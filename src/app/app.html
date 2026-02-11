@@ -1,0 +1,152 @@
+<z-layout class="h-dvh overflow-hidden">
+  <z-sidebar
+    class="gap-6"
+    [zWidth]="248"
+    [zCollapsedWidth]="76"
+    [zCollapsible]="true"
+    [zCollapsed]="sidebarCollapsed()"
+    (zCollapsedChange)="setSidebarCollapsed($event)"
+  >
+    <div class="flex items-center gap-3">
+      <div
+        class="flex size-10 items-center justify-center rounded-lg bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground"
+      >
+        ET
+      </div>
+
+      @if (!sidebarCollapsed()) {
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold leading-none">Expense Tracker</span>
+          <span class="text-xs text-sidebar-foreground/70">Personal Budget</span>
+        </div>
+      }
+    </div>
+
+    <z-sidebar-group class="gap-1">
+      <z-sidebar-group-label>Navigation</z-sidebar-group-label>
+
+      @for (item of navItems; track item.label) {
+        <button
+          type="button"
+          [class]="
+            'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors ' +
+            (sidebarCollapsed() ? 'justify-center ' : '') +
+            (item.active
+              ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+              : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
+          "
+        >
+          <z-icon [zType]="item.icon" class="size-4 shrink-0" />
+
+          @if (!sidebarCollapsed()) {
+            <span class="truncate">{{ item.label }}</span>
+
+            @if (item.badge) {
+              <span
+                class="ml-auto rounded-md bg-sidebar-accent px-1.5 py-0.5 text-[11px] leading-none text-sidebar-accent-foreground"
+              >
+                {{ item.badge }}
+              </span>
+            }
+          }
+        </button>
+      }
+    </z-sidebar-group>
+
+    <div class="mt-auto rounded-lg border border-sidebar-border bg-sidebar-accent/60 p-3">
+      @if (!sidebarCollapsed()) {
+        <p class="text-xs font-medium uppercase tracking-wide text-sidebar-foreground/70">
+          February Goal
+        </p>
+        <p class="mt-1 text-sm font-semibold">Keep food spend under $450</p>
+        <p class="mt-1 text-xs text-sidebar-foreground/70">Current spend: $312.40</p>
+      } @else {
+        <div class="flex justify-center">
+          <z-icon zType="activity" class="size-4 text-sidebar-foreground/70" />
+        </div>
+      }
+    </div>
+  </z-sidebar>
+
+  <z-layout class="min-w-0 flex-1">
+    <z-header class="justify-between gap-4">
+      <div class="flex min-w-0 flex-col">
+        <p class="text-xs uppercase tracking-wide text-muted-foreground">Overview</p>
+        <h1 class="truncate text-lg font-semibold">Homepage</h1>
+      </div>
+
+      <div class="flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm">
+        <z-icon zType="calendar" class="size-4 text-muted-foreground" />
+        <span>February 2026</span>
+      </div>
+    </z-header>
+
+    <z-content class="gap-6">
+      <section class="grid gap-4 md:grid-cols-3">
+        @for (card of summaryCards; track card.label) {
+          <article class="rounded-xl border border-border bg-card p-4 shadow-sm">
+            <div class="flex items-center justify-between">
+              <p class="text-sm text-muted-foreground">{{ card.label }}</p>
+              <z-icon [zType]="card.icon" class="size-4 text-muted-foreground" />
+            </div>
+            <p class="mt-3 text-2xl font-semibold">{{ card.amount }}</p>
+            <p class="mt-1 text-sm text-muted-foreground">{{ card.hint }}</p>
+          </article>
+        }
+      </section>
+
+      <section class="grid gap-4 lg:grid-cols-[2fr_1fr]">
+        <article class="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <div class="flex items-center justify-between">
+            <h2 class="text-base font-semibold">Recent Activity</h2>
+            <button type="button" class="text-sm text-primary hover:underline">View all</button>
+          </div>
+
+          <div class="mt-4 space-y-3">
+            @for (entry of recentActivity; track entry.title) {
+              <div class="flex items-center justify-between rounded-lg border border-border/70 p-3">
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-medium">{{ entry.title }}</p>
+                  <p class="text-xs text-muted-foreground">{{ entry.category }}</p>
+                </div>
+                <p
+                  [class]="
+                    entry.amount.startsWith('-')
+                      ? 'text-sm font-semibold text-destructive'
+                      : 'text-sm font-semibold'
+                  "
+                >
+                  {{ entry.amount }}
+                </p>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <h2 class="text-base font-semibold">Upcoming Bills</h2>
+
+          <div class="mt-4 space-y-3">
+            @for (bill of upcomingBills; track bill.name) {
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <z-icon [zType]="bill.icon" class="size-4 text-muted-foreground" />
+                  <div>
+                    <p class="text-sm font-medium">{{ bill.name }}</p>
+                    <p class="text-xs text-muted-foreground">{{ bill.dueDate }}</p>
+                  </div>
+                </div>
+                <p class="text-sm font-semibold">{{ bill.amount }}</p>
+              </div>
+            }
+          </div>
+        </article>
+      </section>
+    </z-content>
+
+    <z-footer class="justify-between text-sm text-muted-foreground">
+      <span>Expense Tracker</span>
+      <span>Last updated today</span>
+    </z-footer>
+  </z-layout>
+</z-layout>

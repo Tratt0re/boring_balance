@@ -1,0 +1,102 @@
+{
+  "name": "expense_tracker",
+  "version": "0.0.0",
+  "description": "Desktop expense tracker built with Angular and Electron.",
+  "author": "Expense Tracker Team",
+  "main": "electron/main.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:web": "ng build --configuration production --base-href ./",
+    "build:desktop": "npm run build:web && electron-builder --dir --publish never",
+    "dist": "npm run build:web && electron-builder --publish never",
+    "dist:mac": "npm run build:web && electron-builder --mac --publish never",
+    "dist:win": "npm run build:web && electron-builder --win --publish never",
+    "dist:linux": "npm run build:web && electron-builder --linux --publish never",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "electron:dev": "electronmon .",
+    "electron:start": "electron .",
+    "dev": "concurrently -k \"ng serve\" \"wait-on http://localhost:4200 && npm run electron:dev\""
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@11.8.0",
+  "build": {
+    "appId": "com.expense_tracker.desktop",
+    "productName": "Expense Tracker",
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
+    "npmRebuild": false,
+    "electronDist": "node_modules/electron/dist",
+    "files": [
+      "dist/expense_tracker/browser/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.finance"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office"
+    }
+  },
+  "dependencies": {
+    "@angular/cdk": "^21.1.4",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-angular": "^0.563.0",
+    "rxjs": "~7.8.0",
+    "tailwind-merge": "^3.4.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.1.4",
+    "@angular/cli": "^21.1.4",
+    "@angular/compiler-cli": "^21.1.0",
+    "@tailwindcss/postcss": "^4.1.18",
+    "concurrently": "^9.2.1",
+    "electron": "^40.4.0",
+    "electron-builder": "^26.7.0",
+    "electronmon": "^2.0.4",
+    "jsdom": "^27.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8",
+    "wait-on": "^9.0.3"
+  }
+}
