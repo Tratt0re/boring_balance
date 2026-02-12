@@ -77,7 +77,12 @@
     "@angular/router": "^21.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-angular": "^21.0.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-class-names": "^8.6.0",
+    "embla-carousel-wheel-gestures": "^8.1.0",
     "lucide-angular": "^0.563.0",
+    "ngx-sonner": "^3.1.0",
     "rxjs": "~7.8.0",
     "tailwind-merge": "^3.4.0",
     "tslib": "^2.3.0"
