@@ -1,8 +1,9 @@
-import { makeEnvironmentProviders, type EnvironmentProviders } from '@angular/core';
+import { makeEnvironmentProviders, type EnvironmentProviders, inject, provideAppInitializer } from '@angular/core';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 
 import { ZardDebounceEventManagerPlugin } from './event-manager-plugins/zard-debounce-event-manager-plugin';
 import { ZardEventManagerPlugin } from './event-manager-plugins/zard-event-manager-plugin';
+import { ZardDarkMode } from '../../services/dark-mode';
 
 export function provideZard(): EnvironmentProviders {
   const eventManagerPlugins = [
@@ -18,5 +19,5 @@ export function provideZard(): EnvironmentProviders {
     },
   ];
 
-  return makeEnvironmentProviders([...eventManagerPlugins]);
+  return makeEnvironmentProviders([provideAppInitializer(() => inject(ZardDarkMode).init()), ...eventManagerPlugins]);
 }

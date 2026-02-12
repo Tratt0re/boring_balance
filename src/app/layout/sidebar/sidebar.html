@@ -1,0 +1,46 @@
+<z-sidebar
+  [class]="
+    'p-0! ' +
+    (isSmallScreen() ? 'absolute inset-y-0 left-0 z-50 h-full shadow-xl' : '')
+  "
+  [zWidth]="248"
+  [zCollapsedWidth]="isSmallScreen() ? 0 : 76"
+  [zCollapsible]="!isSmallScreen()"
+  [zCollapsed]="sidebarCollapsed()"
+  (zCollapsedChange)="onSidebarCollapsedChange($event)"
+>
+  <nav [class]="'flex h-full flex-col overflow-y-auto ' + (sidebarCollapsed() ? 'gap-1 p-2 pt-4' : 'gap-4 p-4')">
+    @for (section of menuSections(); track section.label) {
+      <z-sidebar-group class="gap-1">
+        @if (!sidebarCollapsed()) {
+          <z-sidebar-group-label>{{ section.label }}</z-sidebar-group-label>
+        }
+
+        @for (item of section.items; track item.path) {
+          <a
+            [routerLink]="item.path"
+            (click)="onMenuItemClick()"
+            routerLinkActive=""
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+            #routeLinkActive="routerLinkActive"
+            [attr.title]="sidebarCollapsed() ? item.label : null"
+            [class]="
+              'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
+              (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
+              ' ' +
+              (routeLinkActive.isActive
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
+            "
+          >
+            <z-icon [zType]="item.icon" class="size-4 shrink-0" />
+
+            @if (!sidebarCollapsed()) {
+              <span class="truncate">{{ item.label }}</span>
+            }
+          </a>
+        }
+      </z-sidebar-group>
+    }
+  </nav>
+</z-sidebar>

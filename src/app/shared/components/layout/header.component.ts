@@ -18,7 +18,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 })
 export class HeaderComponent {
   readonly class = input<ClassValue>('');
-  readonly zHeight = input<number>(64);
+  readonly zHeight = input<number | null>(64);
 
   protected readonly classes = computed(() => mergeClasses(headerVariants(), this.class()));
 }

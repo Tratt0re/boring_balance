@@ -6,7 +6,24 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
+
+    <script>
+      (function () {
+        const html = document.documentElement;
+
+        try {
+          const theme = localStorage.theme;
+          const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+
+          const isSystem = theme === 'system' || !('theme' in localStorage);
+          const isDark = theme === 'dark' || (isSystem && prefersDark);
+          html.classList.toggle('dark', isDark);
+          html.setAttribute('data-theme', theme ?? 'system');
+        } catch (_) {}
+      })();
+    </script>
+
+  </head>
 <body>
   <app-root></app-root>
 </body>
