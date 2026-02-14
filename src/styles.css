@@ -157,6 +157,16 @@
   }
 }
 
+.window-drag {
+  -webkit-app-region: drag;
+  app-region: drag;
+  user-select: none;
+}
+
+.window-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
 
 ::-webkit-scrollbar {
   width: 6px;

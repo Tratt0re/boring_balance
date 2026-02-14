@@ -2,6 +2,8 @@ const { app, BrowserWindow, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const isMac = process.platform === 'darwin';
+
 const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:4200';
 const openWindows = new Set();
 
@@ -17,6 +19,8 @@ function initMainWindow(isDev) {
     minHeight: 400,
     show: false,
     autoHideMenuBar: true,
+    titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
+    ...(isMac ? {} : { titleBarOverlay: true }),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,

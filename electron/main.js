@@ -9,10 +9,15 @@ const {
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
+const APP_NAME = 'Expense Tracker';
+
+app.setName(APP_NAME);
+app.setAboutPanelOptions({
+  applicationName: APP_NAME,
+});
+
 app.whenReady()
   .then(() => {
-    app.setName('Expense Tracker');
-
     const database = createDatabase();
 
     if (isInitializationCompleted()) {
