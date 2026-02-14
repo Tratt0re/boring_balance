@@ -7,8 +7,7 @@ import { filter, map, startWith } from 'rxjs';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardIconComponent } from '@/shared/components/icon';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
-
-import { MenuConfiguration } from '../menu-configuration/menu.config';
+import { MenuConfiguration } from '@/config/menu.config';
 
 interface BreadcrumbItem {
   readonly label: string;

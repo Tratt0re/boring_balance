@@ -5,7 +5,7 @@ import { Breadcrumb } from '../breadcrumb/breadcrumb';
 import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
-import { MenuConfiguration, type MenuSectionConfig } from '../menu-configuration/menu.config';
+import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 
 @Component({
   selector: 'app-root-layout',
