@@ -21,12 +21,12 @@ export class MenuConfiguration {
         { label: 'Transactions', icon: 'credit-card', path: '/transactions' },
         { label: 'Breakdown', icon: 'circle-dollar-sign', path: '/breakdown' },
         { label: 'Compare', icon: 'activity', path: '/compare' },
+        { label: 'Budget', icon: 'dollar-sign', path: '/budget' },
       ],
     },
     {
       label: 'Settings',
       items: [
-        { label: 'Budget', icon: 'dollar-sign', path: '/budget' },
         { label: 'Definitions', icon: 'settings', path: '/definitions' },
       ],
     },

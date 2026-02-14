@@ -19,7 +19,7 @@
     zShape="circle"
     [attr.aria-label]="darkMode.themeMode() === EDarkModes.DARK ? 'Activate light mode' : 'Activate dark mode'"
     [attr.title]="darkMode.themeMode() === EDarkModes.DARK ? 'Light mode' : 'Dark mode'"
-    (click)="toggleTheme()"
+    (click)="toggleTheme($event)"
   >
     <z-icon [zType]="darkMode.themeMode() === EDarkModes.DARK ? 'sun' : 'moon'" class="size-4" />
   </button>
