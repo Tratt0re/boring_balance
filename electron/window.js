@@ -11,6 +11,16 @@ function resolveRendererIndexPath() {
   return path.join(__dirname, '..', 'dist', 'expense_tracker', 'browser', 'index.html');
 }
 
+function resolvePreloadPath() {
+  const preloadPath = path.join(__dirname, 'preload.bundle.cjs');
+
+  if (!fs.existsSync(preloadPath)) {
+    throw new Error(`Preload bundle not found at ${preloadPath}. Run "npm run build:preload".`);
+  }
+
+  return preloadPath;
+}
+
 function initMainWindow(isDev) {
   return new BrowserWindow({
     width: 1200,
@@ -22,7 +32,7 @@ function initMainWindow(isDev) {
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
     ...(isMac ? {} : { titleBarOverlay: true }),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: resolvePreloadPath(),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
