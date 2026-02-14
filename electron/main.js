@@ -1,77 +1,28 @@
-const { app, BrowserWindow, shell } = require('electron');
-const fs = require('node:fs');
-const path = require('node:path');
-
-const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:4200';
-let mainWindow = null;
-
-function resolveRendererIndexPath() {
-  return path.join(__dirname, '..', 'dist', 'expense_tracker', 'browser', 'index.html');
-}
-
-function createWindow() {
-  const isDev = !app.isPackaged;
-
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    minWidth: 600,
-    minHeight: 400,
-    show: false,
-    autoHideMenuBar: true,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false,
-      contextIsolation: true,
-      sandbox: true,
-      devTools: isDev,
-    },
-  });
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow?.show();
-  });
-
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
-    return { action: 'deny' };
-  });
-
-  mainWindow.webContents.on('will-navigate', (event, url) => {
-    const sameAppNavigation = isDev ? url.startsWith(DEV_SERVER_URL) : url.startsWith('file://');
-    if (sameAppNavigation) {
-      return;
-    }
-
-    event.preventDefault();
-    void shell.openExternal(url);
-  });
-
-  if (isDev) {
-    console.log(`[electron] DEV mode -> ${DEV_SERVER_URL}`);
-    mainWindow.loadURL(DEV_SERVER_URL);
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
-  } else {
-    const indexPath = resolveRendererIndexPath();
-
-    if (!fs.existsSync(indexPath)) {
-      throw new Error(
-        `Renderer build not found at ${indexPath}. Run "npm run build:web" before starting Electron in production mode.`,
-      );
-    }
-
-    console.log('[electron] PROD mode ->', indexPath);
-    mainWindow.loadFile(indexPath);
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-}
+const { app, BrowserWindow } = require('electron');
+const {
+  closeDatabase,
+  createDatabase,
+  initSchema,
+  isInitializationCompleted,
+  markInitializationCompleted,
+} = require('./database');
+const { registerIpcHandlers } = require('./ipc');
+const { createWindow } = require('./window');
 
 app.whenReady()
   .then(() => {
     app.setName('Expense Tracker');
+
+    const database = createDatabase();
+
+    if (isInitializationCompleted()) {
+      console.log('[electron] Schema initialization skipped (already completed).');
+    } else {
+      initSchema(database);
+      markInitializationCompleted();
+    }
+
+    registerIpcHandlers();
     createWindow();
 
     app.on('activate', () => {
@@ -89,4 +40,8 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('before-quit', () => {
+  closeDatabase();
 });

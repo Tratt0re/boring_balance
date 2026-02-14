@@ -58,3 +58,17 @@ Run unit tests:
 ```bash
 npm test
 ```
+
+## Database Files (Dev vs Prod)
+
+The Electron process stores SQLite files in:
+
+`<userData>/data/`
+
+Environment-based filenames:
+- development (`app.isPackaged === false`): `expense-tracker.dev.db`
+- production (`app.isPackaged === true`): `expense-tracker.db`
+
+Optional override:
+- set `EXPENSE_TRACKER_DB_ENV=dev` to force the dev DB file
+- set `EXPENSE_TRACKER_DB_ENV=prod` to force the prod DB file
