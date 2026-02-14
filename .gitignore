@@ -39,6 +39,8 @@ yarn-error.log
 testem.log
 /typings
 __screenshots__/
+/electron/preload.bundle.cjs
+/electron/preload.bundle.cjs.map
 
 # System files
 .DS_Store
