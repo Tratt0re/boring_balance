@@ -18,17 +18,32 @@ export class MenuConfiguration {
       label: 'Main',
       items: [
         { label: 'Overview', icon: 'layout-dashboard', path: '/', exact: true },
-        { label: 'Transactions', icon: 'credit-card', path: '/transactions' },
-        { label: 'Breakdown', icon: 'circle-dollar-sign', path: '/breakdown' },
-        { label: 'Compare', icon: 'activity', path: '/compare' },
-        { label: 'Budget', icon: 'dollar-sign', path: '/budget' },
+        { label: 'Transactions', icon: 'badge-euro', path: '/transactions' },
+      ],
+    },
+    {
+      label: 'Insights',
+      items: [
+        { label: 'Breakdown', icon: 'chart-line', path: '/breakdown' },
+        { label: 'Compare', icon: 'scale', path: '/compare' },
+        { label: 'Budget', icon: 'chart-pie', path: '/budget' },
+      ],
+    },
+    {
+      label: 'Setup',
+      items: [
+        { label: 'Accounts', icon: 'landmark', path: '/accounts' },
+        { label: 'Categories', icon: 'tags', path: '/categories' },
       ],
     },
     {
       label: 'Settings',
       items: [
-        { label: 'Definitions', icon: 'settings', path: '/definitions' },
+        { label: 'General', icon: 'settings', path: '/general' },
+        { label: 'Data & Backups', icon: 'hard-drive', path: '/data-n-backups' },
+        { label: 'About', icon: 'badge-info', path: '/about' }
       ],
     },
   ];
+
 }

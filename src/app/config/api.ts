@@ -1,0 +1,69 @@
+import type * as DTO from '@/dtos';
+
+type IpcRequest<TPayload, TResult> = (payload: TPayload) => Promise<TResult>;
+type OptionalIpcRequest<TPayload, TResult> = (payload?: TPayload) => Promise<TResult>;
+
+export enum APIChannel {
+  APP_META = 'appMeta',
+  ACCOUNTS = 'accounts',
+  CATEGORIES = 'categories',
+  TRANSACTIONS = 'transactions',
+}
+
+export interface ElectronIpcClient {
+  readonly appMeta: {
+    readonly create: IpcRequest<DTO.AppMetaCreateDto, DTO.AppMetaCreateResponse>;
+    readonly get: IpcRequest<DTO.AppMetaGetDto, DTO.AppMetaGetResponse>;
+    readonly list: OptionalIpcRequest<DTO.AppMetaListDto, DTO.AppMetaListResponse>;
+    readonly update: IpcRequest<DTO.AppMetaUpdateDto, DTO.AppMetaUpdateResponse>;
+    readonly remove: IpcRequest<DTO.AppMetaGetDto, DTO.AppMetaRemoveResponse>;
+    readonly upsert: IpcRequest<DTO.AppMetaUpsertDto, DTO.AppMetaUpsertResponse>;
+  };
+  readonly accounts: {
+    readonly create: IpcRequest<DTO.AccountCreateDto, DTO.AccountCreateResponse>;
+    readonly get: IpcRequest<DTO.AccountGetDto, DTO.AccountGetResponse>;
+    readonly list: OptionalIpcRequest<DTO.AccountListDto, DTO.AccountListResponse>;
+    readonly update: IpcRequest<DTO.AccountUpdateDto, DTO.AccountUpdateResponse>;
+    readonly remove: IpcRequest<DTO.AccountRemoveDto, DTO.AccountRemoveResponse>;
+    readonly listActive: OptionalIpcRequest<DTO.AccountListActiveDto, DTO.AccountListActiveResponse>;
+  };
+  readonly categories: {
+    readonly create: IpcRequest<DTO.CategoryCreateDto, DTO.CategoryCreateResponse>;
+    readonly get: IpcRequest<DTO.CategoryGetDto, DTO.CategoryGetResponse>;
+    readonly list: OptionalIpcRequest<DTO.CategoryListDto, DTO.CategoryListResponse>;
+    readonly update: IpcRequest<DTO.CategoryUpdateDto, DTO.CategoryUpdateResponse>;
+    readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
+    readonly listByType: IpcRequest<DTO.CategoryListByTypeDto, DTO.CategoryListByTypeResponse>;
+    readonly listByParent: IpcRequest<DTO.CategoryListByParentDto, DTO.CategoryListByParentResponse>;
+    readonly listRoot: OptionalIpcRequest<DTO.CategoryListRootDto, DTO.CategoryListRootResponse>;
+  };
+  readonly transactions: {
+    readonly create: IpcRequest<DTO.TransactionCreateDto, DTO.TransactionCreateResponse>;
+    readonly get: IpcRequest<DTO.TransactionGetDto, DTO.TransactionGetResponse>;
+    readonly list: IpcRequest<DTO.TransactionListDto, DTO.TransactionListResponse>;
+    readonly update: IpcRequest<DTO.TransactionUpdateDto, DTO.TransactionUpdateResponse>;
+    readonly remove: IpcRequest<DTO.TransactionRemoveDto, DTO.TransactionRemoveResponse>;
+    readonly listByAccount: IpcRequest<DTO.TransactionListByAccountDto, DTO.TransactionListByAccountResponse>;
+    readonly listByCategory: IpcRequest<DTO.TransactionListByCategoryDto, DTO.TransactionListByCategoryResponse>;
+    readonly listByDateRange: IpcRequest<DTO.TransactionListByDateRangeDto, DTO.TransactionListByDateRangeResponse>;
+    readonly listUnsettled: IpcRequest<DTO.TransactionListUnsettledDto, DTO.TransactionListUnsettledResponse>;
+  };
+}
+
+export interface ElectronAPI {
+  readonly ipcClient: ElectronIpcClient;
+  readonly platform: string;
+  readonly versions: Readonly<{
+    chrome: string;
+    electron: string;
+    node: string;
+  }>;
+}
+
+declare global {
+  interface Window {
+    readonly electronAPI?: ElectronAPI;
+  }
+}
+
+export {};
