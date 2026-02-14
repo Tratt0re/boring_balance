@@ -8,7 +8,7 @@ import {
   SidebarGroupLabelComponent,
 } from '@/shared/components/layout/sidebar.component';
 
-import type { MenuSectionConfig } from '../menu-configuration/menu.config';
+import type { MenuSectionConfig } from '@/config/menu.config';
 
 @Component({
   selector: 'app-sidebar',
