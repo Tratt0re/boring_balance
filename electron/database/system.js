@@ -1,28 +1,36 @@
-function isInitializationCompleted() {
+const FIRST_START_META_KEY = 'app.first_start';
+
+function isFirstStart() {
   const { appMetaController } = require('../controllers');
 
   try {
-    const initializationRecord = appMetaController.get({ key: 'initialization' });
-    return initializationRecord?.value === 'done';
+    const firstStartRecord = appMetaController.get({ key: FIRST_START_META_KEY });
+
+    if (firstStartRecord) {
+      const normalizedValue = String(firstStartRecord.value).trim().toLowerCase();
+      return normalizedValue === '1' || normalizedValue === 'true';
+    }
+
+    return true;
   } catch (error) {
     if (error instanceof Error && error.message.includes('no such table: app_meta')) {
-      return false;
+      return true;
     }
 
     throw error;
   }
 }
 
-function markInitializationCompleted() {
+function markFirstStartCompleted() {
   const { appMetaController } = require('../controllers');
 
   appMetaController.upsert({
-    key: 'initialization',
-    value: 'done',
+    key: FIRST_START_META_KEY,
+    value: '0',
   });
 }
 
 module.exports = {
-  isInitializationCompleted,
-  markInitializationCompleted,
+  isFirstStart,
+  markFirstStartCompleted,
 };

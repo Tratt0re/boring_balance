@@ -1,30 +1,33 @@
 const { app, BrowserWindow } = require('electron');
+const path = require('node:path');
 const {
   closeDatabase,
   createDatabase,
   initSchema,
-  isInitializationCompleted,
-  markInitializationCompleted,
+  isFirstStart,
+  markFirstStartCompleted,
 } = require('./database');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
 const APP_NAME = 'Expense Tracker';
+const APP_STORAGE_DIR_NAME = 'expense_tracker';
 
 app.setName(APP_NAME);
 app.setAboutPanelOptions({
   applicationName: APP_NAME,
 });
+app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME));
 
 app.whenReady()
   .then(() => {
     const database = createDatabase();
 
-    if (isInitializationCompleted()) {
-      console.log('[electron] Schema initialization skipped (already completed).');
+    if (!isFirstStart()) {
+      console.log('[electron] Schema initialization skipped - app already initialized');
     } else {
       initSchema(database);
-      markInitializationCompleted();
+      markFirstStartCompleted();
     }
 
     registerIpcHandlers();

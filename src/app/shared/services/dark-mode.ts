@@ -2,12 +2,15 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { DestroyRef, Injectable, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
 
+import type { ThemePreference } from '@/config/local-preferences.config';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
+
 export enum EDarkModes {
   LIGHT = 'light',
   DARK = 'dark',
   SYSTEM = 'system',
 }
-export type DarkModeOptions = EDarkModes.LIGHT | EDarkModes.DARK | EDarkModes.SYSTEM;
+export type DarkModeOptions = ThemePreference;
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +18,8 @@ export type DarkModeOptions = EDarkModes.LIGHT | EDarkModes.DARK | EDarkModes.SY
 export class ZardDarkMode {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
 
-  private static readonly STORAGE_KEY = 'theme';
   private handleThemeChange = (event: MediaQueryListEvent) => this.updateThemeMode(event.matches, EDarkModes.SYSTEM);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly themeSignal = signal<DarkModeOptions>(EDarkModes.SYSTEM);
@@ -80,12 +83,10 @@ export class ZardDarkMode {
   }
 
   private initializeTheme(): void {
-    const storedTheme = this.getStoredTheme();
-    if (storedTheme) {
-      this.themeSignal.set(storedTheme);
-    }
+    const storedTheme = this.localPreferencesService.getTheme();
+    this.themeSignal.set(storedTheme);
 
-    if (!storedTheme || storedTheme === EDarkModes.SYSTEM) {
+    if (storedTheme === EDarkModes.SYSTEM) {
       this.handleSystemChanges();
     }
     this.initialized = true;
@@ -96,11 +97,7 @@ export class ZardDarkMode {
       return;
     }
 
-    try {
-      localStorage.setItem(ZardDarkMode.STORAGE_KEY, theme);
-    } catch (error) {
-      console.warn('Failed to save theme to localStorage:', error);
-    }
+    this.localPreferencesService.setTheme(theme);
     this.themeSignal.set(theme);
 
     if (theme === EDarkModes.SYSTEM) {
@@ -110,23 +107,7 @@ export class ZardDarkMode {
     }
   }
 
-  private getStoredTheme(): DarkModeOptions | undefined {
-    if (!this.isBrowser) {
-      return undefined;
-    }
-
-    try {
-      const value = localStorage.getItem(ZardDarkMode.STORAGE_KEY);
-      if (value === EDarkModes.LIGHT || value === EDarkModes.DARK || value === EDarkModes.SYSTEM) {
-        return value;
-      }
-    } catch (error) {
-      console.warn('Failed to read theme from localStorage:', error);
-    }
-    return undefined;
-  }
-
-  private updateThemeMode(isDarkMode: boolean, themeMode: EDarkModes): void {
+  private updateThemeMode(isDarkMode: boolean, themeMode: DarkModeOptions): void {
     const html = this.document.documentElement;
     html.classList.toggle('dark', isDarkMode);
     html.setAttribute('data-theme', themeMode);

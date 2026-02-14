@@ -1,7 +1,7 @@
 const { closeDatabase, createDatabase, getDatabase } = require('./db');
 const { countRows, deleteRows, insertRow, selectOne, selectRows, updateRows } = require('./core_op');
 const { getSchemaFilePaths, initSchema } = require('./schema');
-const { isInitializationCompleted, markInitializationCompleted } = require('./system');
+const { isFirstStart, markFirstStartCompleted } = require('./system');
 
 module.exports = {
   closeDatabase,
@@ -11,9 +11,9 @@ module.exports = {
   getDatabase,
   getSchemaFilePaths,
   initSchema,
-  isInitializationCompleted,
+  isFirstStart,
   insertRow,
-  markInitializationCompleted,
+  markFirstStartCompleted,
   selectOne,
   selectRows,
   updateRows,
