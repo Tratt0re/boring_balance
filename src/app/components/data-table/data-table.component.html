@@ -16,15 +16,15 @@
         <tr z-table-row>
           @if (selectable()) {
             <th z-table-head class="w-10">
-              <input
-                type="checkbox"
-                role="checkbox"
-                class="size-4 accent-primary"
-                [checked]="allVisibleRowsSelected()"
-                [indeterminate]="partiallySelectedVisibleRows()"
-                aria-label="Select all rows"
-                (change)="onToggleAllRows($event)"
-              />
+              <z-checkbox
+                zSize="default"
+                [zChecked]="allVisibleRowsSelected()"
+                [zDisabled]="sortedRows().length === 0"
+                [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
+                (zCheckedChange)="onToggleAllRowsChange($event)"
+              >
+                <span class="sr-only">Select all rows</span>
+              </z-checkbox>
             </th>
           }
 
@@ -35,14 +35,15 @@
           @for (column of columns(); track column.columnKey) {
             <th z-table-head>
               @if (column.sortable) {
-                <button
-                  type="button"
-                  class="inline-flex items-center gap-1 text-left hover:text-foreground"
+                <z-button
+                  zType="ghost"
+                  zSize="sm"
+                  class="h-auto px-0 py-0 text-left hover:bg-transparent hover:text-foreground"
                   (click)="onSortColumn(column)"
                 >
                   <span>{{ column.columnName | translate }}</span>
                   <z-icon [zType]="sortIcon(column)" class="size-4" />
-                </button>
+                </z-button>
               } @else {
                 {{ column.columnName | translate }}
               }
@@ -61,14 +62,13 @@
             <tr z-table-row [attr.data-state]="isRowSelected(row) ? 'selected' : null">
               @if (selectable()) {
                 <td z-table-cell class="w-10">
-                  <input
-                    type="checkbox"
-                    role="checkbox"
-                    class="size-4 accent-primary"
-                    [checked]="isRowSelected(row)"
-                    aria-label="Select row"
-                    (change)="onToggleRow($event, row)"
-                  />
+                  <z-checkbox
+                    zSize="default"
+                    [zChecked]="isRowSelected(row)"
+                    (zCheckedChange)="onToggleRowChange($event, row)"
+                  >
+                    <span class="sr-only">Select row</span>
+                  </z-checkbox>
                 </td>
               }
 
@@ -76,9 +76,7 @@
                 <td z-table-cell>
                   <div class="flex items-center gap-1">
                     @for (actionItem of actionItems(); track actionItem.id) {
-                      <button
-                        type="button"
-                        z-button
+                      <z-button
                         zSize="sm"
                         [zType]="actionItem.buttonType ?? 'ghost'"
                         [zDisabled]="isActionDisabled(actionItem, row)"
@@ -87,23 +85,117 @@
                         (click)="onActionClick(actionItem, row)"
                       >
                         <z-icon [zType]="actionItem.icon" class="size-4" />
-                      </button>
+                      </z-button>
                     }
                   </div>
                 </td>
               }
 
               @for (column of columns(); track column.columnKey) {
-                <td z-table-cell>{{ formatCellValue(row, column) }}</td>
+                <td z-table-cell>
+                  @if (isEditableColumn(column)) {
+                    <div class="group flex min-w-36 flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
+                      @switch (column.editableType) {
+                        @case ('checkbox') {
+                          <z-checkbox
+                            zSize="default"
+                            [zChecked]="getEditableChecked(row, column)"
+                            [zDisabled]="isEditableDisabled(column, row)"
+                            (zCheckedChange)="onEditableCheckboxValueChange($event, row, column)"
+                          >
+                            <span class="sr-only">{{ column.columnName | translate }}</span>
+                          </z-checkbox>
+                        }
+
+                        @case ('switch') {
+                          <z-switch
+                            [zChecked]="getEditableChecked(row, column)"
+                            [zDisabled]="isEditableDisabled(column, row)"
+                            (zCheckedChange)="onEditableSwitchChange($event, row, column)"
+                          >
+                            <span class="sr-only">{{ column.columnName | translate }}</span>
+                          </z-switch>
+                        }
+
+                        @case ('select') {
+                          @if (isEditableDisabled(column, row)) {
+                            <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                          } @else {
+                            <z-select
+                              class="data-active:border-0 data-active:ring-0 [&_button]:border-0 [&_button]:px-0 [&_button]:py-0 [&_button]:bg-transparent [&_button]:shadow-none [&_button]:focus-visible:border-0 [&_button]:focus-visible:ring-0 dark:[&_button]:bg-transparent dark:[&_button]:hover:bg-transparent"
+                              zChevronClass="text-primary opacity-70"
+                              [zValue]="getEditableSelectValue(row, column)"
+                              [zDisabled]="isEditableDisabled(column, row)"
+                              [zPlaceholder]="column.placeholder ? (column.placeholder | translate) : ''"
+                              (zSelectionChange)="onEditableSelectValueChange($event, row, column)"
+                            >
+                              @for (option of column.options ?? []; track option.value) {
+                                <z-select-item [zValue]="stringifyOptionValue(option.value)">
+                                  {{ option.translate ? (option.label | translate) : option.label }}
+                                </z-select-item>
+                              }
+                            </z-select>
+                          }
+                        }
+
+                        @case ('date') {
+                          @if (isEditableDisabled(column, row)) {
+                            <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                          } @else {
+                            <z-date-picker
+                              zCalendarIconClass="text-primary opacity-70"
+                              [value]="getEditableDateValue(row, column)"
+                              zIconPosition="right"
+                              [zBorderless]="true"
+                              [zPaddingless]="true"
+                              [disabled]="isEditableDisabled(column, row)"
+                              [placeholder]="column.placeholder ? (column.placeholder | translate) : ('Pick a date' | translate)"
+                              (dateChange)="onEditableDateChange($event, row, column)"
+                            />
+                          }
+                        }
+
+                        @default {
+                          @if (isEditableDisabled(column, row)) {
+                            <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                          } @else {
+                            <div class="relative">
+                              <input
+                                z-input
+                                class="pr-6"
+                                [zBorderless]="true"
+                                [type]="getEditableInputType(column)"
+                                [value]="getEditableInputValue(row, column)"
+                                [zStatus]="getEditableError(row, column) ? 'error' : undefined"
+                                [attr.placeholder]="column.placeholder ? (column.placeholder | translate) : null"
+                                [attr.aria-label]="column.columnName | translate"
+                                (input)="onEditableTextInput($event, row, column)"
+                                (blur)="onEditableTextBlur($event, row, column)"
+                              />
+                              <z-icon
+                                zType="pencil"
+                                class="pointer-events-none absolute right-0 top-1/2 size-3.5 -translate-y-1/2 text-primary opacity-70"
+                              />
+                            </div>
+                          }
+                        }
+                      }
+
+                      @if (getVisibleEditableError(row, column); as validationError) {
+                        <p class="text-xs text-destructive">{{ validationError }}</p>
+                      }
+                    </div>
+                  } @else {
+                    {{ formatCellValue(row, column) }}
+                  }
+                </td>
               }
 
               @if (renderActionColumnAtEnd()) {
                 <td z-table-cell>
                   <div class="flex items-center justify-end gap-1">
                     @for (actionItem of actionItems(); track actionItem.id) {
-                      <button
-                        type="button"
-                        z-button
+                      <z-button
                         zSize="sm"
                         [zType]="actionItem.buttonType ?? 'ghost'"
                         [zDisabled]="isActionDisabled(actionItem, row)"
@@ -112,7 +204,7 @@
                         (click)="onActionClick(actionItem, row)"
                       >
                         <z-icon [zType]="actionItem.icon" class="size-4" />
-                      </button>
+                      </z-button>
                     }
                   </div>
                 </td>

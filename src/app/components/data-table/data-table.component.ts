@@ -16,26 +16,48 @@ import type { ClassValue } from 'clsx';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardCheckboxComponent } from '@/shared/components/checkbox';
+import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { ZardIconComponent } from '@/shared/components/icon';
+import { ZardInputDirective } from '@/shared/components/input';
+import { ZardSelectImports } from '@/shared/components/select';
+import { ZardSwitchComponent } from '@/shared/components/switch';
 import { ZardTableImports } from '@/shared/components/table';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type {
+  ActionDataItem,
   ActionItem,
-  RowDataItem,
+  EditableColumnDataItem,
+  EditableValueChangeEvent,
+  EditableValidationErrorEvent,
+  ColumnDataItem,
   TableActionColumnPosition,
   TableCellType,
-  TableDataStructure,
+  TableDataItem,
   TableSortDirection,
   TableSortState,
 } from './data-table.types';
 
 type TableRow = object;
 type TableRowRecord = Record<string, unknown>;
+type TableColumn = ColumnDataItem;
+type EditableValueMap = Map<TableRow, Map<string, unknown>>;
+type EditableErrorMap = Map<TableRow, Map<string, string>>;
 
 @Component({
   selector: 'app-data-table',
-  imports: [TranslatePipe, ZardButtonComponent, ZardIconComponent, ...ZardTableImports],
+  imports: [
+    TranslatePipe,
+    ZardButtonComponent,
+    ZardCheckboxComponent,
+    ZardDatePickerComponent,
+    ZardIconComponent,
+    ZardInputDirective,
+    ZardSwitchComponent,
+    ...ZardSelectImports,
+    ...ZardTableImports,
+  ],
   templateUrl: './data-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -46,7 +68,7 @@ export class AppDataTableComponent {
   private readonly translateService = inject(TranslateService);
 
   readonly data = input<readonly TableRow[]>([]);
-  readonly structure = input.required<readonly TableDataStructure[]>();
+  readonly structure = input.required<readonly TableDataItem[]>();
 
   readonly title = input('');
   readonly description = input('');
@@ -65,21 +87,31 @@ export class AppDataTableComponent {
 
   readonly selectedRowsChange = output<readonly TableRow[]>();
   readonly sortChange = output<TableSortState | null>();
+  readonly editableValueChange = output<EditableValueChangeEvent>();
+  readonly editableValidationError = output<EditableValidationErrorEvent>();
 
   private readonly sortState = signal<TableSortState | null>(null);
   private readonly selectedRowsState = signal<ReadonlySet<TableRow>>(new Set<TableRow>());
+  private readonly editableValuesState = signal<EditableValueMap>(new Map());
+  private readonly editableErrorsState = signal<EditableErrorMap>(new Map());
 
-  protected readonly columns = computed(() =>
-    this.structure()
-      .map((item) => item.rowDataItem)
-      .filter((item): item is RowDataItem => item !== undefined),
-  );
+  protected readonly columns = computed<TableColumn[]>(() => {
+    const columns: TableColumn[] = [];
+
+    for (const item of this.structure()) {
+      if (this.isColumnDataItem(item)) {
+        columns.push(item);
+      }
+    }
+
+    return columns;
+  });
 
   protected readonly actionItems = computed(() => {
     const items: ActionItem[] = [];
 
     for (const item of this.structure()) {
-      if (!item.actionItems) {
+      if (!this.isActionDataItem(item)) {
         continue;
       }
 
@@ -181,7 +213,7 @@ export class AppDataTableComponent {
     });
   }
 
-  protected onSortColumn(column: RowDataItem): void {
+  protected onSortColumn(column: TableColumn): void {
     if (!column.sortable) {
       return;
     }
@@ -206,7 +238,7 @@ export class AppDataTableComponent {
     this.sortChange.emit(null);
   }
 
-  protected sortIcon(column: RowDataItem): 'chevrons-up-down' | 'chevron-up' | 'chevron-down' {
+  protected sortIcon(column: TableColumn): 'chevrons-up-down' | 'chevron-up' | 'chevron-down' {
     if (!column.sortable) {
       return 'chevrons-up-down';
     }
@@ -223,14 +255,12 @@ export class AppDataTableComponent {
     return 'chevrons-up-down';
   }
 
-  protected onToggleAllRows(event: Event): void {
-    const checked = (event.target as HTMLInputElement | null)?.checked ?? false;
+  protected onToggleAllRowsChange(checked: boolean): void {
     const nextSelection = checked ? new Set<TableRow>(this.sortedRows()) : new Set<TableRow>();
     this.updateSelection(nextSelection);
   }
 
-  protected onToggleRow(event: Event, row: TableRow): void {
-    const checked = (event.target as HTMLInputElement | null)?.checked ?? false;
+  protected onToggleRowChange(checked: boolean, row: TableRow): void {
     const nextSelection = new Set<TableRow>(this.selectedRowsState());
 
     if (checked) {
@@ -267,15 +297,140 @@ export class AppDataTableComponent {
     }
   }
 
-  protected formatCellValue(row: TableRow, column: RowDataItem): string {
-    const rawValue = this.getRawValue(row, column.columnKey);
-    const translatedValue =
-      column.translate && typeof rawValue === 'string' ? this.translateService.instant(rawValue) : rawValue;
-
-    return this.formatValueByType(translatedValue, column.type ?? 'string');
+  protected isEditableColumn(column: TableColumn): column is EditableColumnDataItem {
+    return 'editableType' in column;
   }
 
-  private sortDirectionForColumn(column: RowDataItem): TableSortDirection | null {
+  protected isEditableDisabled(column: EditableColumnDataItem, row: TableRow): boolean {
+    if (typeof column.disabled === 'function') {
+      return column.disabled(row);
+    }
+
+    return column.disabled ?? false;
+  }
+
+  protected getEditableInputType(column: EditableColumnDataItem): string {
+    if (column.inputType) {
+      return column.inputType;
+    }
+
+    if (column.type === 'number' || column.type === 'currency') {
+      return 'number';
+    }
+
+    return 'text';
+  }
+
+  protected getEditableInputValue(row: TableRow, column: EditableColumnDataItem): string {
+    const value = this.getEditableValue(row, column);
+    return value === null || value === undefined ? '' : `${value}`;
+  }
+
+  protected getEditableChecked(row: TableRow, column: EditableColumnDataItem): boolean {
+    return this.toBooleanValue(this.getEditableValue(row, column)) ?? false;
+  }
+
+  protected getEditableSelectValue(row: TableRow, column: EditableColumnDataItem): string {
+    const value = this.getEditableValue(row, column);
+    return value === null || value === undefined ? '' : `${value}`;
+  }
+
+  protected getEditableDateValue(row: TableRow, column: EditableColumnDataItem): Date | null {
+    return this.toDateValue(this.getEditableValue(row, column));
+  }
+
+  protected stringifyOptionValue(value: string | number | boolean): string {
+    return `${value}`;
+  }
+
+  protected formatEditableReadonlyValue(row: TableRow, column: EditableColumnDataItem): string {
+    return this.formatColumnValue(this.getEditableValue(row, column), column);
+  }
+
+  protected getEditableSelectReadonlyValue(row: TableRow, column: EditableColumnDataItem): string {
+    const value = this.getEditableValue(row, column);
+    const selectedOption = column.options?.find((option) => option.value === value || `${option.value}` === `${value}`);
+
+    if (!selectedOption) {
+      return this.formatColumnValue(value, column);
+    }
+
+    if (selectedOption.translate) {
+      return this.translateService.instant(selectedOption.label);
+    }
+
+    return selectedOption.label;
+  }
+
+  protected getEditableError(row: TableRow, column: EditableColumnDataItem): string | null {
+    const errorByColumn = this.editableErrorsState().get(row);
+    return errorByColumn?.get(column.columnKey) ?? null;
+  }
+
+  protected getVisibleEditableError(row: TableRow, column: EditableColumnDataItem): string | null {
+    if (
+      this.isEditableDisabled(column, row) &&
+      (column.editableType === 'input' || column.editableType === 'select' || column.editableType === 'date')
+    ) {
+      return null;
+    }
+
+    return this.getEditableError(row, column);
+  }
+
+  protected onEditableTextInput(event: Event, row: TableRow, column: EditableColumnDataItem): void {
+    const inputValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    const normalizedValue = this.normalizeInputValue(inputValue, column);
+    const error = this.validateEditableValue(row, column, normalizedValue);
+    this.setEditableError(row, column.columnKey, error);
+
+    if (error) {
+      this.editableValidationError.emit({
+        row,
+        columnKey: column.columnKey,
+        value: normalizedValue,
+        error,
+      });
+    }
+  }
+
+  protected onEditableTextBlur(event: FocusEvent, row: TableRow, column: EditableColumnDataItem): void {
+    const inputValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    const normalizedValue = this.normalizeInputValue(inputValue, column);
+    this.applyEditableChange(row, column, normalizedValue);
+  }
+
+  protected onEditableSelectValueChange(
+    value: string | string[],
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
+    if (Array.isArray(value)) {
+      console.warn('[app-data-table] Select editor received multiple values, expected a single value.', value);
+      return;
+    }
+
+    const normalizedValue = this.resolveSelectValue(value, column);
+    this.applyEditableChange(row, column, normalizedValue);
+  }
+
+  protected onEditableSwitchChange(checked: boolean, row: TableRow, column: EditableColumnDataItem): void {
+    this.applyEditableChange(row, column, checked);
+  }
+
+  protected onEditableCheckboxValueChange(checked: boolean, row: TableRow, column: EditableColumnDataItem): void {
+    this.applyEditableChange(row, column, checked);
+  }
+
+  protected onEditableDateChange(value: Date | null, row: TableRow, column: EditableColumnDataItem): void {
+    this.applyEditableChange(row, column, value);
+  }
+
+  protected formatCellValue(row: TableRow, column: ColumnDataItem): string {
+    return this.formatColumnValue(this.getRawValue(row, column.columnKey), column);
+  }
+
+  private sortDirectionForColumn(column: TableColumn): TableSortDirection | null {
     const currentSort = this.sortState();
 
     if (!currentSort || currentSort.columnKey !== column.columnKey) {
@@ -285,7 +440,7 @@ export class AppDataTableComponent {
     return currentSort.direction;
   }
 
-  private compareRows(leftRow: TableRow, rightRow: TableRow, column: RowDataItem): number {
+  private compareRows(leftRow: TableRow, rightRow: TableRow, column: TableColumn): number {
     const leftRaw = this.getRawValue(leftRow, column.columnKey);
     const rightRaw = this.getRawValue(rightRow, column.columnKey);
 
@@ -469,6 +624,188 @@ export class AppDataTableComponent {
       default:
         return this.toComparableString(value);
     }
+  }
+
+  private isColumnDataItem(item: TableDataItem): item is ColumnDataItem {
+    return 'columnName' in item && 'columnKey' in item;
+  }
+
+  private formatColumnValue(value: unknown, column: ColumnDataItem): string {
+    const translatedValue = column.translate && typeof value === 'string' ? this.translateService.instant(value) : value;
+    return this.formatValueByType(translatedValue, column.type ?? 'string');
+  }
+
+  private isActionDataItem(item: TableDataItem): item is ActionDataItem {
+    return 'actionItems' in item && Array.isArray(item.actionItems);
+  }
+
+  private applyEditableChange(row: TableRow, column: EditableColumnDataItem, value: unknown): void {
+    const previousValue = this.getEditableValue(row, column);
+    const hasValueChanged = !this.areEditableValuesEqual(previousValue, value, column);
+    const error = this.validateEditableValue(row, column, value);
+    const previousError = this.getEditableError(row, column);
+
+    if (previousError !== error) {
+      this.setEditableError(row, column.columnKey, error);
+    }
+
+    if (!hasValueChanged) {
+      return;
+    }
+
+    this.setEditableValue(row, column.columnKey, value);
+
+    if (error) {
+      this.editableValidationError.emit({
+        row,
+        columnKey: column.columnKey,
+        value,
+        error,
+      });
+    }
+
+    this.editableValueChange.emit({
+      row,
+      columnKey: column.columnKey,
+      value,
+      valid: error === null,
+      error,
+    });
+  }
+
+  private areEditableValuesEqual(leftValue: unknown, rightValue: unknown, column: EditableColumnDataItem): boolean {
+    if (Object.is(leftValue, rightValue)) {
+      return true;
+    }
+
+    const shouldCompareAsDate =
+      column.editableType === 'date' || column.type === 'date' || column.type === 'datetime';
+
+    if (!shouldCompareAsDate) {
+      return false;
+    }
+
+    const leftDate = this.toDateValue(leftValue);
+    const rightDate = this.toDateValue(rightValue);
+
+    return leftDate !== null && rightDate !== null && leftDate.getTime() === rightDate.getTime();
+  }
+
+  private validateEditableValue(row: TableRow, column: EditableColumnDataItem, value: unknown): string | null {
+    const rules = column.validation;
+    if (!rules) {
+      return null;
+    }
+
+    if (rules.required) {
+      if (column.editableType === 'checkbox' || column.editableType === 'switch') {
+        if (this.toBooleanValue(value) !== true) {
+          return 'This field is required.';
+        }
+      } else if (this.isEmptyValue(value)) {
+        return 'This field is required.';
+      }
+    }
+
+    if (!this.isEmptyValue(value) && (rules.min !== undefined || rules.max !== undefined)) {
+      const numericValue = this.toNumberValue(value);
+      if (numericValue === null) {
+        return 'Invalid numeric value.';
+      }
+
+      if (rules.min !== undefined && numericValue < rules.min) {
+        return `Value must be greater than or equal to ${rules.min}.`;
+      }
+
+      if (rules.max !== undefined && numericValue > rules.max) {
+        return `Value must be less than or equal to ${rules.max}.`;
+      }
+    }
+
+    if (!this.isEmptyValue(value) && (rules.minLength !== undefined || rules.maxLength !== undefined)) {
+      const textValue = this.toComparableString(value);
+
+      if (rules.minLength !== undefined && textValue.length < rules.minLength) {
+        return `Value must be at least ${rules.minLength} characters.`;
+      }
+
+      if (rules.maxLength !== undefined && textValue.length > rules.maxLength) {
+        return `Value must be at most ${rules.maxLength} characters.`;
+      }
+    }
+
+    if (rules.pattern && !this.isEmptyValue(value)) {
+      try {
+        const regex = new RegExp(rules.pattern);
+        if (!regex.test(this.toComparableString(value))) {
+          return 'Invalid format.';
+        }
+      } catch {
+        return 'Invalid validation pattern.';
+      }
+    }
+
+    if (rules.validator) {
+      return rules.validator(value, row);
+    }
+
+    return null;
+  }
+
+  private normalizeInputValue(inputValue: string, column: EditableColumnDataItem): unknown {
+    if (column.type !== 'number' && column.type !== 'currency') {
+      return inputValue;
+    }
+
+    if (inputValue.trim().length === 0) {
+      return '';
+    }
+
+    const parsedValue = Number(inputValue);
+    return Number.isFinite(parsedValue) ? parsedValue : inputValue;
+  }
+
+  private resolveSelectValue(selectedValue: string, column: EditableColumnDataItem): unknown {
+    const option = column.options?.find((item) => `${item.value}` === selectedValue);
+    return option ? option.value : selectedValue;
+  }
+
+  private getEditableValue(row: TableRow, column: EditableColumnDataItem): unknown {
+    const valueByColumn = this.editableValuesState().get(row);
+
+    if (valueByColumn?.has(column.columnKey)) {
+      return valueByColumn.get(column.columnKey);
+    }
+
+    return this.getRawValue(row, column.columnKey);
+  }
+
+  private setEditableValue(row: TableRow, columnKey: string, value: unknown): void {
+    const nextValues = new Map(this.editableValuesState());
+    const valueByColumn = new Map(nextValues.get(row) ?? []);
+    valueByColumn.set(columnKey, value);
+    nextValues.set(row, valueByColumn);
+    this.editableValuesState.set(nextValues);
+  }
+
+  private setEditableError(row: TableRow, columnKey: string, error: string | null): void {
+    const nextErrors = new Map(this.editableErrorsState());
+    const errorByColumn = new Map(nextErrors.get(row) ?? []);
+
+    if (error) {
+      errorByColumn.set(columnKey, error);
+      nextErrors.set(row, errorByColumn);
+      this.editableErrorsState.set(nextErrors);
+      return;
+    }
+
+    errorByColumn.delete(columnKey);
+    if (errorByColumn.size === 0) {
+      nextErrors.delete(row);
+    } else {
+      nextErrors.set(row, errorByColumn);
+    }
+    this.editableErrorsState.set(nextErrors);
   }
 
   private getRawValue(row: TableRow, columnKey: string): unknown {

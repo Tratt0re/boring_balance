@@ -1,59 +1,47 @@
 import { Component, OnInit, signal } from '@angular/core';
 
-import { AppDataTableComponent, type TableDataStructure } from '@/components/data-table';
+import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 
-const CATEGORY_TABLE_STRUCTURE: readonly TableDataStructure[] = [
+const CATEGORY_TABLE_STRUCTURE: readonly TableDataItem[] = [
   {
-    rowDataItem: {
-      columnName: 'ID',
-      columnKey: 'id',
-      type: 'number',
-      sortable: true,
-    },
+    columnName: 'ID',
+    columnKey: 'id',
+    type: 'number',
+    sortable: true,
   },
   {
-    rowDataItem: {
-      columnName: 'Name',
-      columnKey: 'name',
-      type: 'string',
-      sortable: true,
-      translate: true,
-    },
+    columnName: 'Name',
+    columnKey: 'name',
+    type: 'string',
+    sortable: true,
+    translate: true,
   },
   {
-    rowDataItem: {
-      columnName: 'Type',
-      columnKey: 'type',
-      type: 'string',
-      sortable: true,
-    },
+    columnName: 'Type',
+    columnKey: 'type',
+    type: 'string',
+    sortable: true,
   },
   {
-    rowDataItem: {
-      columnName: 'Parent',
-      columnKey: 'parentId',
-      type: 'number',
-      sortable: true,
-    },
+    columnName: 'Parent',
+    columnKey: 'parentId',
+    type: 'number',
+    sortable: true,
   },
   {
-    rowDataItem: {
-      columnName: 'Locked',
-      columnKey: 'locked',
-      type: 'boolean',
-      sortable: true,
-    },
+    columnName: 'Locked',
+    columnKey: 'locked',
+    type: 'boolean',
+    sortable: true,
   },
   {
-    rowDataItem: {
-      columnName: 'Archived',
-      columnKey: 'archived',
-      type: 'boolean',
-      sortable: true,
-    },
+    columnName: 'Archived',
+    columnKey: 'archived',
+    type: 'boolean',
+    sortable: true,
   },
 ] as const;
 

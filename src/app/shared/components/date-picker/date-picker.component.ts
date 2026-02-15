@@ -22,7 +22,7 @@ import { ZardCalendarComponent } from '@/shared/components/calendar/calendar.com
 import { ZardIconComponent } from '@/shared/components/icon/icon.component';
 import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover/popover.component';
 
-import { mergeClasses } from '@/shared/utils/merge-classes';
+import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
 const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
   sm: 'h-8',
@@ -51,10 +51,15 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
       [attr.aria-haspopup]="true"
       aria-label="Choose date"
     >
-      <z-icon zType="calendar" />
+      @if (zIconPosition() === 'left') {
+        <z-icon zType="calendar" [class]="zCalendarIconClass()" />
+      }
       <span [class]="textClasses()">
         {{ displayText() }}
       </span>
+      @if (zIconPosition() === 'right') {
+        <z-icon zType="calendar" [class]="zCalendarIconClass()" />
+      }
     </button>
 
     <ng-template #calendarTemplate>
@@ -96,6 +101,10 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   readonly class = input<ClassValue>('');
   readonly zType = input<ZardButtonTypeVariants>('outline');
   readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly zIconPosition = input<'left' | 'right'>('left');
+  readonly zBorderless = input(false, { transform });
+  readonly zPaddingless = input(false, { transform });
+  readonly zCalendarIconClass = input<ClassValue>('');
   readonly value = model<Date | null>(null);
   readonly placeholder = input<string>('Pick a date');
   readonly zFormat = input<string>('MMMM d, yyyy');
@@ -115,7 +124,12 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
     const size = this.zSize();
     const height = HEIGHT_BY_SIZE[size];
     return mergeClasses(
-      'justify-start text-left font-normal',
+      'text-left font-normal',
+      this.zIconPosition() === 'right' ? 'justify-between' : 'justify-start',
+      this.zBorderless()
+        ? 'border-0 bg-transparent shadow-none hover:bg-transparent focus-visible:border-0 focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent'
+        : '',
+      this.zPaddingless() ? 'px-0 py-0' : '',
       !hasValue && 'text-muted-foreground',
       height,
       'min-w-[240px]',

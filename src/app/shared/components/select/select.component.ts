@@ -64,7 +64,7 @@ const COMPACT_MODE_WIDTH_THRESHOLD = 100;
       (focus)="onFocus()"
     >
       <span class="flex flex-1 flex-wrap items-center gap-2 min-w-0">
-        @for (label of selectedLabels(); track label) {
+        @for (label of selectedLabels(); track $index) {
           @if (zMultiple()) {
             <z-badge zType="secondary">
               <span class="truncate">{{ label }}</span>
@@ -76,7 +76,7 @@ const COMPACT_MODE_WIDTH_THRESHOLD = 100;
           <span class="text-muted-foreground truncate">{{ zPlaceholder() }}</span>
         }
       </span>
-      <z-icon zType="chevron-down" zSize="lg" class="opacity-50" />
+      <z-icon zType="chevron-down" zSize="lg" [class]="chevronClasses()" />
     </button>
 
     <ng-template #dropdownTemplate>
@@ -132,6 +132,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   readonly zMultiple = input<boolean>(false);
   readonly zPlaceholder = input<string>('Select an option...');
   readonly zSize = input<ZardSelectSizeVariants>('default');
+  readonly zChevronClass = input<ClassValue>('opacity-50');
   readonly zValue = model<string | string[]>(this.zMultiple() ? [] : '');
 
   readonly zSelectionChange = output<string | string[]>();
@@ -167,6 +168,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   protected readonly classes = computed(() => mergeClasses(selectVariants(), this.class()));
   protected readonly contentClasses = computed(() => mergeClasses(selectContentVariants()));
+  protected readonly chevronClasses = computed(() => mergeClasses(this.zChevronClass()));
   protected readonly triggerClasses = computed(() =>
     mergeClasses(
       selectTriggerVariants({
