@@ -15,35 +15,33 @@ export interface MenuSectionConfig {
 export class MenuConfiguration {
   static readonly sections: readonly MenuSectionConfig[] = [
     {
-      label: 'Main',
+      label: 'nav.sections.main',
       items: [
-        { label: 'Overview', icon: 'layout-dashboard', path: '/', exact: true },
-        { label: 'Transactions', icon: 'badge-euro', path: '/transactions' },
+        { label: 'nav.items.overview', icon: 'layout-dashboard', path: '/', exact: true },
+        { label: 'nav.items.transactions', icon: 'badge-euro', path: '/transactions' },
       ],
     },
     {
-      label: 'Insights',
+      label: 'nav.sections.insights',
       items: [
-        { label: 'Breakdown', icon: 'chart-line', path: '/breakdown' },
-        { label: 'Compare', icon: 'scale', path: '/compare' },
-        { label: 'Budget', icon: 'chart-pie', path: '/budget' },
+        { label: 'nav.items.breakdown', icon: 'chart-line', path: '/breakdown' },
+        { label: 'nav.items.compare', icon: 'scale', path: '/compare' },
+        { label: 'nav.items.budget', icon: 'chart-pie', path: '/budget' },
       ],
     },
     {
-      label: 'Setup',
+      label: 'nav.sections.setup',
       items: [
-        { label: 'Accounts', icon: 'landmark', path: '/accounts' },
-        { label: 'Categories', icon: 'tags', path: '/categories' },
+        { label: 'nav.items.accounts', icon: 'landmark', path: '/accounts' },
+        { label: 'nav.items.categories', icon: 'tags', path: '/categories' },
       ],
     },
     {
-      label: 'Settings',
+      label: 'nav.sections.settings',
       items: [
-        { label: 'General', icon: 'settings', path: '/general' },
-        { label: 'Data & Backups', icon: 'hard-drive', path: '/data-n-backups' },
-        { label: 'About', icon: 'badge-info', path: '/about' }
+        { label: 'nav.items.dataBackups', icon: 'hard-drive', path: '/data-n-backups' },
+        { label: 'nav.items.about', icon: 'badge-info', path: '/about' },
       ],
     },
   ];
-
 }

@@ -1,0 +1,12 @@
+<button
+  z-button
+  type="button"
+  zType="ghost"
+  zSize="sm"
+  zShape="circle"
+  [attr.aria-label]="(sidebarCollapsed() ? 'sidebar.expand' : 'sidebar.collapse') | translate"
+  [attr.aria-expanded]="!sidebarCollapsed()"
+  (click)="onToggle()"
+>
+  <z-icon zType="panel-left" class="size-4" />
+</button>

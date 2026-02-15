@@ -1,10 +1,11 @@
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Component, computed, inject, input, output, ViewEncapsulation } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 
 import { filter, map, startWith } from 'rxjs';
 
-import { ZardButtonComponent } from '@/shared/components/button';
+import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import { ZardIconComponent } from '@/shared/components/icon';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
 import { MenuConfiguration } from '@/config/menu.config';
@@ -16,12 +17,13 @@ interface BreadcrumbItem {
 
 @Component({
   selector: 'app-breadcrumb',
-  imports: [HeaderComponent, RouterLink, ZardButtonComponent, ZardIconComponent],
+  imports: [HeaderComponent, RouterLink, SidebarToggleComponent, ZardIconComponent, TranslatePipe],
   templateUrl: './breadcrumb.html',
   encapsulation: ViewEncapsulation.None,
 })
 export class Breadcrumb {
   readonly sidebarCollapsed = input(false);
+  readonly isSmallScreen = input(false);
   readonly sidebarToggle = output<void>();
 
   private readonly router = inject(Router);
@@ -48,7 +50,7 @@ export class Breadcrumb {
     const normalizedPath = this.normalizePath(url);
 
     if (normalizedPath === '/') {
-      return [{ label: this.routeLabelMap.get('/') ?? 'Overview' }];
+      return [{ label: this.routeLabelMap.get('/') ?? 'nav.items.overview' }];
     }
 
     const segments = normalizedPath.split('/').filter(Boolean);

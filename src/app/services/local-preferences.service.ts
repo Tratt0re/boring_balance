@@ -50,6 +50,10 @@ export class LocalPreferencesService {
     return this.getText(LocalPreferenceKey.LANGUAGE) ?? LOCAL_PREFERENCE_DEFAULTS.language;
   }
 
+  hasLanguagePreference(): boolean {
+    return this.getText(LocalPreferenceKey.LANGUAGE) !== undefined;
+  }
+
   setLanguage(language: string): void {
     this.setText(LocalPreferenceKey.LANGUAGE, language.trim() || LOCAL_PREFERENCE_DEFAULTS.language);
   }

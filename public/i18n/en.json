@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Main",
+      "insights": "Insights",
+      "setup": "Setup",
+      "settings": "Settings"
+    },
+    "items": {
+      "overview": "Overview",
+      "transactions": "Transactions",
+      "breakdown": "Breakdown",
+      "compare": "Compare",
+      "budget": "Budget",
+      "accounts": "Accounts",
+      "categories": "Categories",
+      "dataBackups": "Data & Backups",
+      "about": "About"
+    }
+  },
+  "category": {
+    "exclude": {
+      "name": "Exclude",
+      "description": "Transactions excluded from analytics and budget calculations."
+    },
+    "transfer": {
+      "name": "Transfer",
+      "description": "Money moved between your own accounts."
+    },
+    "other_expense": {
+      "name": "Other Expense",
+      "description": "Fallback category for uncategorized expenses."
+    },
+    "other_income": {
+      "name": "Other Income",
+      "description": "Fallback category for uncategorized income."
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "EN",
+        "es": "ES",
+        "it": "IT"
+      }
+    },
+    "theme": {
+      "activateLight": "Activate light mode",
+      "activateDark": "Activate dark mode",
+      "lightMode": "Light mode",
+      "darkMode": "Dark mode"
+    }
+  },
+  "sidebar": {
+    "close": "Close sidebar",
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar"
+  },
+  "breadcrumb": {
+    "ariaLabel": "Breadcrumb"
+  }
+}

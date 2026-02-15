@@ -1,4 +1,5 @@
 import { Component, computed, HostListener, signal, ViewEncapsulation } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
 
 import { Breadcrumb } from '../breadcrumb/breadcrumb';
@@ -11,6 +12,7 @@ import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config'
   selector: 'app-root-layout',
   imports: [
     ...LayoutImports,
+    TranslatePipe,
     Header,
     Breadcrumb,
     Sidebar,

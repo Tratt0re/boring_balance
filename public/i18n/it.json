@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Main",
+      "insights": "Analisi",
+      "setup": "Organizzazione",
+      "settings": "Preferenze"
+    },
+    "items": {
+      "overview": "Panoramica",
+      "transactions": "Movimenti",
+      "breakdown": "Distribuzione",
+      "compare": "Confronti",
+      "budget": "Budget",
+      "accounts": "Conti",
+      "categories": "Categorie",
+      "dataBackups": "Dati e backup",
+      "about": "Info app"
+    }
+  },
+  "category": {
+    "exclude": {
+      "name": "Fuori budget",
+      "description": "Movimenti esclusi da analisi e budget."
+    },
+    "transfer": {
+      "name": "Giroconto",
+      "description": "Spostamento di denaro tra conti personali."
+    },
+    "other_expense": {
+      "name": "Spese varie",
+      "description": "Categoria jolly per spese non classificate."
+    },
+    "other_income": {
+      "name": "Entrate varie",
+      "description": "Categoria jolly per entrate non classificate."
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "EN",
+        "es": "ES",
+        "it": "IT"
+      }
+    },
+    "theme": {
+      "activateLight": "Passa al tema chiaro",
+      "activateDark": "Passa al tema scuro",
+      "lightMode": "Tema chiaro",
+      "darkMode": "Tema scuro"
+    }
+  },
+  "sidebar": {
+    "close": "Chiudi menu laterale",
+    "expand": "Apri menu laterale",
+    "collapse": "Nascondi menu laterale"
+  },
+  "breadcrumb": {
+    "ariaLabel": "Percorso pagina"
+  }
+}

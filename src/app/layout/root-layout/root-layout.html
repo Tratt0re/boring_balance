@@ -6,7 +6,7 @@
       <button
         type="button"
         class="absolute inset-0 z-40 bg-black/30 md:hidden"
-        aria-label="Close sidebar"
+        [attr.aria-label]="'sidebar.close' | translate"
         (click)="closeSidebarOverlay()"
       ></button>
     }
@@ -21,6 +21,7 @@
     <z-layout class="min-w-0 flex-1">
       <app-breadcrumb
         [sidebarCollapsed]="sidebarCollapsed()"
+        [isSmallScreen]="isSmallScreen()"
         (sidebarToggle)="toggleSidebar()"
       ></app-breadcrumb>
 
