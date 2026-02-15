@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 
 import { ZardIconComponent } from '@/shared/components/icon';
+import type { ZardIcon } from '@/shared/components/icon';
 import {
   selectItemIconVariants,
   selectItemVariants,
@@ -34,9 +35,24 @@ interface SelectHost {
         <z-icon zType="check" [zStrokeWidth]="strokeWidth()" aria-hidden="true" data-testid="check-icon" />
       </span>
     }
-    <span class="truncate">
-      <ng-content />
-    </span>
+    @if (zColorHex(); as colorHex) {
+      <span
+        class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+        [style.backgroundColor]="colorHex"
+      ></span>
+    }
+    @if (zIcon(); as iconType) {
+      <z-icon [zType]="iconType" class="size-3.5 shrink-0" />
+    }
+    @if (zShowLabel()) {
+      <span class="truncate">
+        @if (zLabel()) {
+          {{ zLabel() }}
+        } @else {
+          <ng-content />
+        }
+      </span>
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -57,12 +73,21 @@ export class ZardSelectItemComponent {
 
   readonly zValue = input.required<string>();
   readonly zDisabled = input(false, { transform });
+  readonly zLabel = input<string>('');
+  readonly zShowLabel = input(true, { transform });
+  readonly zIcon = input<ZardIcon | null>(null);
+  readonly zColorHex = input<string | null>(null);
   readonly class = input<string>('');
 
   private readonly select = signal<SelectHost | null>(null);
   noopFn = noopFn;
 
   readonly label = linkedSignal<string>(() => {
+    const explicitLabel = this.zLabel().trim();
+    if (explicitLabel.length > 0) {
+      return explicitLabel;
+    }
+
     const element = this.elementRef.nativeElement;
     return (element.textContent ?? element.innerText)?.trim() ?? '';
   });

@@ -32,6 +32,8 @@ import { filter } from 'rxjs';
 
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardIconComponent } from '@/shared/components/icon';
+import type { ZardIcon } from '@/shared/components/icon';
+import { ZARD_ICONS } from '@/shared/components/icon';
 import { ZardSelectItemComponent } from '@/shared/components/select/select-item.component';
 import {
   selectContentVariants,
@@ -43,6 +45,11 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
 type OnTouchedType = () => void;
 type OnChangeType = (value: string) => void;
+interface SelectSingleVisual {
+  readonly label: string;
+  readonly icon: ZardIcon | null;
+  readonly colorHex: string | null;
+}
 
 const COMPACT_MODE_WIDTH_THRESHOLD = 100;
 
@@ -64,16 +71,31 @@ const COMPACT_MODE_WIDTH_THRESHOLD = 100;
       (focus)="onFocus()"
     >
       <span class="flex flex-1 flex-wrap items-center gap-2 min-w-0">
-        @for (label of selectedLabels(); track $index) {
-          @if (zMultiple()) {
-            <z-badge zType="secondary">
-              <span class="truncate">{{ label }}</span>
-            </z-badge>
-          } @else {
-            <span class="truncate">{{ label }}</span>
+        @if (selectedSingleVisual(); as selectedVisual) {
+          @if (selectedVisual.colorHex; as colorHex) {
+            <span
+              class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+              [style.backgroundColor]="colorHex"
+            ></span>
           }
-        } @empty {
-          <span class="text-muted-foreground truncate">{{ zPlaceholder() }}</span>
+          @if (selectedVisual.icon; as iconType) {
+            <z-icon [zType]="iconType" class="size-3.5 shrink-0" />
+          }
+          @if (zShowSelectedLabel()) {
+            <span class="truncate">{{ selectedVisual.label }}</span>
+          }
+        } @else {
+          @for (label of selectedLabels(); track $index) {
+            @if (zMultiple()) {
+              <z-badge zType="secondary">
+                <span class="truncate">{{ label }}</span>
+              </z-badge>
+            } @else {
+              <span class="truncate">{{ label }}</span>
+            }
+          } @empty {
+            <span class="text-muted-foreground truncate">{{ zPlaceholder() }}</span>
+          }
         }
       </span>
       <z-icon zType="chevron-down" zSize="lg" [class]="chevronClasses()" />
@@ -132,6 +154,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   readonly zMultiple = input<boolean>(false);
   readonly zPlaceholder = input<string>('Select an option...');
   readonly zSize = input<ZardSelectSizeVariants>('default');
+  readonly zShowSelectedLabel = input(true, { transform });
   readonly zChevronClass = input<ClassValue>('opacity-50');
   readonly zValue = model<string | string[]>(this.zMultiple() ? [] : '');
 
@@ -156,6 +179,43 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     }
 
     return this.provideLabelForSingleSelectMode(selectedValue as string);
+  });
+
+  protected readonly selectedSingleVisual = computed<SelectSingleVisual | null>(() => {
+    if (this.zMultiple()) {
+      return null;
+    }
+
+    const selectedValue = this.zValue();
+    if (typeof selectedValue !== 'string' || selectedValue.length === 0) {
+      return null;
+    }
+
+    const selectedItem = this.getMatchingItem(selectedValue);
+    if (!selectedItem) {
+      if (!this.zShowSelectedLabel() && this.isRegisteredIcon(selectedValue)) {
+        return {
+          label: selectedValue,
+          icon: selectedValue,
+          colorHex: null,
+        };
+      }
+
+      return null;
+    }
+
+    const icon = selectedItem.zIcon();
+    const colorHex = selectedItem.zColorHex();
+
+    if (!icon && !colorHex) {
+      return null;
+    }
+
+    return {
+      label: selectedItem.label() || selectedValue,
+      icon,
+      colorHex,
+    };
   });
 
   private onChange: OnChangeType = (_value: string) => {
@@ -386,6 +446,10 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   private getMatchingItem(value: string): ZardSelectItemComponent | undefined {
     return this.selectItems()?.find(item => item.zValue() === value);
+  }
+
+  private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {
+    return Object.hasOwn(ZARD_ICONS, value);
   }
 
   private determinePortalWidthOnOpen(portalWidth: number): void {

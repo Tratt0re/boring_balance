@@ -29,6 +29,8 @@ export interface EditableOptionItem {
   readonly label: string;
   readonly value: string | number | boolean;
   readonly translate?: boolean;
+  readonly icon?: ZardIcon;
+  readonly colorHex?: string;
 }
 
 export interface EditableValidationRules {
@@ -46,6 +48,7 @@ export interface EditableColumnDataItem extends ColumnDataItem {
   readonly inputType?: EditableInputType;
   readonly placeholder?: string;
   readonly options?: readonly EditableOptionItem[];
+  readonly showOptionLabel?: boolean;
   readonly disabled?: boolean | ((row: object) => boolean);
   readonly validation?: EditableValidationRules;
 }

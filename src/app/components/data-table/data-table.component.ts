@@ -30,6 +30,7 @@ import type {
   ActionDataItem,
   ActionItem,
   EditableColumnDataItem,
+  EditableOptionItem,
   EditableValueChangeEvent,
   EditableValidationErrorEvent,
   ColumnDataItem,
@@ -349,19 +350,30 @@ export class AppDataTableComponent {
     return this.formatColumnValue(this.getEditableValue(row, column), column);
   }
 
+  protected getEditableSelectOption(row: TableRow, column: EditableColumnDataItem): EditableOptionItem | null {
+    const rawValue = this.getEditableValue(row, column);
+    const normalizedValue = rawValue === null || rawValue === undefined ? '' : `${rawValue}`;
+
+    return column.options?.find((option) => `${option.value}` === normalizedValue) ?? null;
+  }
+
+  protected getEditableOptionLabel(option: EditableOptionItem): string {
+    return this.translateString(option.label);
+  }
+
   protected getEditableSelectReadonlyValue(row: TableRow, column: EditableColumnDataItem): string {
     const value = this.getEditableValue(row, column);
-    const selectedOption = column.options?.find((option) => option.value === value || `${option.value}` === `${value}`);
+    const selectedOption = this.getEditableSelectOption(row, column);
 
     if (!selectedOption) {
       return this.formatColumnValue(value, column);
     }
 
-    if (selectedOption.translate) {
-      return this.translateService.instant(selectedOption.label);
-    }
+    return this.getEditableOptionLabel(selectedOption);
+  }
 
-    return selectedOption.label;
+  protected shouldShowEditableSelectLabel(column: EditableColumnDataItem): boolean {
+    return column.showOptionLabel ?? true;
   }
 
   protected getEditableError(row: TableRow, column: EditableColumnDataItem): string | null {
@@ -454,9 +466,8 @@ export class AppDataTableComponent {
     const leftRaw = this.getRawValue(leftRow, column.columnKey);
     const rightRaw = this.getRawValue(rightRow, column.columnKey);
 
-    const leftValue = column.translate && typeof leftRaw === 'string' ? this.translateService.instant(leftRaw) : leftRaw;
-    const rightValue =
-      column.translate && typeof rightRaw === 'string' ? this.translateService.instant(rightRaw) : rightRaw;
+    const leftValue = this.translateIfString(leftRaw);
+    const rightValue = this.translateIfString(rightRaw);
 
     return this.compareValues(leftValue, rightValue, column.type ?? 'string');
   }
@@ -627,7 +638,7 @@ export class AppDataTableComponent {
           return '-';
         }
 
-        return booleanValue ? 'Yes' : 'No';
+        return this.translateString(booleanValue ? 'Yes' : 'No');
       }
 
       case 'string':
@@ -641,7 +652,7 @@ export class AppDataTableComponent {
   }
 
   private formatColumnValue(value: unknown, column: ColumnDataItem): string {
-    const translatedValue = column.translate && typeof value === 'string' ? this.translateService.instant(value) : value;
+    const translatedValue = this.translateIfString(value);
     return this.formatValueByType(translatedValue, column.type ?? 'string');
   }
 
@@ -852,6 +863,18 @@ export class AppDataTableComponent {
     }
 
     return String(value);
+  }
+
+  private translateIfString(value: unknown): unknown {
+    if (typeof value !== 'string') {
+      return value;
+    }
+
+    return this.translateString(value);
+  }
+
+  private translateString(value: string): string {
+    return this.translateService.instant(value);
   }
 
   private toNumberValue(value: unknown): number | null {

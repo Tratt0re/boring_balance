@@ -34,6 +34,54 @@
     "other_income": {
       "name": "Other Income",
       "description": "Fallback category for uncategorized income."
+    },
+    "type": {
+      "income": "Income",
+      "expense": "Expense",
+      "exclude": "Exclude"
+    }
+  },
+  "categories": {
+    "table": {
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "color": "Color",
+        "icon": "Icon",
+        "type": "Type"
+      }
+    }
+  },
+  "options": {
+    "colors": {
+      "none": "None",
+      "gray": "Gray",
+      "coral": "Coral",
+      "amber": "Amber",
+      "gold": "Gold",
+      "lime": "Lime",
+      "green": "Green",
+      "teal": "Teal",
+      "sky": "Sky",
+      "blue": "Blue",
+      "violet": "Violet",
+      "rose": "Rose"
+    },
+    "icons": {
+      "none": "None",
+      "blocked": "Blocked",
+      "transfer": "Transfer",
+      "circle": "Circle",
+      "income": "Income",
+      "tag": "Tag",
+      "tags": "Tags",
+      "money": "Money",
+      "bank": "Bank",
+      "home": "Home",
+      "heart": "Heart",
+      "star": "Star",
+      "sparkles": "Sparkles",
+      "card": "Card"
     }
   },
   "header": {

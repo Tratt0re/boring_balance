@@ -16,7 +16,7 @@ export interface CategoryDto {
   readonly name: string;
   readonly parent_id: RowId | null;
   readonly description: string | null;
-  readonly color_hex: string | null;
+  readonly color_key: string | null;
   readonly icon: string | null;
   readonly type: CategoryType;
   readonly locked: SqliteBoolean;
@@ -29,7 +29,7 @@ export interface CategoryCreateDto {
   readonly name: string;
   readonly parent_id?: number | null;
   readonly description?: string | null;
-  readonly color_hex?: string | null;
+  readonly color_key?: string | null;
   readonly icon?: string | null;
   readonly type: CategoryType;
   readonly locked?: BooleanFlagInput;
@@ -43,7 +43,7 @@ export interface CategoryGetDto {
 export type CategoryListDto = ListQueryDto<
   Pick<
     CategoryDto,
-    'id' | 'name' | 'parent_id' | 'description' | 'color_hex' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
+    'id' | 'name' | 'parent_id' | 'description' | 'color_key' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
   >
 >;
 
@@ -67,7 +67,7 @@ export interface CategoryUpdateDto {
     readonly name?: string;
     readonly parent_id?: number | null;
     readonly description?: string | null;
-    readonly color_hex?: string | null;
+    readonly color_key?: string | null;
     readonly icon?: string | null;
     readonly type?: CategoryType;
     readonly locked?: BooleanFlagInput;

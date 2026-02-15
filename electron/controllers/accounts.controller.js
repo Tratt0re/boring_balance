@@ -14,7 +14,7 @@ const {
   requireString,
 } = require('./utils');
 
-const ACCOUNT_FIELDS = new Set(['name', 'description', 'color_hex', 'archived']);
+const ACCOUNT_FIELDS = new Set(['name', 'description', 'color_key', 'icon', 'archived']);
 
 function normalizeAccountChanges(value, label, options = {}) {
   const changesInput = ensureNonEmptyObject(value, label);
@@ -26,7 +26,8 @@ function normalizeAccountChanges(value, label, options = {}) {
         ? undefined
         : requireString(changesInput.name, `${label}.name`, { allowEmpty: false }),
     description: normalizeOptionalString(changesInput.description, `${label}.description`),
-    color_hex: normalizeOptionalString(changesInput.color_hex, `${label}.color_hex`),
+    color_key: normalizeOptionalString(changesInput.color_key, `${label}.color_key`),
+    icon: normalizeOptionalString(changesInput.icon, `${label}.icon`),
     archived: normalizeOptionalBooleanFlag(changesInput.archived, `${label}.archived`),
   });
 

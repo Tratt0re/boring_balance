@@ -34,6 +34,54 @@
     "other_income": {
       "name": "Ingresos varios",
       "description": "Categoria comodin para ingresos sin clasificar."
+    },
+    "type": {
+      "income": "Ingreso",
+      "expense": "Gasto",
+      "exclude": "Sin impacto"
+    }
+  },
+  "categories": {
+    "table": {
+      "columns": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "color": "Color",
+        "icon": "Icono",
+        "type": "Tipo"
+      }
+    }
+  },
+  "options": {
+    "colors": {
+      "none": "Ninguno",
+      "gray": "Gris",
+      "coral": "Coral",
+      "amber": "Ambar",
+      "gold": "Oro",
+      "lime": "Lima",
+      "green": "Verde",
+      "teal": "Turquesa",
+      "sky": "Cielo",
+      "blue": "Azul",
+      "violet": "Violeta",
+      "rose": "Rosa"
+    },
+    "icons": {
+      "none": "Ninguno",
+      "blocked": "Bloqueado",
+      "transfer": "Transferencia",
+      "circle": "Circulo",
+      "income": "Ingreso",
+      "tag": "Etiqueta",
+      "tags": "Etiquetas",
+      "money": "Dinero",
+      "bank": "Banco",
+      "home": "Casa",
+      "heart": "Corazon",
+      "star": "Estrella",
+      "sparkles": "Brillo",
+      "card": "Tarjeta"
     }
   },
   "header": {

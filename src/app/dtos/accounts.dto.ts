@@ -13,7 +13,8 @@ export interface AccountDto {
   readonly id: RowId;
   readonly name: string;
   readonly description: string | null;
-  readonly color_hex: string | null;
+  readonly color_key: string | null;
+  readonly icon: string | null;
   readonly archived: SqliteBoolean;
   readonly created_at: UnixTimestampMilliseconds;
   readonly updated_at: UnixTimestampMilliseconds | null;
@@ -22,7 +23,8 @@ export interface AccountDto {
 export interface AccountCreateDto {
   readonly name: string;
   readonly description?: string | null;
-  readonly color_hex?: string | null;
+  readonly color_key?: string | null;
+  readonly icon?: string | null;
   readonly archived?: BooleanFlagInput;
 }
 
@@ -31,7 +33,7 @@ export interface AccountGetDto {
 }
 
 export type AccountListDto = ListQueryDto<
-  Pick<AccountDto, 'id' | 'name' | 'description' | 'color_hex' | 'archived' | 'created_at' | 'updated_at'>
+  Pick<AccountDto, 'id' | 'name' | 'description' | 'color_key' | 'icon' | 'archived' | 'created_at' | 'updated_at'>
 >;
 
 export interface AccountListActiveDto {
@@ -43,7 +45,8 @@ export interface AccountUpdateDto {
   readonly changes: {
     readonly name?: string;
     readonly description?: string | null;
-    readonly color_hex?: string | null;
+    readonly color_key?: string | null;
+    readonly icon?: string | null;
     readonly archived?: BooleanFlagInput;
   };
 }

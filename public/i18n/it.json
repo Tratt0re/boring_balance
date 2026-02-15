@@ -34,6 +34,54 @@
     "other_income": {
       "name": "Entrate varie",
       "description": "Categoria jolly per entrate non classificate."
+    },
+    "type": {
+      "income": "Entrata",
+      "expense": "Spesa",
+      "exclude": "Esclusa"
+    }
+  },
+  "categories": {
+    "table": {
+      "columns": {
+        "name": "Nome",
+        "description": "Descrizione",
+        "color": "Colore",
+        "icon": "Icona",
+        "type": "Tipo"
+      }
+    }
+  },
+  "options": {
+    "colors": {
+      "none": "Nessuno",
+      "gray": "Grigio",
+      "coral": "Corallo",
+      "amber": "Ambra",
+      "gold": "Oro",
+      "lime": "Lime",
+      "green": "Verde",
+      "teal": "Turchese",
+      "sky": "Cielo",
+      "blue": "Blu",
+      "violet": "Viola",
+      "rose": "Rosa"
+    },
+    "icons": {
+      "none": "Nessuna",
+      "blocked": "Bloccata",
+      "transfer": "Trasferimento",
+      "circle": "Cerchio",
+      "income": "Entrata",
+      "tag": "Etichetta",
+      "tags": "Etichette",
+      "money": "Denaro",
+      "bank": "Banca",
+      "home": "Casa",
+      "heart": "Cuore",
+      "star": "Stella",
+      "sparkles": "Scintille",
+      "card": "Carta"
     }
   },
   "header": {
