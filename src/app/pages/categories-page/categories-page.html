@@ -1,5 +1,25 @@
 <section class="flex flex-col gap-4">
-  <z-skeleton class="h-8 w-48"></z-skeleton>
-  <z-skeleton class="h-24 w-full"></z-skeleton>
-  <z-skeleton class="h-40 w-full"></z-skeleton>
+  @if (isLoading()) {
+    <z-skeleton class="h-12 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+  } @else if (loadError(); as loadError) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      Failed to load categories: {{ loadError }}
+    </div>
+  } @else {
+    <app-data-table
+      [data]="categories()"
+      [structure]="categoryTableStructure"
+      title="nav.items.categories"
+      description="Category configuration"
+      emptyMessage="No categories found."
+      [showEmpty]="true"
+      [bordered]="true"
+      [striped]="false"
+      [hoverable]="true"
+      [selectable]="false"
+      [hasActionColumn]="true"
+      actionColumnPosition="end"
+    ></app-data-table>
+  }
 </section>

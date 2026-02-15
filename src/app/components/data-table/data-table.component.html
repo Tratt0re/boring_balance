@@ -1,0 +1,132 @@
+<section class="flex flex-col gap-3">
+  @if (title() || description()) {
+    <header class="flex flex-col gap-1">
+      @if (title()) {
+        <h2 class="text-xl font-semibold tracking-tight">{{ title() | translate }}</h2>
+      }
+      @if (description()) {
+        <p class="text-sm text-muted-foreground">{{ description() | translate }}</p>
+      }
+    </header>
+  }
+
+  <div [class]="containerClasses()">
+    <table z-table [class]="tableClasses()">
+      <thead z-table-header>
+        <tr z-table-row>
+          @if (selectable()) {
+            <th z-table-head class="w-10">
+              <input
+                type="checkbox"
+                role="checkbox"
+                class="size-4 accent-primary"
+                [checked]="allVisibleRowsSelected()"
+                [indeterminate]="partiallySelectedVisibleRows()"
+                aria-label="Select all rows"
+                (change)="onToggleAllRows($event)"
+              />
+            </th>
+          }
+
+          @if (renderActionColumnAtStart()) {
+            <th z-table-head class="w-24">{{ actionColumnName() | translate }}</th>
+          }
+
+          @for (column of columns(); track column.columnKey) {
+            <th z-table-head>
+              @if (column.sortable) {
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 text-left hover:text-foreground"
+                  (click)="onSortColumn(column)"
+                >
+                  <span>{{ column.columnName | translate }}</span>
+                  <z-icon [zType]="sortIcon(column)" class="size-4" />
+                </button>
+              } @else {
+                {{ column.columnName | translate }}
+              }
+            </th>
+          }
+
+          @if (renderActionColumnAtEnd()) {
+            <th z-table-head class="w-24">{{ actionColumnName() | translate }}</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody z-table-body>
+        @if (sortedRows().length > 0) {
+          @for (row of sortedRows(); track row) {
+            <tr z-table-row [attr.data-state]="isRowSelected(row) ? 'selected' : null">
+              @if (selectable()) {
+                <td z-table-cell class="w-10">
+                  <input
+                    type="checkbox"
+                    role="checkbox"
+                    class="size-4 accent-primary"
+                    [checked]="isRowSelected(row)"
+                    aria-label="Select row"
+                    (change)="onToggleRow($event, row)"
+                  />
+                </td>
+              }
+
+              @if (renderActionColumnAtStart()) {
+                <td z-table-cell>
+                  <div class="flex items-center gap-1">
+                    @for (actionItem of actionItems(); track actionItem.id) {
+                      <button
+                        type="button"
+                        z-button
+                        zSize="sm"
+                        [zType]="actionItem.buttonType ?? 'ghost'"
+                        [zDisabled]="isActionDisabled(actionItem, row)"
+                        [attr.aria-label]="actionItem.label | translate"
+                        [attr.title]="actionItem.label | translate"
+                        (click)="onActionClick(actionItem, row)"
+                      >
+                        <z-icon [zType]="actionItem.icon" class="size-4" />
+                      </button>
+                    }
+                  </div>
+                </td>
+              }
+
+              @for (column of columns(); track column.columnKey) {
+                <td z-table-cell>{{ formatCellValue(row, column) }}</td>
+              }
+
+              @if (renderActionColumnAtEnd()) {
+                <td z-table-cell>
+                  <div class="flex items-center justify-end gap-1">
+                    @for (actionItem of actionItems(); track actionItem.id) {
+                      <button
+                        type="button"
+                        z-button
+                        zSize="sm"
+                        [zType]="actionItem.buttonType ?? 'ghost'"
+                        [zDisabled]="isActionDisabled(actionItem, row)"
+                        [attr.aria-label]="actionItem.label | translate"
+                        [attr.title]="actionItem.label | translate"
+                        (click)="onActionClick(actionItem, row)"
+                      >
+                        <z-icon [zType]="actionItem.icon" class="size-4" />
+                      </button>
+                    }
+                  </div>
+                </td>
+              }
+            </tr>
+          }
+        } @else if (showEmpty()) {
+          <tr z-table-row>
+            <td z-table-cell [attr.colspan]="visibleColumnCount()" class="py-6 text-center text-muted-foreground">
+              {{ emptyMessage() | translate }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
