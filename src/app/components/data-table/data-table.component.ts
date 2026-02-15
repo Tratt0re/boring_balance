@@ -34,6 +34,7 @@ import type {
   EditableValueChangeEvent,
   EditableValidationErrorEvent,
   ColumnDataItem,
+  TableHeaderActionItem,
   TableActionColumnPosition,
   TableCellType,
   TableDataItem,
@@ -75,8 +76,9 @@ export class AppDataTableComponent {
 
   readonly title = input('');
   readonly description = input('');
+  readonly tableActions = input<readonly TableHeaderActionItem[]>([]);
   readonly emptyMessage = input('No data available.');
-  readonly actionColumnName = input('Actions');
+  readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
   readonly class = input<ClassValue>('');
 
@@ -124,7 +126,28 @@ export class AppDataTableComponent {
     return items;
   });
 
-  protected readonly showActionColumn = computed(() => this.hasActionColumn() || this.actionItems().length > 0);
+  protected readonly visibleTableActions = computed(() =>
+    this.tableActions().filter((actionItem) => !this.isTableActionDisabled(actionItem)),
+  );
+
+  protected readonly hasAnyVisibleRowAction = computed(() => {
+    const actionItems = this.actionItems();
+    if (actionItems.length === 0) {
+      return false;
+    }
+
+    for (const row of this.sortedRows()) {
+      for (const actionItem of actionItems) {
+        if (!this.isActionDisabled(actionItem, row)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  });
+
+  protected readonly showActionColumn = computed(() => this.hasActionColumn() || this.hasAnyVisibleRowAction());
   protected readonly renderActionColumnAtStart = computed(
     () => this.showActionColumn() && this.actionColumnPosition() === 'start',
   );
@@ -281,6 +304,35 @@ export class AppDataTableComponent {
 
   protected isActionDisabled(actionItem: ActionItem, row: TableRow): boolean {
     return actionItem.disabled?.(row) ?? false;
+  }
+
+  protected isTableActionDisabled(actionItem: TableHeaderActionItem): boolean {
+    if (typeof actionItem.disabled === 'function') {
+      return actionItem.disabled();
+    }
+
+    return actionItem.disabled ?? false;
+  }
+
+  protected visibleRowActionItems(row: TableRow): readonly ActionItem[] {
+    return this.actionItems().filter((actionItem) => !this.isActionDisabled(actionItem, row));
+  }
+
+  protected onTableActionClick(actionItem: TableHeaderActionItem): void {
+    if (this.isTableActionDisabled(actionItem)) {
+      return;
+    }
+
+    try {
+      const result = actionItem.action();
+      if (this.isPromiseLike(result)) {
+        void result.catch((error) => {
+          console.error('[app-data-table] Table action failed:', error);
+        });
+      }
+    } catch (error) {
+      console.error('[app-data-table] Table action failed:', error);
+    }
   }
 
   protected onActionClick(actionItem: ActionItem, row: TableRow): void {
@@ -463,13 +515,21 @@ export class AppDataTableComponent {
   }
 
   private compareRows(leftRow: TableRow, rightRow: TableRow, column: TableColumn): number {
-    const leftRaw = this.getRawValue(leftRow, column.columnKey);
-    const rightRaw = this.getRawValue(rightRow, column.columnKey);
+    const leftRaw = this.getSortValue(leftRow, column);
+    const rightRaw = this.getSortValue(rightRow, column);
 
     const leftValue = this.translateIfString(leftRaw);
     const rightValue = this.translateIfString(rightRaw);
 
     return this.compareValues(leftValue, rightValue, column.type ?? 'string');
+  }
+
+  private getSortValue(row: TableRow, column: TableColumn): unknown {
+    if (this.isEditableColumn(column)) {
+      return this.getEditableValue(row, column);
+    }
+
+    return this.getRawValue(row, column.columnKey);
   }
 
   private compareValues(leftValue: unknown, rightValue: unknown, type: TableCellType): number {

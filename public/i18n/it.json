@@ -1,4 +1,7 @@
 {
+  "common": {
+    "actions": "Azioni"
+  },
   "nav": {
     "sections": {
       "main": "Main",
@@ -38,17 +41,63 @@
     "type": {
       "income": "Entrata",
       "expense": "Spesa",
-      "exclude": "Esclusa"
+      "exclude": "Escluso"
     }
   },
   "categories": {
     "table": {
+      "description": "Configurazione categorie",
+      "actions": {
+        "add": "Aggiungi categoria",
+        "archive": "Archivia categoria"
+      },
       "columns": {
         "name": "Nome",
         "description": "Descrizione",
         "color": "Colore",
         "icon": "Icona",
         "type": "Tipo"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Aggiungi categoria",
+        "description": "Crea una nuova categoria con impostazioni visive e tipo.",
+        "fields": {
+          "name": "Nome",
+          "description": "Descrizione",
+          "type": "Tipo",
+          "color": "Colore",
+          "icon": "Icona"
+        },
+        "placeholders": {
+          "name": "Nome categoria",
+          "description": "Descrizione categoria",
+          "type": "Seleziona tipo",
+          "color": "Seleziona colore",
+          "icon": "Seleziona icona"
+        },
+        "actions": {
+          "cancel": "Annulla",
+          "create": "Crea categoria"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di creare la categoria.",
+          "nameRequired": "Il nome è obbligatorio.",
+          "nameMinLength": "Il nome deve contenere almeno 2 caratteri.",
+          "nameMaxLength": "Il nome deve contenere al massimo 64 caratteri.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
+          "typeRequired": "Il tipo di categoria è obbligatorio.",
+          "createFailed": "Creazione della categoria non riuscita."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archivia categoria?",
+      "description": "Sei sicuro di voler archiviare \"{{name}}\"? Dopo la conferma questa categoria non sara piu selezionabile per i nuovi dati. I dati gia associati continueranno a mostrarla finche non li modificherai.",
+      "actions": {
+        "cancel": "Annulla",
+        "archive": "Archivia"
       }
     }
   },
@@ -73,14 +122,69 @@
       "transfer": "Trasferimento",
       "circle": "Cerchio",
       "income": "Entrata",
+      "expense": "Spesa",
       "tag": "Etichetta",
       "tags": "Etichette",
       "money": "Denaro",
+      "coins": "Monete",
+      "handCoins": "Monete in mano",
+      "wallet": "Portafoglio",
+      "piggyBank": "Salvadanaio",
+      "vault": "Caveau",
       "bank": "Banca",
+      "banknoteArrowUp": "Banconota",
+      "shoppingCart": "Carrello",
+      "store": "Negozio",
+      "backpack": "Zaino",
+      "globe": "Globo",
+      "library": "Biblioteca",
+      "school": "Scuola",
+      "graduationCap": "Cappello da laurea",
+      "gamepad": "Gaming",
+      "music": "Musica",
+      "cassette": "Cassetta",
+      "film": "Film",
+      "camera": "Fotocamera",
+      "popcorn": "Popcorn",
+      "cigarette": "Sigaretta",
+      "beer": "Birra",
+      "coffee": "Caffe",
+      "glassWater": "Bicchiere d'acqua",
+      "martini": "Martini",
+      "techReceipt": "Ricevuta",
+      "badgePercent": "Percentuale",
+      "dumbbell": "Palestra",
+      "biceps": "Bicipiti",
+      "ambulance": "Ambulanza",
+      "hospital": "Ospedale",
+      "pill": "Pillola",
+      "cannabis": "Cannabis",
+      "mountainSnow": "Montagna",
+      "treePalm": "Palma",
+      "leaf": "Foglia",
+      "bird": "Uccello",
+      "cat": "Gatto",
+      "dog": "Cane",
+      "fish": "Pesce",
+      "utensils": "Posate",
+      "hamburger": "Hamburger",
+      "salad": "Insalata",
+      "pizza": "Pizza",
+      "baby": "Bambino",
+      "glasses": "Occhiali",
+      "gift": "Regalo",
+      "tech": "Tecnologia",
+      "laptop": "Laptop",
       "home": "Casa",
+      "shirt": "Maglietta",
+      "armchair": "Poltrona",
+      "lampDesk": "Lampada da scrivania",
+      "frown": "Triste",
+      "smile": "Sorriso",
       "heart": "Cuore",
       "star": "Stella",
       "sparkles": "Scintille",
+      "creditCard": "Carta di credito",
       "card": "Carta"
     }
   },

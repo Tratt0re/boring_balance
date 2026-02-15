@@ -1,4 +1,7 @@
 {
+  "common": {
+    "actions": "Actions"
+  },
   "nav": {
     "sections": {
       "main": "Main",
@@ -43,12 +46,58 @@
   },
   "categories": {
     "table": {
+      "description": "Category configuration",
+      "actions": {
+        "add": "Add category",
+        "archive": "Archive category"
+      },
       "columns": {
         "name": "Name",
         "description": "Description",
         "color": "Color",
         "icon": "Icon",
         "type": "Type"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Add category",
+        "description": "Create a new category with visual settings and type.",
+        "fields": {
+          "name": "Name",
+          "description": "Description",
+          "type": "Type",
+          "color": "Color",
+          "icon": "Icon"
+        },
+        "placeholders": {
+          "name": "Category name",
+          "description": "Category description",
+          "type": "Select type",
+          "color": "Select color",
+          "icon": "Select icon"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create category"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before creating the category.",
+          "nameRequired": "Name is required.",
+          "nameMinLength": "Name must be at least 2 characters.",
+          "nameMaxLength": "Name must be at most 64 characters.",
+          "descriptionMaxLength": "Description must be at most 160 characters.",
+          "typeRequired": "Category type is required.",
+          "createFailed": "Failed to create category."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archive category?",
+      "description": "Are you sure you want to archive \"{{name}}\"? After confirmation, this category will no longer be selectable for new data. Existing data with this category will continue to show it until you edit those entries.",
+      "actions": {
+        "cancel": "Cancel",
+        "archive": "Archive"
       }
     }
   },
@@ -73,14 +122,69 @@
       "transfer": "Transfer",
       "circle": "Circle",
       "income": "Income",
+      "expense": "Expense",
       "tag": "Tag",
       "tags": "Tags",
       "money": "Money",
+      "coins": "Coins",
+      "handCoins": "Hand Coins",
+      "wallet": "Wallet",
+      "piggyBank": "Piggy Bank",
+      "vault": "Vault",
       "bank": "Bank",
+      "banknoteArrowUp": "Banknote",
+      "shoppingCart": "Shopping Cart",
+      "store": "Store",
+      "backpack": "Backpack",
+      "globe": "Globe",
+      "library": "Library",
+      "school": "School",
+      "graduationCap": "Graduation Cap",
+      "gamepad": "Gaming",
+      "music": "Music",
+      "cassette": "Cassette Tape",
+      "film": "Film",
+      "camera": "Camera",
+      "popcorn": "Popcorn",
+      "cigarette": "Cigarette",
+      "beer": "Beer",
+      "coffee": "Coffee",
+      "glassWater": "Glass Water",
+      "martini": "Martini",
+      "techReceipt": "Receipt",
+      "badgePercent": "Percent",
+      "dumbbell": "Fitness",
+      "biceps": "Workout",
+      "ambulance": "Ambulance",
+      "hospital": "Hospital",
+      "pill": "Pill",
+      "cannabis": "Cannabis",
+      "mountainSnow": "Mountain",
+      "treePalm": "Palm Tree",
+      "leaf": "Leaf",
+      "bird": "Bird",
+      "cat": "Cat",
+      "dog": "Dog",
+      "fish": "Fish",
+      "utensils": "Utensils",
+      "hamburger": "Burger",
+      "salad": "Salad",
+      "pizza": "Pizza",
+      "baby": "Baby",
+      "glasses": "Eyewear",
+      "gift": "Gift",
+      "tech": "Tech",
+      "laptop": "Laptop",
       "home": "Home",
+      "shirt": "Shirt",
+      "armchair": "Armchair",
+      "lampDesk": "Desk Lamp",
+      "frown": "Frown",
+      "smile": "Smile",
       "heart": "Heart",
       "star": "Star",
       "sparkles": "Sparkles",
+      "creditCard": "Credit Card",
       "card": "Card"
     }
   },

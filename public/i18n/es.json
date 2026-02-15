@@ -1,4 +1,7 @@
 {
+  "common": {
+    "actions": "Acciones"
+  },
   "nav": {
     "sections": {
       "main": "Main",
@@ -43,12 +46,58 @@
   },
   "categories": {
     "table": {
+      "description": "Configuracion de categorias",
+      "actions": {
+        "add": "Agregar categoria",
+        "archive": "Archivar categoria"
+      },
       "columns": {
         "name": "Nombre",
         "description": "Descripcion",
         "color": "Color",
         "icon": "Icono",
         "type": "Tipo"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar categoria",
+        "description": "Crea una nueva categoria con ajustes visuales y tipo.",
+        "fields": {
+          "name": "Nombre",
+          "description": "Descripcion",
+          "type": "Tipo",
+          "color": "Color",
+          "icon": "Icono"
+        },
+        "placeholders": {
+          "name": "Nombre de categoria",
+          "description": "Descripcion de categoria",
+          "type": "Selecciona tipo",
+          "color": "Selecciona color",
+          "icon": "Selecciona icono"
+        },
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear categoria"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear la categoria.",
+          "nameRequired": "El nombre es obligatorio.",
+          "nameMinLength": "El nombre debe tener al menos 2 caracteres.",
+          "nameMaxLength": "El nombre debe tener como maximo 64 caracteres.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 160 caracteres.",
+          "typeRequired": "El tipo de categoria es obligatorio.",
+          "createFailed": "No se pudo crear la categoria."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archivar categoria?",
+      "description": "Estas seguro de que quieres archivar \"{{name}}\"? Tras confirmar, esta categoria ya no se podra seleccionar para datos nuevos. Los datos existentes con esta categoria seguiran mostrandola hasta que edites esos registros.",
+      "actions": {
+        "cancel": "Cancelar",
+        "archive": "Archivar"
       }
     }
   },
@@ -73,14 +122,69 @@
       "transfer": "Transferencia",
       "circle": "Circulo",
       "income": "Ingreso",
+      "expense": "Gasto",
       "tag": "Etiqueta",
       "tags": "Etiquetas",
       "money": "Dinero",
+      "coins": "Monedas",
+      "handCoins": "Monedas en mano",
+      "wallet": "Billetera",
+      "piggyBank": "Alcancia",
+      "vault": "Boveda",
       "bank": "Banco",
+      "banknoteArrowUp": "Billete",
+      "shoppingCart": "Carrito",
+      "store": "Tienda",
+      "backpack": "Mochila",
+      "globe": "Globo",
+      "library": "Biblioteca",
+      "school": "Escuela",
+      "graduationCap": "Birrete",
+      "gamepad": "Gaming",
+      "music": "Musica",
+      "cassette": "Casete",
+      "film": "Pelicula",
+      "camera": "Camara",
+      "popcorn": "Palomitas",
+      "cigarette": "Cigarrillo",
+      "beer": "Cerveza",
+      "coffee": "Cafe",
+      "glassWater": "Vaso de agua",
+      "martini": "Martini",
+      "techReceipt": "Recibo",
+      "badgePercent": "Porcentaje",
+      "dumbbell": "Gimnasio",
+      "biceps": "Biceps",
+      "ambulance": "Ambulancia",
+      "hospital": "Hospital",
+      "pill": "Pildora",
+      "cannabis": "Cannabis",
+      "mountainSnow": "Montana",
+      "treePalm": "Palma",
+      "leaf": "Hoja",
+      "bird": "Pajaro",
+      "cat": "Gato",
+      "dog": "Perro",
+      "fish": "Pez",
+      "utensils": "Cubiertos",
+      "hamburger": "Hamburguesa",
+      "salad": "Ensalada",
+      "pizza": "Pizza",
+      "baby": "Bebe",
+      "glasses": "Gafas",
+      "gift": "Regalo",
+      "tech": "Tecnologia",
+      "laptop": "Laptop",
       "home": "Casa",
+      "shirt": "Camisa",
+      "armchair": "Sillon",
+      "lampDesk": "Lampara de escritorio",
+      "frown": "Triste",
+      "smile": "Sonrisa",
       "heart": "Corazon",
       "star": "Estrella",
       "sparkles": "Brillo",
+      "creditCard": "Tarjeta de credito",
       "card": "Tarjeta"
     }
   },

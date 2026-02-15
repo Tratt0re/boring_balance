@@ -1,11 +1,34 @@
 <section class="flex flex-col gap-3">
-  @if (title() || description()) {
-    <header class="flex flex-col gap-1">
-      @if (title()) {
-        <h2 class="text-xl font-semibold tracking-tight">{{ title() | translate }}</h2>
+  @if (title() || description() || visibleTableActions().length > 0) {
+    <header class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      @if (title() || description()) {
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
+          @if (title()) {
+            <h2 class="text-xl font-semibold tracking-tight">{{ title() | translate }}</h2>
+          }
+          @if (description()) {
+            <p class="text-sm text-muted-foreground">{{ description() | translate }}</p>
+          }
+        </div>
       }
-      @if (description()) {
-        <p class="text-sm text-muted-foreground">{{ description() | translate }}</p>
+
+      @if (visibleTableActions().length > 0) {
+        <div class="flex flex-wrap items-center gap-2 sm:justify-end">
+          @for (tableAction of visibleTableActions(); track tableAction.id) {
+            <z-button
+              zSize="sm"
+              [zType]="tableAction.buttonType ?? 'default'"
+              [attr.aria-label]="tableAction.label | translate"
+              [attr.title]="tableAction.label | translate"
+              (click)="onTableActionClick(tableAction)"
+            >
+              @if (tableAction.icon; as tableActionIcon) {
+                <z-icon [zType]="tableActionIcon" class="size-4" />
+              }
+              <span>{{ tableAction.label | translate }}</span>
+            </z-button>
+          }
+        </div>
       }
     </header>
   }
@@ -77,11 +100,10 @@
               @if (renderActionColumnAtStart()) {
                 <td z-table-cell>
                   <div class="flex items-center gap-1">
-                    @for (actionItem of actionItems(); track actionItem.id) {
+                    @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
                       <z-button
                         zSize="sm"
                         [zType]="actionItem.buttonType ?? 'ghost'"
-                        [zDisabled]="isActionDisabled(actionItem, row)"
                         [attr.aria-label]="actionItem.label | translate"
                         [attr.title]="actionItem.label | translate"
                         (click)="onActionClick(actionItem, row)"
@@ -228,11 +250,10 @@
               @if (renderActionColumnAtEnd()) {
                 <td z-table-cell>
                   <div class="flex items-center justify-end gap-1">
-                    @for (actionItem of actionItems(); track actionItem.id) {
+                    @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
                       <z-button
                         zSize="sm"
                         [zType]="actionItem.buttonType ?? 'ghost'"
-                        [zDisabled]="isActionDisabled(actionItem, row)"
                         [attr.aria-label]="actionItem.label | translate"
                         [attr.title]="actionItem.label | translate"
                         (click)="onActionClick(actionItem, row)"

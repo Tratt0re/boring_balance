@@ -1,0 +1,92 @@
+<div class="grid gap-4 sm:grid-cols-2">
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="category-name">
+      {{ 'categories.dialog.add.fields.name' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <input
+      id="category-name"
+      z-input
+      type="text"
+      maxlength="64"
+      aria-required="true"
+      [attr.aria-invalid]="visibleNameErrorKey() ? 'true' : null"
+      [value]="name()"
+      [attr.placeholder]="'categories.dialog.add.placeholders.name' | translate"
+      (blur)="onNameBlur()"
+      (input)="onNameInput($event)"
+    />
+    @if (visibleNameErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="category-description">
+      {{ 'categories.dialog.add.fields.description' | translate }}
+    </label>
+    <input
+      id="category-description"
+      z-input
+      type="text"
+      maxlength="160"
+      [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
+      [value]="description()"
+      [attr.placeholder]="'categories.dialog.add.placeholders.description' | translate"
+      (blur)="onDescriptionBlur()"
+      (input)="onDescriptionInput($event)"
+    />
+    @if (visibleDescriptionErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'categories.dialog.add.fields.type' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-select
+      [zValue]="type()"
+      [zPlaceholder]="'categories.dialog.add.placeholders.type' | translate"
+      (zSelectionChange)="onTypeChange($event)"
+    >
+      @for (option of typeOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+      }
+    </z-select>
+    @if (visibleTypeErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'categories.dialog.add.fields.color' | translate }}</label>
+    <z-select
+      [zValue]="colorKey()"
+      [zPlaceholder]="'categories.dialog.add.placeholders.color' | translate"
+      (zSelectionChange)="onColorChange($event)"
+    >
+      @for (option of colorOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zColorHex]="option.colorHex ?? null" />
+      }
+    </z-select>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium">{{ 'categories.dialog.add.fields.icon' | translate }}</label>
+    <z-select
+      [zValue]="icon()"
+      [zPlaceholder]="'categories.dialog.add.placeholders.icon' | translate"
+      (zSelectionChange)="onIconChange($event)"
+    >
+      @for (option of iconOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zIcon]="option.icon ?? null" />
+      }
+    </z-select>
+  </div>
+
+  @if (errorKey(); as currentError) {
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+  }
+</div>

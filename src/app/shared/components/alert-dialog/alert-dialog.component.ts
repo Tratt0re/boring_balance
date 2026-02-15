@@ -34,6 +34,7 @@ import type { ZardAlertDialogRef } from './alert-dialog-ref';
 import { ZardAlertDialogService } from './alert-dialog.service';
 import { alertDialogVariants } from './alert-dialog.variants';
 import { ZardButtonComponent } from '@/shared/components/button/button.component';
+import { ZardIconComponent } from '@/shared/components/icon/icon.component';
 
 export type OnClickCallback<T> = (instance: T) => false | void | object;
 
@@ -57,7 +58,7 @@ export class ZardAlertDialogOptions<T> {
 
 @Component({
   selector: 'z-alert-dialog',
-  imports: [OverlayModule, PortalModule, ZardButtonComponent, A11yModule, ZardIdDirective],
+  imports: [OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent, A11yModule, ZardIdDirective],
   templateUrl: './alert-dialog.component.html',
   styles: `
     z-alert-dialog {

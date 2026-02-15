@@ -27,7 +27,7 @@ CREATE INDEX IF NOT EXISTS idx_categories_archived ON categories(archived);
 INSERT OR IGNORE INTO categories
 (name, parent_id, description, color_key, icon, type, locked, archived)
 VALUES
-('category.exclude.name', NULL, 'category.exclude.description', 'category-color-11', 'ban', 'exclude', 1, 0),
-('category.transfer.name', NULL, 'category.transfer.description', 'category-color-11', 'arrow-left-right', 'exclude', 1, 0),
-('category.other_expense.name', NULL, 'category.other_expense.description', 'category-color-11', 'circle', 'expense', 1, 0),
-('category.other_income.name', NULL, 'category.other_income.description', 'category-color-11', 'circle-dollar-sign', 'income', 1, 0);
+('category.exclude.name', NULL, 'category.exclude.description', 'system-app-color-11', 'ban', 'exclude', 1, 0),
+('category.transfer.name', NULL, 'category.transfer.description', 'system-app-color-11', 'arrow-left-right', 'exclude', 1, 0),
+('category.other_expense.name', NULL, 'category.other_expense.description', 'system-app-color-11', 'banknote-arrow-down', 'expense', 1, 0),
+('category.other_income.name', NULL, 'category.other_income.description', 'system-app-color-11', 'banknote-arrow-up', 'income', 1, 0);

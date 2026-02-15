@@ -62,6 +62,15 @@ export interface ActionItem {
   readonly disabled?: (row: object) => boolean;
 }
 
+export interface TableHeaderActionItem {
+  readonly id: string;
+  readonly label: string;
+  readonly action: () => void | Promise<void>;
+  readonly icon?: ZardIcon;
+  readonly buttonType?: ZardButtonTypeVariants;
+  readonly disabled?: boolean | (() => boolean);
+}
+
 export interface ActionDataItem extends TableDataItem {
   readonly actionItems: readonly ActionItem[];
 }
