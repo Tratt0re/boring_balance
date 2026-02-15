@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "sections": {
+      "main": "Main",
+      "insights": "Analitica",
+      "setup": "Organizacion",
+      "settings": "Preferencias"
+    },
+    "items": {
+      "overview": "Vista general",
+      "transactions": "Movimientos",
+      "breakdown": "Distribucion",
+      "compare": "Comparativa",
+      "budget": "Budget",
+      "accounts": "Cuentas",
+      "categories": "Categorias",
+      "dataBackups": "Datos y respaldo",
+      "about": "Sobre la app"
+    }
+  },
+  "category": {
+    "exclude": {
+      "name": "Sin impacto",
+      "description": "Movimientos que no entran en analitica ni en presupuesto."
+    },
+    "transfer": {
+      "name": "Traspaso interno",
+      "description": "Movimiento de dinero entre cuentas propias."
+    },
+    "other_expense": {
+      "name": "Gastos varios",
+      "description": "Categoria comodin para gastos sin clasificar."
+    },
+    "other_income": {
+      "name": "Ingresos varios",
+      "description": "Categoria comodin para ingresos sin clasificar."
+    }
+  },
+  "header": {
+    "language": {
+      "options": {
+        "en": "EN",
+        "es": "ES",
+        "it": "IT"
+      }
+    },
+    "theme": {
+      "activateLight": "Cambiar a modo claro",
+      "activateDark": "Cambiar a modo oscuro",
+      "lightMode": "Modo claro",
+      "darkMode": "Modo oscuro"
+    }
+  },
+  "sidebar": {
+    "close": "Cerrar menu lateral",
+    "expand": "Abrir menu lateral",
+    "collapse": "Ocultar menu lateral"
+  },
+  "breadcrumb": {
+    "ariaLabel": "Ruta actual"
+  }
+}

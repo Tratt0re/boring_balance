@@ -1,0 +1,29 @@
+<button
+  z-button
+  class="window-no-drag h-8 w-8 px-2"
+  type="button"
+  zType="outline"
+  zSize="sm"
+  zShape="circle"
+  zDropdown
+  [zDropdownMenu]="languageMenu"
+>
+  <span class="uppercase">{{ getLanguageLabelKey(selectedLanguage()) | translate }}</span>
+</button>
+
+<z-dropdown-menu-content #languageMenu="zDropdownMenuContent" class="min-w-20">
+  @for (language of languages; track language) {
+    <button
+      type="button"
+      z-dropdown-menu-item
+      class="w-full justify-between uppercase"
+      [attr.aria-pressed]="selectedLanguage() === language"
+      (click)="onLanguageChange(language)"
+    >
+      <span>{{ getLanguageLabelKey(language) | translate }}</span>
+      @if (selectedLanguage() === language) {
+        <z-icon zType="check" class="size-4" />
+      }
+    </button>
+  }
+</z-dropdown-menu-content>

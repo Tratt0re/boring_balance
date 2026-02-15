@@ -1,0 +1,13 @@
+<button
+  z-button
+  class="window-no-drag"
+  type="button"
+  zType="outline"
+  zSize="sm"
+  zShape="circle"
+  [attr.aria-label]="getThemeToggleAriaLabelKey() | translate"
+  [attr.title]="getThemeToggleTitleKey() | translate"
+  (click)="toggleTheme($event)"
+>
+  <z-icon [zType]="darkMode.themeMode() === EDarkModes.DARK ? 'sun' : 'moon'" class="size-4" />
+</button>

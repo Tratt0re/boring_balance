@@ -1,15 +1,4 @@
-<z-header [zHeight]="48" class="justify-end window-drag">
-  <button
-    z-button
-    class="window-no-drag"
-    type="button"
-    zType="ghost"
-    zSize="sm"
-    zShape="circle"
-    [attr.aria-label]="darkMode.themeMode() === EDarkModes.DARK ? 'Activate light mode' : 'Activate dark mode'"
-    [attr.title]="darkMode.themeMode() === EDarkModes.DARK ? 'Light mode' : 'Dark mode'"
-    (click)="toggleTheme($event)"
-  >
-    <z-icon [zType]="darkMode.themeMode() === EDarkModes.DARK ? 'sun' : 'moon'" class="size-4" />
-  </button>
+<z-header [zHeight]="48" class="justify-end gap-1.5 window-drag">
+  <app-language-selector class="window-no-drag"></app-language-selector>
+  <app-theme-toggle class="window-no-drag"></app-theme-toggle>
 </z-header>

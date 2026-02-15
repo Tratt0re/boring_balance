@@ -1,6 +1,8 @@
-import { Component, input, output, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
+import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import { ZardIconComponent } from '@/shared/components/icon';
 import {
   SidebarComponent,
@@ -15,6 +17,8 @@ import type { MenuSectionConfig } from '@/config/menu.config';
   imports: [
     RouterLink,
     RouterLinkActive,
+    SidebarToggleComponent,
+    TranslatePipe,
     ZardIconComponent,
     SidebarComponent,
     SidebarGroupComponent,
@@ -24,11 +28,44 @@ import type { MenuSectionConfig } from '@/config/menu.config';
   encapsulation: ViewEncapsulation.None,
 })
 export class Sidebar {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly collapseTransitionMs = 100;
+  private collapseTransitionTimer?: ReturnType<typeof globalThis.setTimeout>;
+  private previousCollapsed?: boolean;
+
   readonly menuSections = input.required<readonly MenuSectionConfig[]>();
   readonly isSmallScreen = input(false);
   readonly sidebarCollapsed = input(false);
+  protected readonly isClosingCollapseTransition = signal(false);
 
   readonly sidebarCollapsedChange = output<boolean>();
+
+  constructor() {
+    effect(() => {
+      const collapsed = this.sidebarCollapsed();
+
+      if (this.previousCollapsed === undefined) {
+        this.previousCollapsed = collapsed;
+        return;
+      }
+
+      if (!this.previousCollapsed && collapsed) {
+        this.isClosingCollapseTransition.set(true);
+        this.clearCollapseTransitionTimer();
+        this.collapseTransitionTimer = globalThis.setTimeout(() => {
+          this.isClosingCollapseTransition.set(false);
+          this.collapseTransitionTimer = undefined;
+        }, this.collapseTransitionMs);
+      } else if (this.previousCollapsed && !collapsed) {
+        this.isClosingCollapseTransition.set(false);
+        this.clearCollapseTransitionTimer();
+      }
+
+      this.previousCollapsed = collapsed;
+    });
+
+    this.destroyRef.onDestroy(() => this.clearCollapseTransitionTimer());
+  }
 
   protected onSidebarCollapsedChange(isCollapsed: boolean): void {
     this.sidebarCollapsedChange.emit(isCollapsed);
@@ -38,5 +75,18 @@ export class Sidebar {
     if (this.isSmallScreen()) {
       this.sidebarCollapsedChange.emit(true);
     }
+  }
+
+  protected toggleSidebar(): void {
+    this.sidebarCollapsedChange.emit(!this.sidebarCollapsed());
+  }
+
+  private clearCollapseTransitionTimer(): void {
+    if (!this.collapseTransitionTimer) {
+      return;
+    }
+
+    globalThis.clearTimeout(this.collapseTransitionTimer);
+    this.collapseTransitionTimer = undefined;
   }
 }
