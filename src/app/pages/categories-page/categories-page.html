@@ -18,8 +18,8 @@
       [striped]="false"
       [hoverable]="true"
       [selectable]="false"
-      [hasActionColumn]="true"
-      actionColumnPosition="end"
+      [hasActionColumn]="false"
+      (editableValueChange)="onEditableValueChange($event)"
     ></app-data-table>
   }
 </section>

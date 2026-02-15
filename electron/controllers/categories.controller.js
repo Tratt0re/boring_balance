@@ -20,7 +20,7 @@ const CATEGORY_FIELDS = new Set([
   'name',
   'parent_id',
   'description',
-  'color_hex',
+  'color_key',
   'icon',
   'type',
   'locked',
@@ -47,7 +47,7 @@ function normalizeCategoryChanges(value, label, options = {}) {
         : requireString(changesInput.name, `${label}.name`, { allowEmpty: false }),
     parent_id: normalizeOptionalInteger(changesInput.parent_id, `${label}.parent_id`),
     description: normalizeOptionalString(changesInput.description, `${label}.description`),
-    color_hex: normalizeOptionalString(changesInput.color_hex, `${label}.color_hex`),
+    color_key: normalizeOptionalString(changesInput.color_key, `${label}.color_key`),
     icon: normalizeOptionalString(changesInput.icon, `${label}.icon`),
     type:
       changesInput.type === undefined ? undefined : normalizeCategoryType(changesInput.type, `${label}.type`),

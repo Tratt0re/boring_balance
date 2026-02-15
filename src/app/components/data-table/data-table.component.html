@@ -122,20 +122,41 @@
 
                         @case ('select') {
                           @if (isEditableDisabled(column, row)) {
-                            <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                            @if (getEditableSelectOption(row, column); as selectedOption) {
+                              <span class="inline-flex min-w-0 items-center gap-2 text-sm">
+                                @if (selectedOption.colorHex; as optionColorHex) {
+                                  <span
+                                    class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+                                    [style.backgroundColor]="optionColorHex"
+                                  ></span>
+                                }
+                                @if (selectedOption.icon; as optionIcon) {
+                                  <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                }
+                                @if (shouldShowEditableSelectLabel(column)) {
+                                  <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                }
+                              </span>
+                            } @else {
+                              <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                            }
                           } @else {
                             <z-select
                               class="data-active:border-0 data-active:ring-0 [&_button]:border-0 [&_button]:px-0 [&_button]:py-0 [&_button]:bg-transparent [&_button]:shadow-none [&_button]:focus-visible:border-0 [&_button]:focus-visible:ring-0 dark:[&_button]:bg-transparent dark:[&_button]:hover:bg-transparent"
                               zChevronClass="text-primary opacity-70"
                               [zValue]="getEditableSelectValue(row, column)"
+                              [zShowSelectedLabel]="shouldShowEditableSelectLabel(column)"
                               [zDisabled]="isEditableDisabled(column, row)"
                               [zPlaceholder]="column.placeholder ? (column.placeholder | translate) : ''"
                               (zSelectionChange)="onEditableSelectValueChange($event, row, column)"
                             >
                               @for (option of column.options ?? []; track option.value) {
-                                <z-select-item [zValue]="stringifyOptionValue(option.value)">
-                                  {{ option.translate ? (option.label | translate) : option.label }}
-                                </z-select-item>
+                                <z-select-item
+                                  [zValue]="stringifyOptionValue(option.value)"
+                                  [zLabel]="getEditableOptionLabel(option)"
+                                  [zIcon]="option.icon ?? null"
+                                  [zColorHex]="option.colorHex ?? null"
+                                />
                               }
                             </z-select>
                           }
