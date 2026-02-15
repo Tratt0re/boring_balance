@@ -18,6 +18,7 @@
             <th z-table-head class="w-10">
               <z-checkbox
                 zSize="default"
+                [zNoLabelSpacing]="true"
                 [zChecked]="allVisibleRowsSelected()"
                 [zDisabled]="sortedRows().length === 0"
                 [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
@@ -64,6 +65,7 @@
                 <td z-table-cell class="w-10">
                   <z-checkbox
                     zSize="default"
+                    [zNoLabelSpacing]="true"
                     [zChecked]="isRowSelected(row)"
                     (zCheckedChange)="onToggleRowChange($event, row)"
                   >
@@ -99,6 +101,7 @@
                         @case ('checkbox') {
                           <z-checkbox
                             zSize="default"
+                            [zNoLabelSpacing]="true"
                             [zChecked]="getEditableChecked(row, column)"
                             [zDisabled]="isEditableDisabled(column, row)"
                             (zCheckedChange)="onEditableCheckboxValueChange($event, row, column)"
@@ -170,6 +173,7 @@
                                 [attr.placeholder]="column.placeholder ? (column.placeholder | translate) : null"
                                 [attr.aria-label]="column.columnName | translate"
                                 (input)="onEditableTextInput($event, row, column)"
+                                (keydown.enter)="onEditableTextEnter($event, row, column)"
                                 (blur)="onEditableTextBlur($event, row, column)"
                               />
                               <z-icon
@@ -186,7 +190,16 @@
                       }
                     </div>
                   } @else {
-                    {{ formatCellValue(row, column) }}
+                    @if (isBadgeColumn(column)) {
+                      <z-badge [zType]="column.badge?.type ?? 'secondary'" [zShape]="column.badge?.shape ?? 'pill'">
+                        @if (column.badge?.icon; as badgeIcon) {
+                          <z-icon [zType]="badgeIcon" class="size-3" />
+                        }
+                        {{ formatCellValue(row, column) }}
+                      </z-badge>
+                    } @else {
+                      {{ formatCellValue(row, column) }}
+                    }
                   }
                 </td>
               }

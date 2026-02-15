@@ -15,6 +15,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ClassValue } from 'clsx';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
@@ -49,6 +50,7 @@ type EditableErrorMap = Map<TableRow, Map<string, string>>;
   selector: 'app-data-table',
   imports: [
     TranslatePipe,
+    ZardBadgeComponent,
     ZardButtonComponent,
     ZardCheckboxComponent,
     ZardDatePickerComponent,
@@ -395,9 +397,13 @@ export class AppDataTableComponent {
   }
 
   protected onEditableTextBlur(event: FocusEvent, row: TableRow, column: EditableColumnDataItem): void {
-    const inputValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    const normalizedValue = this.normalizeInputValue(inputValue, column);
-    this.applyEditableChange(row, column, normalizedValue);
+    this.commitEditableTextValue(event.target, row, column);
+  }
+
+  protected onEditableTextEnter(event: Event, row: TableRow, column: EditableColumnDataItem): void {
+    event.preventDefault();
+    this.commitEditableTextValue(event.target, row, column);
+    (event.target as HTMLInputElement | null)?.blur();
   }
 
   protected onEditableSelectValueChange(
@@ -428,6 +434,10 @@ export class AppDataTableComponent {
 
   protected formatCellValue(row: TableRow, column: ColumnDataItem): string {
     return this.formatColumnValue(this.getRawValue(row, column.columnKey), column);
+  }
+
+  protected isBadgeColumn(column: ColumnDataItem): boolean {
+    return column.type === 'badge';
   }
 
   private sortDirectionForColumn(column: TableColumn): TableSortDirection | null {
@@ -637,6 +647,16 @@ export class AppDataTableComponent {
 
   private isActionDataItem(item: TableDataItem): item is ActionDataItem {
     return 'actionItems' in item && Array.isArray(item.actionItems);
+  }
+
+  private commitEditableTextValue(
+    target: EventTarget | null,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
+    const inputValue = (target as HTMLInputElement | null)?.value ?? '';
+    const normalizedValue = this.normalizeInputValue(inputValue, column);
+    this.applyEditableChange(row, column, normalizedValue);
   }
 
   private applyEditableChange(row: TableRow, column: EditableColumnDataItem, value: unknown): void {

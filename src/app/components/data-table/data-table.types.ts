@@ -1,7 +1,8 @@
+import type { ZardBadgeShapeVariants, ZardBadgeTypeVariants } from '@/shared/components/badge';
 import type { ZardButtonTypeVariants } from '@/shared/components/button';
 import type { ZardIcon } from '@/shared/components/icon';
 
-export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean';
+export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
 export type TableActionColumnPosition = 'start' | 'end';
 export type TableSortDirection = 'asc' | 'desc';
 export type EditableCellType = 'input' | 'checkbox' | 'select' | 'switch' | 'date';
@@ -9,12 +10,19 @@ export type EditableInputType = 'text' | 'number' | 'email' | 'password' | 'sear
 
 export interface TableDataItem {}
 
+export interface TableBadgeConfig {
+  readonly icon?: ZardIcon;
+  readonly type?: ZardBadgeTypeVariants;
+  readonly shape?: ZardBadgeShapeVariants;
+}
+
 export interface ColumnDataItem extends TableDataItem {
   readonly columnName: string;
   readonly columnKey: string;
   readonly type?: TableCellType;
   readonly sortable?: boolean;
   readonly translate?: boolean;
+  readonly badge?: TableBadgeConfig;
 }
 
 export interface EditableOptionItem {
