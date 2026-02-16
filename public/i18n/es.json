@@ -44,9 +44,64 @@
       "exclude": "Sin impacto"
     }
   },
+  "accounts": {
+    "table": {
+      "description": "Configuracion de cuentas",
+      "emptyMessage": "No se encontraron cuentas.",
+      "actions": {
+        "add": "Agregar cuenta",
+        "archive": "Archivar cuenta"
+      },
+      "columns": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "color": "Color",
+        "icon": "Icono"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar cuenta",
+        "description": "Crea una nueva cuenta con ajustes visuales.",
+        "fields": {
+          "name": "Nombre",
+          "description": "Descripcion",
+          "color": "Color",
+          "icon": "Icono"
+        },
+        "placeholders": {
+          "name": "Nombre de cuenta",
+          "description": "Descripcion de cuenta",
+          "color": "Selecciona color",
+          "icon": "Selecciona icono"
+        },
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear cuenta"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear la cuenta.",
+          "nameRequired": "El nombre es obligatorio.",
+          "nameMinLength": "El nombre debe tener al menos 2 caracteres.",
+          "nameMaxLength": "El nombre debe tener como maximo 64 caracteres.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 160 caracteres.",
+          "createFailed": "No se pudo crear la cuenta."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archivar cuenta?",
+      "description": "Estas seguro de que quieres archivar \"{{name}}\"? Tras confirmar, esta cuenta ya no se podra seleccionar para datos nuevos. Los datos existentes con esta cuenta seguiran mostrandola hasta que edites esos registros.",
+      "actions": {
+        "cancel": "Cancelar",
+        "archive": "Archivar"
+      }
+    }
+  },
   "categories": {
     "table": {
       "description": "Configuracion de categorias",
+      "emptyMessage": "No se encontraron categorias.",
       "actions": {
         "add": "Agregar categoria",
         "archive": "Archivar categoria"

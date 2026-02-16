@@ -44,9 +44,64 @@
       "exclude": "Escluso"
     }
   },
+  "accounts": {
+    "table": {
+      "description": "Configurazione conti",
+      "emptyMessage": "Nessun conto trovato.",
+      "actions": {
+        "add": "Aggiungi conto",
+        "archive": "Archivia conto"
+      },
+      "columns": {
+        "name": "Nome",
+        "description": "Descrizione",
+        "color": "Colore",
+        "icon": "Icona"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Aggiungi conto",
+        "description": "Crea un nuovo conto con impostazioni visive.",
+        "fields": {
+          "name": "Nome",
+          "description": "Descrizione",
+          "color": "Colore",
+          "icon": "Icona"
+        },
+        "placeholders": {
+          "name": "Nome conto",
+          "description": "Descrizione conto",
+          "color": "Seleziona colore",
+          "icon": "Seleziona icona"
+        },
+        "actions": {
+          "cancel": "Annulla",
+          "create": "Crea conto"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di creare il conto.",
+          "nameRequired": "Il nome e obbligatorio.",
+          "nameMinLength": "Il nome deve contenere almeno 2 caratteri.",
+          "nameMaxLength": "Il nome deve contenere al massimo 64 caratteri.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
+          "createFailed": "Creazione del conto non riuscita."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archivia conto?",
+      "description": "Sei sicuro di voler archiviare \"{{name}}\"? Dopo la conferma questo conto non sara piu selezionabile per i nuovi dati. I dati gia associati continueranno a mostrarlo finche non li modificherai.",
+      "actions": {
+        "cancel": "Annulla",
+        "archive": "Archivia"
+      }
+    }
+  },
   "categories": {
     "table": {
       "description": "Configurazione categorie",
+      "emptyMessage": "Nessuna categoria trovata.",
       "actions": {
         "add": "Aggiungi categoria",
         "archive": "Archivia categoria"

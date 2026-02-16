@@ -1,3 +1,26 @@
-<section class="flex flex-col gap-2">
-  <h2 class="text-xl font-semibold tracking-tight">Accounts</h2>
+<section class="flex flex-col gap-4">
+  @if (isLoading()) {
+    <z-skeleton class="h-12 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+  } @else if (loadError(); as loadError) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      Failed to load accounts: {{ loadError }}
+    </div>
+  } @else {
+    <app-data-table
+      [data]="accounts()"
+      [structure]="accountTableStructure"
+      [tableActions]="accountTableActions"
+      title="nav.items.accounts"
+      description="accounts.table.description"
+      emptyMessage="accounts.table.emptyMessage"
+      [showEmpty]="true"
+      [bordered]="true"
+      [striped]="false"
+      [hoverable]="true"
+      [selectable]="false"
+      [hasActionColumn]="false"
+      (editableValueChange)="onEditableValueChange($event)"
+    ></app-data-table>
+  }
 </section>
