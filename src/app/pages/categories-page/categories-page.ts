@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import {
@@ -11,12 +11,12 @@ import {
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
-  type TableHeaderActionItem,
   type TableDataItem,
 } from '@/components/data-table';
 import type { CategoryCreateDto, CategoryType, CategoryUpdateDto } from '@/dtos';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
+import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
@@ -130,12 +130,12 @@ const createCategoryTableStructure = (
   imports: [AppDataTableComponent, ZardSkeletonComponent],
   templateUrl: './categories-page.html',
 })
-export class CategoriesPage implements OnInit {
+export class CategoriesPage implements OnInit, OnDestroy {
   protected readonly categories = signal<readonly CategoryModel[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly categoryTableStructure = createCategoryTableStructure((row) => this.onArchiveCategory(row));
-  protected readonly categoryTableActions: readonly TableHeaderActionItem[] = [
+  private readonly toolbarActions: readonly ToolbarAction[] = [
     {
       id: 'add-category',
       label: 'categories.table.actions.add',
@@ -144,16 +144,27 @@ export class CategoriesPage implements OnInit {
       action: () => this.openAddCategoryDialog(),
     },
   ];
+  private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
     private readonly categoriesService: CategoriesService,
+    private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
     private readonly translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
+    this.releaseToolbarActions = this.toolbarContextService.activate({
+      title: 'nav.items.categories',
+      actions: this.toolbarActions,
+    });
     void this.loadCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.releaseToolbarActions?.();
+    this.releaseToolbarActions = null;
   }
 
   protected onEditableValueChange(event: EditableValueChangeEvent): void {

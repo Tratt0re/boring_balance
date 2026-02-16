@@ -162,6 +162,14 @@
     @apply bg-background text-foreground;
   }
 
+  .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
+    background: rgb(0 0 0 / 0.3) !important;
+  }
+
+  .dark .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
+    background: rgb(255 255 255 / 0.1) !important;
+  }
+
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;

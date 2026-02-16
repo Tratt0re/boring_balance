@@ -25,8 +25,8 @@ function initMainWindow(isDev) {
   return new BrowserWindow({
     width: 1200,
     height: 800,
-    minWidth: 600,
-    minHeight: 400,
+    minWidth: 950,
+    minHeight: 500,
     show: false,
     autoHideMenuBar: true,
     titleBarStyle: isMac ? 'hiddenInset' : 'hidden',

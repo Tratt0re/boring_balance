@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import {
@@ -11,7 +11,6 @@ import {
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
-  type TableHeaderActionItem,
   type ActionItem,
   type TableDataItem,
 } from '@/components/data-table';
@@ -24,6 +23,7 @@ import type {
 import { AccountModel, TransferModel, type TransactionModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
 import { TransactionsService } from '@/services/transactions.service';
+import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -218,7 +218,7 @@ const sortTransfers = (transfers: readonly TransferModel[]): readonly TransferMo
   imports: [AppDataTableComponent, ZardSkeletonComponent],
   templateUrl: './accounts-page.html',
 })
-export class AccountsPage implements OnInit {
+export class AccountsPage implements OnInit, OnDestroy {
   protected readonly accounts = signal<readonly AccountModel[]>([]);
   protected readonly transfers = signal<readonly TransferModel[]>([]);
   protected readonly isLoading = signal(true);
@@ -233,7 +233,8 @@ export class AccountsPage implements OnInit {
   protected readonly transferRows = computed<readonly TransferTableRow[]>(() =>
     this.transfers().map((transfer) => this.toTransferRow(transfer)),
   );
-  protected readonly accountTableActions: readonly TableHeaderActionItem[] = [
+
+  private readonly toolbarActions: readonly ToolbarAction[] = [
     {
       id: 'add-account',
       label: 'accounts.table.actions.add',
@@ -241,17 +242,16 @@ export class AccountsPage implements OnInit {
       buttonType: 'default',
       action: () => this.openAddAccountDialog(),
     },
-  ];
-  protected readonly transferTableActions: readonly TableHeaderActionItem[] = [
     {
       id: 'add-transfer',
       label: 'accounts.transfers.table.actions.add',
       icon: 'plus',
-      buttonType: 'default',
+      buttonType: 'secondary',
       disabled: () => this.transferAccountOptions().length < 2,
       action: () => this.openCreateTransferDialog(),
     },
   ];
+  private releaseToolbarActions: (() => void) | null = null;
 
   private readonly transferAccountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly accountNameById = signal<ReadonlyMap<number, string>>(new Map());
@@ -261,13 +261,23 @@ export class AccountsPage implements OnInit {
   constructor(
     private readonly accountsService: AccountsService,
     private readonly transactionsService: TransactionsService,
+    private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
     private readonly translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
+    this.releaseToolbarActions = this.toolbarContextService.activate({
+      title: 'nav.items.accounts',
+      actions: this.toolbarActions,
+    });
     void this.loadAccountsPageData();
+  }
+
+  ngOnDestroy(): void {
+    this.releaseToolbarActions?.();
+    this.releaseToolbarActions = null;
   }
 
   protected onEditableValueChange(event: EditableValueChangeEvent): void {

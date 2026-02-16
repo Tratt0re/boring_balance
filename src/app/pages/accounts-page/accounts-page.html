@@ -10,7 +10,6 @@
     <app-data-table
       [data]="accounts()"
       [structure]="accountTableStructure"
-      [tableActions]="accountTableActions"
       title="nav.items.accounts"
       description="accounts.table.description"
       emptyMessage="accounts.table.emptyMessage"
@@ -26,7 +25,6 @@
     <app-data-table
       [data]="transferRows()"
       [structure]="transferTableStructure()"
-      [tableActions]="transferTableActions"
       title="accounts.transfers.title"
       description="accounts.transfers.table.description"
       emptyMessage="accounts.transfers.table.emptyMessage"

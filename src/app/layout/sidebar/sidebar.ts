@@ -2,7 +2,6 @@ import { Component, DestroyRef, effect, inject, input, output, signal, ViewEncap
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import { ZardIconComponent } from '@/shared/components/icon';
 import {
   SidebarComponent,
@@ -17,7 +16,6 @@ import type { MenuSectionConfig } from '@/config/menu.config';
   imports: [
     RouterLink,
     RouterLinkActive,
-    SidebarToggleComponent,
     TranslatePipe,
     ZardIconComponent,
     SidebarComponent,

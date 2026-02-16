@@ -1,0 +1,29 @@
+<z-header [zHeight]="null" class="justify-between gap-4 py-4">
+  <div class="flex min-w-0 items-center gap-2">
+    <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
+
+    @if (title(); as title) {
+      <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
+      <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>
+    }
+  </div>
+
+  <div class="flex items-center gap-2">
+    @for (action of actions(); track action.id) {
+      <button
+        z-button
+        type="button"
+        [zType]="action.buttonType ?? 'default'"
+        [zSize]="action.buttonSize ?? 'sm'"
+        [zShape]="action.buttonShape ?? 'default'"
+        [zDisabled]="isActionDisabled(action)"
+        (click)="onActionClick(action)"
+      >
+        @if (action.icon) {
+          <z-icon [zType]="action.icon" class="size-4" />
+        }
+        <span>{{ action.label | translate }}</span>
+      </button>
+    }
+  </div>
+</z-header>

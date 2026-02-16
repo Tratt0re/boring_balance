@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 
 @Component({
@@ -7,4 +8,22 @@ import { ZardSkeletonComponent } from '@/shared/components/skeleton';
   imports: [ZardSkeletonComponent],
   templateUrl: './overview-page.html',
 })
-export class OverviewPage {}
+export class OverviewPage implements OnInit, OnDestroy {
+  private releaseToolbarActions: (() => void) | null = null;
+
+  constructor(
+    private readonly toolbarContextService: ToolbarContextService,
+  ) {}
+
+  ngOnInit(): void {
+    this.releaseToolbarActions = this.toolbarContextService.activate({
+      title: 'nav.items.overview',
+      actions: [],
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.releaseToolbarActions?.();
+    this.releaseToolbarActions = null;
+  }
+}
