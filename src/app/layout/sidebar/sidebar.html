@@ -10,28 +10,6 @@
   (zCollapsedChange)="onSidebarCollapsedChange($event)"
 >
   <div class="flex h-full flex-col overflow-y-auto">
-    @if (!isSmallScreen()) {
-      <div
-        [class]="
-          'flex items-center ' +
-          (sidebarCollapsed() ? 'justify-center px-2 pb-2 pt-4' : 'justify-between gap-2 px-4 pb-2 pt-4')
-        "
-      >
-        <a
-          routerLink="/"
-          [class]="
-            'truncate overflow-hidden whitespace-nowrap text-sm font-semibold tracking-tight text-sidebar-foreground transition-[max-width,opacity] duration-200 ease-out hover:text-sidebar-foreground/80 ' +
-            (sidebarCollapsed() ? 'pointer-events-none max-w-0 opacity-0' : 'max-w-40 opacity-100')
-          "
-          [attr.aria-hidden]="sidebarCollapsed()"
-        >
-          Expense Tracker
-        </a>
-
-        <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="toggleSidebar()"></app-sidebar-toggle>
-      </div>
-    }
-
     <nav [class]="'flex flex-1 flex-col ' + (sidebarCollapsed() ? 'gap-1 p-2 pt-2' : 'gap-4 p-4 pt-2')">
       @for (section of menuSections(); track section.label) {
         <z-sidebar-group class="gap-1">

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_OPTIONS, APP_ICON_OPTIONS } from '@/config/visual-options.config';
@@ -6,7 +6,6 @@ import {
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
-  type TableHeaderActionItem,
   type TableDataItem,
 } from '@/components/data-table';
 import type { TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
@@ -14,6 +13,7 @@ import type { TransactionModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
 import { CategoriesService } from '@/services/categories.service';
 import { TransactionsService } from '@/services/transactions.service';
+import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -145,7 +145,7 @@ const createTransactionTableStructure = (
   imports: [AppDataTableComponent, ZardSkeletonComponent],
   templateUrl: './transaction-page.html',
 })
-export class TransactionPage implements OnInit {
+export class TransactionPage implements OnInit, OnDestroy {
   protected readonly transactions = signal<readonly TransactionTableRow[]>([]);
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
@@ -165,7 +165,8 @@ export class TransactionPage implements OnInit {
       (row) => this.onDeleteTransaction(row),
     ),
   );
-  protected readonly transactionTableActions: readonly TableHeaderActionItem[] = [
+
+  private readonly toolbarActions: readonly ToolbarAction[] = [
     {
       id: 'add-transaction',
       label: 'transactions.table.actions.add',
@@ -175,18 +176,29 @@ export class TransactionPage implements OnInit {
       action: () => this.openAddTransactionDialog(),
     },
   ];
+  private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
+    private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
     private readonly translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
+    this.releaseToolbarActions = this.toolbarContextService.activate({
+      title: 'nav.items.transactions',
+      actions: this.toolbarActions,
+    });
     void this.loadTransactionPageData();
+  }
+
+  ngOnDestroy(): void {
+    this.releaseToolbarActions?.();
+    this.releaseToolbarActions = null;
   }
 
   protected onEditableValueChange(event: EditableValueChangeEvent): void {

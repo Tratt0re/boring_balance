@@ -1,12 +1,11 @@
-import { Component, computed, HostListener, signal, ViewEncapsulation } from '@angular/core';
+import { Component, computed, HostListener, inject, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LayoutImports } from '@/shared/components/layout/layout.imports';
-
-import { Breadcrumb } from '../breadcrumb/breadcrumb';
-import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 import { Sidebar } from '../sidebar/sidebar';
+import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
+import { ToolbarContextService } from '@/services/toolbar-context.service';
 
 @Component({
   selector: 'app-root-layout',
@@ -14,18 +13,21 @@ import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config'
     ...LayoutImports,
     TranslatePipe,
     Header,
-    Breadcrumb,
+    Toolbar,
     Sidebar,
-    Footer,
   ],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,
 })
 export class RootLayout {
+  private readonly toolbarContextService = inject(ToolbarContextService);
+
   protected readonly sidebarCollapsed = signal(false);
   protected readonly isSmallScreen = signal(this.detectSmallScreen());
   protected readonly menuSections: readonly MenuSectionConfig[] = MenuConfiguration.sections;
   protected readonly showSidebarOverlay = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
+  protected readonly toolbarTitle = this.toolbarContextService.title;
+  protected readonly toolbarActions = this.toolbarContextService.actions;
 
   constructor() {
     if (this.isSmallScreen()) {
