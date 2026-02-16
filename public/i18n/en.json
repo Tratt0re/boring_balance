@@ -44,9 +44,64 @@
       "exclude": "Exclude"
     }
   },
+  "accounts": {
+    "table": {
+      "description": "Account configuration",
+      "emptyMessage": "No accounts found.",
+      "actions": {
+        "add": "Add account",
+        "archive": "Archive account"
+      },
+      "columns": {
+        "name": "Name",
+        "description": "Description",
+        "color": "Color",
+        "icon": "Icon"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Add account",
+        "description": "Create a new account with visual settings.",
+        "fields": {
+          "name": "Name",
+          "description": "Description",
+          "color": "Color",
+          "icon": "Icon"
+        },
+        "placeholders": {
+          "name": "Account name",
+          "description": "Account description",
+          "color": "Select color",
+          "icon": "Select icon"
+        },
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create account"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before creating the account.",
+          "nameRequired": "Name is required.",
+          "nameMinLength": "Name must be at least 2 characters.",
+          "nameMaxLength": "Name must be at most 64 characters.",
+          "descriptionMaxLength": "Description must be at most 160 characters.",
+          "createFailed": "Failed to create account."
+        }
+      }
+    },
+    "archiveAlert": {
+      "title": "Archive account?",
+      "description": "Are you sure you want to archive \"{{name}}\"? After confirmation, this account will no longer be selectable for new data. Existing data with this account will continue to show it until you edit those entries.",
+      "actions": {
+        "cancel": "Cancel",
+        "archive": "Archive"
+      }
+    }
+  },
   "categories": {
     "table": {
       "description": "Category configuration",
+      "emptyMessage": "No categories found.",
       "actions": {
         "add": "Add category",
         "archive": "Archive category"

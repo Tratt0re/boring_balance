@@ -70,6 +70,8 @@ type EditableErrorMap = Map<TableRow, Map<string, string>>;
 export class AppDataTableComponent {
   private readonly localPreferencesService = inject(LocalPreferencesService);
   private readonly translateService = inject(TranslateService);
+  private readonly rowTrackKeyByIdentity = new WeakMap<TableRow, number>();
+  private nextRowTrackKey = 1;
 
   readonly data = input<readonly TableRow[]>([]);
   readonly structure = input.required<readonly TableDataItem[]>();
@@ -284,6 +286,25 @@ export class AppDataTableComponent {
   protected onToggleAllRowsChange(checked: boolean): void {
     const nextSelection = checked ? new Set<TableRow>(this.sortedRows()) : new Set<TableRow>();
     this.updateSelection(nextSelection);
+  }
+
+  protected rowTrackKey(index: number, row: TableRow): string {
+    void index;
+
+    const rowRecord = row as TableRowRecord;
+    const rowId = rowRecord['id'];
+    if (typeof rowId === 'string' || typeof rowId === 'number' || typeof rowId === 'bigint') {
+      return `id:${rowId}`;
+    }
+
+    const keyByIdentity = this.rowTrackKeyByIdentity.get(row);
+    if (keyByIdentity !== undefined) {
+      return `obj:${keyByIdentity}`;
+    }
+
+    const nextKey = this.nextRowTrackKey++;
+    this.rowTrackKeyByIdentity.set(row, nextKey);
+    return `obj:${nextKey}`;
   }
 
   protected onToggleRowChange(checked: boolean, row: TableRow): void {

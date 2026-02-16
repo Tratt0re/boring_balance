@@ -1,0 +1,73 @@
+<div class="grid gap-4 sm:grid-cols-2">
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="account-name">
+      {{ 'accounts.dialog.add.fields.name' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <input
+      id="account-name"
+      z-input
+      type="text"
+      maxlength="64"
+      aria-required="true"
+      [attr.aria-invalid]="visibleNameErrorKey() ? 'true' : null"
+      [value]="name()"
+      [attr.placeholder]="'accounts.dialog.add.placeholders.name' | translate"
+      (blur)="onNameBlur()"
+      (input)="onNameInput($event)"
+    />
+    @if (visibleNameErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="account-description">
+      {{ 'accounts.dialog.add.fields.description' | translate }}
+    </label>
+    <input
+      id="account-description"
+      z-input
+      type="text"
+      maxlength="160"
+      [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
+      [value]="description()"
+      [attr.placeholder]="'accounts.dialog.add.placeholders.description' | translate"
+      (blur)="onDescriptionBlur()"
+      (input)="onDescriptionInput($event)"
+    />
+    @if (visibleDescriptionErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'accounts.dialog.add.fields.color' | translate }}</label>
+    <z-select
+      [zValue]="colorKey()"
+      [zPlaceholder]="'accounts.dialog.add.placeholders.color' | translate"
+      (zSelectionChange)="onColorChange($event)"
+    >
+      @for (option of colorOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zColorHex]="option.colorHex ?? null" />
+      }
+    </z-select>
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'accounts.dialog.add.fields.icon' | translate }}</label>
+    <z-select
+      [zValue]="icon()"
+      [zPlaceholder]="'accounts.dialog.add.placeholders.icon' | translate"
+      (zSelectionChange)="onIconChange($event)"
+    >
+      @for (option of iconOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zIcon]="option.icon ?? null" />
+      }
+    </z-select>
+  </div>
+
+  @if (errorKey(); as currentError) {
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+  }
+</div>
