@@ -14,7 +14,7 @@ export interface TransactionDto {
   readonly occurred_at: UnixTimestampMilliseconds;
   readonly amount_cents: number;
   readonly description: string | null;
-  readonly notes: string | null;
+  readonly tags: readonly string[];
   readonly transfer_id: string | null;
   readonly settled: SqliteBoolean;
   readonly created_at: UnixTimestampMilliseconds;
@@ -27,7 +27,7 @@ export interface TransactionCreateDto {
   readonly category_id: RowId;
   readonly amount: number;
   readonly description?: string | null;
-  readonly notes?: string | null;
+  readonly tags?: readonly string[];
   readonly transfer_id?: string | null;
   readonly settled?: BooleanFlagInput;
 }
@@ -90,7 +90,7 @@ export interface TransactionUpdateDto {
     readonly category_id?: RowId;
     readonly amount?: number;
     readonly description?: string | null;
-    readonly notes?: string | null;
+    readonly tags?: readonly string[];
     readonly transfer_id?: string | null;
     readonly settled?: BooleanFlagInput;
   };

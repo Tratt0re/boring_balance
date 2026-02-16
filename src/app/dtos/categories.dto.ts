@@ -1,7 +1,6 @@
 import type {
   BooleanFlagInput,
   ListQueryDto,
-  ListQueryOptions,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -47,20 +46,6 @@ export type CategoryListDto = ListQueryDto<
   >
 >;
 
-export interface CategoryListByTypeDto {
-  readonly type: CategoryType;
-  readonly options?: ListQueryOptions;
-}
-
-export interface CategoryListByParentDto {
-  readonly parent_id: number | null;
-  readonly options?: ListQueryOptions;
-}
-
-export interface CategoryListRootDto {
-  readonly options?: ListQueryOptions;
-}
-
 export interface CategoryUpdateDto {
   readonly id: number;
   readonly changes: {
@@ -82,8 +67,5 @@ export interface CategoryRemoveDto {
 export type CategoryCreateResponse = CategoryDto | null;
 export type CategoryGetResponse = CategoryDto | null;
 export type CategoryListResponse = CategoryDto[];
-export type CategoryListByTypeResponse = CategoryDto[];
-export type CategoryListByParentResponse = CategoryDto[];
-export type CategoryListRootResponse = CategoryDto[];
 export type CategoryUpdateResponse = UpdateResponseDto<CategoryDto>;
 export type CategoryRemoveResponse = RemoveResponseDto;

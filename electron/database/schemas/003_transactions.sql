@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 
   amount_cents INTEGER NOT NULL, -- signed
   description  TEXT,
-  notes        TEXT,
+  tags         TEXT, -- JSON array
 
   transfer_id  TEXT, -- NULL for normal tx, same value for transfer legs
 

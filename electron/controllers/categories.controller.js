@@ -6,7 +6,6 @@ const {
   ensurePlainObject,
   extractId,
   extractListPayload,
-  extractOptionsPayload,
   nowUnixTimestampMilliseconds,
   normalizeOptionalBooleanFlag,
   normalizeOptionalInteger,
@@ -89,31 +88,6 @@ function list(payload) {
   return categoriesModel.list(where, options);
 }
 
-function listByType(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const type = normalizeCategoryType(body.type, 'type');
-  const options = extractOptionsPayload({ options: body.options ?? {} });
-
-  return categoriesModel.listByType(type, options);
-}
-
-function listByParent(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const options = extractOptionsPayload({ options: body.options ?? {} });
-
-  if (body.parent_id === null) {
-    return categoriesModel.listRoot(options);
-  }
-
-  const parentId = extractId({ id: body.parent_id });
-  return categoriesModel.listByParent(parentId, options);
-}
-
-function listRoot(payload) {
-  const options = extractOptionsPayload(payload);
-  return categoriesModel.listRoot(options);
-}
-
 function update(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const id = extractId({ id: body.id });
@@ -152,9 +126,6 @@ module.exports = {
   create,
   get,
   list,
-  listByParent,
-  listByType,
-  listRoot,
   remove,
   update,
 };

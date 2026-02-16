@@ -1,7 +1,6 @@
 import type {
   BooleanFlagInput,
   ListQueryDto,
-  ListQueryOptions,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -36,10 +35,6 @@ export type AccountListDto = ListQueryDto<
   Pick<AccountDto, 'id' | 'name' | 'description' | 'color_key' | 'icon' | 'archived' | 'created_at' | 'updated_at'>
 >;
 
-export interface AccountListActiveDto {
-  readonly options?: ListQueryOptions;
-}
-
 export interface AccountUpdateDto {
   readonly id: number;
   readonly changes: {
@@ -58,6 +53,5 @@ export interface AccountRemoveDto {
 export type AccountCreateResponse = AccountDto | null;
 export type AccountGetResponse = AccountDto | null;
 export type AccountListResponse = AccountDto[];
-export type AccountListActiveResponse = AccountDto[];
 export type AccountUpdateResponse = UpdateResponseDto<AccountDto>;
 export type AccountRemoveResponse = RemoveResponseDto;

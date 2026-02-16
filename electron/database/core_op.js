@@ -10,7 +10,7 @@ const IDENTIFIER_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
  * @throws {Error} If identifier does not match the allowed pattern.
  */
 function assertIdentifier(value, label) {
-  if (!IDENTIFIER_PATTERN.test(value)) {
+  if (typeof value !== 'string' || !IDENTIFIER_PATTERN.test(value)) {
     throw new Error(`Invalid ${label}: "${value}"`);
   }
 }
@@ -24,6 +24,15 @@ function assertIdentifier(value, label) {
 function quoteIdentifier(identifier) {
   assertIdentifier(identifier, 'identifier');
   return `"${identifier}"`;
+}
+
+function isPlainObject(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
 }
 
 /**
@@ -55,14 +64,91 @@ function ensureObjectHasKeys(value, label) {
   }
 }
 
+function appendInCondition(clauses, params, quotedColumn, values, label, options = {}) {
+  if (!Array.isArray(values)) {
+    throw new Error(`${label} must be an array.`);
+  }
+
+  if (values.length === 0) {
+    clauses.push(options.negate ? '1 = 1' : '1 = 0');
+    return;
+  }
+
+  const placeholdersSql = values.map(() => '?').join(', ');
+  const operator = options.negate ? 'NOT IN' : 'IN';
+  clauses.push(`${quotedColumn} ${operator} (${placeholdersSql})`);
+  params.push(...values);
+}
+
+function appendOperatorCondition(clauses, params, quotedColumn, operator, value, label) {
+  switch (operator) {
+    case 'eq':
+      if (value === null) {
+        clauses.push(`${quotedColumn} IS NULL`);
+      } else {
+        clauses.push(`${quotedColumn} = ?`);
+        params.push(value);
+      }
+      return;
+    case 'ne':
+      if (value === null) {
+        clauses.push(`${quotedColumn} IS NOT NULL`);
+      } else {
+        clauses.push(`${quotedColumn} != ?`);
+        params.push(value);
+      }
+      return;
+    case 'gt':
+    case 'gte':
+    case 'lt':
+    case 'lte': {
+      if (value === null) {
+        throw new Error(`${label}.${operator} cannot be null.`);
+      }
+
+      const sqlOperator = {
+        gt: '>',
+        gte: '>=',
+        lt: '<',
+        lte: '<=',
+      }[operator];
+
+      clauses.push(`${quotedColumn} ${sqlOperator} ?`);
+      params.push(value);
+      return;
+    }
+    case 'in':
+      appendInCondition(clauses, params, quotedColumn, value, `${label}.in`);
+      return;
+    case 'notIn':
+      appendInCondition(clauses, params, quotedColumn, value, `${label}.notIn`, { negate: true });
+      return;
+    case 'isNull':
+      if (typeof value !== 'boolean') {
+        throw new Error(`${label}.isNull must be a boolean.`);
+      }
+      clauses.push(`${quotedColumn} IS ${value ? '' : 'NOT '}NULL`);
+      return;
+    default:
+      throw new Error(`Unsupported operator "${operator}" in ${label}.`);
+  }
+}
+
 /**
- * Builds a parameterized WHERE clause from an equality map.
+ * Builds a parameterized WHERE clause from a filter map.
  *
  * Example:
- * `buildWhereClause({ id: 1, archived: 0 })`
- * returns `{ clause: ' WHERE "id" = ? AND "archived" = ?', params: [1, 0] }`
+ * `buildWhereClause({ id: 1, archived: 0, parent_id: { isNull: true } })`
+ * returns `{ clause: ' WHERE "id" = ? AND "archived" = ? AND "parent_id" IS NULL', params: [1, 0] }`
  *
- * @param {Record<string, unknown>} where - Column/value equality filters.
+ * Supported value shapes:
+ * - primitive value: `{ column: value }` => `"column" = ?`
+ * - `null` value: `{ column: null }` => `"column" IS NULL`
+ * - array value: `{ column: [1, 2] }` => `"column" IN (?, ?)`
+ * - operator object:
+ *   - `{ eq, ne, gt, gte, lt, lte, in, notIn, isNull }`
+ *
+ * @param {Record<string, unknown>} where - Column/value filters.
  * @returns {{ clause: string, params: unknown[] }} SQL fragment and parameter list.
  */
 function buildWhereClause(where) {
@@ -70,11 +156,72 @@ function buildWhereClause(where) {
     return { clause: '', params: [] };
   }
 
-  const keys = Object.keys(where);
-  const clause = ` WHERE ${keys.map((key) => `${quoteIdentifier(key)} = ?`).join(' AND ')}`;
-  const params = keys.map((key) => where[key]);
+  const clauses = [];
+  const params = [];
+
+  for (const key of Object.keys(where)) {
+    const quotedKey = quoteIdentifier(key);
+    const condition = where[key];
+    const label = `where.${key}`;
+
+    if (Array.isArray(condition)) {
+      appendInCondition(clauses, params, quotedKey, condition, label);
+      continue;
+    }
+
+    if (condition === null) {
+      clauses.push(`${quotedKey} IS NULL`);
+      continue;
+    }
+
+    if (isPlainObject(condition)) {
+      const entries = Object.entries(condition);
+      if (entries.length === 0) {
+        throw new Error(`${label} cannot be an empty operator object.`);
+      }
+
+      for (const [operator, value] of entries) {
+        appendOperatorCondition(clauses, params, quotedKey, operator, value, label);
+      }
+      continue;
+    }
+
+    clauses.push(`${quotedKey} = ?`);
+    params.push(condition);
+  }
+
+  const clause = clauses.length === 0 ? '' : ` WHERE ${clauses.join(' AND ')}`;
 
   return { clause, params };
+}
+
+function buildOrderByClause(options = {}) {
+  if (!options.orderBy) {
+    return '';
+  }
+
+  if (typeof options.orderBy === 'string') {
+    assertIdentifier(options.orderBy, 'orderBy');
+    const direction = options.orderDirection === 'DESC' ? 'DESC' : 'ASC';
+    return ` ORDER BY ${quoteIdentifier(options.orderBy)} ${direction}`;
+  }
+
+  if (!Array.isArray(options.orderBy) || options.orderBy.length === 0) {
+    throw new Error('orderBy must be a string or a non-empty array.');
+  }
+
+  const parts = options.orderBy.map((entry, index) => {
+    if (!isPlainObject(entry)) {
+      throw new Error(`orderBy[${index}] must be an object.`);
+    }
+
+    const column = entry.column;
+    assertIdentifier(column, `orderBy[${index}].column`);
+    const direction = entry.direction === 'DESC' ? 'DESC' : 'ASC';
+    return `${quoteIdentifier(column)} ${direction}`;
+  });
+
+  return ` ORDER BY ${parts.join(', ')}`;
 }
 
 /**
@@ -101,12 +248,17 @@ function insertRow(database, tableName, row) {
 }
 
 /**
- * Selects rows using equality filters and optional ordering/pagination.
+ * Selects rows using filters and optional ordering/pagination.
  *
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
  * @param {string} tableName - Source table name.
- * @param {Record<string, unknown>} [where={}] - Column/value equality filters.
- * @param {{ orderBy?: string, orderDirection?: 'ASC'|'DESC', limit?: number, offset?: number }} [options={}] - Query options.
+ * @param {Record<string, unknown>} [where={}] - Column/value filters.
+ * @param {{
+ *   orderBy?: string | { column: string, direction?: 'ASC'|'DESC' }[],
+ *   orderDirection?: 'ASC'|'DESC',
+ *   limit?: number,
+ *   offset?: number
+ * }} [options={}] - Query options.
  * @returns {Record<string, unknown>[]} Matching rows.
  */
 function selectRows(database, tableName, where = {}, options = {}) {
@@ -118,11 +270,7 @@ function selectRows(database, tableName, where = {}, options = {}) {
   const hasLimit = Number.isInteger(options.limit) && options.limit > 0;
   const hasOffset = Number.isInteger(options.offset) && options.offset >= 0;
 
-  if (options.orderBy) {
-    assertIdentifier(options.orderBy, 'orderBy');
-    const direction = options.orderDirection === 'DESC' ? 'DESC' : 'ASC';
-    sql += ` ORDER BY ${quoteIdentifier(options.orderBy)} ${direction}`;
-  }
+  sql += buildOrderByClause(options);
 
   if (hasLimit) {
     sql += ` LIMIT ${options.limit}`;
@@ -140,11 +288,11 @@ function selectRows(database, tableName, where = {}, options = {}) {
 }
 
 /**
- * Counts rows using equality filters.
+ * Counts rows using filters.
  *
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
  * @param {string} tableName - Source table name.
- * @param {Record<string, unknown>} [where={}] - Column/value equality filters.
+ * @param {Record<string, unknown>} [where={}] - Column/value filters.
  * @returns {number} Number of matching rows.
  */
 function countRows(database, tableName, where = {}) {
@@ -163,7 +311,7 @@ function countRows(database, tableName, where = {}) {
  *
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
  * @param {string} tableName - Source table name.
- * @param {Record<string, unknown>} [where={}] - Column/value equality filters.
+ * @param {Record<string, unknown>} [where={}] - Column/value filters.
  * @returns {Record<string, unknown>|null} First matching row or `null`.
  */
 function selectOne(database, tableName, where = {}) {
@@ -177,7 +325,7 @@ function selectOne(database, tableName, where = {}) {
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
  * @param {string} tableName - Target table name.
  * @param {Record<string, unknown>} changes - Column/value updates.
- * @param {Record<string, unknown>} where - Column/value equality filters.
+ * @param {Record<string, unknown>} where - Column/value filters.
  * @returns {number} Number of changed rows.
  */
 function updateRows(database, tableName, changes, where) {
@@ -201,7 +349,7 @@ function updateRows(database, tableName, changes, where) {
  *
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
  * @param {string} tableName - Target table name.
- * @param {Record<string, unknown>} where - Column/value equality filters.
+ * @param {Record<string, unknown>} where - Column/value filters.
  * @returns {number} Number of deleted rows.
  */
 function deleteRows(database, tableName, where) {

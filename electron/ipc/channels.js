@@ -13,7 +13,6 @@ const CHANNELS = Object.freeze({
     list: 'db:accounts:list',
     update: 'db:accounts:update',
     remove: 'db:accounts:remove',
-    listActive: 'db:accounts:list-active',
   }),
   categories: Object.freeze({
     create: 'db:categories:create',
@@ -21,9 +20,6 @@ const CHANNELS = Object.freeze({
     list: 'db:categories:list',
     update: 'db:categories:update',
     remove: 'db:categories:remove',
-    listByType: 'db:categories:list-by-type',
-    listByParent: 'db:categories:list-by-parent',
-    listRoot: 'db:categories:list-root',
   }),
   transactions: Object.freeze({
     create: 'db:transactions:create',

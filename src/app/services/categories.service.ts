@@ -33,21 +33,6 @@ export class CategoriesService extends BaseIpcService<APIChannel.CATEGORIES> {
     return rows.map((row) => CategoryModel.fromDTO(row));
   }
 
-  async listByType(payload: DTO.CategoryListByTypeDto): Promise<CategoryModel[]> {
-    const rows = await this.ipcClient.listByType(payload);
-    return rows.map((row) => CategoryModel.fromDTO(row));
-  }
-
-  async listByParent(payload: DTO.CategoryListByParentDto): Promise<CategoryModel[]> {
-    const rows = await this.ipcClient.listByParent(payload);
-    return rows.map((row) => CategoryModel.fromDTO(row));
-  }
-
-  async listRoot(payload?: DTO.CategoryListRootDto): Promise<CategoryModel[]> {
-    const rows = await this.ipcClient.listRoot(payload);
-    return rows.map((row) => CategoryModel.fromDTO(row));
-  }
-
   async update(payload: DTO.CategoryUpdateDto): Promise<CategoryUpdateResult> {
     const result = await this.ipcClient.update(payload);
     return {

@@ -33,11 +33,6 @@ export class AccountsService extends BaseIpcService<APIChannel.ACCOUNTS> {
     return rows.map((row) => AccountModel.fromDTO(row));
   }
 
-  async listActive(payload?: DTO.AccountListActiveDto): Promise<AccountModel[]> {
-    const rows = await this.ipcClient.listActive(payload);
-    return rows.map((row) => AccountModel.fromDTO(row));
-  }
-
   async update(payload: DTO.AccountUpdateDto): Promise<AccountUpdateResult> {
     const result = await this.ipcClient.update(payload);
     return {

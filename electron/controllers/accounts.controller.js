@@ -6,7 +6,6 @@ const {
   ensurePlainObject,
   extractId,
   extractListPayload,
-  extractOptionsPayload,
   nowUnixTimestampMilliseconds,
   normalizeOptionalBooleanFlag,
   normalizeOptionalString,
@@ -60,11 +59,6 @@ function list(payload) {
   return accountsModel.list(where, options);
 }
 
-function listActive(payload) {
-  const options = extractOptionsPayload(payload);
-  return accountsModel.listActive(options);
-}
-
 function update(payload) {
   const body = ensurePlainObject(payload, 'payload');
   const id = extractId({ id: body.id });
@@ -92,7 +86,6 @@ module.exports = {
   create,
   get,
   list,
-  listActive,
   remove,
   update,
 };

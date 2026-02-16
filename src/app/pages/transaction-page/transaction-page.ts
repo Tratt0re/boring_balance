@@ -325,7 +325,10 @@ export class TransactionPage implements OnInit {
 
     try {
       const [accounts, categories, transactions] = await Promise.all([
-        this.accountsService.listActive({
+        this.accountsService.list({
+          where: {
+            archived: 0,
+          },
           options: {
             orderBy: 'id',
             orderDirection: 'ASC',

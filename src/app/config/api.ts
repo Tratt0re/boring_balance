@@ -25,7 +25,6 @@ export interface ElectronIpcClient {
     readonly list: OptionalIpcRequest<DTO.AccountListDto, DTO.AccountListResponse>;
     readonly update: IpcRequest<DTO.AccountUpdateDto, DTO.AccountUpdateResponse>;
     readonly remove: IpcRequest<DTO.AccountRemoveDto, DTO.AccountRemoveResponse>;
-    readonly listActive: OptionalIpcRequest<DTO.AccountListActiveDto, DTO.AccountListActiveResponse>;
   };
   readonly categories: {
     readonly create: IpcRequest<DTO.CategoryCreateDto, DTO.CategoryCreateResponse>;
@@ -33,9 +32,6 @@ export interface ElectronIpcClient {
     readonly list: OptionalIpcRequest<DTO.CategoryListDto, DTO.CategoryListResponse>;
     readonly update: IpcRequest<DTO.CategoryUpdateDto, DTO.CategoryUpdateResponse>;
     readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
-    readonly listByType: IpcRequest<DTO.CategoryListByTypeDto, DTO.CategoryListByTypeResponse>;
-    readonly listByParent: IpcRequest<DTO.CategoryListByParentDto, DTO.CategoryListByParentResponse>;
-    readonly listRoot: OptionalIpcRequest<DTO.CategoryListRootDto, DTO.CategoryListRootResponse>;
   };
   readonly transactions: {
     readonly create: IpcRequest<DTO.TransactionCreateDto, DTO.TransactionCreateResponse>;
