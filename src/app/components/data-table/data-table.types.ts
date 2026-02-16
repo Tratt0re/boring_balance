@@ -5,7 +5,7 @@ import type { ZardIcon } from '@/shared/components/icon';
 export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
 export type TableActionColumnPosition = 'start' | 'end';
 export type TableSortDirection = 'asc' | 'desc';
-export type EditableCellType = 'input' | 'checkbox' | 'select' | 'switch' | 'date';
+export type EditableCellType = 'input' | 'checkbox' | 'select' | 'combobox' | 'switch' | 'date';
 export type EditableInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
 
 export interface TableDataItem {}

@@ -75,15 +75,13 @@
 
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium">{{ 'categories.dialog.add.fields.icon' | translate }}</label>
-    <z-select
-      [zValue]="icon()"
-      [zPlaceholder]="'categories.dialog.add.placeholders.icon' | translate"
-      (zSelectionChange)="onIconChange($event)"
-    >
-      @for (option of iconOptions; track option.value) {
-        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zIcon]="option.icon ?? null" />
-      }
-    </z-select>
+    <z-combobox
+      zWidth="full"
+      [value]="icon() || null"
+      [placeholder]="'categories.dialog.add.placeholders.icon' | translate"
+      [options]="getIconComboboxOptions()"
+      (zValueChange)="onIconChange($event)"
+    />
   </div>
 
   @if (errorKey(); as currentError) {

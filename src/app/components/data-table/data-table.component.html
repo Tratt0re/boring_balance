@@ -165,7 +165,7 @@
                           } @else {
                             <z-select
                               class="data-active:border-0 data-active:ring-0 [&_button]:border-0 [&_button]:px-0 [&_button]:py-0 [&_button]:bg-transparent [&_button]:shadow-none [&_button]:focus-visible:border-0 [&_button]:focus-visible:ring-0 dark:[&_button]:bg-transparent dark:[&_button]:hover:bg-transparent"
-                              zChevronClass="text-primary opacity-70"
+                              [zChevronClass]="editablePickerIconClass()"
                               [zValue]="getEditableSelectValue(row, column)"
                               [zShowSelectedLabel]="shouldShowEditableSelectLabel(column)"
                               [zDisabled]="isEditableDisabled(column, row)"
@@ -181,6 +181,41 @@
                                 />
                               }
                             </z-select>
+                          }
+                        }
+
+                        @case ('combobox') {
+                          @if (isEditableDisabled(column, row)) {
+                            @if (getEditableSelectOption(row, column); as selectedOption) {
+                              <span class="inline-flex min-w-0 items-center gap-2 text-sm">
+                                @if (selectedOption.colorHex; as optionColorHex) {
+                                  <span
+                                    class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+                                    [style.backgroundColor]="optionColorHex"
+                                  ></span>
+                                }
+                                @if (selectedOption.icon; as optionIcon) {
+                                  <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                }
+                                @if (shouldShowEditableSelectLabel(column)) {
+                                  <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                }
+                              </span>
+                            } @else {
+                              <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                            }
+                          } @else {
+                            <z-combobox
+                              zWidth="full"
+                              buttonVariant="ghost"
+                              zButtonClass="!border-0 !px-0 !py-0 !h-auto !bg-transparent !shadow-none !hover:bg-transparent !focus-visible:border-0 !focus-visible:ring-0 dark:!bg-transparent dark:!hover:bg-transparent"
+                              [zChevronClass]="editablePickerIconClass()"
+                              [value]="getEditableComboboxValue(row, column)"
+                              [options]="getEditableComboboxOptions(column)"
+                              [placeholder]="column.placeholder ? (column.placeholder | translate) : ''"
+                              [disabled]="isEditableDisabled(column, row)"
+                              (zValueChange)="onEditableComboboxValueChange($event, row, column)"
+                            />
                           }
                         }
 
