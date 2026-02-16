@@ -118,7 +118,7 @@
               @for (column of columns(); track column.columnKey) {
                 <td z-table-cell>
                   @if (isEditableColumn(column)) {
-                    <div class="group flex min-w-36 flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
+                    <div class="group flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
                       @switch (column.editableType) {
                         @case ('checkbox') {
                           <z-checkbox
@@ -269,8 +269,12 @@
                     </div>
                   } @else {
                     @if (isBadgeColumn(column)) {
-                      <z-badge [zType]="column.badge?.type ?? 'secondary'" [zShape]="column.badge?.shape ?? 'pill'">
-                        @if (column.badge?.icon; as badgeIcon) {
+                      <z-badge
+                        [zType]="column.badge?.type ?? 'secondary'"
+                        [zShape]="column.badge?.shape ?? 'pill'"
+                        [attr.style]="badgeInlineStyle(row, column)"
+                      >
+                        @if (badgeIcon(row, column); as badgeIcon) {
                           <z-icon [zType]="badgeIcon" class="size-3" />
                         }
                         {{ formatCellValue(row, column) }}

@@ -5,8 +5,7 @@ const {
   ensureNonEmptyObject,
   ensurePlainObject,
   extractId,
-  extractListPayload,
-  extractOptionsPayload,
+  extractString,
   normalizeAmountToCents,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
@@ -14,19 +13,23 @@ const {
   normalizeOptionalString,
   normalizePositiveInteger,
   pickDefined,
-  requireString,
 } = require('./utils');
 
 const TRANSACTION_FIELDS = new Set([
   'occurred_at',
   'account_id',
   'category_id',
-  'amount_cents',
+  'amount',
   'description',
   'notes',
   'transfer_id',
   'settled',
 ]);
+const LIST_PAYLOAD_FIELDS = new Set(['filters']);
+const LIST_TRANSACTIONS_FILTER_FIELDS = new Set(['date_from', 'date_to', 'categories', 'accounts', 'settled']);
+const LIST_TRANSFERS_FILTER_FIELDS = new Set(['date_from', 'date_to', 'accounts']);
+const CREATE_TRANSFER_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount']);
+const UPDATE_TRANSFER_FIELDS = new Set(['transfer_id', 'occurred_at', 'from_account_id', 'to_account_id', 'amount']);
 
 function normalizeTransactionChanges(value, label, options = {}) {
   const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
@@ -46,9 +49,9 @@ function normalizeTransactionChanges(value, label, options = {}) {
         ? undefined
         : normalizePositiveInteger(changesInput.category_id, `${label}.category_id`),
     amount_cents:
-      changesInput.amount_cents === undefined
+      changesInput.amount === undefined
         ? undefined
-        : normalizeAmountToCents(changesInput.amount_cents, `${label}.amount_cents`),
+        : normalizeAmountToCents(changesInput.amount, `${label}.amount`),
     description: normalizeOptionalString(changesInput.description, `${label}.description`),
     notes: normalizeOptionalString(changesInput.notes, `${label}.notes`),
     transfer_id: normalizeOptionalString(changesInput.transfer_id, `${label}.transfer_id`),
@@ -56,11 +59,16 @@ function normalizeTransactionChanges(value, label, options = {}) {
   });
 
   if (!options.partial) {
-    const requiredFields = ['occurred_at', 'account_id', 'category_id', 'amount_cents'];
+    const requiredFields = [
+      { changeKey: 'occurred_at', payloadKey: 'occurred_at' },
+      { changeKey: 'account_id', payloadKey: 'account_id' },
+      { changeKey: 'category_id', payloadKey: 'category_id' },
+      { changeKey: 'amount_cents', payloadKey: 'amount' },
+    ];
 
     for (const requiredField of requiredFields) {
-      if (changes[requiredField] === undefined) {
-        throw new Error(`payload.${requiredField} is required.`);
+      if (changes[requiredField.changeKey] === undefined) {
+        throw new Error(`payload.${requiredField.payloadKey} is required.`);
       }
     }
   }
@@ -69,73 +77,113 @@ function normalizeTransactionChanges(value, label, options = {}) {
   return changes;
 }
 
-function normalizeDateRangeFilters(payload) {
+function normalizeOptionalIdArray(value, label) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error(`${label} must be an array.`);
+  }
+
+  return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
+}
+
+function normalizeListTransactionsFilters(payload) {
   if (payload === undefined || payload === null) {
     return {};
   }
 
   const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, LIST_PAYLOAD_FIELDS, 'payload');
+  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
+  assertAllowedKeys(filters, LIST_TRANSACTIONS_FILTER_FIELDS, 'payload.filters');
 
   return pickDefined({
-    from:
-      body.from === undefined
+    date_from:
+      filters.date_from === undefined
         ? undefined
-        : normalizeUnixTimestampMilliseconds(body.from, 'from'),
-    to: body.to === undefined ? undefined : normalizeUnixTimestampMilliseconds(body.to, 'to'),
-    accountId:
-      body.accountId === undefined
-        ? undefined
-        : normalizePositiveInteger(body.accountId, 'accountId'),
-    categoryId:
-      body.categoryId === undefined
-        ? undefined
-        : normalizePositiveInteger(body.categoryId, 'categoryId'),
-    settled: normalizeOptionalBooleanFlag(body.settled, 'settled'),
-    transferId:
-      body.transferId === undefined
-        ? undefined
-        : body.transferId === null
-          ? null
-          : requireString(body.transferId, 'transferId', { allowEmpty: false }),
+        : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
+    date_to:
+      filters.date_to === undefined ? undefined : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
+    categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
+    accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+    settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
   });
 }
 
-function normalizePaginationOptions(options, label) {
-  if (options.page === undefined) {
-    throw new Error(`${label}.page is required.`);
+function normalizeListTransfersFilters(payload) {
+  if (payload === undefined || payload === null) {
+    return {};
   }
 
-  if (options.perPage === undefined) {
-    throw new Error(`${label}.perPage is required.`);
-  }
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, LIST_PAYLOAD_FIELDS, 'payload');
+  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
+  assertAllowedKeys(filters, LIST_TRANSFERS_FILTER_FIELDS, 'payload.filters');
 
-  const paginationOptions = {
-    page: normalizePositiveInteger(options.page, `${label}.page`),
-    perPage: normalizePositiveInteger(options.perPage, `${label}.perPage`),
-  };
-
-  if (options.orderBy !== undefined) {
-    paginationOptions.orderBy = requireString(options.orderBy, `${label}.orderBy`, { allowEmpty: false });
-  }
-
-  if (options.orderDirection !== undefined) {
-    paginationOptions.orderDirection = requireString(options.orderDirection, `${label}.orderDirection`, {
-      allowEmpty: false,
-    }).toUpperCase();
-  }
-
-  return paginationOptions;
+  return pickDefined({
+    date_from:
+      filters.date_from === undefined
+        ? undefined
+        : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
+    date_to:
+      filters.date_to === undefined ? undefined : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
+    accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+  });
 }
 
-function buildPaginatedTransactionsResponse(paginatedResult, paginationOptions) {
-  const totalTransactions = paginatedResult.totalTransactions;
+function normalizeCreateTransferPayload(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, CREATE_TRANSFER_FIELDS, 'payload');
+
+  const occurredAt = normalizeUnixTimestampMilliseconds(body.occurred_at, 'payload.occurred_at');
+  const fromAccountId = normalizePositiveInteger(body.from_account_id, 'payload.from_account_id');
+  const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
+  const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
+
+  if (amountCents <= 0) {
+    throw new Error('payload.amount must be a positive number.');
+  }
+
+  if (fromAccountId === toAccountId) {
+    throw new Error('payload.from_account_id and payload.to_account_id must be different.');
+  }
 
   return {
-    transactions: paginatedResult.rows,
-    page: paginationOptions.page,
-    perPage: paginationOptions.perPage,
-    totalPages: totalTransactions === 0 ? 0 : Math.ceil(totalTransactions / paginationOptions.perPage),
-    totalTransactions,
+    occurred_at: occurredAt,
+    from_account_id: fromAccountId,
+    to_account_id: toAccountId,
+    amount_cents: amountCents,
+    created_at: nowUnixTimestampMilliseconds(),
+  };
+}
+
+function normalizeUpdateTransferPayload(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, UPDATE_TRANSFER_FIELDS, 'payload');
+
+  const transferId = extractString({ transfer_id: body.transfer_id }, 'transfer_id');
+  const occurredAt = normalizeUnixTimestampMilliseconds(body.occurred_at, 'payload.occurred_at');
+  const fromAccountId = normalizePositiveInteger(body.from_account_id, 'payload.from_account_id');
+  const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
+  const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
+
+  if (amountCents <= 0) {
+    throw new Error('payload.amount must be a positive number.');
+  }
+
+  if (fromAccountId === toAccountId) {
+    throw new Error('payload.from_account_id and payload.to_account_id must be different.');
+  }
+
+  return {
+    transfer_id: transferId,
+    occurred_at: occurredAt,
+    from_account_id: fromAccountId,
+    to_account_id: toAccountId,
+    amount_cents: amountCents,
+    updated_at: nowUnixTimestampMilliseconds(),
   };
 }
 
@@ -154,50 +202,29 @@ function get(payload) {
   return transactionsModel.getById(id);
 }
 
-function list(payload) {
-  const { where, options } = extractListPayload(payload);
-  const paginationOptions = normalizePaginationOptions(options, 'payload.options');
-  const paginatedResult = transactionsModel.listPaginated(where, paginationOptions);
-
-  return buildPaginatedTransactionsResponse(paginatedResult, paginationOptions);
+function listTransactions(payload) {
+  const filters = normalizeListTransactionsFilters(payload);
+  return transactionsModel.listTransactions(filters);
 }
 
-function listByAccount(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const accountId = normalizePositiveInteger(body.account_id, 'account_id');
-  const options = extractOptionsPayload({ options: body.options ?? {} });
-  const paginationOptions = normalizePaginationOptions(options, 'payload.options');
-  const paginatedResult = transactionsModel.listByAccount(accountId, paginationOptions);
-
-  return buildPaginatedTransactionsResponse(paginatedResult, paginationOptions);
+function listTransfers(payload) {
+  const filters = normalizeListTransfersFilters(payload);
+  return transactionsModel.listTransfers(filters);
 }
 
-function listByCategory(payload) {
-  const body = ensurePlainObject(payload, 'payload');
-  const categoryId = normalizePositiveInteger(body.category_id, 'category_id');
-  const options = extractOptionsPayload({ options: body.options ?? {} });
-  const paginationOptions = normalizePaginationOptions(options, 'payload.options');
-  const paginatedResult = transactionsModel.listByCategory(categoryId, paginationOptions);
-
-  return buildPaginatedTransactionsResponse(paginatedResult, paginationOptions);
+function createTransfer(payload) {
+  const transferPayload = normalizeCreateTransferPayload(payload);
+  return transactionsModel.createTransfer(transferPayload);
 }
 
-function listUnsettled(payload) {
-  const options = extractOptionsPayload(payload);
-  const paginationOptions = normalizePaginationOptions(options, 'options');
-  const paginatedResult = transactionsModel.listUnsettled(paginationOptions);
-
-  return buildPaginatedTransactionsResponse(paginatedResult, paginationOptions);
+function updateTransfer(payload) {
+  const transferPayload = normalizeUpdateTransferPayload(payload);
+  return transactionsModel.updateTransfer(transferPayload);
 }
 
-function listByDateRange(payload) {
-  const body = payload ? ensurePlainObject(payload, 'payload') : {};
-  const filters = normalizeDateRangeFilters(body);
-  const options = extractOptionsPayload({ options: body.options ?? {} });
-  const paginationOptions = normalizePaginationOptions(options, 'payload.options');
-  const paginatedResult = transactionsModel.listByDateRange(filters, paginationOptions);
-
-  return buildPaginatedTransactionsResponse(paginatedResult, paginationOptions);
+function deleteTransfer(payload) {
+  const transferId = extractString(payload, 'transfer_id');
+  return transactionsModel.deleteTransfer({ transfer_id: transferId });
 }
 
 function update(payload) {
@@ -225,12 +252,12 @@ function remove(payload) {
 
 module.exports = {
   create,
+  createTransfer,
+  updateTransfer,
+  deleteTransfer,
   get,
-  list,
-  listByAccount,
-  listByCategory,
-  listByDateRange,
-  listUnsettled,
+  listTransactions,
+  listTransfers,
   remove,
   update,
 };

@@ -39,14 +39,17 @@ export interface ElectronIpcClient {
   };
   readonly transactions: {
     readonly create: IpcRequest<DTO.TransactionCreateDto, DTO.TransactionCreateResponse>;
+    readonly createTransfer: IpcRequest<DTO.TransactionCreateTransferDto, DTO.TransactionCreateTransferResponse>;
+    readonly updateTransfer: IpcRequest<DTO.TransactionUpdateTransferDto, DTO.TransactionUpdateTransferResponse>;
+    readonly deleteTransfer: IpcRequest<DTO.TransactionDeleteTransferDto, DTO.TransactionDeleteTransferResponse>;
     readonly get: IpcRequest<DTO.TransactionGetDto, DTO.TransactionGetResponse>;
-    readonly list: IpcRequest<DTO.TransactionListDto, DTO.TransactionListResponse>;
+    readonly listTransactions: OptionalIpcRequest<
+      DTO.TransactionListTransactionsDto,
+      DTO.TransactionListTransactionsResponse
+    >;
+    readonly listTransfers: OptionalIpcRequest<DTO.TransactionListTransfersDto, DTO.TransactionListTransfersResponse>;
     readonly update: IpcRequest<DTO.TransactionUpdateDto, DTO.TransactionUpdateResponse>;
     readonly remove: IpcRequest<DTO.TransactionRemoveDto, DTO.TransactionRemoveResponse>;
-    readonly listByAccount: IpcRequest<DTO.TransactionListByAccountDto, DTO.TransactionListByAccountResponse>;
-    readonly listByCategory: IpcRequest<DTO.TransactionListByCategoryDto, DTO.TransactionListByCategoryResponse>;
-    readonly listByDateRange: IpcRequest<DTO.TransactionListByDateRangeDto, DTO.TransactionListByDateRangeResponse>;
-    readonly listUnsettled: IpcRequest<DTO.TransactionListUnsettledDto, DTO.TransactionListUnsettledResponse>;
   };
 }
 

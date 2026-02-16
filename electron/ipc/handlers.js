@@ -31,14 +31,14 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.categories.listRoot]: categoriesController.listRoot,
 
   [CHANNELS.transactions.create]: transactionsController.create,
+  [CHANNELS.transactions.createTransfer]: transactionsController.createTransfer,
+  [CHANNELS.transactions.updateTransfer]: transactionsController.updateTransfer,
+  [CHANNELS.transactions.deleteTransfer]: transactionsController.deleteTransfer,
   [CHANNELS.transactions.get]: transactionsController.get,
-  [CHANNELS.transactions.list]: transactionsController.list,
+  [CHANNELS.transactions.listTransactions]: transactionsController.listTransactions,
+  [CHANNELS.transactions.listTransfers]: transactionsController.listTransfers,
   [CHANNELS.transactions.update]: transactionsController.update,
   [CHANNELS.transactions.remove]: transactionsController.remove,
-  [CHANNELS.transactions.listByAccount]: transactionsController.listByAccount,
-  [CHANNELS.transactions.listByCategory]: transactionsController.listByCategory,
-  [CHANNELS.transactions.listByDateRange]: transactionsController.listByDateRange,
-  [CHANNELS.transactions.listUnsettled]: transactionsController.listUnsettled,
 });
 
 module.exports = {

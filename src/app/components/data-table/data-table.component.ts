@@ -20,7 +20,7 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
-import { ZardIconComponent } from '@/shared/components/icon';
+import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
@@ -557,6 +557,43 @@ export class AppDataTableComponent {
 
   protected isBadgeColumn(column: ColumnDataItem): boolean {
     return column.type === 'badge';
+  }
+
+  protected badgeIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
+    if (!this.isBadgeColumn(column)) {
+      return null;
+    }
+
+    const iconColumnKey = column.badge?.iconColumnKey;
+    if (iconColumnKey) {
+      const iconValue = this.getRawValue(row, iconColumnKey);
+      if (typeof iconValue === 'string' && iconValue.length > 0) {
+        return iconValue as ZardIcon;
+      }
+    }
+
+    return column.badge?.icon ?? null;
+  }
+
+  protected badgeInlineStyle(row: TableRow, column: ColumnDataItem): string | null {
+    if (!this.isBadgeColumn(column)) {
+      return null;
+    }
+
+    const styles: string[] = [];
+    if (column.badge?.fullWidth) {
+      styles.push('display:flex;width:100%;');
+    }
+
+    const colorColumnKey = column.badge?.colorHexColumnKey;
+    if (colorColumnKey) {
+      const colorValue = this.getRawValue(row, colorColumnKey);
+      if (typeof colorValue === 'string' && colorValue.trim().length > 0) {
+        styles.push(`background-color:${colorValue};border-color:${colorValue};color:#fff;`);
+      }
+    }
+
+    return styles.length > 0 ? styles.join('') : null;
   }
 
   private sortDirectionForColumn(column: TableColumn): TableSortDirection | null {

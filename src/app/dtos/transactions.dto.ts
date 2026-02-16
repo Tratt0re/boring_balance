@@ -2,7 +2,6 @@ import type {
   BooleanFlagInput,
   RemoveResponseDto,
   RowId,
-  SortDirection,
   SqliteBoolean,
   UnixTimestampMilliseconds,
   UpdateResponseDto,
@@ -22,71 +21,74 @@ export interface TransactionDto {
   readonly updated_at: UnixTimestampMilliseconds | null;
 }
 
-export type TransactionOrderBy = 'occurred_at' | 'created_at' | 'id' | 'amount_cents';
-
-export interface TransactionPaginationOptionsDto {
-  readonly page: number;
-  readonly perPage: number;
-  readonly orderBy?: TransactionOrderBy;
-  readonly orderDirection?: SortDirection;
-}
-
 export interface TransactionCreateDto {
-  readonly occurred_at: number;
-  readonly account_id: number;
-  readonly category_id: number;
-  readonly amount_cents: number;
+  readonly occurred_at: UnixTimestampMilliseconds;
+  readonly account_id: RowId;
+  readonly category_id: RowId;
+  readonly amount: number;
   readonly description?: string | null;
   readonly notes?: string | null;
   readonly transfer_id?: string | null;
   readonly settled?: BooleanFlagInput;
 }
 
+export interface TransactionCreateTransferDto {
+  readonly occurred_at: UnixTimestampMilliseconds;
+  readonly from_account_id: RowId;
+  readonly to_account_id: RowId;
+  readonly amount: number;
+}
+
+export interface TransactionUpdateTransferDto {
+  readonly transfer_id: string;
+  readonly occurred_at: UnixTimestampMilliseconds;
+  readonly from_account_id: RowId;
+  readonly to_account_id: RowId;
+  readonly amount: number;
+}
+
+export interface TransactionDeleteTransferDto {
+  readonly transfer_id: string;
+}
+
+export interface TransactionCreateTransferResponseDto {
+  readonly transfer_id: string;
+  readonly transactions: readonly TransactionDto[];
+}
+
 export interface TransactionGetDto {
-  readonly id: number;
+  readonly id: RowId;
 }
 
-export interface TransactionListDto {
-  readonly where?: Partial<
-    Pick<
-      TransactionDto,
-      'id' | 'account_id' | 'category_id' | 'occurred_at' | 'amount_cents' | 'description' | 'notes' | 'transfer_id' | 'settled' | 'created_at' | 'updated_at'
-    >
-  >;
-  readonly options: TransactionPaginationOptionsDto;
-}
-
-export interface TransactionListByAccountDto {
-  readonly account_id: number;
-  readonly options: TransactionPaginationOptionsDto;
-}
-
-export interface TransactionListByCategoryDto {
-  readonly category_id: number;
-  readonly options: TransactionPaginationOptionsDto;
-}
-
-export interface TransactionListByDateRangeDto {
-  readonly from?: number;
-  readonly to?: number;
-  readonly accountId?: number;
-  readonly categoryId?: number;
+export interface TransactionListTransactionsFiltersDto {
+  readonly date_from?: UnixTimestampMilliseconds;
+  readonly date_to?: UnixTimestampMilliseconds;
+  readonly categories?: readonly RowId[];
+  readonly accounts?: readonly RowId[];
   readonly settled?: BooleanFlagInput;
-  readonly transferId?: string | null;
-  readonly options: TransactionPaginationOptionsDto;
 }
 
-export interface TransactionListUnsettledDto {
-  readonly options: TransactionPaginationOptionsDto;
+export interface TransactionListTransactionsDto {
+  readonly filters?: TransactionListTransactionsFiltersDto;
+}
+
+export interface TransactionListTransfersFiltersDto {
+  readonly date_from?: UnixTimestampMilliseconds;
+  readonly date_to?: UnixTimestampMilliseconds;
+  readonly accounts?: readonly RowId[];
+}
+
+export interface TransactionListTransfersDto {
+  readonly filters?: TransactionListTransfersFiltersDto;
 }
 
 export interface TransactionUpdateDto {
-  readonly id: number;
+  readonly id: RowId;
   readonly changes: {
-    readonly occurred_at?: number;
-    readonly account_id?: number;
-    readonly category_id?: number;
-    readonly amount_cents?: number;
+    readonly occurred_at?: UnixTimestampMilliseconds;
+    readonly account_id?: RowId;
+    readonly category_id?: RowId;
+    readonly amount?: number;
     readonly description?: string | null;
     readonly notes?: string | null;
     readonly transfer_id?: string | null;
@@ -95,23 +97,15 @@ export interface TransactionUpdateDto {
 }
 
 export interface TransactionRemoveDto {
-  readonly id: number;
-}
-
-export interface TransactionPageResponseDto {
-  readonly transactions: TransactionDto[];
-  readonly page: number;
-  readonly perPage: number;
-  readonly totalPages: number;
-  readonly totalTransactions: number;
+  readonly id: RowId;
 }
 
 export type TransactionCreateResponse = TransactionDto | null;
+export type TransactionCreateTransferResponse = TransactionCreateTransferResponseDto;
+export type TransactionUpdateTransferResponse = TransactionCreateTransferResponseDto;
+export type TransactionDeleteTransferResponse = RemoveResponseDto;
 export type TransactionGetResponse = TransactionDto | null;
-export type TransactionListResponse = TransactionPageResponseDto;
-export type TransactionListByAccountResponse = TransactionPageResponseDto;
-export type TransactionListByCategoryResponse = TransactionPageResponseDto;
-export type TransactionListByDateRangeResponse = TransactionPageResponseDto;
-export type TransactionListUnsettledResponse = TransactionPageResponseDto;
+export type TransactionListTransactionsResponse = TransactionDto[];
+export type TransactionListTransfersResponse = TransactionDto[];
 export type TransactionUpdateResponse = UpdateResponseDto<TransactionDto>;
 export type TransactionRemoveResponse = RemoveResponseDto;

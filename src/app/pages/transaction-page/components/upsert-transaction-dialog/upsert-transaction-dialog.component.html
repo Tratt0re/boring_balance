@@ -1,0 +1,108 @@
+<div class="grid gap-4 sm:grid-cols-2">
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'transactions.dialog.add.fields.occurredAt' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-date-picker
+      zIconPosition="right"
+      [value]="occurredAt()"
+      [placeholder]="'transactions.dialog.add.placeholders.occurredAt' | translate"
+      (dateChange)="onOccurredAtChange($event)"
+    />
+    @if (visibleOccurredAtErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'transactions.dialog.add.fields.settled' | translate }}</label>
+    <z-switch [zChecked]="settled()" (zCheckedChange)="onSettledChange($event)">
+      {{ settled() ? ('common.yes' | translate) : ('common.no' | translate) }}
+    </z-switch>
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'transactions.dialog.add.fields.account' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-select
+      [zValue]="accountId()"
+      [zPlaceholder]="'transactions.dialog.add.placeholders.account' | translate"
+      (zSelectionChange)="onAccountIdChange($event)"
+    >
+      @for (option of accountOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+      }
+    </z-select>
+    @if (visibleAccountIdErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-amount">
+      {{ 'transactions.dialog.add.fields.amount' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <input
+      id="transaction-amount"
+      z-input
+      type="number"
+      step="0.01"
+      aria-required="true"
+      [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
+      [value]="amount()"
+      [attr.placeholder]="'transactions.dialog.add.placeholders.amount' | translate"
+      (blur)="onAmountBlur()"
+      (input)="onAmountInput($event)"
+    />
+    @if (visibleAmountErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'transactions.dialog.add.fields.category' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-select
+      [zValue]="categoryId()"
+      [zPlaceholder]="'transactions.dialog.add.placeholders.category' | translate"
+      (zSelectionChange)="onCategoryIdChange($event)"
+    >
+      @for (option of categoryOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+      }
+    </z-select>
+    @if (visibleCategoryIdErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-description">
+      {{ 'transactions.dialog.add.fields.description' | translate }}
+    </label>
+    <input
+      id="transaction-description"
+      z-input
+      type="text"
+      maxlength="160"
+      [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
+      [value]="description()"
+      [attr.placeholder]="'transactions.dialog.add.placeholders.description' | translate"
+      (blur)="onDescriptionBlur()"
+      (input)="onDescriptionInput($event)"
+    />
+    @if (visibleDescriptionErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  @if (errorKey(); as currentError) {
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+  }
+</div>

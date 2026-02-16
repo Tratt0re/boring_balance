@@ -27,14 +27,14 @@ const CHANNELS = Object.freeze({
   }),
   transactions: Object.freeze({
     create: 'db:transactions:create',
+    createTransfer: 'db:transactions:create-transfer',
+    updateTransfer: 'db:transactions:update-transfer',
+    deleteTransfer: 'db:transactions:delete-transfer',
     get: 'db:transactions:get',
-    list: 'db:transactions:list',
+    listTransactions: 'db:transactions:list-transactions',
+    listTransfers: 'db:transactions:list-transfers',
     update: 'db:transactions:update',
     remove: 'db:transactions:remove',
-    listByAccount: 'db:transactions:list-by-account',
-    listByCategory: 'db:transactions:list-by-category',
-    listByDateRange: 'db:transactions:list-by-date-range',
-    listUnsettled: 'db:transactions:list-unsettled',
   }),
 });
 

@@ -132,7 +132,7 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
       this.zPaddingless() ? 'px-0 py-0' : '',
       !hasValue && 'text-muted-foreground',
       height,
-      'min-w-[240px]',
+      'w-full min-w-0',
     );
   });
 

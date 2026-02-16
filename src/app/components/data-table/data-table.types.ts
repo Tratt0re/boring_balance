@@ -14,6 +14,9 @@ export interface TableBadgeConfig {
   readonly icon?: ZardIcon;
   readonly type?: ZardBadgeTypeVariants;
   readonly shape?: ZardBadgeShapeVariants;
+  readonly iconColumnKey?: string;
+  readonly colorHexColumnKey?: string;
+  readonly fullWidth?: boolean;
 }
 
 export interface ColumnDataItem extends TableDataItem {

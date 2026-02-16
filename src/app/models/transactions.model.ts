@@ -3,13 +3,15 @@ import type { TransactionDto } from '@/dtos';
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
 import { toBooleanFlag, toSqliteBooleanFlag } from './common.model';
 
+const AMOUNT_CENTS_DIVISOR = 100;
+
 export class TransactionModel {
   constructor(
     public readonly id: RowId,
     public readonly accountId: RowId,
     public readonly categoryId: RowId,
     public readonly occurredAt: UnixTimestampMilliseconds,
-    public readonly amountCents: number,
+    public readonly amount: number,
     public readonly description: string | null,
     public readonly notes: string | null,
     public readonly transferId: string | null,
@@ -24,7 +26,7 @@ export class TransactionModel {
       dto.account_id,
       dto.category_id,
       dto.occurred_at,
-      dto.amount_cents,
+      dto.amount_cents / AMOUNT_CENTS_DIVISOR,
       dto.description,
       dto.notes,
       dto.transfer_id,
@@ -40,7 +42,7 @@ export class TransactionModel {
       account_id: this.accountId,
       category_id: this.categoryId,
       occurred_at: this.occurredAt,
-      amount_cents: this.amountCents,
+      amount_cents: Math.round(this.amount * AMOUNT_CENTS_DIVISOR),
       description: this.description,
       notes: this.notes,
       transfer_id: this.transferId,
