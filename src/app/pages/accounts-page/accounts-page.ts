@@ -19,7 +19,7 @@ import { AccountsService } from '@/services/accounts.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
-import { AddAccountDialogComponent } from './add-account-dialog.component';
+import { AddAccountDialogComponent } from './components/add-account-dialog/add-account-dialog.component';
 
 const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
   {

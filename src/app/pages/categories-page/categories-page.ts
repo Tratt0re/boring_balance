@@ -20,7 +20,7 @@ import { CategoriesService } from '@/services/categories.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
-import { AddCategoryDialogComponent } from './add-category-dialog.component';
+import { AddCategoryDialogComponent } from './components/add-category-dialog/add-category-dialog.component';
 
 const isCategoryReadonly = (row: object): boolean => {
   const category = row as CategoryModel;
