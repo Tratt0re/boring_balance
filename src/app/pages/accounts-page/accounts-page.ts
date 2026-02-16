@@ -63,7 +63,7 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     columnKey: 'icon',
     type: 'string',
     sortable: true,
-    editableType: 'select',
+    editableType: 'combobox',
     showOptionLabel: true,
     placeholder: 'Select icon',
     options: APP_ICON_OPTIONS,

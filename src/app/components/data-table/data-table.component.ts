@@ -18,6 +18,7 @@ import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
+import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { ZardIconComponent } from '@/shared/components/icon';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -55,6 +56,7 @@ type EditableErrorMap = Map<TableRow, Map<string, string>>;
     ZardBadgeComponent,
     ZardButtonComponent,
     ZardCheckboxComponent,
+    ZardComboboxComponent,
     ZardDatePickerComponent,
     ZardIconComponent,
     ZardInputDirective,
@@ -82,6 +84,7 @@ export class AppDataTableComponent {
   readonly emptyMessage = input('No data available.');
   readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
+  readonly editablePickerIconClass = input<ClassValue>('text-primary opacity-70');
   readonly class = input<ClassValue>('');
 
   readonly showEmpty = input(true, { transform: booleanAttribute });
@@ -411,6 +414,16 @@ export class AppDataTableComponent {
     return value === null || value === undefined ? '' : `${value}`;
   }
 
+  protected getEditableComboboxValue(row: TableRow, column: EditableColumnDataItem): string | null {
+    const value = this.getEditableValue(row, column);
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const normalizedValue = `${value}`;
+    return normalizedValue.length > 0 ? normalizedValue : null;
+  }
+
   protected getEditableDateValue(row: TableRow, column: EditableColumnDataItem): Date | null {
     return this.toDateValue(this.getEditableValue(row, column));
   }
@@ -428,6 +441,15 @@ export class AppDataTableComponent {
     const normalizedValue = rawValue === null || rawValue === undefined ? '' : `${rawValue}`;
 
     return column.options?.find((option) => `${option.value}` === normalizedValue) ?? null;
+  }
+
+  protected getEditableComboboxOptions(column: EditableColumnDataItem): ZardComboboxOption[] {
+    const options = column.options ?? [];
+    return options.map((option) => ({
+      value: this.stringifyOptionValue(option.value),
+      label: this.getEditableOptionLabel(option),
+      icon: option.icon,
+    }));
   }
 
   protected getEditableOptionLabel(option: EditableOptionItem): string {
@@ -457,7 +479,10 @@ export class AppDataTableComponent {
   protected getVisibleEditableError(row: TableRow, column: EditableColumnDataItem): string | null {
     if (
       this.isEditableDisabled(column, row) &&
-      (column.editableType === 'input' || column.editableType === 'select' || column.editableType === 'date')
+      (column.editableType === 'input' ||
+        column.editableType === 'select' ||
+        column.editableType === 'combobox' ||
+        column.editableType === 'date')
     ) {
       return null;
     }
@@ -502,6 +527,15 @@ export class AppDataTableComponent {
     }
 
     const normalizedValue = this.resolveSelectValue(value, column);
+    this.applyEditableChange(row, column, normalizedValue);
+  }
+
+  protected onEditableComboboxValueChange(
+    value: string | null,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
+    const normalizedValue = this.resolveComboboxValue(value, column);
     this.applyEditableChange(row, column, normalizedValue);
   }
 
@@ -878,6 +912,15 @@ export class AppDataTableComponent {
   }
 
   private resolveSelectValue(selectedValue: string, column: EditableColumnDataItem): unknown {
+    const option = column.options?.find((item) => `${item.value}` === selectedValue);
+    return option ? option.value : selectedValue;
+  }
+
+  private resolveComboboxValue(selectedValue: string | null, column: EditableColumnDataItem): unknown {
+    if (selectedValue === null) {
+      return null;
+    }
+
     const option = column.options?.find((item) => `${item.value}` === selectedValue);
     return option ? option.value : selectedValue;
   }

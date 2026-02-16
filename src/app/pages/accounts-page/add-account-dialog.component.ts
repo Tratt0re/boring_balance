@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
 import type { AccountCreateDto } from '@/dtos';
+import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 
 @Component({
   selector: 'app-add-account-dialog',
-  imports: [TranslatePipe, ZardInputDirective, ...ZardSelectImports],
+  imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
   templateUrl: './add-account-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,6 +34,8 @@ export class AddAccountDialogComponent {
   protected readonly visibleDescriptionErrorKey = computed(() =>
     this.submitAttempted() || this.descriptionTouched() ? this.descriptionErrorKey() : null,
   );
+
+  constructor(private readonly translateService: TranslateService) {}
 
   public collectCreatePayload(): AccountCreateDto | null {
     this.submitAttempted.set(true);
@@ -98,15 +101,19 @@ export class AddAccountDialogComponent {
     }
   }
 
-  protected onIconChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
-    }
-
-    this.icon.set(value);
+  protected onIconChange(value: string | null): void {
+    this.icon.set(value ?? '');
     if (this.errorKey()) {
       this.errorKey.set(null);
     }
+  }
+
+  protected getIconComboboxOptions(): ZardComboboxOption[] {
+    return this.iconOptions.map((option) => ({
+      value: option.value,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
+    }));
   }
 
   private hasValidationError(): boolean {

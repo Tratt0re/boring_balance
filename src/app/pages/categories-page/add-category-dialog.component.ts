@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
 import type { CategoryCreateDto, CategoryType } from '@/dtos';
+import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 
@@ -14,7 +15,7 @@ const CATEGORY_TYPE_OPTIONS = [
 
 @Component({
   selector: 'app-add-category-dialog',
-  imports: [TranslatePipe, ZardInputDirective, ...ZardSelectImports],
+  imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
   templateUrl: './add-category-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,6 +47,8 @@ export class AddCategoryDialogComponent {
   protected readonly visibleTypeErrorKey = computed(() =>
     this.submitAttempted() || this.typeTouched() ? this.typeErrorKey() : null,
   );
+
+  constructor(private readonly translateService: TranslateService) {}
 
   public collectCreatePayload(): CategoryCreateDto | null {
     this.submitAttempted.set(true);
@@ -132,12 +135,19 @@ export class AddCategoryDialogComponent {
     this.colorKey.set(value);
   }
 
-  protected onIconChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected onIconChange(value: string | null): void {
+    this.icon.set(value ?? '');
+    if (this.errorKey()) {
+      this.errorKey.set(null);
     }
+  }
 
-    this.icon.set(value);
+  protected getIconComboboxOptions(): ZardComboboxOption[] {
+    return this.iconOptions.map((option) => ({
+      value: option.value,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
+    }));
   }
 
   private hasValidationError(): boolean {
