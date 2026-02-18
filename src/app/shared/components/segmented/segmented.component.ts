@@ -3,12 +3,15 @@ import {
   Component,
   computed,
   contentChildren,
+  ElementRef,
   effect,
   forwardRef,
+  HostListener,
   input,
   type OnInit,
   output,
   signal,
+  viewChildren,
   ViewEncapsulation,
 } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -23,6 +26,12 @@ export interface SegmentedOption {
   value: string;
   label: string;
   disabled?: boolean;
+}
+
+interface SegmentedActiveIndicatorState {
+  readonly width: string;
+  readonly transform: string;
+  readonly visible: boolean;
 }
 @Component({
   selector: 'z-segmented-item',
@@ -43,8 +52,16 @@ export class ZardSegmentedItemComponent {
   standalone: true,
   template: `
     <div [class]="classes()" role="tablist" [attr.aria-label]="zAriaLabel()">
-      @for (option of zOptions(); track option.value) {
+      <span
+        class="pointer-events-none absolute top-1 bottom-1 left-0 rounded-sm bg-background shadow-sm transition-[transform,width,opacity] duration-200 ease-out"
+        [style.width]="activeIndicatorState().width"
+        [style.transform]="activeIndicatorState().transform"
+        [class.opacity-0]="!activeIndicatorState().visible"
+      ></span>
+
+      @for (option of resolvedOptions(); track option.value) {
         <button
+          #segmentButton
           type="button"
           role="tab"
           [class]="getItemClasses(option.value)"
@@ -56,21 +73,6 @@ export class ZardSegmentedItemComponent {
         >
           {{ option.label }}
         </button>
-      } @empty {
-        @for (item of items(); track item.value()) {
-          <button
-            type="button"
-            role="tab"
-            [class]="getItemClasses(item.value())"
-            [disabled]="item.disabled() || zDisabled()"
-            [attr.aria-selected]="isSelected(item.value())"
-            [attr.aria-controls]="item.value() + '-panel'"
-            [attr.id]="item.value() + '-tab'"
-            (click)="selectOption(item.value())"
-          >
-            {{ item.label() }}
-          </button>
-        }
       }
     </div>
   `,
@@ -90,6 +92,8 @@ export class ZardSegmentedItemComponent {
 })
 export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   private readonly itemComponents = contentChildren(ZardSegmentedItemComponent);
+  private readonly segmentButtons = viewChildren<ElementRef<HTMLButtonElement>>('segmentButton');
+  private readonly layoutVersion = signal(0);
 
   readonly class = input<ClassValue>('');
   readonly zSize = input<ZardSegmentedVariants['zSize']>('default');
@@ -102,6 +106,37 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
 
   protected readonly selectedValue = signal<string>('');
   protected readonly items = signal<readonly ZardSegmentedItemComponent[]>([]);
+  protected readonly resolvedOptions = computed<readonly SegmentedOption[]>(() => {
+    const options = this.zOptions();
+    if (options.length > 0) {
+      return options;
+    }
+
+    return this.items().map((item) => ({
+      value: item.value(),
+      label: item.label(),
+      disabled: item.disabled(),
+    }));
+  });
+  protected readonly selectedIndex = computed(() =>
+    this.resolvedOptions().findIndex((option) => option.value === this.selectedValue()),
+  );
+  protected readonly activeIndicatorState = computed<SegmentedActiveIndicatorState>(() => {
+    this.layoutVersion();
+
+    const selectedIndex = this.selectedIndex();
+    const button = this.segmentButtons()[selectedIndex]?.nativeElement;
+
+    if (!button) {
+      return { width: '0px', transform: 'translateX(0px)', visible: false };
+    }
+
+    return {
+      width: `${button.offsetWidth}px`,
+      transform: `translateX(${button.offsetLeft}px)`,
+      visible: true,
+    };
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
@@ -139,15 +174,18 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   protected selectOption(value: string) {
     if (this.zDisabled()) return;
 
-    const option = this.zOptions().find(opt => opt.value === value);
-    const item = this.items().find(item => item.value() === value);
-
-    if (option?.disabled || item?.disabled()) return;
+    const option = this.resolvedOptions().find((resolvedOption) => resolvedOption.value === value);
+    if (!option || option.disabled) return;
 
     this.selectedValue.set(value);
     this.onChange(value);
     this.onTouched();
     this.zChange.emit(value);
+  }
+
+  @HostListener('window:resize')
+  protected onWindowResize(): void {
+    this.layoutVersion.update((current) => current + 1);
   }
 
   // ControlValueAccessor implementation

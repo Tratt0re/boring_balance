@@ -7,19 +7,26 @@
       Failed to load transactions: {{ loadError }}
     </div>
   } @else {
-    <app-data-table
-      [data]="transactions()"
-      [structure]="transactionTableStructure()"
-      title="nav.items.transactions"
-      description="transactions.table.description"
-      emptyMessage="transactions.table.emptyMessage"
-      [showEmpty]="true"
-      [bordered]="true"
-      [striped]="false"
-      [hoverable]="true"
-      [selectable]="false"
-      [hasActionColumn]="false"
-      (editableValueChange)="onEditableValueChange($event)"
-    ></app-data-table>
+    <z-segmented [zDefaultValue]="activeView()" zAriaLabel="Transaction sections" (zChange)="onViewChange($event)">
+      <z-segmented-item value="common" [label]="'transactions.view.commonTransactions' | translate" />
+      <z-segmented-item value="transfers" [label]="'transactions.view.transfers' | translate" />
+    </z-segmented>
+
+    @if (activeView() === 'common') {
+      <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out">
+        <app-transactions-table-section
+          [rows]="transactions()"
+          [structure]="transactionTableStructure()"
+          (editableValueChange)="onEditableValueChange($event)"
+        ></app-transactions-table-section>
+      </div>
+    } @else {
+      <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out">
+        <app-transfers-table-section
+          [rows]="transferRows()"
+          [structure]="transferTableStructure()"
+        ></app-transfers-table-section>
+      </div>
+    }
   }
 </section>

@@ -71,7 +71,7 @@ export class UpsertTransferDialogComponent {
   );
 
   public collectCreatePayload(): TransactionCreateTransferDto | null {
-    const values = this.collectNormalizedValues('accounts.transfers.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues('transactions.transfers.dialog.add.errors.fixValidation');
     if (!values) {
       return null;
     }
@@ -86,11 +86,11 @@ export class UpsertTransferDialogComponent {
 
   public collectUpdatePayload(): TransactionUpdateTransferDto | null {
     if (!this.initialTransfer?.transferId) {
-      this.errorKey.set('accounts.transfers.dialog.edit.errors.updateFailed');
+      this.errorKey.set('transactions.transfers.dialog.edit.errors.updateFailed');
       return null;
     }
 
-    const values = this.collectNormalizedValues('accounts.transfers.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues('transactions.transfers.dialog.edit.errors.fixValidation');
     if (!values) {
       return null;
     }
@@ -173,30 +173,30 @@ export class UpsertTransferDialogComponent {
 
     const occurredAt = this.toOccurredAt(this.occurredAt());
     if (occurredAt === null) {
-      this.errorKey.set('accounts.transfers.dialog.add.errors.dateRequired');
+      this.errorKey.set('transactions.transfers.dialog.add.errors.dateRequired');
       return null;
     }
 
     const fromAccountId = this.toPositiveInteger(this.fromAccountId());
     if (fromAccountId === null) {
-      this.errorKey.set('accounts.transfers.dialog.add.errors.fromAccountRequired');
+      this.errorKey.set('transactions.transfers.dialog.add.errors.fromAccountRequired');
       return null;
     }
 
     const toAccountId = this.toPositiveInteger(this.toAccountId());
     if (toAccountId === null) {
-      this.errorKey.set('accounts.transfers.dialog.add.errors.toAccountRequired');
+      this.errorKey.set('transactions.transfers.dialog.add.errors.toAccountRequired');
       return null;
     }
 
     if (fromAccountId === toAccountId) {
-      this.errorKey.set('accounts.transfers.dialog.add.errors.accountsMustDiffer');
+      this.errorKey.set('transactions.transfers.dialog.add.errors.accountsMustDiffer');
       return null;
     }
 
     const amount = this.toAmount(this.amount());
     if (amount === null) {
-      this.errorKey.set('accounts.transfers.dialog.add.errors.amountInvalid');
+      this.errorKey.set('transactions.transfers.dialog.add.errors.amountInvalid');
       return null;
     }
 
@@ -219,22 +219,22 @@ export class UpsertTransferDialogComponent {
   }
 
   private getOccurredAtError(value: Date | null): string | null {
-    return this.toOccurredAt(value) === null ? 'accounts.transfers.dialog.add.errors.dateRequired' : null;
+    return this.toOccurredAt(value) === null ? 'transactions.transfers.dialog.add.errors.dateRequired' : null;
   }
 
   private getFromAccountError(value: string): string | null {
-    return this.toPositiveInteger(value) === null ? 'accounts.transfers.dialog.add.errors.fromAccountRequired' : null;
+    return this.toPositiveInteger(value) === null ? 'transactions.transfers.dialog.add.errors.fromAccountRequired' : null;
   }
 
   private getToAccountError(value: string, fromAccountValue: string): string | null {
     const toAccountId = this.toPositiveInteger(value);
     if (toAccountId === null) {
-      return 'accounts.transfers.dialog.add.errors.toAccountRequired';
+      return 'transactions.transfers.dialog.add.errors.toAccountRequired';
     }
 
     const fromAccountId = this.toPositiveInteger(fromAccountValue);
     if (fromAccountId !== null && fromAccountId === toAccountId) {
-      return 'accounts.transfers.dialog.add.errors.accountsMustDiffer';
+      return 'transactions.transfers.dialog.add.errors.accountsMustDiffer';
     }
 
     return null;
@@ -242,10 +242,10 @@ export class UpsertTransferDialogComponent {
 
   private getAmountError(value: string): string | null {
     if (value.trim().length === 0) {
-      return 'accounts.transfers.dialog.add.errors.amountRequired';
+      return 'transactions.transfers.dialog.add.errors.amountRequired';
     }
 
-    return this.toAmount(value) === null ? 'accounts.transfers.dialog.add.errors.amountInvalid' : null;
+    return this.toAmount(value) === null ? 'transactions.transfers.dialog.add.errors.amountInvalid' : null;
   }
 
   private toOccurredAt(value: Date | null): number | null {
