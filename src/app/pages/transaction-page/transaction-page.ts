@@ -9,6 +9,7 @@ import {
   type TableDataItem,
 } from '@/components/data-table';
 import type {
+  CategoryType,
   TransactionCreateDto,
   TransactionCreateTransferDto,
   TransactionUpdateDto,
@@ -51,6 +52,7 @@ interface TransactionTableRow {
   readonly accountColorHex: string | null;
   readonly amount: number;
   readonly categoryId: number;
+  readonly categoryType: CategoryType | null;
   readonly category: string;
   readonly categoryIcon: ZardIcon | null;
   readonly categoryColorHex: string | null;
@@ -269,6 +271,7 @@ export class TransactionPage implements OnInit, OnDestroy {
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly accountNameById = signal<ReadonlyMap<number, string>>(new Map());
   private readonly categoryNameById = signal<ReadonlyMap<number, string>>(new Map());
+  private readonly categoryTypeById = signal<ReadonlyMap<number, CategoryType>>(new Map());
   private readonly accountIconById = signal<ReadonlyMap<number, ZardIcon | null>>(new Map());
   private readonly categoryIconById = signal<ReadonlyMap<number, ZardIcon | null>>(new Map());
   private readonly accountColorHexById = signal<ReadonlyMap<number, string | null>>(new Map());
@@ -351,6 +354,24 @@ export class TransactionPage implements OnInit, OnDestroy {
     const transaction = event.row as TransactionTableRow;
     void this.updateTransaction(transaction.id, { settled });
   }
+
+  protected readonly transactionRowClass = (row: object): string => {
+    const transaction = row as TransactionTableRow;
+
+    if (transaction.categoryType === 'exclude') {
+      return '';
+    }
+
+    if (transaction.amount > 0) {
+      return 'transaction-row-positive';
+    }
+
+    if (transaction.amount < 0) {
+      return 'transaction-row-negative';
+    }
+
+    return '';
+  };
 
   private activateToolbarActions(): void {
     this.releaseToolbarActions?.();
@@ -608,6 +629,7 @@ export class TransactionPage implements OnInit, OnDestroy {
 
       const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
       const categoryNameById = new Map(visibleCategories.map((category) => [category.id, category.name] as const));
+      const categoryTypeById = new Map(visibleCategories.map((category) => [category.id, category.type] as const));
       const accountIconById = new Map(
         accounts.map((account) => [account.id, resolveIconByValue(account.icon)] as const),
       );
@@ -623,6 +645,7 @@ export class TransactionPage implements OnInit, OnDestroy {
 
       this.accountNameById.set(accountNameById);
       this.categoryNameById.set(categoryNameById);
+      this.categoryTypeById.set(categoryTypeById);
       this.accountIconById.set(accountIconById);
       this.categoryIconById.set(categoryIconById);
       this.accountColorHexById.set(accountColorHexById);
@@ -654,6 +677,7 @@ export class TransactionPage implements OnInit, OnDestroy {
       this.categoryOptions.set([]);
       this.accountNameById.set(new Map());
       this.categoryNameById.set(new Map());
+      this.categoryTypeById.set(new Map());
       this.accountIconById.set(new Map());
       this.categoryIconById.set(new Map());
       this.accountColorHexById.set(new Map());
@@ -832,6 +856,7 @@ export class TransactionPage implements OnInit, OnDestroy {
       accountColorHex: this.accountColorHexById().get(transaction.accountId) ?? null,
       amount: transaction.amount,
       categoryId: transaction.categoryId,
+      categoryType: this.categoryTypeById().get(transaction.categoryId) ?? null,
       category: this.categoryNameById().get(transaction.categoryId) ?? `${transaction.categoryId}`,
       categoryIcon: this.categoryIconById().get(transaction.categoryId) ?? null,
       categoryColorHex: this.categoryColorHexById().get(transaction.categoryId) ?? null,

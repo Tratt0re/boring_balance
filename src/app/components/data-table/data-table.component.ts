@@ -48,6 +48,7 @@ type TableRowRecord = Record<string, unknown>;
 type TableColumn = ColumnDataItem;
 type EditableValueMap = Map<TableRow, Map<string, unknown>>;
 type EditableErrorMap = Map<TableRow, Map<string, string>>;
+type RowClassResolver = (row: TableRow) => ClassValue | null | undefined;
 
 @Component({
   selector: 'app-data-table',
@@ -85,6 +86,7 @@ export class AppDataTableComponent {
   readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
   readonly editablePickerIconClass = input<ClassValue>('text-primary opacity-70');
+  readonly rowClass = input<RowClassResolver | null>(null);
   readonly class = input<ClassValue>('');
 
   readonly showEmpty = input(true, { transform: booleanAttribute });
@@ -308,6 +310,10 @@ export class AppDataTableComponent {
     const nextKey = this.nextRowTrackKey++;
     this.rowTrackKeyByIdentity.set(row, nextKey);
     return `obj:${nextKey}`;
+  }
+
+  protected rowClassName(row: TableRow): ClassValue {
+    return this.rowClass()?.(row) ?? '';
   }
 
   protected onToggleRowChange(checked: boolean, row: TableRow): void {
