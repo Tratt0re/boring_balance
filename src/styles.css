@@ -48,6 +48,8 @@
   --system-app-color-9: oklch(0.68 0.2 302);
   --system-app-color-10: oklch(0.72 0.2 342);
   --system-app-color-11: oklch(0.72 0 0);
+  --positive-transaction-color: oklch(0.72 0.18 154);
+  --negative-transaction-color: oklch(0.68 0.2 24);
 }
 
 .dark {
@@ -93,6 +95,8 @@
   --system-app-color-9: oklch(0.74 0.18 302);
   --system-app-color-10: oklch(0.77 0.18 342);
   --system-app-color-11: oklch(0.62 0 0);
+  --positive-transaction-color: oklch(0.78 0.14 154);
+  --negative-transaction-color: oklch(0.73 0.18 24);
 }
 
 
@@ -144,6 +148,8 @@
   --color-system-app-9: var(--system-app-color-9);
   --color-system-app-10: var(--system-app-color-10);
   --color-system-app-11: var(--system-app-color-11);
+  --color-positive-transaction: var(--positive-transaction-color);
+  --color-negative-transaction: var(--negative-transaction-color);
 }
 
 
@@ -179,6 +185,22 @@
   input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield; /* Added for general compatibility */
+  }
+
+  .transaction-row-positive {
+    background-color: color-mix(in oklch, var(--positive-transaction-color) 15%, transparent) !important;
+  }
+
+  .transaction-row-positive:hover {
+    background-color: color-mix(in oklch, var(--positive-transaction-color) 21%, transparent) !important;
+  }
+
+  .transaction-row-negative {
+    background-color: color-mix(in oklch, var(--negative-transaction-color) 15%, transparent) !important;
+  }
+
+  .transaction-row-negative:hover {
+    background-color: color-mix(in oklch, var(--negative-transaction-color) 21%, transparent) !important;
   }
 }
 

@@ -17,6 +17,7 @@
         <app-transactions-table-section
           [rows]="transactions()"
           [structure]="transactionTableStructure()"
+          [rowClass]="transactionRowClass"
           (editableValueChange)="onEditableValueChange($event)"
         ></app-transactions-table-section>
       </div>

@@ -83,7 +83,7 @@
       <tbody z-table-body>
         @if (sortedRows().length > 0) {
           @for (row of sortedRows(); track rowTrackKey($index, row)) {
-            <tr z-table-row [attr.data-state]="isRowSelected(row) ? 'selected' : null">
+            <tr z-table-row [class]="rowClassName(row)" [attr.data-state]="isRowSelected(row) ? 'selected' : null">
               @if (selectable()) {
                 <td z-table-cell class="w-10">
                   <z-checkbox
