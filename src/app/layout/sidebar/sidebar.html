@@ -10,53 +10,109 @@
   (zCollapsedChange)="onSidebarCollapsedChange($event)"
 >
   <div class="flex h-full flex-col overflow-y-auto">
-    <nav [class]="'flex flex-1 flex-col ' + (sidebarCollapsed() ? 'gap-1 p-2 pt-2' : 'gap-4 p-4 pt-2')">
-      @for (section of menuSections(); track section.label) {
-        <z-sidebar-group class="gap-1">
-          <z-sidebar-group-label
-            [class]="
-              'overflow-hidden transition-[height,opacity,padding,color] duration-150 ease-in-out ' +
-              (sidebarCollapsed()
-                ? (isClosingCollapseTransition()
-                  ? 'pointer-events-none h-0 px-0 py-0 opacity-100'
-                  : 'pointer-events-none h-0 px-0 py-0 opacity-0 text-transparent')
-                : 'h-8 opacity-100')
-            "
-            [attr.aria-hidden]="sidebarCollapsed()"
-          >
-            {{ section.label | translate }}
-          </z-sidebar-group-label>
-
-          @for (item of section.items; track item.path) {
-            <a
-              [routerLink]="item.path"
-              (click)="onMenuItemClick()"
-              routerLinkActive=""
-              [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
-              #routeLinkActive="routerLinkActive"
-              [attr.title]="sidebarCollapsed() ? (item.label | translate) : null"
+    <nav [class]="'flex flex-1 flex-col justify-between ' + (sidebarCollapsed() ? 'p-2 pt-2' : 'p-4 pt-2')">
+      <div [class]="'flex flex-col ' + (sidebarCollapsed() ? 'gap-1' : 'gap-4')">
+        @for (section of topMenuSections(); track section.label) {
+          <z-sidebar-group class="gap-1">
+            <z-sidebar-group-label
               [class]="
-                'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
-                (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
-                ' ' +
-                (routeLinkActive.isActive
-                  ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                  : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
+                'overflow-hidden transition-[height,opacity,padding,color] duration-150 ease-in-out ' +
+                (sidebarCollapsed()
+                  ? (isClosingCollapseTransition()
+                    ? 'pointer-events-none h-0 px-0 py-0 opacity-100'
+                    : 'pointer-events-none h-0 px-0 py-0 opacity-0 text-transparent')
+                  : 'h-8 opacity-100')
               "
+              [attr.aria-hidden]="sidebarCollapsed()"
             >
-              <z-icon [zType]="item.icon" class="size-4 shrink-0" />
-              <span
+              {{ section.label | translate }}
+            </z-sidebar-group-label>
+
+            @for (item of section.items; track item.path) {
+              <a
+                [routerLink]="item.path"
+                (click)="onMenuItemClick()"
+                routerLinkActive=""
+                [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                #routeLinkActive="routerLinkActive"
+                [zTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
+                zPosition="right"
                 [class]="
-                  'truncate overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ' +
-                  (sidebarCollapsed() ? 'max-w-0 opacity-0' : 'max-w-40 opacity-100')
+                  'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
+                  (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
+                  ' ' +
+                  (routeLinkActive.isActive
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                    : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
+                "
+              >
+                <z-icon [zType]="item.icon" class="size-4 shrink-0" />
+                <span
+                  [class]="
+                    'truncate overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ' +
+                    (sidebarCollapsed() ? 'max-w-0 opacity-0' : 'max-w-40 opacity-100')
+                  "
+                  [attr.aria-hidden]="sidebarCollapsed()"
+                >
+                  {{ item.label | translate }}
+                </span>
+              </a>
+            }
+          </z-sidebar-group>
+        }
+      </div>
+
+      @if (bottomMenuSections().length) {
+        <div [class]="'flex flex-col pt-4 ' + (sidebarCollapsed() ? 'gap-1' : 'gap-4')">
+          @for (section of bottomMenuSections(); track section.label) {
+            <z-sidebar-group class="gap-1">
+              <z-sidebar-group-label
+                [class]="
+                  'overflow-hidden transition-[height,opacity,padding,color] duration-150 ease-in-out ' +
+                  (sidebarCollapsed()
+                    ? (isClosingCollapseTransition()
+                      ? 'pointer-events-none h-0 px-0 py-0 opacity-100'
+                      : 'pointer-events-none h-0 px-0 py-0 opacity-0 text-transparent')
+                    : 'h-8 opacity-100')
                 "
                 [attr.aria-hidden]="sidebarCollapsed()"
               >
-                {{ item.label | translate }}
-              </span>
-            </a>
+                {{ section.label | translate }}
+              </z-sidebar-group-label>
+
+              @for (item of section.items; track item.path) {
+                <a
+                  [routerLink]="item.path"
+                  (click)="onMenuItemClick()"
+                  routerLinkActive=""
+                  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                  #routeLinkActive="routerLinkActive"
+                  [zTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
+                  zPosition="right"
+                  [class]="
+                    'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
+                    (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
+                    ' ' +
+                    (routeLinkActive.isActive
+                      ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                      : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
+                  "
+                >
+                  <z-icon [zType]="item.icon" class="size-4 shrink-0" />
+                  <span
+                    [class]="
+                      'truncate overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ' +
+                      (sidebarCollapsed() ? 'max-w-0 opacity-0' : 'max-w-40 opacity-100')
+                    "
+                    [attr.aria-hidden]="sidebarCollapsed()"
+                  >
+                    {{ item.label | translate }}
+                  </span>
+                </a>
+              }
+            </z-sidebar-group>
           }
-        </z-sidebar-group>
+        </div>
       }
     </nav>
   </div>

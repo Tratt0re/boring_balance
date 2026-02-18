@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, computed, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -8,6 +8,7 @@ import {
   SidebarGroupComponent,
   SidebarGroupLabelComponent,
 } from '@/shared/components/layout/sidebar.component';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 
 import type { MenuSectionConfig } from '@/config/menu.config';
 
@@ -21,6 +22,7 @@ import type { MenuSectionConfig } from '@/config/menu.config';
     SidebarComponent,
     SidebarGroupComponent,
     SidebarGroupLabelComponent,
+    ...ZardTooltipImports,
   ],
   templateUrl: './sidebar.html',
   encapsulation: ViewEncapsulation.None,
@@ -35,6 +37,12 @@ export class Sidebar {
   readonly isSmallScreen = input(false);
   readonly sidebarCollapsed = input(false);
   protected readonly isClosingCollapseTransition = signal(false);
+  protected readonly topMenuSections = computed(() =>
+    this.menuSections().filter((section) => section.placement !== 'bottom'),
+  );
+  protected readonly bottomMenuSections = computed(() =>
+    this.menuSections().filter((section) => section.placement === 'bottom'),
+  );
 
   readonly sidebarCollapsedChange = output<boolean>();
 
