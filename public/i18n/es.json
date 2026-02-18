@@ -1,6 +1,8 @@
 {
   "common": {
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "yes": "Si",
+    "no": "No"
   },
   "nav": {
     "sections": {
@@ -153,6 +155,154 @@
       "actions": {
         "cancel": "Cancelar",
         "archive": "Archivar"
+      }
+    }
+  },
+  "transactions": {
+    "view": {
+      "commonTransactions": "Movimientos comunes",
+      "transfers": "Transferencias"
+    },
+    "table": {
+      "description": "Historial de movimientos",
+      "emptyMessage": "No se encontraron movimientos.",
+      "actions": {
+        "add": "Agregar movimiento",
+        "edit": "Editar movimiento",
+        "delete": "Eliminar movimiento"
+      },
+      "columns": {
+        "occurredAt": "Fecha",
+        "settled": "Liquidado",
+        "account": "Cuenta",
+        "amount": "Importe",
+        "category": "Categoria",
+        "description": "Descripcion"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar movimiento",
+        "description": "Crea un nuevo movimiento.",
+        "fields": {
+          "occurredAt": "Fecha",
+          "settled": "Liquidado",
+          "account": "Cuenta",
+          "amount": "Importe",
+          "category": "Categoria",
+          "description": "Descripcion"
+        },
+        "placeholders": {
+          "occurredAt": "Selecciona una fecha",
+          "account": "Selecciona cuenta",
+          "amount": "0.00",
+          "category": "Selecciona categoria",
+          "description": "Descripcion del movimiento"
+        },
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear movimiento"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear el movimiento.",
+          "dateRequired": "La fecha es obligatoria.",
+          "accountRequired": "La cuenta es obligatoria.",
+          "amountRequired": "El importe es obligatorio.",
+          "amountInvalid": "El importe debe ser un numero valido.",
+          "categoryRequired": "La categoria es obligatoria.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 160 caracteres.",
+          "createFailed": "No se pudo crear el movimiento."
+        }
+      },
+      "edit": {
+        "title": "Editar movimiento",
+        "description": "Actualiza los detalles del movimiento.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar el movimiento.",
+          "updateFailed": "No se pudo actualizar el movimiento."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminar movimiento?",
+      "description": "Estas seguro de que quieres eliminar este movimiento? Esta accion no se puede deshacer.",
+      "actions": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "transfers": {
+      "title": "Transferencias",
+      "table": {
+        "description": "Movimientos de dinero entre tus cuentas.",
+        "emptyMessage": "No se encontraron transferencias.",
+        "actions": {
+          "add": "Agregar transferencia",
+          "edit": "Editar transferencia",
+          "delete": "Eliminar transferencia"
+        },
+        "columns": {
+          "occurredAt": "Fecha",
+          "fromAccount": "Desde",
+          "toAccount": "Hacia",
+          "amount": "Importe"
+        }
+      },
+      "dialog": {
+        "add": {
+          "title": "Agregar transferencia",
+          "description": "Mueve dinero entre dos cuentas.",
+          "fields": {
+            "occurredAt": "Fecha",
+            "fromAccount": "Cuenta de origen",
+            "toAccount": "Cuenta de destino",
+            "amount": "Importe"
+          },
+          "placeholders": {
+            "occurredAt": "Selecciona una fecha",
+            "fromAccount": "Selecciona cuenta de origen",
+            "toAccount": "Selecciona cuenta de destino",
+            "amount": "0.00"
+          },
+          "actions": {
+            "cancel": "Cancelar",
+            "create": "Crear transferencia"
+          },
+          "errors": {
+            "fixValidation": "Corrige los campos resaltados antes de crear la transferencia.",
+            "dateRequired": "La fecha es obligatoria.",
+            "fromAccountRequired": "La cuenta de origen es obligatoria.",
+            "toAccountRequired": "La cuenta de destino es obligatoria.",
+            "accountsMustDiffer": "La cuenta de origen y la de destino deben ser distintas.",
+            "amountRequired": "El importe es obligatorio.",
+            "amountInvalid": "El importe debe ser un numero positivo.",
+            "createFailed": "No se pudo crear la transferencia."
+          }
+        },
+        "edit": {
+          "title": "Editar transferencia",
+          "description": "Actualiza los detalles de la transferencia.",
+          "actions": {
+            "cancel": "Cancelar",
+            "save": "Guardar cambios"
+          },
+          "errors": {
+            "fixValidation": "Corrige los campos resaltados antes de guardar la transferencia.",
+            "updateFailed": "No se pudo actualizar la transferencia."
+          }
+        }
+      },
+      "deleteAlert": {
+        "title": "Eliminar transferencia?",
+        "description": "Estas seguro de que quieres eliminar esta transferencia? Esta accion no se puede deshacer.",
+        "actions": {
+          "cancel": "Cancelar",
+          "delete": "Eliminar"
+        }
       }
     }
   },

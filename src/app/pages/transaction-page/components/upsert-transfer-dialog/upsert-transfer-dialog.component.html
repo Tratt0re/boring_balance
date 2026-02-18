@@ -1,13 +1,13 @@
 <div class="grid gap-4 sm:grid-cols-2">
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'accounts.transfers.dialog.add.fields.occurredAt' | translate }}
+      {{ 'transactions.transfers.dialog.add.fields.occurredAt' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-date-picker
       zIconPosition="right"
       [value]="occurredAt()"
-      [placeholder]="'accounts.transfers.dialog.add.placeholders.occurredAt' | translate"
+      [placeholder]="'transactions.transfers.dialog.add.placeholders.occurredAt' | translate"
       (dateChange)="onOccurredAtChange($event)"
     />
     @if (visibleOccurredAtErrorKey(); as currentError) {
@@ -17,7 +17,7 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium" for="transfer-amount">
-      {{ 'accounts.transfers.dialog.add.fields.amount' | translate }}
+      {{ 'transactions.transfers.dialog.add.fields.amount' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <input
@@ -29,7 +29,7 @@
       aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
       [value]="amount()"
-      [attr.placeholder]="'accounts.transfers.dialog.add.placeholders.amount' | translate"
+      [attr.placeholder]="'transactions.transfers.dialog.add.placeholders.amount' | translate"
       (blur)="onAmountBlur()"
       (input)="onAmountInput($event)"
     />
@@ -40,12 +40,12 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'accounts.transfers.dialog.add.fields.fromAccount' | translate }}
+      {{ 'transactions.transfers.dialog.add.fields.fromAccount' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-select
       [zValue]="fromAccountId()"
-      [zPlaceholder]="'accounts.transfers.dialog.add.placeholders.fromAccount' | translate"
+      [zPlaceholder]="'transactions.transfers.dialog.add.placeholders.fromAccount' | translate"
       (zSelectionChange)="onFromAccountChange($event)"
     >
       @for (option of accountOptions; track option.value) {
@@ -63,12 +63,12 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'accounts.transfers.dialog.add.fields.toAccount' | translate }}
+      {{ 'transactions.transfers.dialog.add.fields.toAccount' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-select
       [zValue]="toAccountId()"
-      [zPlaceholder]="'accounts.transfers.dialog.add.placeholders.toAccount' | translate"
+      [zPlaceholder]="'transactions.transfers.dialog.add.placeholders.toAccount' | translate"
       (zSelectionChange)="onToAccountChange($event)"
     >
       @for (option of accountOptions; track option.value) {

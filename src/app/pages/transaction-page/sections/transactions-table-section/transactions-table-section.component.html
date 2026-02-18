@@ -1,0 +1,14 @@
+<app-data-table
+  [data]="rows()"
+  [structure]="structure()"
+  title="nav.items.transactions"
+  description="transactions.table.description"
+  emptyMessage="transactions.table.emptyMessage"
+  [showEmpty]="true"
+  [bordered]="true"
+  [striped]="false"
+  [hoverable]="true"
+  [selectable]="false"
+  [hasActionColumn]="false"
+  (editableValueChange)="onEditableValueChange($event)"
+></app-data-table>

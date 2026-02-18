@@ -61,76 +61,6 @@
         "icon": "Icon"
       }
     },
-    "transfers": {
-      "title": "Transfers",
-      "table": {
-        "description": "Money moved between your accounts.",
-        "emptyMessage": "No transfers found.",
-        "actions": {
-          "add": "Add transfer",
-          "edit": "Edit transfer",
-          "delete": "Delete transfer"
-        },
-        "columns": {
-          "occurredAt": "Date",
-          "fromAccount": "From",
-          "toAccount": "To",
-          "amount": "Amount"
-        }
-      },
-      "dialog": {
-        "add": {
-          "title": "Add transfer",
-          "description": "Move money between two accounts.",
-          "fields": {
-            "occurredAt": "Date",
-            "fromAccount": "From account",
-            "toAccount": "To account",
-            "amount": "Amount"
-          },
-          "placeholders": {
-            "occurredAt": "Pick a date",
-            "fromAccount": "Select source account",
-            "toAccount": "Select destination account",
-            "amount": "0.00"
-          },
-          "actions": {
-            "cancel": "Cancel",
-            "create": "Create transfer"
-          },
-          "errors": {
-            "fixValidation": "Please fix the highlighted fields before creating the transfer.",
-            "dateRequired": "Date is required.",
-            "fromAccountRequired": "Source account is required.",
-            "toAccountRequired": "Destination account is required.",
-            "accountsMustDiffer": "Source and destination accounts must be different.",
-            "amountRequired": "Amount is required.",
-            "amountInvalid": "Amount must be a positive number.",
-            "createFailed": "Failed to create transfer."
-          }
-        },
-        "edit": {
-          "title": "Edit transfer",
-          "description": "Update transfer details.",
-          "actions": {
-            "cancel": "Cancel",
-            "save": "Save changes"
-          },
-          "errors": {
-            "fixValidation": "Please fix the highlighted fields before saving the transfer.",
-            "updateFailed": "Failed to update transfer."
-          }
-        }
-      },
-      "deleteAlert": {
-        "title": "Delete transfer?",
-        "description": "Are you sure you want to delete this transfer? This action cannot be undone.",
-        "actions": {
-          "cancel": "Cancel",
-          "delete": "Delete"
-        }
-      }
-    },
     "dialog": {
       "add": {
         "title": "Add account",
@@ -229,6 +159,80 @@
     }
   },
   "transactions": {
+    "view": {
+      "commonTransactions": "Common transactions",
+      "transfers": "Transfers"
+    },
+    "transfers": {
+      "title": "Transfers",
+      "table": {
+        "description": "Money moved between your accounts.",
+        "emptyMessage": "No transfers found.",
+        "actions": {
+          "add": "Add transfer",
+          "edit": "Edit transfer",
+          "delete": "Delete transfer"
+        },
+        "columns": {
+          "occurredAt": "Date",
+          "fromAccount": "From",
+          "toAccount": "To",
+          "amount": "Amount"
+        }
+      },
+      "dialog": {
+        "add": {
+          "title": "Add transfer",
+          "description": "Move money between two accounts.",
+          "fields": {
+            "occurredAt": "Date",
+            "fromAccount": "From account",
+            "toAccount": "To account",
+            "amount": "Amount"
+          },
+          "placeholders": {
+            "occurredAt": "Pick a date",
+            "fromAccount": "Select source account",
+            "toAccount": "Select destination account",
+            "amount": "0.00"
+          },
+          "actions": {
+            "cancel": "Cancel",
+            "create": "Create transfer"
+          },
+          "errors": {
+            "fixValidation": "Please fix the highlighted fields before creating the transfer.",
+            "dateRequired": "Date is required.",
+            "fromAccountRequired": "Source account is required.",
+            "toAccountRequired": "Destination account is required.",
+            "accountsMustDiffer": "Source and destination accounts must be different.",
+            "amountRequired": "Amount is required.",
+            "amountInvalid": "Amount must be a positive number.",
+            "createFailed": "Failed to create transfer."
+          }
+        },
+        "edit": {
+          "title": "Edit transfer",
+          "description": "Update transfer details.",
+          "actions": {
+            "cancel": "Cancel",
+            "save": "Save changes"
+          },
+          "errors": {
+            "fixValidation": "Please fix the highlighted fields before saving the transfer.",
+            "updateFailed": "Failed to update transfer."
+          }
+        }
+      },
+      "deleteAlert": {
+        "title": "Delete transfer?",
+        "description": "Are you sure you want to delete this transfer? This action cannot be undone.",
+        "actions": {
+          "cancel": "Cancel",
+          "delete": "Delete"
+        }
+      }
+    },
     "table": {
       "description": "Transaction history",
       "emptyMessage": "No transactions found.",
