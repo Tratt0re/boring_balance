@@ -26,7 +26,15 @@ const TRANSACTION_FIELDS = new Set([
   'settled',
 ]);
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
-const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'categories', 'accounts', 'settled']);
+const LIST_FILTER_FIELDS = new Set([
+  'date_from',
+  'date_to',
+  'amount_from',
+  'amount_to',
+  'categories',
+  'accounts',
+  'settled',
+]);
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
@@ -104,6 +112,24 @@ function normalizeOptionalIdArray(value, label) {
   return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
 }
 
+function normalizeOptionalAmountFilterToCents(value, label) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  let normalizedValue = value;
+  if (typeof normalizedValue === 'string') {
+    const trimmedValue = normalizedValue.trim();
+    if (trimmedValue.length === 0) {
+      throw new Error(`${label} cannot be empty.`);
+    }
+
+    normalizedValue = Number(trimmedValue);
+  }
+
+  return Math.abs(normalizeAmountToCents(normalizedValue, label));
+}
+
 function normalizeListFilters(payload) {
   if (payload === undefined || payload === null) {
     return {
@@ -128,19 +154,25 @@ function normalizeListFilters(payload) {
   }
 
   return {
-    filters: pickDefined({
-      date_from:
-        filters.date_from === undefined
-          ? undefined
-          : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
-      date_to:
-        filters.date_to === undefined
-          ? undefined
-          : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
-      categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
-      accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
-      settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
-    }),
+    filters: (() => {
+      const normalizedFilters = pickDefined({
+        date_from:
+          filters.date_from === undefined
+            ? undefined
+            : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
+        date_to:
+          filters.date_to === undefined
+            ? undefined
+            : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
+        amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, 'payload.filters.amount_from'),
+        amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, 'payload.filters.amount_to'),
+        categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
+        accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+        settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
+      });
+
+      return normalizedFilters;
+    })(),
     pagination: {
       page,
       page_size: pageSize,

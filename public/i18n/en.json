@@ -301,6 +301,8 @@
       "fields": {
         "dateFrom": "From date",
         "dateTo": "To date",
+        "amountFrom": "Amount from",
+        "amountTo": "Amount to",
         "settled": "Settlement status",
         "category": "Category",
         "account": "Account"
@@ -308,6 +310,8 @@
       "placeholders": {
         "dateFrom": "From date",
         "dateTo": "To date",
+        "amountFrom": "Minimum amount",
+        "amountTo": "Maximum amount",
         "settled": "Any status",
         "category": "Select a category",
         "account": "Select an account",

@@ -2,8 +2,9 @@ import type { ZardComboboxGroup, ZardComboboxOption } from '@/shared/components/
 import type { ZardIcon } from '@/shared/components/icon';
 import type { ZardSelectSizeVariants } from '@/shared/components/select';
 
-export type AppSheetFieldType = 'date-picker' | 'combobox' | 'select' | 'checkbox';
+export type AppSheetFieldType = 'date-picker' | 'combobox' | 'select' | 'checkbox' | 'input';
 export type AppSheetFieldWidth = `${number}/${number}` | 'full';
+export type AppSheetInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
 
 export type AppSheetFieldValue = Date | string | readonly string[] | boolean | null;
 export type AppSheetFieldValueMap = Record<string, AppSheetFieldValue>;
@@ -73,7 +74,16 @@ export interface AppSheetCheckboxField extends AppSheetFieldBase<'checkbox', boo
   readonly icon?: ZardIcon;
 }
 
-export type AppSheetField = AppSheetDatePickerField | AppSheetComboboxField | AppSheetSelectField | AppSheetCheckboxField;
+export interface AppSheetInputField extends AppSheetFieldBase<'input', string | null> {
+  readonly inputType?: AppSheetInputType;
+}
+
+export type AppSheetField =
+  | AppSheetDatePickerField
+  | AppSheetComboboxField
+  | AppSheetSelectField
+  | AppSheetCheckboxField
+  | AppSheetInputField;
 
 export interface AppSheetFormData {
   readonly fields: readonly AppSheetField[];

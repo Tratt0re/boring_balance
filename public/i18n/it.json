@@ -231,6 +231,8 @@
       "fields": {
         "dateFrom": "Data da",
         "dateTo": "Data a",
+        "amountFrom": "Importo da",
+        "amountTo": "Importo a",
         "settled": "Stato regolazione",
         "category": "Categoria",
         "account": "Conto"
@@ -238,6 +240,8 @@
       "placeholders": {
         "dateFrom": "Data da",
         "dateTo": "Data a",
+        "amountFrom": "Importo minimo",
+        "amountTo": "Importo massimo",
         "settled": "Qualsiasi stato",
         "category": "Seleziona una categoria",
         "account": "Seleziona un conto",

@@ -44,6 +44,8 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 const TRANSACTION_FILTER_FIELD = {
   dateFrom: 'dateFrom',
   dateTo: 'dateTo',
+  amountFrom: 'amountFrom',
+  amountTo: 'amountTo',
   settled: 'settled',
   categoryId: 'categoryId',
   accountId: 'accountId',
@@ -83,6 +85,8 @@ interface TransactionTableRow {
 interface TransactionTableFilters {
   readonly dateFrom: Date | null;
   readonly dateTo: Date | null;
+  readonly amountFrom: number | null;
+  readonly amountTo: number | null;
   readonly settled: boolean | null;
   readonly categoryIds: readonly number[];
   readonly accountIds: readonly number[];
@@ -91,6 +95,8 @@ interface TransactionTableFilters {
 interface PersistedTransactionTableFilters {
   readonly dateFrom: number | null;
   readonly dateTo: number | null;
+  readonly amountFrom: number | null;
+  readonly amountTo: number | null;
   readonly settled: boolean | null;
   readonly categoryIds: readonly number[];
   readonly accountIds: readonly number[];
@@ -105,6 +111,8 @@ interface PersistedTransactionsTableState {
 const DEFAULT_TRANSACTION_TABLE_FILTERS: TransactionTableFilters = {
   dateFrom: null,
   dateTo: null,
+  amountFrom: null,
+  amountTo: null,
   settled: null,
   categoryIds: [],
   accountIds: [],
@@ -254,6 +262,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     return (
       filters.dateFrom !== null ||
       filters.dateTo !== null ||
+      filters.amountFrom !== null ||
+      filters.amountTo !== null ||
       filters.settled !== null ||
       filters.categoryIds.length > 0 ||
       filters.accountIds.length > 0
@@ -282,6 +292,30 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         label: this.toActiveFilterLabel(
           'transactions.filters.fields.dateTo',
           this.formatActiveFilterDate(filters.dateTo),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.amountFrom !== null) {
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.amountFrom,
+        icon: 'dollar-sign',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.amountFrom',
+          this.formatActiveFilterAmount(filters.amountFrom),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.amountTo !== null) {
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.amountTo,
+        icon: 'dollar-sign',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.amountTo',
+          this.formatActiveFilterAmount(filters.amountTo),
         ),
         translate: false,
       });
@@ -444,6 +478,16 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         ...currentFilters,
         dateTo: null,
       };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.amountFrom && currentFilters.amountFrom !== null) {
+      nextFilters = {
+        ...currentFilters,
+        amountFrom: null,
+      };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.amountTo && currentFilters.amountTo !== null) {
+      nextFilters = {
+        ...currentFilters,
+        amountTo: null,
+      };
     } else if (fieldId === TRANSACTION_FILTER_FIELD.settled && currentFilters.settled !== null) {
       nextFilters = {
         ...currentFilters,
@@ -558,6 +602,24 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         translate: true,
       },
       {
+        id: TRANSACTION_FILTER_FIELD.amountFrom,
+        type: 'input',
+        inputType: 'number',
+        width: '1/2',
+        label: 'transactions.filters.fields.amountFrom',
+        placeholder: 'transactions.filters.placeholders.amountFrom',
+        translate: true,
+      },
+      {
+        id: TRANSACTION_FILTER_FIELD.amountTo,
+        type: 'input',
+        inputType: 'number',
+        width: '1/2',
+        label: 'transactions.filters.fields.amountTo',
+        placeholder: 'transactions.filters.placeholders.amountTo',
+        translate: true,
+      },
+      {
         id: TRANSACTION_FILTER_FIELD.settled,
         type: 'select',
         width: '1/1',
@@ -625,6 +687,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     return {
       [TRANSACTION_FILTER_FIELD.dateFrom]: filters.dateFrom,
       [TRANSACTION_FILTER_FIELD.dateTo]: filters.dateTo,
+      [TRANSACTION_FILTER_FIELD.amountFrom]:
+        filters.amountFrom === null ? null : `${filters.amountFrom}`,
+      [TRANSACTION_FILTER_FIELD.amountTo]:
+        filters.amountTo === null ? null : `${filters.amountTo}`,
       [TRANSACTION_FILTER_FIELD.settled]:
         filters.settled === null ? null : `${filters.settled}`,
       [TRANSACTION_FILTER_FIELD.categoryId]: filters.categoryIds.map((id) => `${id}`),
@@ -636,6 +702,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const nextFilters: TransactionTableFilters = {
       dateFrom: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateFrom]),
       dateTo: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateTo]),
+      amountFrom: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountFrom]),
+      amountTo: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountTo]),
       settled: this.toSettledFilterValue(values[TRANSACTION_FILTER_FIELD.settled]),
       categoryIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.categoryId]),
       accountIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
@@ -655,12 +723,16 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const filters = this.filters();
     const dateFrom = filters.dateFrom?.getTime();
     const dateTo = filters.dateTo?.getTime();
+    const amountFrom = filters.amountFrom ?? undefined;
+    const amountTo = filters.amountTo ?? undefined;
     const categories = filters.categoryIds.length > 0 ? [...filters.categoryIds] : undefined;
     const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
     const settled = filters.settled === null ? undefined : filters.settled;
     const hasFilters =
       dateFrom !== undefined ||
       dateTo !== undefined ||
+      amountFrom !== undefined ||
+      amountTo !== undefined ||
       categories !== undefined ||
       accounts !== undefined ||
       settled !== undefined;
@@ -678,6 +750,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       filters: {
         ...(dateFrom === undefined ? {} : { date_from: dateFrom }),
         ...(dateTo === undefined ? {} : { date_to: dateTo }),
+        ...(amountFrom === undefined ? {} : { amount_from: amountFrom }),
+        ...(amountTo === undefined ? {} : { amount_to: amountTo }),
         ...(categories === undefined ? {} : { categories }),
         ...(accounts === undefined ? {} : { accounts }),
         ...(settled === undefined ? {} : { settled }),
@@ -1045,6 +1119,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       filters: {
         dateFrom: filters.dateFrom?.getTime() ?? null,
         dateTo: filters.dateTo?.getTime() ?? null,
+        amountFrom: filters.amountFrom,
+        amountTo: filters.amountTo,
         settled: filters.settled,
         categoryIds: [...filters.categoryIds],
         accountIds: [...filters.accountIds],
@@ -1063,6 +1139,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     return {
       dateFrom: this.toDateValue(filters.dateFrom),
       dateTo: this.toDateValue(filters.dateTo),
+      amountFrom: this.toAmountFilterValue(filters.amountFrom),
+      amountTo: this.toAmountFilterValue(filters.amountTo),
       settled: this.toSettledFilterValue(filters.settled),
       categoryIds: this.toPositiveIntegerArray(filters.categoryIds),
       accountIds: this.toPositiveIntegerArray(filters.accountIds),
@@ -1091,6 +1169,19 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     return PAGE_SIZE_OPTIONS.includes(pageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ? pageSize : DEFAULT_PAGE_SIZE;
   }
 
+  private toAmountFilterValue(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      const parsedValue = Number(value);
+      return Number.isFinite(parsedValue) ? parsedValue : null;
+    }
+
+    return null;
+  }
+
   private applyFiltersAndReload(nextFilters: TransactionTableFilters): void {
     this.filters.set(nextFilters);
     this.page.set(1);
@@ -1108,6 +1199,19 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       month: 'short',
       day: '2-digit',
     }).format(date);
+  }
+
+  private formatActiveFilterAmount(amount: number): string {
+    const currency = this.localPreferencesService.getCurrency().toUpperCase();
+
+    try {
+      return new Intl.NumberFormat(this.resolveLocale(), {
+        style: 'currency',
+        currency,
+      }).format(amount);
+    } catch {
+      return `${amount}`;
+    }
   }
 
   private resolveLocale(): string {

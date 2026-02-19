@@ -20,6 +20,20 @@ function buildOccurredAtFilter(filters = {}) {
   return Object.keys(occurredAtFilter).length === 0 ? undefined : occurredAtFilter;
 }
 
+function buildAmountCentsFilter(filters = {}) {
+  const amountCentsFilter = {};
+
+  if (filters.amount_from !== undefined) {
+    amountCentsFilter.absGte = filters.amount_from;
+  }
+
+  if (filters.amount_to !== undefined) {
+    amountCentsFilter.absLte = filters.amount_to;
+  }
+
+  return Object.keys(amountCentsFilter).length === 0 ? undefined : amountCentsFilter;
+}
+
 function buildListWhere(filters = {}) {
   const where = {
     category_id: { ne: TRANSFER_CATEGORY_ID },
@@ -39,6 +53,11 @@ function buildListWhere(filters = {}) {
 
   if (Array.isArray(filters.accounts)) {
     where.account_id = { in: filters.accounts };
+  }
+
+  const amountCentsFilter = buildAmountCentsFilter(filters);
+  if (amountCentsFilter) {
+    where.amount_cents = amountCentsFilter;
   }
 
   if (filters.settled !== undefined) {
