@@ -6,6 +6,7 @@ import {
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
+  type TableActiveFilterItem,
   type TableHeaderActionItem,
   type TableDataItem,
 } from '@/components/data-table';
@@ -47,6 +48,7 @@ const TRANSACTION_FILTER_FIELD = {
   categoryId: 'categoryId',
   accountId: 'accountId',
 } as const;
+const ACTIVE_FILTER_ID_SEPARATOR = ':';
 const TRANSACTION_COLUMN_WIDTH = {
   occurredAt: 'w-1/14',
   settled: 'w-1/14',
@@ -257,6 +259,77 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       filters.accountIds.length > 0
     );
   });
+  protected readonly activeFilters = computed<readonly TableActiveFilterItem[]>(() => {
+    const filters = this.filters();
+    const items: TableActiveFilterItem[] = [];
+
+    if (filters.dateFrom) {
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.dateFrom,
+        icon: 'calendar',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.dateFrom',
+          this.formatActiveFilterDate(filters.dateFrom),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.dateTo) {
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.dateTo,
+        icon: 'calendar',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.dateTo',
+          this.formatActiveFilterDate(filters.dateTo),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.settled !== null) {
+      const settledLabelKey = filters.settled
+        ? 'transactions.filters.options.settled.yes'
+        : 'transactions.filters.options.settled.no';
+
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.settled,
+        icon: filters.settled ? 'circle-check' : 'circle-x',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.settled',
+          this.translateService.instant(settledLabelKey),
+        ),
+        translate: false,
+      });
+    }
+
+    for (const categoryId of filters.categoryIds) {
+      const categoryName = this.categoryNameById().get(categoryId) ?? `${categoryId}`;
+      items.push({
+        id: `${TRANSACTION_FILTER_FIELD.categoryId}${ACTIVE_FILTER_ID_SEPARATOR}${categoryId}`,
+        icon: this.categoryIconById().get(categoryId) ?? 'tag',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.category',
+          this.translateService.instant(categoryName),
+        ),
+        translate: false,
+      });
+    }
+
+    for (const accountId of filters.accountIds) {
+      items.push({
+        id: `${TRANSACTION_FILTER_FIELD.accountId}${ACTIVE_FILTER_ID_SEPARATOR}${accountId}`,
+        icon: this.accountIconById().get(accountId) ?? 'wallet',
+        label: this.toActiveFilterLabel(
+          'transactions.filters.fields.account',
+          this.accountNameById().get(accountId) ?? `${accountId}`,
+        ),
+        translate: false,
+      });
+    }
+
+    return items;
+  });
   protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => {
     const actions: TableHeaderActionItem[] = [
       {
@@ -355,6 +428,56 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     void this.updateTransaction(transaction.id, { settled });
   }
 
+  protected onActiveFilterRemove(activeFilter: TableActiveFilterItem): void {
+    const [fieldId, rawValue] = activeFilter.id.split(ACTIVE_FILTER_ID_SEPARATOR);
+    const currentFilters = this.filters();
+
+    let nextFilters: TransactionTableFilters | null = null;
+
+    if (fieldId === TRANSACTION_FILTER_FIELD.dateFrom && currentFilters.dateFrom) {
+      nextFilters = {
+        ...currentFilters,
+        dateFrom: null,
+      };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.dateTo && currentFilters.dateTo) {
+      nextFilters = {
+        ...currentFilters,
+        dateTo: null,
+      };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.settled && currentFilters.settled !== null) {
+      nextFilters = {
+        ...currentFilters,
+        settled: null,
+      };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.categoryId) {
+      const categoryId = this.toPositiveInteger(rawValue);
+      if (!categoryId || !currentFilters.categoryIds.includes(categoryId)) {
+        return;
+      }
+
+      nextFilters = {
+        ...currentFilters,
+        categoryIds: currentFilters.categoryIds.filter((id) => id !== categoryId),
+      };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.accountId) {
+      const accountId = this.toPositiveInteger(rawValue);
+      if (!accountId || !currentFilters.accountIds.includes(accountId)) {
+        return;
+      }
+
+      nextFilters = {
+        ...currentFilters,
+        accountIds: currentFilters.accountIds.filter((id) => id !== accountId),
+      };
+    }
+
+    if (!nextFilters) {
+      return;
+    }
+
+    this.applyFiltersAndReload(nextFilters);
+  }
+
   private openFilterSheet(): void {
     this.sheetFormService.open({
       zTitle: this.translateService.instant('transactions.filters.title'),
@@ -388,10 +511,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.filters.set(DEFAULT_TRANSACTION_TABLE_FILTERS);
-    this.page.set(1);
-    this.persistTableState();
-    void this.reloadTransactionsPage();
+    this.applyFiltersAndReload(DEFAULT_TRANSACTION_TABLE_FILTERS);
   }
 
   private activateToolbarActions(): void {
@@ -521,10 +641,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       accountIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
     };
 
-    this.filters.set(nextFilters);
-    this.page.set(1);
-    this.persistTableState();
-    void this.reloadTransactionsPage();
+    this.applyFiltersAndReload(nextFilters);
   }
 
   private resetSheetFilters(sheetContent: AppSheetFormComponent): void {
@@ -573,12 +690,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       const uniqueValues = new Set<number>();
 
       for (const item of value) {
-        if (typeof item !== 'string') {
-          continue;
-        }
-
-        const parsedValue = Number.parseInt(item, 10);
-        if (Number.isInteger(parsedValue) && parsedValue > 0) {
+        const parsedValue = this.toPositiveInteger(item);
+        if (parsedValue) {
           uniqueValues.add(parsedValue);
         }
       }
@@ -586,16 +699,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       return Array.from(uniqueValues);
     }
 
-    if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
-      return [value];
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number.parseInt(value, 10);
-      return Number.isInteger(parsedValue) && parsedValue > 0 ? [parsedValue] : [];
-    }
-
-    return [];
+    const parsedValue = this.toPositiveInteger(value);
+    return parsedValue ? [parsedValue] : [];
   }
 
   private toSettledFilterValue(value: unknown): boolean | null {
@@ -984,6 +1089,30 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     return PAGE_SIZE_OPTIONS.includes(pageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ? pageSize : DEFAULT_PAGE_SIZE;
+  }
+
+  private applyFiltersAndReload(nextFilters: TransactionTableFilters): void {
+    this.filters.set(nextFilters);
+    this.page.set(1);
+    this.persistTableState();
+    void this.reloadTransactionsPage();
+  }
+
+  private toActiveFilterLabel(labelKey: string, value: string): string {
+    return `${this.translateService.instant(labelKey)}: ${value}`;
+  }
+
+  private formatActiveFilterDate(date: Date): string {
+    return new Intl.DateTimeFormat(this.resolveLocale(), {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    }).format(date);
+  }
+
+  private resolveLocale(): string {
+    const currentLanguage = this.translateService.currentLang?.trim();
+    return currentLanguage && currentLanguage.length > 0 ? currentLanguage : 'en';
   }
 
   private toTransactionRow(transaction: TransactionModel): TransactionTableRow {

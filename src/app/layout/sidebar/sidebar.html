@@ -7,9 +7,15 @@
   [zCollapsedWidth]="isSmallScreen() ? 0 : 76"
   [zCollapsible]="false"
   [zCollapsed]="sidebarCollapsed()"
+  [attr.inert]="isSmallScreenCollapsed() ? '' : null"
+  [attr.aria-hidden]="isSmallScreenCollapsed() ? 'true' : null"
   (zCollapsedChange)="onSidebarCollapsedChange($event)"
 >
-  <div class="flex h-full flex-col overflow-y-auto">
+  <div
+    class="flex h-full flex-col overflow-y-auto"
+    [cdkTrapFocus]="shouldTrapFocus()"
+    [cdkTrapFocusAutoCapture]="shouldTrapFocus()"
+  >
     <nav [class]="'flex flex-1 flex-col justify-between ' + (sidebarCollapsed() ? 'p-2 pt-2' : 'p-4 pt-2')">
       <div [class]="'flex flex-col ' + (sidebarCollapsed() ? 'gap-1' : 'gap-4')">
         @for (section of topMenuSections(); track section.label) {
@@ -32,6 +38,7 @@
               <a
                 [routerLink]="item.path"
                 (click)="onMenuItemClick()"
+                [attr.tabindex]="isSmallScreenCollapsed() ? -1 : null"
                 routerLinkActive=""
                 [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
                 #routeLinkActive="routerLinkActive"
@@ -84,6 +91,7 @@
                 <a
                   [routerLink]="item.path"
                   (click)="onMenuItemClick()"
+                  [attr.tabindex]="isSmallScreenCollapsed() ? -1 : null"
                   routerLinkActive=""
                   [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
                   #routeLinkActive="routerLinkActive"

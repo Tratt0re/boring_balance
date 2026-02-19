@@ -9,6 +9,7 @@ export const badgeVariants = cva(
         secondary: 'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90 h-5',
         destructive:
           'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 h-5',
+        filter: 'h-6 border-border/70 bg-muted text-foreground px-2 pr-1',
         outline: 'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
       },
       zShape: {

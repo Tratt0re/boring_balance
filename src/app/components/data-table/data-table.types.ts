@@ -97,6 +97,14 @@ export interface TableHeaderActionItem {
   readonly disabled?: boolean | (() => boolean);
 }
 
+export interface TableActiveFilterItem {
+  readonly id: string;
+  readonly label: string;
+  readonly icon?: ZardIcon;
+  readonly translate?: boolean;
+  readonly removable?: boolean;
+}
+
 export interface ActionDataItem extends TableDataStructureItem {
   readonly actionItems: readonly ActionItem[];
 }

@@ -18,7 +18,11 @@
       (sidebarCollapsedChange)="setSidebarCollapsed($event)"
     ></app-sidebar>
 
-    <z-layout class="min-w-0 flex-1">
+    <z-layout
+      class="min-w-0 flex-1"
+      [attr.inert]="showSidebarOverlay() ? '' : null"
+      [attr.aria-hidden]="showSidebarOverlay() ? 'true' : null"
+    >
       <app-toolbar
         [sidebarCollapsed]="sidebarCollapsed()"
         [title]="toolbarTitle()"

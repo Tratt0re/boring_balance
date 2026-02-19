@@ -39,6 +39,7 @@ import type {
   EditableValueChangeEvent,
   EditableValidationErrorEvent,
   ColumnDataItem,
+  TableActiveFilterItem,
   TableHeaderActionItem,
   TableActionColumnPosition,
   TableCellType,
@@ -96,6 +97,7 @@ export class AppDataTableComponent {
   readonly title = input('');
   readonly description = input('');
   readonly tableActions = input<readonly TableHeaderActionItem[]>([]);
+  readonly activeFilters = input<readonly TableActiveFilterItem[]>([], { alias: 'active-filters' });
   readonly emptyMessage = input('No data available.');
   readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
@@ -128,6 +130,7 @@ export class AppDataTableComponent {
   readonly sortChange = output<TableSortState | null>();
   readonly editableValueChange = output<EditableValueChangeEvent>();
   readonly editableValidationError = output<EditableValidationErrorEvent>();
+  readonly activeFilterRemove = output<TableActiveFilterItem>();
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
@@ -174,6 +177,9 @@ export class AppDataTableComponent {
 
   protected readonly visibleTableActions = computed(() =>
     this.tableActions().filter((actionItem) => !this.isTableActionDisabled(actionItem)),
+  );
+  protected readonly visibleActiveFilters = computed(() =>
+    this.activeFilters().filter((activeFilter) => activeFilter.label.trim().length > 0),
   );
 
   protected readonly hasAnyVisibleRowAction = computed(() => {
@@ -456,6 +462,33 @@ export class AppDataTableComponent {
     }
 
     return actionItem.showLabel ?? true;
+  }
+
+  protected activeFilterLabel(activeFilter: TableActiveFilterItem): string {
+    if (activeFilter.translate === false) {
+      return activeFilter.label;
+    }
+
+    return this.translateString(activeFilter.label);
+  }
+
+  protected activeFilterRemoveLabel(activeFilter: TableActiveFilterItem): string {
+    return `Remove filter: ${this.activeFilterLabel(activeFilter)}`;
+  }
+
+  protected isActiveFilterRemovable(activeFilter: TableActiveFilterItem): boolean {
+    return activeFilter.removable ?? true;
+  }
+
+  protected onActiveFilterRemove(event: Event, activeFilter: TableActiveFilterItem): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!this.isActiveFilterRemovable(activeFilter)) {
+      return;
+    }
+
+    this.activeFilterRemove.emit(activeFilter);
   }
 
   protected visibleRowActionItems(row: TableRow): readonly ActionItem[] {

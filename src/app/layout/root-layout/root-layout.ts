@@ -61,6 +61,13 @@ export class RootLayout {
     }
   }
 
+  @HostListener('document:keydown.escape')
+  protected onEscapeKeyDown(): void {
+    if (this.showSidebarOverlay()) {
+      this.closeSidebarOverlay();
+    }
+  }
+
   private detectSmallScreen(): boolean {
     if (typeof window === 'undefined') {
       return false;

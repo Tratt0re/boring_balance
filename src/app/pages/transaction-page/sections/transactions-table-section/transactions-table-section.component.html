@@ -10,6 +10,7 @@
     [data]="rows()"
     [structure]="tableStructure()"
     [tableActions]="tableActions()"
+    [active-filters]="activeFilters()"
     minHeight="55dvh"
     [stickyHeader]="true"
     [highContrastHeader]="false"
@@ -34,5 +35,6 @@
     (pageChange)="onPageChange($event)"
     (pageSizeChange)="onPageSizeChange($event)"
     (editableValueChange)="onEditableValueChange($event)"
+    (activeFilterRemove)="onActiveFilterRemove($event)"
   ></app-data-table>
 }

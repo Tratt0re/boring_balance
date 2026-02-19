@@ -1,6 +1,7 @@
 import { Component, DestroyRef, computed, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { A11yModule } from '@angular/cdk/a11y';
 
 import { ZardIconComponent } from '@/shared/components/icon';
 import {
@@ -17,6 +18,7 @@ import type { MenuSectionConfig } from '@/config/menu.config';
   imports: [
     RouterLink,
     RouterLinkActive,
+    A11yModule,
     TranslatePipe,
     ZardIconComponent,
     SidebarComponent,
@@ -43,6 +45,8 @@ export class Sidebar {
   protected readonly bottomMenuSections = computed(() =>
     this.menuSections().filter((section) => section.placement === 'bottom'),
   );
+  protected readonly isSmallScreenCollapsed = computed(() => this.isSmallScreen() && this.sidebarCollapsed());
+  protected readonly shouldTrapFocus = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
 
   readonly sidebarCollapsedChange = output<boolean>();
 
