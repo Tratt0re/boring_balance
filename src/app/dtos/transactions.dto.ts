@@ -79,6 +79,8 @@ export interface TransactionListTransactionsDto {
 export interface TransactionListTransfersFiltersDto {
   readonly date_from?: UnixTimestampMilliseconds;
   readonly date_to?: UnixTimestampMilliseconds;
+  readonly amount_from?: number;
+  readonly amount_to?: number;
   readonly accounts?: readonly RowId[];
 }
 

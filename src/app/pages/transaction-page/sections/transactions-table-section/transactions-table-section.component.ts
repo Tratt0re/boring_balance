@@ -40,7 +40,7 @@ import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 
 const TRANSFER_CATEGORY_ID = 2;
 const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 const TRANSACTION_FILTER_FIELD = {
   dateFrom: 'dateFrom',
   dateTo: 'dateTo',

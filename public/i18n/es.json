@@ -286,6 +286,7 @@
         "emptyMessage": "No se encontraron transferencias.",
         "actions": {
           "add": "Agregar transferencia",
+          "filter": "Filtrar transferencias",
           "edit": "Editar transferencia",
           "delete": "Eliminar transferencia"
         },
@@ -346,6 +347,33 @@
         "actions": {
           "cancel": "Cancelar",
           "delete": "Eliminar"
+        }
+      },
+      "filters": {
+        "title": "Filtrar transferencias",
+        "description": "Aplica uno o mas filtros opcionales para reducir la lista de transferencias.",
+        "fields": {
+          "dateFrom": "Fecha desde",
+          "dateTo": "Fecha hasta",
+          "amountFrom": "Importe desde",
+          "amountTo": "Importe hasta",
+          "account": "Cuenta"
+        },
+        "placeholders": {
+          "dateFrom": "Fecha desde",
+          "dateTo": "Fecha hasta",
+          "amountFrom": "Importe minimo",
+          "amountTo": "Importe maximo",
+          "account": "Selecciona una cuenta",
+          "searchAccount": "Buscar cuentas..."
+        },
+        "empty": {
+          "account": "No se encontraron cuentas."
+        },
+        "actions": {
+          "apply": "Aplicar filtros",
+          "reset": "Restablecer filtros",
+          "cancel": "Cancelar"
         }
       }
     }

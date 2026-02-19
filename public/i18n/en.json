@@ -214,6 +214,7 @@
         "emptyMessage": "No transfers found.",
         "actions": {
           "add": "Add transfer",
+          "filter": "Filter transfers",
           "edit": "Edit transfer",
           "delete": "Delete transfer"
         },
@@ -274,6 +275,33 @@
         "actions": {
           "cancel": "Cancel",
           "delete": "Delete"
+        }
+      },
+      "filters": {
+        "title": "Filter transfers",
+        "description": "Apply one or more optional filters to narrow the transfer list.",
+        "fields": {
+          "dateFrom": "From date",
+          "dateTo": "To date",
+          "amountFrom": "Amount from",
+          "amountTo": "Amount to",
+          "account": "Account"
+        },
+        "placeholders": {
+          "dateFrom": "From date",
+          "dateTo": "To date",
+          "amountFrom": "Minimum amount",
+          "amountTo": "Maximum amount",
+          "account": "Select an account",
+          "searchAccount": "Search accounts..."
+        },
+        "empty": {
+          "account": "No accounts found."
+        },
+        "actions": {
+          "apply": "Apply filters",
+          "reset": "Reset filters",
+          "cancel": "Cancel"
         }
       }
     },

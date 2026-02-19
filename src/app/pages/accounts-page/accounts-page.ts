@@ -91,7 +91,7 @@ const createAccountTableStructure = (
   ] as const;
 
 const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 @Component({
   selector: 'app-accounts-page',

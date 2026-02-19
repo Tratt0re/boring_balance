@@ -83,6 +83,14 @@ export class LocalPreferencesService {
     this.setJson(LocalPreferenceKey.TRANSACTIONS_TABLE_STATE, value);
   }
 
+  getTransfersTableState<T>(): T | null {
+    return this.getJson<T>(LocalPreferenceKey.TRANSFERS_TABLE_STATE);
+  }
+
+  setTransfersTableState(value: unknown): void {
+    this.setJson(LocalPreferenceKey.TRANSFERS_TABLE_STATE, value);
+  }
+
   private getText(key: LocalPreferenceKey): string | undefined {
     if (!this.isBrowser) {
       return undefined;

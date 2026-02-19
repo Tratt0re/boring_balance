@@ -7,37 +7,118 @@ const { EMPTY_TAGS_JSON, normalizeRowsTags, normalizeRowTags } = require('./tags
 const transactionsBaseModel = createBaseModel('transactions');
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
-const TRANSFER_ROWS_PER_TRANSFER = 2;
 
-function buildOccurredAtFilter(filters = {}) {
-  const occurredAtFilter = {};
+function buildFilteredTransferWhereClause(filters = {}, tableAlias = 't') {
+  const conditions = [`${tableAlias}.category_id = ?`, `${tableAlias}.transfer_id IS NOT NULL`];
+  const params = [TRANSFER_CATEGORY_ID];
 
   if (filters.date_from !== undefined) {
-    occurredAtFilter.gte = filters.date_from;
+    conditions.push(`${tableAlias}.occurred_at >= ?`);
+    params.push(filters.date_from);
   }
 
   if (filters.date_to !== undefined) {
-    occurredAtFilter.lte = filters.date_to;
+    conditions.push(`${tableAlias}.occurred_at <= ?`);
+    params.push(filters.date_to);
   }
 
-  return Object.keys(occurredAtFilter).length === 0 ? undefined : occurredAtFilter;
-}
+  if (filters.amount_from !== undefined) {
+    conditions.push(`ABS(${tableAlias}.amount_cents) >= ?`);
+    params.push(filters.amount_from);
+  }
 
-function buildListWhere(filters = {}) {
-  const where = {
-    category_id: TRANSFER_CATEGORY_ID,
-  };
-
-  const occurredAtFilter = buildOccurredAtFilter(filters);
-  if (occurredAtFilter) {
-    where.occurred_at = occurredAtFilter;
+  if (filters.amount_to !== undefined) {
+    conditions.push(`ABS(${tableAlias}.amount_cents) <= ?`);
+    params.push(filters.amount_to);
   }
 
   if (Array.isArray(filters.accounts)) {
-    where.account_id = { in: filters.accounts };
+    if (filters.accounts.length === 0) {
+      return {
+        whereSql: ' WHERE 1 = 0',
+        params: [],
+      };
+    }
+
+    const accountPlaceholders = filters.accounts.map(() => '?').join(', ');
+    conditions.push(`${tableAlias}.account_id IN (${accountPlaceholders})`);
+    params.push(...filters.accounts);
   }
 
-  return where;
+  return {
+    whereSql: ` WHERE ${conditions.join(' AND ')}`,
+    params,
+  };
+}
+
+function countFilteredTransfers(database, filters = {}) {
+  const { whereSql, params } = buildFilteredTransferWhereClause(filters, 't');
+  const sql = `
+    WITH valid_transfer_ids AS (
+      SELECT transfer_id
+      FROM transactions
+      WHERE category_id = ?
+        AND transfer_id IS NOT NULL
+      GROUP BY transfer_id
+      HAVING SUM(CASE WHEN amount_cents < 0 THEN 1 ELSE 0 END) > 0
+        AND SUM(CASE WHEN amount_cents > 0 THEN 1 ELSE 0 END) > 0
+    ),
+    filtered_transfers AS (
+      SELECT t.transfer_id
+      FROM transactions t
+      INNER JOIN valid_transfer_ids v
+        ON v.transfer_id = t.transfer_id
+      ${whereSql}
+      GROUP BY t.transfer_id
+    )
+    SELECT COUNT(*) AS total
+    FROM filtered_transfers
+  `;
+
+  const row = database.prepare(sql).get(TRANSFER_CATEGORY_ID, ...params);
+  return Number(row?.total ?? 0);
+}
+
+function listFilteredTransferRows(database, filters = {}, pagination = {}) {
+  const { whereSql, params } = buildFilteredTransferWhereClause(filters, 't');
+  const limit = pagination.page_size;
+  const offset = (pagination.page - 1) * limit;
+  const sql = `
+    WITH valid_transfer_ids AS (
+      SELECT transfer_id
+      FROM transactions
+      WHERE category_id = ?
+        AND transfer_id IS NOT NULL
+      GROUP BY transfer_id
+      HAVING SUM(CASE WHEN amount_cents < 0 THEN 1 ELSE 0 END) > 0
+        AND SUM(CASE WHEN amount_cents > 0 THEN 1 ELSE 0 END) > 0
+    ),
+    filtered_transfers AS (
+      SELECT
+        t.transfer_id,
+        MAX(t.occurred_at) AS occurred_at_sort,
+        MAX(t.id) AS id_sort
+      FROM transactions t
+      INNER JOIN valid_transfer_ids v
+        ON v.transfer_id = t.transfer_id
+      ${whereSql}
+      GROUP BY t.transfer_id
+    ),
+    paged_transfers AS (
+      SELECT transfer_id
+      FROM filtered_transfers
+      ORDER BY occurred_at_sort DESC, id_sort DESC
+      LIMIT ? OFFSET ?
+    )
+    SELECT t.*
+    FROM transactions t
+    INNER JOIN paged_transfers p
+      ON p.transfer_id = t.transfer_id
+    WHERE t.category_id = ?
+    ORDER BY t.occurred_at DESC, t.id DESC
+  `;
+
+  return database.prepare(sql).all(TRANSFER_CATEGORY_ID, ...params, limit, offset, TRANSFER_CATEGORY_ID);
 }
 
 function normalizePagination(pagination = {}) {
@@ -54,25 +135,26 @@ function normalizePagination(pagination = {}) {
 }
 
 function list(filters = {}, pagination = {}) {
-  const where = buildListWhere(filters);
   const normalizedPagination = normalizePagination(pagination);
-  const totalRows = transactionsBaseModel.count(where);
-  const totalTransfers = Math.ceil(totalRows / TRANSFER_ROWS_PER_TRANSFER);
+  const database = getDatabase();
+  const totalTransfers = countFilteredTransfers(database, filters);
   const totalPages =
     totalTransfers === 0
       ? DEFAULT_PAGE
       : Math.max(DEFAULT_PAGE, Math.ceil(totalTransfers / normalizedPagination.page_size));
   const page = Math.min(normalizedPagination.page, totalPages);
-  const pageRowLimit = normalizedPagination.page_size * TRANSFER_ROWS_PER_TRANSFER;
-  const offset = (page - 1) * pageRowLimit;
+  if (totalTransfers === 0) {
+    return {
+      rows: [],
+      total: totalTransfers,
+      page,
+      page_size: normalizedPagination.page_size,
+    };
+  }
 
-  const rows = transactionsBaseModel.list(where, {
-    orderBy: [
-      { column: 'occurred_at', direction: 'DESC' },
-      { column: 'id', direction: 'DESC' },
-    ],
-    limit: pageRowLimit,
-    offset,
+  const rows = listFilteredTransferRows(database, filters, {
+    page,
+    page_size: normalizedPagination.page_size,
   });
 
   return {

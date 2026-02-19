@@ -327,6 +327,7 @@
         "emptyMessage": "Nessun trasferimento trovato.",
         "actions": {
           "add": "Aggiungi trasferimento",
+          "filter": "Filtra trasferimenti",
           "edit": "Modifica trasferimento",
           "delete": "Elimina trasferimento"
         },
@@ -387,6 +388,33 @@
         "actions": {
           "cancel": "Annulla",
           "delete": "Elimina"
+        }
+      },
+      "filters": {
+        "title": "Filtra trasferimenti",
+        "description": "Applica uno o piu filtri opzionali per restringere l'elenco dei trasferimenti.",
+        "fields": {
+          "dateFrom": "Data da",
+          "dateTo": "Data a",
+          "amountFrom": "Importo da",
+          "amountTo": "Importo a",
+          "account": "Conto"
+        },
+        "placeholders": {
+          "dateFrom": "Data da",
+          "dateTo": "Data a",
+          "amountFrom": "Importo minimo",
+          "amountTo": "Importo massimo",
+          "account": "Seleziona un conto",
+          "searchAccount": "Cerca conti..."
+        },
+        "empty": {
+          "account": "Nessun conto trovato."
+        },
+        "actions": {
+          "apply": "Applica filtri",
+          "reset": "Reimposta filtri",
+          "cancel": "Annulla"
         }
       }
     }

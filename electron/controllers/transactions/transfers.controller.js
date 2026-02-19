@@ -11,7 +11,7 @@ const {
 } = require('../utils');
 
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
-const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'accounts']);
+const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'amount_from', 'amount_to', 'accounts']);
 const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount']);
 const UPDATE_FIELDS = new Set(['transfer_id', 'occurred_at', 'from_account_id', 'to_account_id', 'amount']);
 const DEFAULT_PAGE = 1;
@@ -28,6 +28,24 @@ function normalizeOptionalIdArray(value, label) {
   }
 
   return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
+}
+
+function normalizeOptionalAmountFilterToCents(value, label) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  let normalizedValue = value;
+  if (typeof normalizedValue === 'string') {
+    const trimmedValue = normalizedValue.trim();
+    if (trimmedValue.length === 0) {
+      throw new Error(`${label} cannot be empty.`);
+    }
+
+    normalizedValue = Number(trimmedValue);
+  }
+
+  return Math.abs(normalizeAmountToCents(normalizedValue, label));
 }
 
 function normalizeListFilters(payload) {
@@ -63,6 +81,8 @@ function normalizeListFilters(payload) {
         filters.date_to === undefined
           ? undefined
           : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
+      amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, 'payload.filters.amount_from'),
+      amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, 'payload.filters.amount_to'),
       accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
     }),
     pagination: {

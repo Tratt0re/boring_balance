@@ -9,7 +9,9 @@
   <app-data-table
     [data]="rows()"
     [structure]="tableStructure()"
-    minHeight="55dvh"
+    [tableActions]="tableActions()"
+    [active-filters]="activeFilters()"
+    minHeight="35dvh"
     [stickyHeader]="true"
     [title]="'transactions.transfers.title'"
     description="transactions.transfers.table.description"
@@ -31,5 +33,6 @@
     [showTopPagination]="true"
     (pageChange)="onPageChange($event)"
     (pageSizeChange)="onPageSizeChange($event)"
+    (activeFilterRemove)="onActiveFilterRemove($event)"
   ></app-data-table>
 }

@@ -120,7 +120,7 @@ export class AppDataTableComponent {
   readonly currentPage = input(1);
   readonly totalPages = input(1);
   readonly pageSize = input(10);
-  readonly pageSizeOptions = input<readonly number[]>([10, 25, 50]);
+  readonly pageSizeOptions = input<readonly number[]>([5, 10, 25, 50]);
   readonly maxVisiblePages = input(5);
   readonly pageSizeLabel = input('Rows per page');
   readonly showPageSizeSelector = input(false, { transform: booleanAttribute });

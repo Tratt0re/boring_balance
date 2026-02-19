@@ -16,7 +16,7 @@ export class AppPaginationComponent {
   readonly currentPage = input(1);
   readonly totalPages = input(1);
   readonly pageSize = input(10);
-  readonly pageSizeOptions = input<readonly number[]>([10, 25, 50]);
+  readonly pageSizeOptions = input<readonly number[]>([5, 10, 25, 50]);
   readonly maxVisiblePages = input(5);
   readonly pageSizeLabel = input('Rows per page');
   readonly showPageSizeSelector = input(false, { transform: booleanAttribute });
@@ -36,7 +36,7 @@ export class AppPaginationComponent {
       .filter((value) => value > 0);
     const uniqueOptions = Array.from(new Set(sanitizedOptions));
     uniqueOptions.sort((left, right) => left - right);
-    return uniqueOptions.length > 0 ? uniqueOptions : [10, 25, 50];
+    return uniqueOptions.length > 0 ? uniqueOptions : [5, 10, 25, 50];
   });
   protected readonly normalizedPageSize = computed(() => {
     const value = Math.trunc(this.pageSize());
