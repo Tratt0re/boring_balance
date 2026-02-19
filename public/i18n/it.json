@@ -65,6 +65,7 @@
       "emptyMessage": "Nessun conto trovato.",
       "actions": {
         "add": "Aggiungi conto",
+        "edit": "Modifica conto",
         "archive": "Archivia conto"
       },
       "columns": {
@@ -102,6 +103,18 @@
           "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
           "createFailed": "Creazione del conto non riuscita."
         }
+      },
+      "edit": {
+        "title": "Modifica conto",
+        "description": "Aggiorna le impostazioni del conto.",
+        "actions": {
+          "cancel": "Annulla",
+          "save": "Salva modifiche"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di salvare il conto.",
+          "updateFailed": "Aggiornamento del conto non riuscito."
+        }
       }
     },
     "archiveAlert": {
@@ -119,6 +132,7 @@
       "emptyMessage": "Nessuna categoria trovata.",
       "actions": {
         "add": "Aggiungi categoria",
+        "edit": "Modifica categoria",
         "archive": "Archivia categoria"
       },
       "columns": {
@@ -159,6 +173,18 @@
           "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
           "typeRequired": "Il tipo di categoria è obbligatorio.",
           "createFailed": "Creazione della categoria non riuscita."
+        }
+      },
+      "edit": {
+        "title": "Modifica categoria",
+        "description": "Aggiorna le impostazioni della categoria.",
+        "actions": {
+          "cancel": "Annulla",
+          "save": "Salva modifiche"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di salvare la categoria.",
+          "updateFailed": "Aggiornamento della categoria non riuscito."
         }
       }
     },

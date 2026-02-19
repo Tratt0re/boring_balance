@@ -19,7 +19,17 @@
       [hoverable]="true"
       [selectable]="false"
       [hasActionColumn]="false"
-      (editableValueChange)="onEditableValueChange($event)"
+      [showPagination]="true"
+      [currentPage]="page()"
+      [totalPages]="pageCount()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions"
+      [maxVisiblePages]="5"
+      [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+      [showPageSizeSelector]="true"
+      [showTopPagination]="true"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
     ></app-data-table>
   }
 </section>

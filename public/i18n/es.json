@@ -65,6 +65,7 @@
       "emptyMessage": "No se encontraron cuentas.",
       "actions": {
         "add": "Agregar cuenta",
+        "edit": "Editar cuenta",
         "archive": "Archivar cuenta"
       },
       "columns": {
@@ -102,6 +103,18 @@
           "descriptionMaxLength": "La descripcion debe tener como maximo 160 caracteres.",
           "createFailed": "No se pudo crear la cuenta."
         }
+      },
+      "edit": {
+        "title": "Editar cuenta",
+        "description": "Actualiza la configuracion de la cuenta.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar la cuenta.",
+          "updateFailed": "No se pudo actualizar la cuenta."
+        }
       }
     },
     "archiveAlert": {
@@ -119,6 +132,7 @@
       "emptyMessage": "No se encontraron categorias.",
       "actions": {
         "add": "Agregar categoria",
+        "edit": "Editar categoria",
         "archive": "Archivar categoria"
       },
       "columns": {
@@ -159,6 +173,18 @@
           "descriptionMaxLength": "La descripcion debe tener como maximo 160 caracteres.",
           "typeRequired": "El tipo de categoria es obligatorio.",
           "createFailed": "No se pudo crear la categoria."
+        }
+      },
+      "edit": {
+        "title": "Editar categoria",
+        "description": "Actualiza la configuracion de la categoria.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar la categoria.",
+          "updateFailed": "No se pudo actualizar la categoria."
         }
       }
     },

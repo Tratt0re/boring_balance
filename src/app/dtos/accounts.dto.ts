@@ -31,9 +31,21 @@ export interface AccountGetDto {
   readonly id: number;
 }
 
-export type AccountListDto = ListQueryDto<
-  Pick<AccountDto, 'id' | 'name' | 'description' | 'color_key' | 'icon' | 'archived' | 'created_at' | 'updated_at'>
->;
+export interface AccountListDto
+  extends ListQueryDto<
+    Pick<AccountDto, 'id' | 'name' | 'description' | 'color_key' | 'icon' | 'archived' | 'created_at' | 'updated_at'>
+  > {
+  readonly page?: number;
+  readonly page_size?: number;
+  readonly all?: BooleanFlagInput;
+}
+
+export interface AccountListResponseDto {
+  readonly rows: readonly AccountDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
+}
 
 export interface AccountUpdateDto {
   readonly id: number;
@@ -52,6 +64,6 @@ export interface AccountRemoveDto {
 
 export type AccountCreateResponse = AccountDto | null;
 export type AccountGetResponse = AccountDto | null;
-export type AccountListResponse = AccountDto[];
+export type AccountListResponse = AccountListResponseDto;
 export type AccountUpdateResponse = UpdateResponseDto<AccountDto>;
 export type AccountRemoveResponse = RemoveResponseDto;

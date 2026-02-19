@@ -39,12 +39,24 @@ export interface CategoryGetDto {
   readonly id: number;
 }
 
-export type CategoryListDto = ListQueryDto<
-  Pick<
-    CategoryDto,
-    'id' | 'name' | 'parent_id' | 'description' | 'color_key' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
-  >
->;
+export interface CategoryListDto
+  extends ListQueryDto<
+    Pick<
+      CategoryDto,
+      'id' | 'name' | 'parent_id' | 'description' | 'color_key' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
+    >
+  > {
+  readonly page?: number;
+  readonly page_size?: number;
+  readonly all?: BooleanFlagInput;
+}
+
+export interface CategoryListResponseDto {
+  readonly rows: readonly CategoryDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
+}
 
 export interface CategoryUpdateDto {
   readonly id: number;
@@ -66,6 +78,6 @@ export interface CategoryRemoveDto {
 
 export type CategoryCreateResponse = CategoryDto | null;
 export type CategoryGetResponse = CategoryDto | null;
-export type CategoryListResponse = CategoryDto[];
+export type CategoryListResponse = CategoryListResponseDto;
 export type CategoryUpdateResponse = UpdateResponseDto<CategoryDto>;
 export type CategoryRemoveResponse = RemoveResponseDto;

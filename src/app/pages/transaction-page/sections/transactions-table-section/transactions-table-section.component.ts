@@ -392,7 +392,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     try {
       const [accounts, categories, transactions] = await Promise.all([
-        this.accountsService.list({
+        this.accountsService.listAll({
           where: {
             archived: 0,
           },
@@ -401,7 +401,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
             orderDirection: 'ASC',
           },
         }),
-        this.categoriesService.list({
+        this.categoriesService.listAll({
           where: {
             archived: 0,
           },

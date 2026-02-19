@@ -1,17 +1,7 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import {
-  APP_COLOR_KEY_SET,
-  APP_COLOR_OPTIONS,
-  APP_ICON_KEY_SET,
-  APP_ICON_OPTIONS,
-} from '@/config/visual-options.config';
-import {
-  AppDataTableComponent,
-  type EditableValueChangeEvent,
-  type TableDataItem,
-} from '@/components/data-table';
+import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import type { AccountCreateDto, AccountUpdateDto } from '@/dtos';
 import { AccountModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
@@ -19,7 +9,26 @@ import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-co
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
-import { AddAccountDialogComponent } from './components/add-account-dialog/add-account-dialog.component';
+import {
+  UpsertAccountDialogComponent,
+  type UpsertAccountDialogData,
+} from './components/upsert-account-dialog/upsert-account-dialog.component';
+
+interface AccountTableRow {
+  readonly id: number;
+  readonly name: string;
+  readonly description: string | null;
+  readonly colorKey: string | null;
+  readonly icon: string | null;
+  readonly iconColorHex: string | null;
+  readonly archived: boolean;
+}
+
+const ACCOUNT_COLUMN_WIDTH = {
+  name: '1/4',
+  description: '2/4',
+  action: '1/4',
+} as const;
 
 const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
@@ -27,13 +36,11 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     columnKey: 'name',
     type: 'string',
     sortable: true,
-    editableType: 'input',
-    inputType: 'text',
-    placeholder: 'Account name',
-    validation: {
-      required: true,
-      minLength: 2,
-      maxLength: 64,
+    minWidth: ACCOUNT_COLUMN_WIDTH.name,
+    maxWidth: ACCOUNT_COLUMN_WIDTH.name,
+    cellIcon: {
+      iconColumnKey: 'icon',
+      colorHexColumnKey: 'iconColorHex',
     },
   },
   {
@@ -41,67 +48,63 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     columnKey: 'description',
     type: 'string',
     sortable: true,
-    editableType: 'input',
-    inputType: 'text',
-    placeholder: 'Account description',
-    validation: {
-      maxLength: 160,
-    },
-  },
-  {
-    columnName: 'accounts.table.columns.color',
-    columnKey: 'colorKey',
-    type: 'string',
-    sortable: true,
-    editableType: 'select',
-    showOptionLabel: true,
-    placeholder: 'Select color',
-    options: APP_COLOR_OPTIONS,
-  },
-  {
-    columnName: 'accounts.table.columns.icon',
-    columnKey: 'icon',
-    type: 'string',
-    sortable: true,
-    editableType: 'combobox',
-    showOptionLabel: true,
-    placeholder: 'Select icon',
-    options: APP_ICON_OPTIONS,
+    minWidth: ACCOUNT_COLUMN_WIDTH.description,
+    maxWidth: ACCOUNT_COLUMN_WIDTH.description,
   },
 ] as const;
 
 const createAccountTableStructure = (
+  onEditAction: (row: object) => void | Promise<void>,
   onArchiveAction: (row: object) => void | Promise<void>,
 ): readonly TableDataItem[] =>
   [
     ...ACCOUNT_TABLE_COLUMNS,
     {
+      minWidth: ACCOUNT_COLUMN_WIDTH.action,
+      maxWidth: ACCOUNT_COLUMN_WIDTH.action,
+      showLabel: false,
       actionItems: [
+        {
+          id: 'edit',
+          icon: 'pencil',
+          label: 'accounts.table.actions.edit',
+          buttonType: 'ghost',
+          disabled: (row: object) => (row as AccountTableRow).archived,
+          action: onEditAction,
+        },
         {
           id: 'archive',
           icon: 'archive',
           label: 'accounts.table.actions.archive',
           buttonType: 'ghost',
-          disabled: (row: object) => (row as AccountModel).archived,
+          disabled: (row: object) => (row as AccountTableRow).archived,
           action: onArchiveAction,
         },
       ],
     },
   ] as const;
 
-const sortAccountsById = (accounts: readonly AccountModel[]): readonly AccountModel[] =>
-  [...accounts].sort((left, right) => Number(left.id) - Number(right.id));
+const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 
 @Component({
   selector: 'app-accounts-page',
-  imports: [AppDataTableComponent, ZardSkeletonComponent],
+  imports: [AppDataTableComponent, TranslatePipe, ZardSkeletonComponent],
   templateUrl: './accounts-page.html',
 })
 export class AccountsPage implements OnInit, OnDestroy {
-  protected readonly accounts = signal<readonly AccountModel[]>([]);
+  protected readonly accounts = signal<readonly AccountTableRow[]>([]);
+  protected readonly total = signal(0);
+  protected readonly page = signal(1);
+  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly accountTableStructure = createAccountTableStructure((row) => this.onArchiveAccount(row));
+  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly accountTableStructure = createAccountTableStructure(
+    (row) => this.onEditAccount(row),
+    (row) => this.onArchiveAccount(row),
+  );
 
   private readonly toolbarActions: readonly ToolbarAction[] = [
     {
@@ -136,75 +139,88 @@ export class AccountsPage implements OnInit, OnDestroy {
     this.releaseToolbarActions = null;
   }
 
-  protected onEditableValueChange(event: EditableValueChangeEvent): void {
-    if (!event.valid) {
+  protected onPageChange(nextPage: number): void {
+    if (nextPage === this.page()) {
       return;
     }
 
-    const account = event.row as AccountModel;
+    this.page.set(nextPage);
+    void this.loadAccounts(nextPage);
+  }
+
+  protected onPageSizeChange(nextPageSize: number): void {
+    if (
+      !PAGE_SIZE_OPTIONS.includes(nextPageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ||
+      nextPageSize === this.pageSize()
+    ) {
+      return;
+    }
+
+    this.pageSize.set(nextPageSize);
+    this.page.set(1);
+    void this.loadAccounts(1);
+  }
+
+  private toAccountTableRow(account: AccountModel): AccountTableRow {
+    return {
+      id: account.id,
+      name: account.name,
+      description: account.description,
+      colorKey: account.colorKey,
+      icon: account.icon,
+      iconColorHex: account.colorKey ? `var(--${account.colorKey})` : null,
+      archived: account.archived,
+    };
+  }
+
+  private onEditAccount(row: object): void {
+    const account = row as AccountTableRow;
     if (account.archived) {
       return;
     }
 
-    const changes = this.toAccountChanges(event.columnKey, event.value);
-    if (!changes) {
-      return;
-    }
+    let isUpdatingAccount = false;
 
-    void this.updateAccount(account.id, changes);
-  }
+    const dialogRef = this.dialogService.create<UpsertAccountDialogComponent, UpsertAccountDialogData>({
+      zTitle: this.translateService.instant('accounts.dialog.edit.title'),
+      zDescription: this.translateService.instant('accounts.dialog.edit.description'),
+      zContent: UpsertAccountDialogComponent,
+      zData: {
+        account: {
+          name: account.name,
+          description: account.description,
+          colorKey: account.colorKey,
+          icon: account.icon,
+        },
+      },
+      zWidth: 'min(96vw, 720px)',
+      zMaskClosable: true,
+      zOkText: this.translateService.instant('accounts.dialog.edit.actions.save'),
+      zCancelText: this.translateService.instant('accounts.dialog.edit.actions.cancel'),
+      zOkIcon: 'pencil',
+      zOnOk: (dialogContent) => {
+        if (isUpdatingAccount) {
+          return false;
+        }
 
-  private toAccountChanges(columnKey: string, value: unknown): AccountUpdateDto['changes'] | null {
-    switch (columnKey) {
-      case 'name': {
-        const name = this.toRequiredString(value);
-        return name ? { name } : null;
-      }
-      case 'description':
-        return { description: this.toNullableString(value) };
-      case 'colorKey':
-        return { color_key: this.toNullableColor(value) };
-      case 'icon':
-        return { icon: this.toNullableIcon(value) };
-      default:
-        return null;
-    }
-  }
+        const changes = dialogContent.collectUpdateChanges();
+        if (!changes) {
+          return false;
+        }
 
-  private toNullableString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const text = `${value}`.trim();
-    return text.length > 0 ? text : null;
-  }
-
-  private toRequiredString(value: unknown): string | null {
-    const text = this.toNullableString(value);
-    return text && text.length > 0 ? text : null;
-  }
-
-  private toNullableIcon(value: unknown): string | null {
-    const icon = this.toNullableString(value);
-    if (!icon) {
-      return null;
-    }
-
-    return APP_ICON_KEY_SET.has(icon) ? icon : null;
-  }
-
-  private toNullableColor(value: unknown): string | null {
-    const color = this.toNullableString(value);
-    if (!color) {
-      return null;
-    }
-
-    return APP_COLOR_KEY_SET.has(color) ? color : null;
+        isUpdatingAccount = true;
+        void this
+          .updateAccountFromDialog(account.id, changes, dialogContent, dialogRef)
+          .finally(() => {
+            isUpdatingAccount = false;
+          });
+        return false;
+      },
+    });
   }
 
   private onArchiveAccount(row: object): void {
-    const account = row as AccountModel;
+    const account = row as AccountTableRow;
     if (account.archived) {
       return;
     }
@@ -231,7 +247,7 @@ export class AccountsPage implements OnInit, OnDestroy {
     const dialogRef = this.dialogService.create({
       zTitle: this.translateService.instant('accounts.dialog.add.title'),
       zDescription: this.translateService.instant('accounts.dialog.add.description'),
-      zContent: AddAccountDialogComponent,
+      zContent: UpsertAccountDialogComponent,
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
       zOkText: this.translateService.instant('accounts.dialog.add.actions.create'),
@@ -258,24 +274,30 @@ export class AccountsPage implements OnInit, OnDestroy {
     });
   }
 
-  private async loadAccounts(): Promise<void> {
+  private async loadAccounts(page = this.page()): Promise<void> {
     this.isLoading.set(true);
     this.loadError.set(null);
 
     try {
-      const accounts = await this.accountsService.list({
+      const response = await this.accountsService.list({
         where: {
           archived: 0,
         },
+        page,
+        page_size: this.pageSize(),
         options: {
           orderBy: 'id',
           orderDirection: 'ASC',
         },
       });
 
-      this.accounts.set(sortAccountsById(accounts));
+      this.accounts.set(response.rows.map((account) => this.toAccountTableRow(account)));
+      this.total.set(response.total);
+      this.page.set(response.page);
     } catch (error) {
       this.accounts.set([]);
+      this.total.set(0);
+      this.page.set(1);
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading accounts.');
       console.error('[accounts-page] Failed to load accounts:', error);
     } finally {
@@ -283,22 +305,32 @@ export class AccountsPage implements OnInit, OnDestroy {
     }
   }
 
-  private async updateAccount(id: number, changes: AccountUpdateDto['changes']): Promise<void> {
+  private async updateAccountFromDialog(
+    id: number,
+    changes: AccountUpdateDto['changes'],
+    dialogContent: UpsertAccountDialogComponent,
+    dialogRef: ZardDialogRef<UpsertAccountDialogComponent>,
+  ): Promise<void> {
     try {
       const result = await this.accountsService.update({ id, changes });
 
       if (result.row) {
-        const nextAccounts = this.accounts().map((row) => (row.id === id ? result.row! : row));
-        this.accounts.set(sortAccountsById(nextAccounts));
+        const nextAccounts = this.accounts().map((row) => (row.id === id ? this.toAccountTableRow(result.row!) : row));
+        this.accounts.set(nextAccounts);
+        dialogRef.close(result.row);
         return;
       }
 
       if (result.changed > 0) {
         await this.loadAccounts();
+        dialogRef.close(null);
+        return;
       }
+
+      dialogContent.setSubmitError('accounts.dialog.edit.errors.updateFailed');
     } catch (error) {
       console.error('[accounts-page] Failed to update account:', error);
-      await this.loadAccounts();
+      dialogContent.setSubmitError('accounts.dialog.edit.errors.updateFailed');
     }
   }
 
@@ -312,8 +344,7 @@ export class AccountsPage implements OnInit, OnDestroy {
       });
 
       if ((result.row && result.row.archived) || result.changed > 0) {
-        const nextAccounts = this.accounts().filter((row) => row.id !== id);
-        this.accounts.set(sortAccountsById(nextAccounts));
+        await this.loadAccounts();
         return;
       }
 
@@ -326,8 +357,8 @@ export class AccountsPage implements OnInit, OnDestroy {
 
   private async createAccount(
     payload: AccountCreateDto,
-    dialogContent: AddAccountDialogComponent,
-    dialogRef: ZardDialogRef<AddAccountDialogComponent>,
+    dialogContent: UpsertAccountDialogComponent,
+    dialogRef: ZardDialogRef<UpsertAccountDialogComponent>,
   ): Promise<void> {
     try {
       const created = await this.accountsService.create(payload);
@@ -336,7 +367,10 @@ export class AccountsPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.accounts.set(sortAccountsById([...this.accounts(), created]));
+      const nextTotal = this.total() + 1;
+      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      this.page.set(targetPage);
+      await this.loadAccounts(targetPage);
       dialogRef.close(created);
     } catch (error) {
       console.error('[accounts-page] Failed to create account:', error);

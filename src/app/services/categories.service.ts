@@ -10,6 +10,14 @@ export interface CategoryUpdateResult {
   readonly row: CategoryModel | null;
 }
 
+export interface CategoryListResult {
+  readonly rows: readonly CategoryModel[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly totalPages: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,9 +36,28 @@ export class CategoriesService extends BaseIpcService<APIChannel.CATEGORIES> {
     return row ? CategoryModel.fromDTO(row) : null;
   }
 
-  async list(payload?: DTO.CategoryListDto): Promise<CategoryModel[]> {
-    const rows = await this.ipcClient.list(payload);
-    return rows.map((row) => CategoryModel.fromDTO(row));
+  async list(payload?: DTO.CategoryListDto): Promise<CategoryListResult> {
+    const response = await this.ipcClient.list(payload);
+    const pageSize = response.page_size;
+
+    return {
+      rows: response.rows.map((row) => CategoryModel.fromDTO(row)),
+      total: response.total,
+      page: response.page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
+    };
+  }
+
+  async listAll(
+    payload?: Omit<DTO.CategoryListDto, 'page' | 'page_size' | 'all'>,
+  ): Promise<readonly CategoryModel[]> {
+    const response = await this.list({
+      ...payload,
+      all: true,
+    });
+
+    return response.rows;
   }
 
   async update(payload: DTO.CategoryUpdateDto): Promise<CategoryUpdateResult> {

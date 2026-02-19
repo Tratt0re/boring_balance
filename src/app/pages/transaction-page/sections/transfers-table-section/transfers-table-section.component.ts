@@ -314,7 +314,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
     try {
       const [accounts, transferTransactions] = await Promise.all([
-        this.accountsService.list({
+        this.accountsService.listAll({
           where: {
             archived: 0,
           },

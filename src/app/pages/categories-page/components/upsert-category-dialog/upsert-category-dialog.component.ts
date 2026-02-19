@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
-import type { CategoryCreateDto, CategoryType } from '@/dtos';
+import type { CategoryCreateDto, CategoryType, CategoryUpdateDto } from '@/dtos';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
+import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 
@@ -13,22 +14,37 @@ const CATEGORY_TYPE_OPTIONS = [
   { label: 'category.type.exclude', value: 'exclude' },
 ] as const;
 
+export interface CategoryDialogInitialValue {
+  readonly name: string;
+  readonly description: string | null;
+  readonly colorKey: string | null;
+  readonly icon: string | null;
+  readonly type: CategoryType;
+}
+
+export interface UpsertCategoryDialogData {
+  readonly category?: CategoryDialogInitialValue;
+}
+
 @Component({
-  selector: 'app-add-category-dialog',
+  selector: 'app-upsert-category-dialog',
   imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
-  templateUrl: './add-category-dialog.component.html',
+  templateUrl: './upsert-category-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddCategoryDialogComponent {
+export class UpsertCategoryDialogComponent {
+  private readonly data = inject<UpsertCategoryDialogData | null>(Z_MODAL_DATA, { optional: true });
+  private readonly initialCategory = this.data?.category;
+
   protected readonly colorOptions = APP_COLOR_OPTIONS;
   protected readonly iconOptions = APP_ICON_OPTIONS;
   protected readonly typeOptions = CATEGORY_TYPE_OPTIONS;
 
-  protected readonly name = signal('');
-  protected readonly description = signal('');
-  protected readonly colorKey = signal('');
-  protected readonly icon = signal('');
-  protected readonly type = signal<CategoryType | ''>('');
+  protected readonly name = signal(this.initialCategory?.name ?? '');
+  protected readonly description = signal(this.initialCategory?.description ?? '');
+  protected readonly colorKey = signal(this.initialCategory?.colorKey ?? '');
+  protected readonly icon = signal(this.initialCategory?.icon ?? '');
+  protected readonly type = signal<CategoryType | ''>(this.initialCategory?.type ?? '');
   protected readonly nameTouched = signal(false);
   protected readonly descriptionTouched = signal(false);
   protected readonly typeTouched = signal(false);
@@ -51,13 +67,90 @@ export class AddCategoryDialogComponent {
   constructor(private readonly translateService: TranslateService) {}
 
   public collectCreatePayload(): CategoryCreateDto | null {
+    const changes = this.collectNormalizedChanges('categories.dialog.add.errors.fixValidation');
+    if (!changes) {
+      return null;
+    }
+
+    if (!this.isCategoryCreateDto(changes)) {
+      return null;
+    }
+
+    return changes;
+  }
+
+  public collectUpdateChanges(): CategoryUpdateDto['changes'] | null {
+    return this.collectNormalizedChanges('categories.dialog.edit.errors.fixValidation');
+  }
+
+  public setSubmitError(errorKey: string | null): void {
+    this.errorKey.set(errorKey);
+  }
+
+  protected onNameInput(event: Event): void {
+    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.name.set(nextValue);
+    this.clearSubmitError();
+  }
+
+  protected onNameBlur(): void {
+    this.nameTouched.set(true);
+  }
+
+  protected onDescriptionInput(event: Event): void {
+    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.description.set(nextValue);
+    this.clearSubmitError();
+  }
+
+  protected onDescriptionBlur(): void {
+    this.descriptionTouched.set(true);
+  }
+
+  protected onTypeChange(value: string | string[]): void {
+    if (Array.isArray(value)) {
+      return;
+    }
+
+    this.typeTouched.set(true);
+    if (this.isCategoryType(value)) {
+      this.type.set(value);
+    } else {
+      this.type.set('');
+    }
+    this.clearSubmitError();
+  }
+
+  protected onColorChange(value: string | string[]): void {
+    if (Array.isArray(value)) {
+      return;
+    }
+
+    this.colorKey.set(value);
+    this.clearSubmitError();
+  }
+
+  protected onIconChange(value: string | null): void {
+    this.icon.set(value ?? '');
+    this.clearSubmitError();
+  }
+
+  protected getIconComboboxOptions(): ZardComboboxOption[] {
+    return this.iconOptions.map((option) => ({
+      value: option.value,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
+    }));
+  }
+
+  private collectNormalizedChanges(invalidFormErrorKey: string): CategoryUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
     this.nameTouched.set(true);
     this.descriptionTouched.set(true);
     this.typeTouched.set(true);
 
     if (this.hasValidationError()) {
-      this.errorKey.set('categories.dialog.add.errors.fixValidation');
+      this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
@@ -81,73 +174,6 @@ export class AddCategoryDialogComponent {
       icon: this.normalizeIcon(this.icon()),
       type,
     };
-  }
-
-  public setSubmitError(errorKey: string | null): void {
-    this.errorKey.set(errorKey);
-  }
-
-  protected onNameInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.name.set(nextValue);
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onNameBlur(): void {
-    this.nameTouched.set(true);
-  }
-
-  protected onDescriptionInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.description.set(nextValue);
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onDescriptionBlur(): void {
-    this.descriptionTouched.set(true);
-  }
-
-  protected onTypeChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
-    }
-
-    this.typeTouched.set(true);
-    if (this.isCategoryType(value)) {
-      this.type.set(value);
-    } else {
-      this.type.set('');
-    }
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onColorChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
-    }
-
-    this.colorKey.set(value);
-  }
-
-  protected onIconChange(value: string | null): void {
-    this.icon.set(value ?? '');
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected getIconComboboxOptions(): ZardComboboxOption[] {
-    return this.iconOptions.map((option) => ({
-      value: option.value,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 
   private hasValidationError(): boolean {
@@ -216,5 +242,15 @@ export class AddCategoryDialogComponent {
 
   private isCategoryType(value: unknown): value is CategoryType {
     return value === 'income' || value === 'expense' || value === 'exclude';
+  }
+
+  private isCategoryCreateDto(changes: CategoryUpdateDto['changes']): changes is CategoryCreateDto {
+    return this.isCategoryType(changes.type);
+  }
+
+  private clearSubmitError(): void {
+    if (this.errorKey()) {
+      this.errorKey.set(null);
+    }
   }
 }

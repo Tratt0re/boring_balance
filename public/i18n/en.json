@@ -65,6 +65,7 @@
       "emptyMessage": "No accounts found.",
       "actions": {
         "add": "Add account",
+        "edit": "Edit account",
         "archive": "Archive account"
       },
       "columns": {
@@ -102,6 +103,18 @@
           "descriptionMaxLength": "Description must be at most 160 characters.",
           "createFailed": "Failed to create account."
         }
+      },
+      "edit": {
+        "title": "Edit account",
+        "description": "Update account settings.",
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save changes"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before saving the account.",
+          "updateFailed": "Failed to update account."
+        }
       }
     },
     "archiveAlert": {
@@ -119,6 +132,7 @@
       "emptyMessage": "No categories found.",
       "actions": {
         "add": "Add category",
+        "edit": "Edit category",
         "archive": "Archive category"
       },
       "columns": {
@@ -159,6 +173,18 @@
           "descriptionMaxLength": "Description must be at most 160 characters.",
           "typeRequired": "Category type is required.",
           "createFailed": "Failed to create category."
+        }
+      },
+      "edit": {
+        "title": "Edit category",
+        "description": "Update category settings.",
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save changes"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before saving the category.",
+          "updateFailed": "Failed to update category."
         }
       }
     },

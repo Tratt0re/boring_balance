@@ -1,37 +1,23 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import {
-  APP_COLOR_KEY_SET,
-  APP_COLOR_OPTIONS,
-  APP_ICON_KEY_SET,
-  APP_ICON_OPTIONS,
-} from '@/config/visual-options.config';
-import {
-  AppDataTableComponent,
-  type EditableOptionItem,
-  type EditableValueChangeEvent,
-  type TableDataItem,
-} from '@/components/data-table';
-import type { CategoryCreateDto, CategoryType, CategoryUpdateDto } from '@/dtos';
+import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
+import type { CategoryCreateDto } from '@/dtos';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
-import { AddCategoryDialogComponent } from './components/add-category-dialog/add-category-dialog.component';
+import {
+  UpsertCategoryDialogComponent,
+  type UpsertCategoryDialogData,
+} from './components/upsert-category-dialog/upsert-category-dialog.component';
 
 const isCategoryReadonly = (row: object): boolean => {
   const category = row as CategoryModel;
   return category.locked || category.archived;
 };
-
-const CATEGORY_TYPE_OPTIONS: readonly EditableOptionItem[] = [
-  { label: 'category.type.income', value: 'income' },
-  { label: 'category.type.expense', value: 'expense' },
-  { label: 'category.type.exclude', value: 'exclude' },
-] as const;
 
 const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
@@ -39,50 +25,24 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
     columnKey: 'name',
     type: 'string',
     sortable: true,
-    editableType: 'input',
-    inputType: 'text',
-    placeholder: 'Category name',
-    disabled: isCategoryReadonly,
-    validation: {
-      required: true,
-      minLength: 2,
-      maxLength: 64,
-    },
   },
   {
     columnName: 'categories.table.columns.description',
     columnKey: 'description',
     type: 'string',
     sortable: true,
-    editableType: 'input',
-    inputType: 'text',
-    placeholder: 'Category description',
-    disabled: isCategoryReadonly,
-    validation: {
-      maxLength: 160,
-    },
   },
   {
     columnName: 'categories.table.columns.color',
     columnKey: 'colorKey',
     type: 'string',
     sortable: true,
-    editableType: 'select',
-    showOptionLabel: true,
-    placeholder: 'Select color',
-    options: APP_COLOR_OPTIONS,
-    disabled: isCategoryReadonly,
   },
   {
     columnName: 'categories.table.columns.icon',
     columnKey: 'icon',
     type: 'string',
     sortable: true,
-    editableType: 'combobox',
-    showOptionLabel: true,
-    placeholder: 'Select icon',
-    options: APP_ICON_OPTIONS,
-    disabled: isCategoryReadonly,
   },
   {
     columnName: 'categories.table.columns.type',
@@ -93,17 +53,11 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
       shape: 'pill',
       type: 'secondary',
     },
-    editableType: 'select',
-    placeholder: 'Select type',
-    options: CATEGORY_TYPE_OPTIONS,
-    disabled: isCategoryReadonly,
-    validation: {
-      required: true,
-    },
   },
 ] as const;
 
 const createCategoryTableStructure = (
+  onEditAction: (row: object) => void | Promise<void>,
   onArchiveAction: (row: object) => void | Promise<void>,
 ): readonly TableDataItem[] =>
   [
@@ -111,30 +65,46 @@ const createCategoryTableStructure = (
     {
       actionItems: [
         {
+          id: 'edit',
+          icon: 'pencil',
+          label: 'categories.table.actions.edit',
+          buttonType: 'ghost',
+          disabled: isCategoryReadonly,
+          action: onEditAction,
+        },
+        {
           id: 'archive',
           icon: 'archive',
           label: 'categories.table.actions.archive',
           buttonType: 'ghost',
-          disabled: (row: object) => {
-            const category = row as CategoryModel;
-            return category.locked || category.archived;
-          },
+          disabled: isCategoryReadonly,
           action: onArchiveAction,
         },
       ],
     },
   ] as const;
 
+const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+
 @Component({
   selector: 'app-categories-page',
-  imports: [AppDataTableComponent, ZardSkeletonComponent],
+  imports: [AppDataTableComponent, TranslatePipe, ZardSkeletonComponent],
   templateUrl: './categories-page.html',
 })
 export class CategoriesPage implements OnInit, OnDestroy {
   protected readonly categories = signal<readonly CategoryModel[]>([]);
+  protected readonly total = signal(0);
+  protected readonly page = signal(1);
+  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly categoryTableStructure = createCategoryTableStructure((row) => this.onArchiveCategory(row));
+  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly categoryTableStructure = createCategoryTableStructure(
+    (row) => this.onEditCategory(row),
+    (row) => this.onArchiveCategory(row),
+  );
   private readonly toolbarActions: readonly ToolbarAction[] = [
     {
       id: 'add-category',
@@ -167,82 +137,78 @@ export class CategoriesPage implements OnInit, OnDestroy {
     this.releaseToolbarActions = null;
   }
 
-  protected onEditableValueChange(event: EditableValueChangeEvent): void {
-    if (!event.valid) {
+  protected onPageChange(nextPage: number): void {
+    if (nextPage === this.page()) {
       return;
     }
 
-    const category = event.row as CategoryModel;
-    if (category.locked || category.archived) {
+    this.page.set(nextPage);
+    void this.loadCategories(nextPage);
+  }
+
+  protected onPageSizeChange(nextPageSize: number): void {
+    if (
+      !PAGE_SIZE_OPTIONS.includes(nextPageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ||
+      nextPageSize === this.pageSize()
+    ) {
       return;
     }
 
-    const changes = this.toCategoryChanges(event.columnKey, event.value);
-    if (!changes) {
+    this.pageSize.set(nextPageSize);
+    this.page.set(1);
+    void this.loadCategories(1);
+  }
+
+  private onEditCategory(row: object): void {
+    const category = row as CategoryModel;
+    if (isCategoryReadonly(category)) {
       return;
     }
 
-    void this.updateCategory(category.id, changes);
-  }
+    let isUpdatingCategory = false;
 
-  private toCategoryChanges(columnKey: string, value: unknown): CategoryUpdateDto['changes'] | null {
-    switch (columnKey) {
-      case 'name': {
-        const name = this.toRequiredString(value);
-        return name ? { name } : null;
-      }
-      case 'description':
-        return { description: this.toNullableString(value) };
-      case 'colorKey':
-        return { color_key: this.toNullableColor(value) };
-      case 'icon':
-        return { icon: this.toNullableIcon(value) };
-      case 'type':
-        return this.isCategoryType(value) ? { type: value } : null;
-      default:
-        return null;
-    }
-  }
+    const dialogRef = this.dialogService.create<UpsertCategoryDialogComponent, UpsertCategoryDialogData>({
+      zTitle: this.translateService.instant('categories.dialog.edit.title'),
+      zDescription: this.translateService.instant('categories.dialog.edit.description'),
+      zContent: UpsertCategoryDialogComponent,
+      zData: {
+        category: {
+          name: category.name,
+          description: category.description,
+          colorKey: category.colorKey,
+          icon: category.icon,
+          type: category.type,
+        },
+      },
+      zWidth: 'min(96vw, 720px)',
+      zMaskClosable: true,
+      zOkText: this.translateService.instant('categories.dialog.edit.actions.save'),
+      zCancelText: this.translateService.instant('categories.dialog.edit.actions.cancel'),
+      zOkIcon: 'pencil',
+      zOnOk: (dialogContent) => {
+        if (isUpdatingCategory) {
+          return false;
+        }
 
-  private toNullableString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
+        const changes = dialogContent.collectUpdateChanges();
+        if (!changes) {
+          return false;
+        }
 
-    const text = `${value}`.trim();
-    return text.length > 0 ? text : null;
-  }
-
-  private toRequiredString(value: unknown): string | null {
-    const text = this.toNullableString(value);
-    return text && text.length > 0 ? text : null;
-  }
-
-  private toNullableIcon(value: unknown): string | null {
-    const icon = this.toNullableString(value);
-    if (!icon) {
-      return null;
-    }
-
-    return APP_ICON_KEY_SET.has(icon) ? icon : null;
-  }
-
-  private toNullableColor(value: unknown): string | null {
-    const color = this.toNullableString(value);
-    if (!color) {
-      return null;
-    }
-
-    return APP_COLOR_KEY_SET.has(color) ? color : null;
-  }
-
-  private isCategoryType(value: unknown): value is CategoryType {
-    return value === 'income' || value === 'expense' || value === 'exclude';
+        isUpdatingCategory = true;
+        void this
+          .updateCategoryFromDialog(category.id, changes, dialogContent, dialogRef)
+          .finally(() => {
+            isUpdatingCategory = false;
+          });
+        return false;
+      },
+    });
   }
 
   private onArchiveCategory(row: object): void {
     const category = row as CategoryModel;
-    if (category.locked || category.archived) {
+    if (isCategoryReadonly(category)) {
       return;
     }
 
@@ -274,7 +240,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
     const dialogRef = this.dialogService.create({
       zTitle: this.translateService.instant('categories.dialog.add.title'),
       zDescription: this.translateService.instant('categories.dialog.add.description'),
-      zContent: AddCategoryDialogComponent,
+      zContent: UpsertCategoryDialogComponent,
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
       zOkText: this.translateService.instant('categories.dialog.add.actions.create'),
@@ -301,23 +267,29 @@ export class CategoriesPage implements OnInit, OnDestroy {
     });
   }
 
-  private async loadCategories(): Promise<void> {
+  private async loadCategories(page = this.page()): Promise<void> {
     this.isLoading.set(true);
     this.loadError.set(null);
 
     try {
-      const categories = await this.categoriesService.list({
+      const response = await this.categoriesService.list({
         where: {
           archived: 0,
         },
+        page,
+        page_size: this.pageSize(),
         options: {
           orderBy: 'id',
           orderDirection: 'ASC',
         },
       });
-      this.categories.set(categories);
+      this.categories.set(response.rows);
+      this.total.set(response.total);
+      this.page.set(response.page);
     } catch (error) {
       this.categories.set([]);
+      this.total.set(0);
+      this.page.set(1);
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading categories.');
       console.error('[categories-page] Failed to list categories:', error);
     } finally {
@@ -325,21 +297,31 @@ export class CategoriesPage implements OnInit, OnDestroy {
     }
   }
 
-  private async updateCategory(id: number, changes: CategoryUpdateDto['changes']): Promise<void> {
+  private async updateCategoryFromDialog(
+    id: number,
+    changes: NonNullable<ReturnType<UpsertCategoryDialogComponent['collectUpdateChanges']>>,
+    dialogContent: UpsertCategoryDialogComponent,
+    dialogRef: ZardDialogRef<UpsertCategoryDialogComponent>,
+  ): Promise<void> {
     try {
       const result = await this.categoriesService.update({ id, changes });
 
       if (result.row) {
         this.categories.update((rows) => rows.map((row) => (row.id === id ? result.row! : row)));
+        dialogRef.close(result.row);
         return;
       }
 
       if (result.changed > 0) {
         await this.loadCategories();
+        dialogRef.close(null);
+        return;
       }
+
+      dialogContent.setSubmitError('categories.dialog.edit.errors.updateFailed');
     } catch (error) {
       console.error('[categories-page] Failed to update category:', error);
-      await this.loadCategories();
+      dialogContent.setSubmitError('categories.dialog.edit.errors.updateFailed');
     }
   }
 
@@ -353,7 +335,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
       });
 
       if ((result.row && result.row.archived) || result.changed > 0) {
-        this.categories.update((rows) => rows.filter((row) => row.id !== id));
+        await this.loadCategories();
         return;
       }
 
@@ -366,8 +348,8 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
   private async createCategory(
     payload: CategoryCreateDto,
-    dialogContent: AddCategoryDialogComponent,
-    dialogRef: ZardDialogRef<AddCategoryDialogComponent>,
+    dialogContent: UpsertCategoryDialogComponent,
+    dialogRef: ZardDialogRef<UpsertCategoryDialogComponent>,
   ): Promise<void> {
     try {
       const created = await this.categoriesService.create(payload);
@@ -376,9 +358,10 @@ export class CategoriesPage implements OnInit, OnDestroy {
         return;
       }
 
-      this.categories.update((rows) =>
-        [...rows, created].sort((left, right) => Number(left.id) - Number(right.id)),
-      );
+      const nextTotal = this.total() + 1;
+      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      this.page.set(targetPage);
+      await this.loadCategories(targetPage);
       dialogRef.close(created);
     } catch (error) {
       console.error('[categories-page] Failed to create category:', error);

@@ -1,26 +1,41 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
-import type { AccountCreateDto } from '@/dtos';
+import type { AccountCreateDto, AccountUpdateDto } from '@/dtos';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
+import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 
+export interface AccountDialogInitialValue {
+  readonly name: string;
+  readonly description: string | null;
+  readonly colorKey: string | null;
+  readonly icon: string | null;
+}
+
+export interface UpsertAccountDialogData {
+  readonly account?: AccountDialogInitialValue;
+}
+
 @Component({
-  selector: 'app-add-account-dialog',
+  selector: 'app-upsert-account-dialog',
   imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
-  templateUrl: './add-account-dialog.component.html',
+  templateUrl: './upsert-account-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddAccountDialogComponent {
+export class UpsertAccountDialogComponent {
+  private readonly data = inject<UpsertAccountDialogData | null>(Z_MODAL_DATA, { optional: true });
+  private readonly initialAccount = this.data?.account;
+
   protected readonly colorOptions = APP_COLOR_OPTIONS;
   protected readonly iconOptions = APP_ICON_OPTIONS;
 
-  protected readonly name = signal('');
-  protected readonly description = signal('');
-  protected readonly colorKey = signal('');
-  protected readonly icon = signal('');
+  protected readonly name = signal(this.initialAccount?.name ?? '');
+  protected readonly description = signal(this.initialAccount?.description ?? '');
+  protected readonly colorKey = signal(this.initialAccount?.colorKey ?? '');
+  protected readonly icon = signal(this.initialAccount?.icon ?? '');
   protected readonly nameTouched = signal(false);
   protected readonly descriptionTouched = signal(false);
   protected readonly submitAttempted = signal(false);
@@ -38,12 +53,82 @@ export class AddAccountDialogComponent {
   constructor(private readonly translateService: TranslateService) {}
 
   public collectCreatePayload(): AccountCreateDto | null {
+    const changes = this.collectNormalizedChanges('accounts.dialog.add.errors.fixValidation');
+    if (!changes) {
+      return null;
+    }
+
+    const name = changes.name;
+    if (!name) {
+      this.errorKey.set('accounts.dialog.add.errors.nameRequired');
+      return null;
+    }
+
+    return {
+      name,
+      description: changes.description,
+      color_key: changes.color_key,
+      icon: changes.icon,
+    };
+  }
+
+  public collectUpdateChanges(): AccountUpdateDto['changes'] | null {
+    return this.collectNormalizedChanges('accounts.dialog.edit.errors.fixValidation');
+  }
+
+  public setSubmitError(errorKey: string | null): void {
+    this.errorKey.set(errorKey);
+  }
+
+  protected onNameInput(event: Event): void {
+    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.name.set(nextValue);
+    this.clearSubmitError();
+  }
+
+  protected onNameBlur(): void {
+    this.nameTouched.set(true);
+  }
+
+  protected onDescriptionInput(event: Event): void {
+    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
+    this.description.set(nextValue);
+    this.clearSubmitError();
+  }
+
+  protected onDescriptionBlur(): void {
+    this.descriptionTouched.set(true);
+  }
+
+  protected onColorChange(value: string | string[]): void {
+    if (Array.isArray(value)) {
+      return;
+    }
+
+    this.colorKey.set(value);
+    this.clearSubmitError();
+  }
+
+  protected onIconChange(value: string | null): void {
+    this.icon.set(value ?? '');
+    this.clearSubmitError();
+  }
+
+  protected getIconComboboxOptions(): ZardComboboxOption[] {
+    return this.iconOptions.map((option) => ({
+      value: option.value,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
+    }));
+  }
+
+  private collectNormalizedChanges(invalidFormErrorKey: string): AccountUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
     this.nameTouched.set(true);
     this.descriptionTouched.set(true);
 
     if (this.hasValidationError()) {
-      this.errorKey.set('accounts.dialog.add.errors.fixValidation');
+      this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
@@ -60,60 +145,6 @@ export class AddAccountDialogComponent {
       color_key: this.normalizeColor(this.colorKey()),
       icon: this.normalizeIcon(this.icon()),
     };
-  }
-
-  public setSubmitError(errorKey: string | null): void {
-    this.errorKey.set(errorKey);
-  }
-
-  protected onNameInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.name.set(nextValue);
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onNameBlur(): void {
-    this.nameTouched.set(true);
-  }
-
-  protected onDescriptionInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.description.set(nextValue);
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onDescriptionBlur(): void {
-    this.descriptionTouched.set(true);
-  }
-
-  protected onColorChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
-    }
-
-    this.colorKey.set(value);
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected onIconChange(value: string | null): void {
-    this.icon.set(value ?? '');
-    if (this.errorKey()) {
-      this.errorKey.set(null);
-    }
-  }
-
-  protected getIconComboboxOptions(): ZardComboboxOption[] {
-    return this.iconOptions.map((option) => ({
-      value: option.value,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 
   private hasValidationError(): boolean {
@@ -171,5 +202,11 @@ export class AddAccountDialogComponent {
     }
 
     return APP_ICON_KEY_SET.has(icon) ? icon : null;
+  }
+
+  private clearSubmitError(): void {
+    if (this.errorKey()) {
+      this.errorKey.set(null);
+    }
   }
 }
