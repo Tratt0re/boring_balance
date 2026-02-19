@@ -344,6 +344,15 @@
                           }
                           {{ formatCellValue(row, column) }}
                         </z-badge>
+                      } @else if (currencyCellIcon(row, column); as currencyCellIcon) {
+                        <span class="inline-flex min-w-0 items-center gap-1.5">
+                          <z-icon
+                            [zType]="currencyCellIcon.icon"
+                            class="size-3.5 shrink-0 text-(--app-data-table-currency-trend-color)"
+                            [style.--app-data-table-currency-trend-color]="currencyCellIcon.color"
+                          />
+                          <span class="truncate">{{ formatCellValue(row, column) }}</span>
+                        </span>
                       } @else if (cellIcon(row, column); as cellIcon) {
                         <span class="inline-flex min-w-0 items-center gap-2">
                           <z-icon

@@ -8,6 +8,7 @@ export type TableSortDirection = 'asc' | 'desc';
 export type EditableCellType = 'input' | 'checkbox' | 'select' | 'combobox' | 'switch' | 'date';
 export type EditableInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
 export type TableWidthValue = string | number;
+export type TableCurrencyIconMode = 'currency-trend' | 'transfer' | 'none';
 
 export interface TableDataStructureItem {
   readonly minWidth?: TableWidthValue;
@@ -31,12 +32,18 @@ export interface TableCellIconConfig {
   readonly colorHexColumnKey?: string;
 }
 
+export interface TableCurrencyConfig {
+  readonly modality?: TableCurrencyIconMode;
+  readonly iconMode?: TableCurrencyIconMode;
+}
+
 export interface ColumnDataItem extends TableDataStructureItem {
   readonly columnName: string;
   readonly columnKey: string;
   readonly type?: TableCellType;
   readonly sortable?: boolean;
   readonly translate?: boolean;
+  readonly currency?: TableCurrencyConfig;
   readonly badge?: TableBadgeConfig;
   readonly cellIcon?: TableCellIconConfig;
 }

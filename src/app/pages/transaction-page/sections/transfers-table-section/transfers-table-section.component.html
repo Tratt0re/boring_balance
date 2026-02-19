@@ -1,26 +1,35 @@
-<app-data-table
-  [data]="rows()"
-  [structure]="structure()"
-  minHeight="55dvh"
-  [stickyHeader]="true"
-  [title]="'transactions.transfers.title'"
-  description="transactions.transfers.table.description"
-  emptyMessage="transactions.transfers.table.emptyMessage"
-  [showEmpty]="true"
-  [bordered]="true"
-  [striped]="false"
-  [hoverable]="true"
-  [selectable]="false"
-  [hasActionColumn]="false"
-  [showPagination]="showPagination()"
-  [currentPage]="currentPage()"
-  [totalPages]="totalPages()"
-  [pageSize]="pageSize()"
-  [pageSizeOptions]="pageSizeOptions()"
-  [maxVisiblePages]="maxVisiblePages()"
-  [pageSizeLabel]="pageSizeLabel()"
-  [showPageSizeSelector]="showPageSizeSelector()"
-  [showTopPagination]="showTopPagination()"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)"
-></app-data-table>
+@if (isLoading()) {
+  <z-skeleton class="h-12 w-full"></z-skeleton>
+  <z-skeleton class="h-60 w-full"></z-skeleton>
+} @else if (loadError(); as loadError) {
+  <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    Failed to load transfers: {{ loadError }}
+  </div>
+} @else {
+  <app-data-table
+    [data]="rows()"
+    [structure]="tableStructure()"
+    minHeight="55dvh"
+    [stickyHeader]="true"
+    [title]="'transactions.transfers.title'"
+    description="transactions.transfers.table.description"
+    emptyMessage="transactions.transfers.table.emptyMessage"
+    [showEmpty]="true"
+    [bordered]="true"
+    [striped]="false"
+    [hoverable]="true"
+    [selectable]="false"
+    [hasActionColumn]="false"
+    [showPagination]="true"
+    [currentPage]="page()"
+    [totalPages]="pageCount()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions"
+    [maxVisiblePages]="5"
+    [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+    [showPageSizeSelector]="true"
+    [showTopPagination]="true"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  ></app-data-table>
+}

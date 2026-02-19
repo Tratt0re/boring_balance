@@ -1,29 +1,37 @@
-<app-data-table
-  [data]="rows()"
-  [structure]="structure()"
-  [rowClass]="rowClass()"
-  minHeight="55dvh"
-  [stickyHeader]="true"
-  [highContrastHeader]="true"
-  [title]="'nav.items.transactions'"
-  description="transactions.table.description"
-  emptyMessage="transactions.table.emptyMessage"
-  [showEmpty]="true"
-  [bordered]="true"
-  [striped]="false"
-  [hoverable]="true"
-  [selectable]="false"
-  [hasActionColumn]="false"
-  [showPagination]="showPagination()"
-  [currentPage]="currentPage()"
-  [totalPages]="totalPages()"
-  [pageSize]="pageSize()"
-  [pageSizeOptions]="pageSizeOptions()"
-  [maxVisiblePages]="maxVisiblePages()"
-  [pageSizeLabel]="pageSizeLabel()"
-  [showPageSizeSelector]="showPageSizeSelector()"
-  [showTopPagination]="showTopPagination()"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)"
-  (editableValueChange)="onEditableValueChange($event)"
-></app-data-table>
+@if (isLoading()) {
+  <z-skeleton class="h-12 w-full"></z-skeleton>
+  <z-skeleton class="h-60 w-full"></z-skeleton>
+} @else if (loadError(); as loadError) {
+  <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    Failed to load transactions: {{ loadError }}
+  </div>
+} @else {
+  <app-data-table
+    [data]="rows()"
+    [structure]="tableStructure()"
+    minHeight="55dvh"
+    [stickyHeader]="true"
+    [highContrastHeader]="false"
+    [title]="'nav.items.transactions'"
+    description="transactions.table.description"
+    emptyMessage="transactions.table.emptyMessage"
+    [showEmpty]="true"
+    [bordered]="true"
+    [striped]="false"
+    [hoverable]="true"
+    [selectable]="false"
+    [hasActionColumn]="false"
+    [showPagination]="true"
+    [currentPage]="page()"
+    [totalPages]="pageCount()"
+    [pageSize]="pageSize()"
+    [pageSizeOptions]="pageSizeOptions"
+    [maxVisiblePages]="5"
+    [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+    [showPageSizeSelector]="true"
+    [showTopPagination]="true"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+    (editableValueChange)="onEditableValueChange($event)"
+  ></app-data-table>
+}

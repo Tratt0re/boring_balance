@@ -94,6 +94,18 @@ export const APP_ICON_OPTIONS: readonly AppVisualOption[] = [
   { label: 'options.icons.star', value: 'star', icon: 'star' },
   { label: 'options.icons.sparkles', value: 'sparkles', icon: 'sparkles' },
   { label: 'options.icons.creditCard', value: 'credit-card', icon: 'credit-card' },
+  { label: 'options.icons.tractor', value: 'tractor', icon: 'tractor' },
+  { label: 'options.icons.train', value: 'train-front', icon: 'train-front' },
+  { label: 'options.icons.footprints', value: 'footprints', icon: 'footprints' },
+  { label: 'options.icons.wrench', value: 'wrench', icon: 'wrench' },
+  { label: 'options.icons.refrigerator', value: 'refrigerator', icon: 'refrigerator' },
+  { label: 'options.icons.package', value: 'package', icon: 'package' },
+  { label: 'options.icons.scissors', value: 'scissors', icon: 'scissors' },
+  { label: 'options.icons.brain', value: 'brain', icon: 'brain' },
+  { label: 'options.icons.crypto', value: 'bitcoin', icon: 'bitcoin' },
+  { label: 'options.icons.factory', value: 'factory', icon: 'factory' },
+  { label: 'options.icons.car', value: 'car', icon: 'car' },
+
 ] as const;
 
 export const APP_ICON_KEY_SET = new Set(

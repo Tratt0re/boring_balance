@@ -66,6 +66,6 @@ export class RootLayout {
       return false;
     }
 
-    return window.innerWidth < 768;
+    return window.innerWidth < 955;
   }
 }

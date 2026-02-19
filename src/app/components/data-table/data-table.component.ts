@@ -41,6 +41,7 @@ import type {
   TableActionColumnPosition,
   TableCellType,
   TableDataItem,
+  TableCurrencyIconMode,
   TableSortDirection,
   TableSortState,
   TableWidthValue,
@@ -52,6 +53,10 @@ type TableColumn = ColumnDataItem;
 type EditableValueMap = Map<TableRow, Map<string, unknown>>;
 type EditableErrorMap = Map<TableRow, Map<string, string>>;
 type RowClassResolver = (row: TableRow) => ClassValue | null | undefined;
+type CurrencyCellIcon = {
+  readonly icon: ZardIcon;
+  readonly color: string;
+};
 
 @Component({
   selector: 'app-data-table',
@@ -654,6 +659,30 @@ export class AppDataTableComponent {
     return this.formatColumnValue(this.getRawValue(row, column.columnKey), column);
   }
 
+  protected currencyCellIcon(row: TableRow, column: ColumnDataItem): CurrencyCellIcon | null {
+    if (column.type !== 'currency') {
+      return null;
+    }
+
+    const iconMode = this.currencyIconMode(column);
+    if (iconMode === 'none') {
+      return null;
+    }
+
+    if (iconMode === 'transfer') {
+      return { icon: 'arrow-right-left', color: 'var(--positive-transaction-color)' };
+    }
+
+    const numericValue = this.toNumberValue(this.getRawValue(row, column.columnKey));
+    if (numericValue === null || numericValue === 0) {
+      return null;
+    }
+
+    return numericValue > 0
+      ? { icon: 'arrow-up', color: 'var(--positive-transaction-color)' }
+      : { icon: 'arrow-down', color: 'var(--negative-transaction-color)' };
+  }
+
   protected cellIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
     const iconColumnKey = column.cellIcon?.iconColumnKey;
     if (iconColumnKey) {
@@ -985,6 +1014,14 @@ export class AppDataTableComponent {
 
   private isColumnDataItem(item: TableDataItem): item is ColumnDataItem {
     return 'columnName' in item && 'columnKey' in item;
+  }
+
+  private currencyIconMode(column: ColumnDataItem): TableCurrencyIconMode {
+    if (column.type !== 'currency') {
+      return 'none';
+    }
+
+    return column.currency?.modality ?? column.currency?.iconMode ?? 'none';
   }
 
   private formatColumnValue(value: unknown, column: ColumnDataItem): string {
