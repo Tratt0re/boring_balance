@@ -2,6 +2,10 @@ import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
+import {
+  DEFAULT_VISUAL_COLOR_KEY,
+  DEFAULT_VISUAL_ICON_KEY,
+} from '@/config/visual-options.config';
 import type { AccountCreateDto, AccountUpdateDto } from '@/dtos';
 import { AccountModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
@@ -39,7 +43,9 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     minWidth: ACCOUNT_COLUMN_WIDTH.name,
     maxWidth: ACCOUNT_COLUMN_WIDTH.name,
     cellIcon: {
+      icon: DEFAULT_VISUAL_ICON_KEY,
       iconColumnKey: 'icon',
+      colorHex: `var(--${DEFAULT_VISUAL_COLOR_KEY})`,
       colorHexColumnKey: 'iconColorHex',
     },
   },
@@ -101,6 +107,8 @@ export class AccountsPage implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly accountRowClass = (row: object): string =>
+    (row as AccountTableRow).archived ? 'bg-primary-foreground' : '';
   protected readonly accountTableStructure = createAccountTableStructure(
     (row) => this.onEditAccount(row),
     (row) => this.onArchiveAccount(row),
@@ -168,7 +176,7 @@ export class AccountsPage implements OnInit, OnDestroy {
       description: account.description,
       colorKey: account.colorKey,
       icon: account.icon,
-      iconColorHex: account.colorKey ? `var(--${account.colorKey})` : null,
+      iconColorHex: `var(--${account.colorKey ?? DEFAULT_VISUAL_COLOR_KEY})`,
       archived: account.archived,
     };
   }

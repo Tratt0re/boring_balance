@@ -83,6 +83,8 @@ export interface ActionItem {
   readonly action: (row: object) => void | Promise<void>;
   readonly buttonType?: ZardButtonTypeVariants;
   readonly disabled?: (row: object) => boolean;
+  readonly visible?: (row: object) => boolean;
+  readonly showWhenDisabled?: boolean;
 }
 
 export interface TableHeaderActionItem {

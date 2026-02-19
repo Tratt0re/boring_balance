@@ -1,4 +1,5 @@
 const { categoriesModel } = require('../models');
+const { TRANSFER_CATEGORY_ID } = require('../models/transactions/constants');
 const {
   assertAllowedKeys,
   ensureHasKeys,
@@ -30,6 +31,38 @@ const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'a
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
+
+function mergeSystemCategoryFilter(where = {}) {
+  const nextWhere = { ...where };
+  const existingIdFilter = nextWhere.id;
+
+  if (existingIdFilter === undefined) {
+    nextWhere.id = { ne: TRANSFER_CATEGORY_ID };
+    return nextWhere;
+  }
+
+  if (Array.isArray(existingIdFilter)) {
+    nextWhere.id = {
+      in: existingIdFilter,
+      ne: TRANSFER_CATEGORY_ID,
+    };
+    return nextWhere;
+  }
+
+  if (existingIdFilter && typeof existingIdFilter === 'object') {
+    nextWhere.id = {
+      ...existingIdFilter,
+      ne: TRANSFER_CATEGORY_ID,
+    };
+    return nextWhere;
+  }
+
+  nextWhere.id = {
+    eq: existingIdFilter,
+    ne: TRANSFER_CATEGORY_ID,
+  };
+  return nextWhere;
+}
 
 function normalizeCategoryType(value, label) {
   const normalizedType = requireString(value, label, { allowEmpty: false });
@@ -143,11 +176,12 @@ function normalizeListPayload(payload) {
 
 function list(payload) {
   const { where, options, pagination, all } = normalizeListPayload(payload);
+  const effectiveWhere = mergeSystemCategoryFilter(where);
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
-  const total = categoriesModel.count(where);
+  const total = categoriesModel.count(effectiveWhere);
 
   if (all) {
-    const rows = categoriesModel.list(where, listOptions);
+    const rows = categoriesModel.list(effectiveWhere, listOptions);
     const pageSize = rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE;
 
     return {
@@ -162,7 +196,7 @@ function list(payload) {
     total === 0 ? DEFAULT_PAGE : Math.max(DEFAULT_PAGE, Math.ceil(total / pagination.page_size));
   const page = Math.min(pagination.page, totalPages);
   const offset = (page - 1) * pagination.page_size;
-  const rows = categoriesModel.list(where, {
+  const rows = categoriesModel.list(effectiveWhere, {
     ...listOptions,
     limit: pagination.page_size,
     offset,

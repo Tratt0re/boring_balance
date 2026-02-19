@@ -17,6 +17,7 @@
           @for (tableAction of visibleTableActions(); track tableAction.id) {
             <z-button
               zSize="sm"
+              [zTooltip]="tableAction.label | translate"
               [zType]="tableAction.buttonType ?? 'default'"
               [attr.aria-label]="tableAction.label | translate"
               [attr.title]="tableAction.label | translate"
@@ -166,15 +167,18 @@
                   <td z-table-cell>
                     <div class="flex items-center gap-1">
                       @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
-                        <z-button
-                          zSize="sm"
-                          [zType]="actionItem.buttonType ?? 'ghost'"
-                          [attr.aria-label]="actionItem.label | translate"
-                          [attr.title]="actionItem.label | translate"
-                          (click)="onActionClick(actionItem, row)"
-                        >
-                          <z-icon [zType]="actionItem.icon" class="size-4" />
-                        </z-button>
+                        <span class="inline-flex" [zTooltip]="actionItem.label | translate">
+                          <z-button
+                            zSize="sm"
+                            [zType]="actionItem.buttonType ?? 'ghost'"
+                            [zDisabled]="isActionDisabled(actionItem, row)"
+                            [attr.aria-label]="actionItem.label | translate"
+                            [attr.title]="actionItem.label | translate"
+                            (click)="onActionClick(actionItem, row)"
+                          >
+                            <z-icon [zType]="actionItem.icon" class="size-4" />
+                          </z-button>
+                        </span>
                       }
                     </div>
                   </td>
@@ -373,15 +377,18 @@
                   <td z-table-cell>
                     <div class="flex items-center justify-end gap-1">
                       @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
-                        <z-button
-                          zSize="sm"
-                          [zType]="actionItem.buttonType ?? 'ghost'"
-                          [attr.aria-label]="actionItem.label | translate"
-                          [attr.title]="actionItem.label | translate"
-                          (click)="onActionClick(actionItem, row)"
-                        >
-                          <z-icon [zType]="actionItem.icon" class="size-4" />
-                        </z-button>
+                        <span class="inline-flex" [zTooltip]="actionItem.label | translate">
+                          <z-button
+                            zSize="sm"
+                            [zType]="actionItem.buttonType ?? 'ghost'"
+                            [zDisabled]="isActionDisabled(actionItem, row)"
+                            [attr.aria-label]="actionItem.label | translate"
+                            [attr.title]="actionItem.label | translate"
+                            (click)="onActionClick(actionItem, row)"
+                          >
+                            <z-icon [zType]="actionItem.icon" class="size-4" />
+                          </z-button>
+                        </span>
                       }
                     </div>
                   </td>

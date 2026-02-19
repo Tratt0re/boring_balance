@@ -7,6 +7,9 @@ export interface AppVisualOption {
   readonly colorHex?: string;
 }
 
+export const DEFAULT_VISUAL_COLOR_KEY = 'system-app-color-11';
+export const DEFAULT_VISUAL_ICON_KEY = 'circle';
+
 export const APP_COLOR_OPTIONS: readonly AppVisualOption[] = [
   { label: 'options.colors.none', value: '', colorHex: 'var(--system-app-color-11)' },
   { label: 'options.colors.gray', value: 'system-app-color-11', colorHex: 'var(--system-app-color-11)' },

@@ -1,7 +1,29 @@
 import type { CategoryDto, CategoryType } from '@/dtos';
+import {
+  APP_COLOR_KEY_SET,
+  APP_ICON_KEY_SET,
+  DEFAULT_VISUAL_COLOR_KEY,
+  DEFAULT_VISUAL_ICON_KEY,
+} from '@/config/visual-options.config';
 
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
 import { toBooleanFlag, toSqliteBooleanFlag } from './common.model';
+
+function normalizeCategoryColorKey(value: string | null): string {
+  if (value && APP_COLOR_KEY_SET.has(value)) {
+    return value;
+  }
+
+  return DEFAULT_VISUAL_COLOR_KEY;
+}
+
+function normalizeCategoryIcon(value: string | null): string {
+  if (value && APP_ICON_KEY_SET.has(value)) {
+    return value;
+  }
+
+  return DEFAULT_VISUAL_ICON_KEY;
+}
 
 export class CategoryModel {
   constructor(
@@ -24,8 +46,8 @@ export class CategoryModel {
       dto.name,
       dto.parent_id,
       dto.description,
-      dto.color_key,
-      dto.icon,
+      normalizeCategoryColorKey(dto.color_key),
+      normalizeCategoryIcon(dto.icon),
       dto.type,
       toBooleanFlag(dto.locked),
       toBooleanFlag(dto.archived),

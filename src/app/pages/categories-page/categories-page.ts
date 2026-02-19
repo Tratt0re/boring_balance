@@ -2,6 +2,10 @@ import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
+import {
+  DEFAULT_VISUAL_COLOR_KEY,
+  DEFAULT_VISUAL_ICON_KEY,
+} from '@/config/visual-options.config';
 import type { CategoryCreateDto } from '@/dtos';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
@@ -15,44 +19,65 @@ import {
 } from './components/upsert-category-dialog/upsert-category-dialog.component';
 
 const isCategoryReadonly = (row: object): boolean => {
-  const category = row as CategoryModel;
+  const category = row as CategoryTableRow;
   return category.locked || category.archived;
 };
+
+interface CategoryTableRow {
+  readonly id: number;
+  readonly name: string;
+  readonly description: string | null;
+  readonly colorKey: string | null;
+  readonly colorHex: string;
+  readonly icon: string | null;
+  readonly type: CategoryModel['type'];
+  readonly typeLabel: string;
+  readonly locked: boolean;
+  readonly archived: boolean;
+}
+
+const CATEGORY_COLUMN_WIDTH = {
+  name: '1/5',
+  description: '2/5',
+  type: '1/10',
+  action: '1/10',
+} as const;
 
 const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
     columnName: 'categories.table.columns.name',
     columnKey: 'name',
-    type: 'string',
+    type: 'badge',
     sortable: true,
+    minWidth: CATEGORY_COLUMN_WIDTH.name,
+    maxWidth: CATEGORY_COLUMN_WIDTH.name,
+    badge: {
+      type: 'secondary',
+      shape: 'pill',
+      icon: DEFAULT_VISUAL_ICON_KEY,
+      iconColumnKey: 'icon',
+      colorHexColumnKey: 'colorHex',
+    },
+  },
+  {
+    columnName: 'categories.table.columns.type',
+    columnKey: 'typeLabel',
+    type: 'badge',
+    sortable: true,
+    minWidth: CATEGORY_COLUMN_WIDTH.type,
+    maxWidth: CATEGORY_COLUMN_WIDTH.type,
+    badge: {
+      shape: 'pill',
+      type: 'secondary',
+    },
   },
   {
     columnName: 'categories.table.columns.description',
     columnKey: 'description',
     type: 'string',
     sortable: true,
-  },
-  {
-    columnName: 'categories.table.columns.color',
-    columnKey: 'colorKey',
-    type: 'string',
-    sortable: true,
-  },
-  {
-    columnName: 'categories.table.columns.icon',
-    columnKey: 'icon',
-    type: 'string',
-    sortable: true,
-  },
-  {
-    columnName: 'categories.table.columns.type',
-    columnKey: 'type',
-    type: 'badge',
-    sortable: true,
-    badge: {
-      shape: 'pill',
-      type: 'secondary',
-    },
+    minWidth: CATEGORY_COLUMN_WIDTH.description,
+    maxWidth: CATEGORY_COLUMN_WIDTH.description,
   },
 ] as const;
 
@@ -63,6 +88,9 @@ const createCategoryTableStructure = (
   [
     ...CATEGORY_TABLE_COLUMNS,
     {
+      minWidth: CATEGORY_COLUMN_WIDTH.action,
+      maxWidth: CATEGORY_COLUMN_WIDTH.action,
+      showLabel: false,
       actionItems: [
         {
           id: 'edit',
@@ -80,6 +108,16 @@ const createCategoryTableStructure = (
           disabled: isCategoryReadonly,
           action: onArchiveAction,
         },
+        {
+          id: 'readonly-lock',
+          icon: 'lock',
+          label: 'categories.table.actions.locked',
+          buttonType: 'ghost',
+          visible: isCategoryReadonly,
+          disabled: () => true,
+          showWhenDisabled: true,
+          action: () => undefined,
+        },
       ],
     },
   ] as const;
@@ -93,7 +131,7 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
   templateUrl: './categories-page.html',
 })
 export class CategoriesPage implements OnInit, OnDestroy {
-  protected readonly categories = signal<readonly CategoryModel[]>([]);
+  protected readonly categories = signal<readonly CategoryTableRow[]>([]);
   protected readonly total = signal(0);
   protected readonly page = signal(1);
   protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
@@ -101,6 +139,8 @@ export class CategoriesPage implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly categoryRowClass = (row: object): string =>
+    isCategoryReadonly(row) ? 'bg-primary-foreground' : '';
   protected readonly categoryTableStructure = createCategoryTableStructure(
     (row) => this.onEditCategory(row),
     (row) => this.onArchiveCategory(row),
@@ -159,8 +199,23 @@ export class CategoriesPage implements OnInit, OnDestroy {
     void this.loadCategories(1);
   }
 
+  private toCategoryTableRow(category: CategoryModel): CategoryTableRow {
+    return {
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      colorKey: category.colorKey,
+      colorHex: `var(--${category.colorKey ?? DEFAULT_VISUAL_COLOR_KEY})`,
+      icon: category.icon,
+      type: category.type,
+      typeLabel: `category.type.${category.type}`,
+      locked: category.locked,
+      archived: category.archived,
+    };
+  }
+
   private onEditCategory(row: object): void {
-    const category = row as CategoryModel;
+    const category = row as CategoryTableRow;
     if (isCategoryReadonly(category)) {
       return;
     }
@@ -207,7 +262,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
   }
 
   private onArchiveCategory(row: object): void {
-    const category = row as CategoryModel;
+    const category = row as CategoryTableRow;
     if (isCategoryReadonly(category)) {
       return;
     }
@@ -283,7 +338,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
           orderDirection: 'ASC',
         },
       });
-      this.categories.set(response.rows);
+      this.categories.set(response.rows.map((category) => this.toCategoryTableRow(category)));
       this.total.set(response.total);
       this.page.set(response.page);
     } catch (error) {
@@ -307,7 +362,9 @@ export class CategoriesPage implements OnInit, OnDestroy {
       const result = await this.categoriesService.update({ id, changes });
 
       if (result.row) {
-        this.categories.update((rows) => rows.map((row) => (row.id === id ? result.row! : row)));
+        this.categories.update((rows) =>
+          rows.map((row) => (row.id === id ? this.toCategoryTableRow(result.row!) : row)),
+        );
         dialogRef.close(result.row);
         return;
       }

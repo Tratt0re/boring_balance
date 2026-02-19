@@ -16,17 +16,19 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { ClassValue } from 'clsx';
 
 import { AppPaginationComponent } from '@/components/pagination/pagination.component';
+import { APP_ICON_OPTIONS } from '@/config/visual-options.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
-import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
+import { ZardIconComponent, ZARD_ICONS, type ZardIcon } from '@/shared/components/icon';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
 import { ZardTableImports } from '@/shared/components/table';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type {
@@ -57,6 +59,7 @@ type CurrencyCellIcon = {
   readonly icon: ZardIcon;
   readonly color: string;
 };
+const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 
 @Component({
   selector: 'app-data-table',
@@ -72,6 +75,7 @@ type CurrencyCellIcon = {
     ZardIconComponent,
     ZardInputDirective,
     ZardSwitchComponent,
+    ...ZardTooltipImports,
     ...ZardSelectImports,
     ...ZardTableImports,
   ],
@@ -180,7 +184,7 @@ export class AppDataTableComponent {
 
     for (const row of this.sortedRows()) {
       for (const actionItem of actionItems) {
-        if (!this.isActionDisabled(actionItem, row)) {
+        if (this.shouldRenderAction(actionItem, row)) {
           return true;
         }
       }
@@ -434,6 +438,10 @@ export class AppDataTableComponent {
     return actionItem.disabled?.(row) ?? false;
   }
 
+  protected isActionVisible(actionItem: ActionItem, row: TableRow): boolean {
+    return actionItem.visible?.(row) ?? true;
+  }
+
   protected isTableActionDisabled(actionItem: TableHeaderActionItem): boolean {
     if (typeof actionItem.disabled === 'function') {
       return actionItem.disabled();
@@ -443,7 +451,7 @@ export class AppDataTableComponent {
   }
 
   protected visibleRowActionItems(row: TableRow): readonly ActionItem[] {
-    return this.actionItems().filter((actionItem) => !this.isActionDisabled(actionItem, row));
+    return this.actionItems().filter((actionItem) => this.shouldRenderAction(actionItem, row));
   }
 
   protected onTableActionClick(actionItem: TableHeaderActionItem): void {
@@ -684,15 +692,16 @@ export class AppDataTableComponent {
   }
 
   protected cellIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
+    const fallbackIcon = this.resolveTableIcon(column.cellIcon?.icon);
     const iconColumnKey = column.cellIcon?.iconColumnKey;
     if (iconColumnKey) {
-      const iconValue = this.getRawValue(row, iconColumnKey);
-      if (typeof iconValue === 'string' && iconValue.length > 0) {
-        return iconValue as ZardIcon;
+      const icon = this.resolveTableIcon(this.getRawValue(row, iconColumnKey));
+      if (icon) {
+        return icon;
       }
     }
 
-    return column.cellIcon?.icon ?? null;
+    return fallbackIcon;
   }
 
   protected cellIconColor(row: TableRow, column: ColumnDataItem): string | null {
@@ -777,15 +786,16 @@ export class AppDataTableComponent {
       return null;
     }
 
+    const fallbackIcon = this.resolveTableIcon(column.badge?.icon);
     const iconColumnKey = column.badge?.iconColumnKey;
     if (iconColumnKey) {
-      const iconValue = this.getRawValue(row, iconColumnKey);
-      if (typeof iconValue === 'string' && iconValue.length > 0) {
-        return iconValue as ZardIcon;
+      const icon = this.resolveTableIcon(this.getRawValue(row, iconColumnKey));
+      if (icon) {
+        return icon;
       }
     }
 
-    return column.badge?.icon ?? null;
+    return fallbackIcon;
   }
 
   protected badgeInlineStyle(row: TableRow, column: ColumnDataItem): string | null {
@@ -877,6 +887,44 @@ export class AppDataTableComponent {
         });
       }
     }
+  }
+
+  private resolveTableIcon(value: unknown): ZardIcon | null {
+    if (!value) {
+      return null;
+    }
+
+    if (typeof value !== 'string') {
+      return value as ZardIcon;
+    }
+
+    const normalizedValue = value.trim();
+    if (normalizedValue.length === 0) {
+      return null;
+    }
+
+    const mappedIcon = APP_ICON_BY_VALUE.get(normalizedValue);
+    if (mappedIcon) {
+      return mappedIcon;
+    }
+
+    return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ZardIcon) : null;
+  }
+
+  private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {
+    return Object.prototype.hasOwnProperty.call(ZARD_ICONS, value);
+  }
+
+  private shouldRenderAction(actionItem: ActionItem, row: TableRow): boolean {
+    if (!this.isActionVisible(actionItem, row)) {
+      return false;
+    }
+
+    if (!this.isActionDisabled(actionItem, row)) {
+      return true;
+    }
+
+    return actionItem.showWhenDisabled ?? false;
   }
 
   private compareNumberValues(leftValue: unknown, rightValue: unknown): number {

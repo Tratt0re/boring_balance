@@ -8,7 +8,12 @@ import {
   type EditableValueChangeEvent,
   type TableDataItem,
 } from '@/components/data-table';
-import { APP_COLOR_OPTIONS, APP_ICON_OPTIONS } from '@/config/visual-options.config';
+import {
+  APP_COLOR_OPTIONS,
+  APP_ICON_OPTIONS,
+  DEFAULT_VISUAL_COLOR_KEY,
+  DEFAULT_VISUAL_ICON_KEY,
+} from '@/config/visual-options.config';
 import type { CategoryType, TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
 import { type TransactionModel } from '@/models';
 import {
@@ -38,6 +43,8 @@ const TRANSACTION_COLUMN_WIDTH = {
 } as const;
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
+const DEFAULT_TABLE_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'circle') as ZardIcon;
+const DEFAULT_TABLE_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
 interface TransactionTableRow {
   readonly id: number;
@@ -58,18 +65,18 @@ interface TransactionTableRow {
 
 const resolveIconByValue = (value: string | null): ZardIcon | null => {
   if (!value || value.length === 0) {
-    return null;
+    return DEFAULT_TABLE_ICON;
   }
 
-  return APP_ICON_BY_VALUE.get(value) ?? null;
+  return APP_ICON_BY_VALUE.get(value) ?? DEFAULT_TABLE_ICON;
 };
 
 const resolveColorHexByValue = (value: string | null): string | null => {
   if (!value || value.length === 0) {
-    return null;
+    return DEFAULT_TABLE_COLOR_HEX;
   }
 
-  return APP_COLOR_HEX_BY_VALUE.get(value) ?? null;
+  return APP_COLOR_HEX_BY_VALUE.get(value) ?? DEFAULT_TABLE_COLOR_HEX;
 };
 
 const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [

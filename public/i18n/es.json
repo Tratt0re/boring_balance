@@ -133,7 +133,8 @@
       "actions": {
         "add": "Agregar categoria",
         "edit": "Editar categoria",
-        "archive": "Archivar categoria"
+        "archive": "Archivar categoria",
+        "locked": "Categoria bloqueada"
       },
       "columns": {
         "name": "Nombre",
