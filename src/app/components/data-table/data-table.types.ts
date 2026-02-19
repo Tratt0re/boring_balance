@@ -92,6 +92,7 @@ export interface TableHeaderActionItem {
   readonly label: string;
   readonly action: () => void | Promise<void>;
   readonly icon?: ZardIcon;
+  readonly showLabel?: boolean;
   readonly buttonType?: ZardButtonTypeVariants;
   readonly disabled?: boolean | (() => boolean);
 }

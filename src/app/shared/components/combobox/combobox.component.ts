@@ -20,6 +20,7 @@ import { type ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angu
 
 import type { ClassValue } from 'clsx';
 
+import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent, type ZardButtonTypeVariants } from '@/shared/components/button';
 import { comboboxVariants, type ZardComboboxWidthVariants } from '@/shared/components/combobox/combobox.variants';
 import {
@@ -53,6 +54,7 @@ export interface ZardComboboxGroup {
   imports: [
     FormsModule,
     NgTemplateOutlet,
+    ZardBadgeComponent,
     ZardButtonComponent,
     ZardCommandComponent,
     ZardCommandInputComponent,
@@ -85,13 +87,25 @@ export interface ZardComboboxGroup {
       (zVisibleChange)="setOpen($event)"
       #popoverTrigger
     >
-      @if (selectedOption(); as selectedOption) {
-        @if (selectedOption.icon; as selectedIcon) {
-          <z-icon zSize="sm" [zType]="selectedIcon" class="mr-2 shrink-0 text-primary opacity-70" />
+      <span [class]="valueContainerClasses()">
+        @if (multiple()) {
+          <span class="flex min-w-0 flex-wrap items-center gap-1.5">
+            @for (label of displayLabels(); track $index) {
+              <z-badge zType="secondary" class="max-w-[120px] truncate">
+                <span class="truncate">{{ label }}</span>
+              </z-badge>
+            } @empty {
+              <span class="text-muted-foreground truncate">{{ placeholder() }}</span>
+            }
+          </span>
+        } @else {
+          @if (selectedOption(); as selectedOption) {
+            @if (selectedOption.icon; as selectedIcon) {
+              <z-icon zSize="sm" [zType]="selectedIcon" class="mr-2 shrink-0 text-primary opacity-70" />
+            }
+          }
+          {{ displayValue() ?? placeholder() }}
         }
-      }
-      <span class="min-w-0 flex-1 truncate text-left">
-        {{ displayValue() ?? placeholder() }}
       </span>
       <z-icon zType="chevrons-up-down" [class]="chevronClasses()" />
     </button>
@@ -103,7 +117,7 @@ export interface ZardComboboxGroup {
             <z-command-input [placeholder]="searchPlaceholder()" #commandInputRef />
           }
 
-          <z-command-list id="combobox-listbox" role="listbox">
+          <z-command-list id="combobox-listbox" role="listbox" [attr.aria-multiselectable]="multiple() ? 'true' : null">
             @if (emptyText()) {
               <z-command-empty>
                 <z-empty [zDescription]="emptyText()" />
@@ -159,15 +173,11 @@ export interface ZardComboboxGroup {
         [zLabel]="option.label"
         [zDisabled]="option.disabled ?? false"
         [zIcon]="option.icon"
+        [zSelected]="isOptionSelected(option.value)"
+        [zShowSelectedIndicator]="multiple()"
         [parentCommand]="cmd"
         [commandGroup]="grp"
-        [attr.aria-selected]="option.value === currentValue()"
-      >
-        {{ option.label }}
-        @if (option.value === currentValue()) {
-          <z-icon zType="check" class="ml-auto" />
-        }
-      </z-command-option>
+      />
     </ng-template>
   `,
   providers: [
@@ -201,13 +211,15 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   readonly emptyText = input<string>('No results found.');
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly searchable = input(true, { transform: booleanAttribute });
-  readonly value = input<string | null>(null);
+  readonly multiple = input(false, { transform: booleanAttribute });
+  readonly maxLabelCount = input(1);
+  readonly value = input<string | readonly string[] | null | undefined>(undefined);
   readonly options = input<ZardComboboxOption[]>([]);
   readonly groups = input<ZardComboboxGroup[]>([]);
   readonly ariaLabel = input<string>('');
   readonly ariaDescribedBy = input<string>('');
 
-  readonly zValueChange = output<string | null>();
+  readonly zValueChange = output<string | string[] | null>();
   readonly zComboSelected = output<ZardComboboxOption>();
 
   readonly popoverDirective = viewChild.required('popoverTrigger', { read: ZardPopoverDirective });
@@ -216,7 +228,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   readonly commandInputRef = viewChild('commandInputRef', { read: ZardCommandInputComponent });
 
   protected readonly open = signal(false);
-  protected readonly internalValue = signal<string | null>(null);
+  protected readonly internalValue = signal<string | readonly string[] | null>(null);
 
   protected readonly classes = computed(() =>
     mergeClasses(
@@ -227,7 +239,16 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     ),
   );
 
-  protected readonly buttonClasses = computed(() => mergeClasses('w-full justify-between', this.zButtonClass()));
+  protected readonly buttonClasses = computed(() =>
+    mergeClasses(
+      'w-full justify-between',
+      this.multiple() ? 'h-auto min-h-9 py-1.5' : '',
+      this.zButtonClass(),
+    ),
+  );
+  protected readonly valueContainerClasses = computed(() =>
+    mergeClasses('min-w-0 flex-1 text-left', this.multiple() ? '' : 'truncate'),
+  );
   protected readonly chevronClasses = computed(() => mergeClasses('ml-2 shrink-0', this.zChevronClass()));
 
   protected readonly popoverClasses = computed(() => {
@@ -235,10 +256,17 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     return `${widthClass} p-0`;
   });
 
-  protected readonly currentValue = computed(() => this.value() ?? this.internalValue());
+  protected readonly currentValue = computed<string | readonly string[] | null>(() => {
+    const controlledValue = this.value();
+    return controlledValue !== undefined ? controlledValue : this.internalValue();
+  });
   protected readonly selectedOption = computed(() => {
+    if (this.multiple()) {
+      return null;
+    }
+
     const currentValue = this.currentValue();
-    if (!currentValue) {
+    if (typeof currentValue !== 'string' || currentValue.length === 0) {
       return null;
     }
 
@@ -248,8 +276,36 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   protected readonly displayValue = computed(() => {
     return this.selectedOption()?.label ?? null;
   });
+  protected readonly selectedValues = computed<string[]>(() => {
+    if (!this.multiple()) {
+      return [];
+    }
 
-  private onChange: (value: string | null) => void = () => {
+    const currentValue = this.currentValue();
+    if (Array.isArray(currentValue)) {
+      return currentValue.filter((value) => typeof value === 'string' && value.trim().length > 0);
+    }
+
+    if (typeof currentValue === 'string' && currentValue.trim().length > 0) {
+      return [currentValue];
+    }
+
+    return [];
+  });
+  protected readonly displayLabels = computed<string[]>(() => {
+    const selectedValues = this.selectedValues();
+    const labels = selectedValues.map((value) => this.getOptionByValue(value)?.label ?? value);
+    const maxLabelCount = Math.max(0, this.maxLabelCount());
+
+    if (maxLabelCount <= 0 || labels.length <= maxLabelCount) {
+      return labels;
+    }
+
+    const hiddenCount = labels.length - maxLabelCount;
+    return [...labels.slice(0, maxLabelCount), `${hiddenCount} more`];
+  });
+
+  private onChange: (value: string | string[] | null) => void = () => {
     // ControlValueAccessor implementation
   };
 
@@ -281,8 +337,28 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   handleSelect(commandOption: ZardCommandOption) {
     const selectedValue = commandOption.value as string;
 
+    if (this.multiple()) {
+      const selectedValues = this.selectedValues();
+      const alreadySelected = selectedValues.includes(selectedValue);
+      const nextValues = alreadySelected
+        ? selectedValues.filter((value) => value !== selectedValue)
+        : [...selectedValues, selectedValue];
+
+      this.internalValue.set(nextValues);
+      this.onChange(nextValues);
+      this.zValueChange.emit(nextValues);
+
+      const selectedOption = this.getOptionByValue(selectedValue);
+      if (selectedOption && !alreadySelected) {
+        this.zComboSelected.emit(selectedOption);
+      }
+
+      return;
+    }
+
     // Toggle behavior - if same value is selected, clear it
-    const newValue = selectedValue === this.currentValue() ? null : selectedValue;
+    const currentValue = this.currentValue();
+    const newValue = selectedValue === currentValue ? null : selectedValue;
 
     this.internalValue.set(newValue);
     this.onChange(newValue);
@@ -307,7 +383,19 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     if (this.open()) {
       this.popoverDirective().hide();
       this.buttonRef().nativeElement.focus();
-    } else if (this.currentValue()) {
+      return;
+    }
+
+    if (this.multiple()) {
+      if (this.selectedValues().length > 0) {
+        this.internalValue.set([]);
+        this.onChange([]);
+        this.zValueChange.emit([]);
+      }
+      return;
+    }
+
+    if (this.currentValue()) {
       this.internalValue.set(null);
       this.onChange(null);
       this.zValueChange.emit(null);
@@ -384,12 +472,20 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     }
   }
 
+  protected isOptionSelected(value: string): boolean {
+    if (this.multiple()) {
+      return this.selectedValues().includes(value);
+    }
+
+    return this.currentValue() === value;
+  }
+
   // ControlValueAccessor implementation
-  writeValue(value: string | null): void {
+  writeValue(value: string | readonly string[] | null): void {
     this.internalValue.set(value);
   }
 
-  registerOnChange(fn: (value: string | null) => void): void {
+  registerOnChange(fn: (value: string | string[] | null) => void): void {
     this.onChange = fn;
   }
 

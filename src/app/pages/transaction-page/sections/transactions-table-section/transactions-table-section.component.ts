@@ -6,15 +6,22 @@ import {
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
+  type TableHeaderActionItem,
   type TableDataItem,
 } from '@/components/data-table';
+import {
+  AppSheetFormService,
+  type AppSheetField,
+  type AppSheetFieldValueMap,
+  type AppSheetFormComponent,
+} from '@/components/sheet-form';
 import {
   APP_COLOR_OPTIONS,
   APP_ICON_OPTIONS,
   DEFAULT_VISUAL_COLOR_KEY,
   DEFAULT_VISUAL_ICON_KEY,
 } from '@/config/visual-options.config';
-import type { CategoryType, TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
+import type { CategoryType, TransactionCreateDto, TransactionListTransactionsDto, TransactionUpdateDto } from '@/dtos';
 import { type TransactionModel } from '@/models';
 import {
   UpsertTransactionDialogComponent,
@@ -32,6 +39,13 @@ import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 const TRANSFER_CATEGORY_ID = 2;
 const DEFAULT_PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+const TRANSACTION_FILTER_FIELD = {
+  dateFrom: 'dateFrom',
+  dateTo: 'dateTo',
+  settled: 'settled',
+  categoryId: 'categoryId',
+  accountId: 'accountId',
+} as const;
 const TRANSACTION_COLUMN_WIDTH = {
   occurredAt: 'w-1/14',
   settled: 'w-1/14',
@@ -62,6 +76,22 @@ interface TransactionTableRow {
   readonly categoryColorHex: string | null;
   readonly description: string | null;
 }
+
+interface TransactionTableFilters {
+  readonly dateFrom: Date | null;
+  readonly dateTo: Date | null;
+  readonly settled: boolean | null;
+  readonly categoryIds: readonly number[];
+  readonly accountIds: readonly number[];
+}
+
+const DEFAULT_TRANSACTION_TABLE_FILTERS: TransactionTableFilters = {
+  dateFrom: null,
+  dateTo: null,
+  settled: null,
+  categoryIds: [],
+  accountIds: [],
+};
 
 const resolveIconByValue = (value: string | null): ZardIcon | null => {
   if (!value || value.length === 0) {
@@ -193,6 +223,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private readonly categoryIconById = signal<ReadonlyMap<number, ZardIcon | null>>(new Map());
   private readonly accountColorHexById = signal<ReadonlyMap<number, string | null>>(new Map());
   private readonly categoryColorHexById = signal<ReadonlyMap<number, string | null>>(new Map());
+  private readonly filters = signal<TransactionTableFilters>(DEFAULT_TRANSACTION_TABLE_FILTERS);
 
   protected readonly tableStructure = computed<readonly TableDataItem[]>(() =>
     createTransactionTableStructure(
@@ -200,6 +231,27 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       (row) => this.onDeleteTransaction(row),
     ),
   );
+  protected readonly hasActiveFilters = computed(() => {
+    const filters = this.filters();
+
+    return (
+      filters.dateFrom !== null ||
+      filters.dateTo !== null ||
+      filters.settled !== null ||
+      filters.categoryIds.length > 0 ||
+      filters.accountIds.length > 0
+    );
+  });
+  protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => [
+    {
+      id: 'transaction-filters',
+      icon: 'filter',
+      label: 'transactions.table.actions.filter',
+      showLabel: false,
+      buttonType: this.hasActiveFilters() ? 'secondary' : 'outline',
+      action: () => this.openFilterSheet(),
+    },
+  ]);
 
   private readonly addTransactionToolbarAction: ToolbarAction = {
     id: 'add-transaction',
@@ -219,6 +271,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
+    private readonly sheetFormService: AppSheetFormService,
     private readonly translateService: TranslateService,
   ) {}
 
@@ -268,6 +321,34 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     void this.updateTransaction(transaction.id, { settled });
   }
 
+  private openFilterSheet(): void {
+    this.sheetFormService.open({
+      zTitle: this.translateService.instant('transactions.filters.title'),
+      zDescription: this.translateService.instant('transactions.filters.description'),
+      zSide: 'right',
+      zWidth: 'min(96vw, 420px)',
+      zOkText: this.translateService.instant('transactions.filters.actions.apply'),
+      zMiddleText: this.translateService.instant('transactions.filters.actions.reset'),
+      zMiddleType: 'secondary',
+      zCancelText: this.translateService.instant('transactions.filters.actions.cancel'),
+      zOkIcon: 'check',
+      zMiddleIcon: 'filter',
+      zCancelIcon: 'x',
+      zMaskClosable: true,
+      validateBeforeSubmit: false,
+      fields: this.buildFilterFields(),
+      values: this.toSheetValues(this.filters()),
+      zOnMiddle: (sheetContent) => {
+        this.resetSheetFilters(sheetContent);
+        return false;
+      },
+      onSubmit: (sheetContent) => {
+        this.applySheetFilters(sheetContent.getValues());
+        return sheetContent.getValues();
+      },
+    });
+  }
+
   private activateToolbarActions(): void {
     this.releaseToolbarActions?.();
 
@@ -288,6 +369,214 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     if (value === 0 || value === '0' || value === 'false') {
       return false;
+    }
+
+    return null;
+  }
+
+  private buildFilterFields(): readonly AppSheetField[] {
+    return [
+      {
+        id: TRANSACTION_FILTER_FIELD.dateFrom,
+        type: 'date-picker',
+        width: '1/2',
+        label: 'transactions.filters.fields.dateFrom',
+        placeholder: 'transactions.filters.placeholders.dateFrom',
+        translate: true,
+      },
+      {
+        id: TRANSACTION_FILTER_FIELD.dateTo,
+        type: 'date-picker',
+        width: '1/2',
+        label: 'transactions.filters.fields.dateTo',
+        placeholder: 'transactions.filters.placeholders.dateTo',
+        translate: true,
+      },
+      {
+        id: TRANSACTION_FILTER_FIELD.settled,
+        type: 'select',
+        width: '1/1',
+        label: 'transactions.filters.fields.settled',
+        placeholder: 'transactions.filters.placeholders.settled',
+        options: [
+          {
+            value: 'any',
+            label: 'transactions.filters.options.settled.any',
+            translate: true,
+          },
+          {
+            value: 'true',
+            label: 'transactions.filters.options.settled.yes',
+            translate: true,
+          },
+          {
+            value: 'false',
+            label: 'transactions.filters.options.settled.no',
+            translate: true,
+          },
+        ],
+        translate: true,
+      },
+      {
+        id: TRANSACTION_FILTER_FIELD.categoryId,
+        type: 'combobox',
+        width: '1/1',
+        multiple: true,
+        maxLabelCount: 7,
+        label: 'transactions.filters.fields.category',
+        placeholder: 'transactions.filters.placeholders.category',
+        searchPlaceholder: 'transactions.filters.placeholders.searchCategory',
+        emptyText: 'transactions.filters.empty.category',
+        translate: true,
+        options: this.categoryOptions().map((option) => ({
+          value: `${option.value}`,
+          label: option.label,
+          icon: option.icon,
+          translate: option.translate,
+        })),
+      },
+      {
+        id: TRANSACTION_FILTER_FIELD.accountId,
+        type: 'combobox',
+        width: '1/1',
+        multiple: true,
+        maxLabelCount: 7,
+        label: 'transactions.filters.fields.account',
+        placeholder: 'transactions.filters.placeholders.account',
+        searchPlaceholder: 'transactions.filters.placeholders.searchAccount',
+        emptyText: 'transactions.filters.empty.account',
+        translate: true,
+        options: this.accountOptions().map((option) => ({
+          value: `${option.value}`,
+          label: option.label,
+          icon: option.icon,
+          translate: option.translate,
+        })),
+      },
+    ];
+  }
+
+  private toSheetValues(filters: TransactionTableFilters): AppSheetFieldValueMap {
+    return {
+      [TRANSACTION_FILTER_FIELD.dateFrom]: filters.dateFrom,
+      [TRANSACTION_FILTER_FIELD.dateTo]: filters.dateTo,
+      [TRANSACTION_FILTER_FIELD.settled]:
+        filters.settled === null ? null : `${filters.settled}`,
+      [TRANSACTION_FILTER_FIELD.categoryId]: filters.categoryIds.map((id) => `${id}`),
+      [TRANSACTION_FILTER_FIELD.accountId]: filters.accountIds.map((id) => `${id}`),
+    };
+  }
+
+  private applySheetFilters(values: AppSheetFieldValueMap): void {
+    const nextFilters: TransactionTableFilters = {
+      dateFrom: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateFrom]),
+      dateTo: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateTo]),
+      settled: this.toSettledFilterValue(values[TRANSACTION_FILTER_FIELD.settled]),
+      categoryIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.categoryId]),
+      accountIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
+    };
+
+    this.filters.set(nextFilters);
+    this.page.set(1);
+    void this.reloadTransactionsPage();
+  }
+
+  private resetSheetFilters(sheetContent: AppSheetFormComponent): void {
+    const resetValues = this.toSheetValues(DEFAULT_TRANSACTION_TABLE_FILTERS);
+    for (const [fieldId, value] of Object.entries(resetValues)) {
+      sheetContent.setValue(fieldId, value ?? null);
+    }
+  }
+
+  private buildListTransactionsPayload(): TransactionListTransactionsDto {
+    const filters = this.filters();
+    const dateFrom = filters.dateFrom?.getTime();
+    const dateTo = filters.dateTo?.getTime();
+    const categories = filters.categoryIds.length > 0 ? [...filters.categoryIds] : undefined;
+    const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
+    const settled = filters.settled === null ? undefined : filters.settled;
+    const hasFilters =
+      dateFrom !== undefined ||
+      dateTo !== undefined ||
+      categories !== undefined ||
+      accounts !== undefined ||
+      settled !== undefined;
+
+    if (!hasFilters) {
+      return {
+        page: this.page(),
+        page_size: this.pageSize(),
+      };
+    }
+
+    return {
+      page: this.page(),
+      page_size: this.pageSize(),
+      filters: {
+        ...(dateFrom === undefined ? {} : { date_from: dateFrom }),
+        ...(dateTo === undefined ? {} : { date_to: dateTo }),
+        ...(categories === undefined ? {} : { categories }),
+        ...(accounts === undefined ? {} : { accounts }),
+        ...(settled === undefined ? {} : { settled }),
+      },
+    };
+  }
+
+  private toPositiveIntegerArray(value: unknown): readonly number[] {
+    if (Array.isArray(value)) {
+      const uniqueValues = new Set<number>();
+
+      for (const item of value) {
+        if (typeof item !== 'string') {
+          continue;
+        }
+
+        const parsedValue = Number.parseInt(item, 10);
+        if (Number.isInteger(parsedValue) && parsedValue > 0) {
+          uniqueValues.add(parsedValue);
+        }
+      }
+
+      return Array.from(uniqueValues);
+    }
+
+    if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
+      return [value];
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      const parsedValue = Number.parseInt(value, 10);
+      return Number.isInteger(parsedValue) && parsedValue > 0 ? [parsedValue] : [];
+    }
+
+    return [];
+  }
+
+  private toSettledFilterValue(value: unknown): boolean | null {
+    if (value === true || value === 'true') {
+      return true;
+    }
+
+    if (value === false || value === 'false') {
+      return false;
+    }
+
+    return null;
+  }
+
+  private toDateValue(value: unknown): Date | null {
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+      return value;
+    }
+
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      const timestamp = Date.parse(value);
+      return Number.isNaN(timestamp) ? null : new Date(timestamp);
     }
 
     return null;
@@ -417,10 +706,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
             orderDirection: 'ASC',
           },
         }),
-        this.transactionsService.listTransactions({
-          page: this.page(),
-          page_size: this.pageSize(),
-        }),
+        this.transactionsService.listTransactions(this.buildListTransactionsPayload()),
       ]);
 
       const visibleCategories = categories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
@@ -491,10 +777,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private async reloadTransactionsPage(): Promise<void> {
     try {
       this.loadError.set(null);
-      const transactions = await this.transactionsService.listTransactions({
-        page: this.page(),
-        page_size: this.pageSize(),
-      });
+      const transactions = await this.transactionsService.listTransactions(this.buildListTransactionsPayload());
 
       this.page.set(transactions.page);
       this.total.set(transactions.total);

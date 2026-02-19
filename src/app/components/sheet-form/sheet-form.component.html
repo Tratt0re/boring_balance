@@ -1,0 +1,117 @@
+<div [class]="containerClasses()">
+  @for (field of resolvedFields(); track field.id) {
+    <div [class]="fieldWidthClass(field)">
+      @if (isDatePickerField(field)) {
+        <div>
+          @if (field.label) {
+            <label class="mb-1.5 block text-sm font-medium">
+              {{ displayLabel(field) }}
+              @if (field.required) {
+                <span class="text-destructive">*</span>
+              }
+            </label>
+          }
+
+          <z-date-picker
+            [value]="dateValue(field)"
+            [placeholder]="displayPlaceholder(field)"
+            [zIconPosition]="field.zIconPosition ?? 'right'"
+            [zFormat]="field.zFormat ?? 'MMMM d, yyyy'"
+            [minDate]="minDate(field)"
+            [maxDate]="maxDate(field)"
+            [disabled]="field.disabled ?? false"
+            (dateChange)="onDateChange(field, $event)"
+          />
+
+          @if (field.description) {
+            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
+          }
+        </div>
+      } @else if (isComboboxField(field)) {
+        <div>
+          @if (field.label) {
+            <label class="mb-1.5 block text-sm font-medium">
+              {{ displayLabel(field) }}
+              @if (field.required) {
+                <span class="text-destructive">*</span>
+              }
+            </label>
+          }
+
+          <z-combobox
+            zWidth="full"
+            [value]="comboboxValue(field)"
+            [multiple]="field.multiple ?? false"
+            [maxLabelCount]="field.maxLabelCount ?? 1"
+            [options]="comboboxOptions(field)"
+            [groups]="comboboxGroups(field)"
+            [placeholder]="displayPlaceholder(field)"
+            [searchPlaceholder]="displaySearchPlaceholder(field)"
+            [emptyText]="displayEmptyText(field)"
+            [searchable]="field.searchable ?? true"
+            [ariaLabel]="field.ariaLabel ?? ''"
+            [disabled]="field.disabled ?? false"
+            (zValueChange)="onComboboxChange(field, $event)"
+          />
+
+          @if (field.description) {
+            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
+          }
+        </div>
+      } @else if (isSelectField(field)) {
+        <div>
+          @if (field.label) {
+            <label class="mb-1.5 block text-sm font-medium">
+              {{ displayLabel(field) }}
+              @if (field.required) {
+                <span class="text-destructive">*</span>
+              }
+            </label>
+          }
+
+          <z-select
+            [zValue]="selectValue(field)"
+            [zMultiple]="field.multiple ?? false"
+            [zMaxLabelCount]="field.maxLabelCount ?? 1"
+            [zShowSelectedLabel]="field.showSelectedLabel ?? true"
+            [zPlaceholder]="displayPlaceholder(field)"
+            [zSize]="field.size ?? 'default'"
+            [zDisabled]="field.disabled ?? false"
+            (zSelectionChange)="onSelectChange(field, $event)"
+          >
+            @for (option of selectOptions(field); track option.value) {
+              <z-select-item
+                [zValue]="option.value"
+                [zLabel]="option.label"
+                [zIcon]="option.icon ?? null"
+                [zColorHex]="option.colorHex ?? null"
+                [zDisabled]="option.disabled ?? false"
+              />
+            }
+          </z-select>
+
+          @if (field.description) {
+            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
+          }
+        </div>
+      } @else if (isCheckboxField(field)) {
+        <div>
+          <z-checkbox
+            [zChecked]="checkboxValue(field)"
+            [zDisabled]="field.disabled ?? false"
+            (checkChange)="onCheckboxChange(field, $event)"
+          >
+            {{ checkboxLabel(field) }}
+            @if (field.required) {
+              <span class="text-destructive">*</span>
+            }
+          </z-checkbox>
+
+          @if (field.description) {
+            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
