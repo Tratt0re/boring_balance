@@ -13,19 +13,41 @@
     </z-segmented>
 
     @if (activeView() === 'common') {
-      <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out">
+      <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out space-y-4">
         <app-transactions-table-section
           [rows]="transactions()"
           [structure]="transactionTableStructure()"
           [rowClass]="transactionRowClass"
+          [showPagination]="true"
+          [currentPage]="transactionsPage()"
+          [totalPages]="transactionsPageCount()"
+          [pageSize]="transactionsPageSize()"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+          [maxVisiblePages]="5"
+          [showPageSizeSelector]="true"
+          [showTopPagination]="true"
+          (pageChange)="onTransactionsPageChange($event)"
+          (pageSizeChange)="onTransactionsPageSizeChange($event)"
           (editableValueChange)="onEditableValueChange($event)"
         ></app-transactions-table-section>
       </div>
     } @else {
-      <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out">
+      <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out space-y-4">
         <app-transfers-table-section
           [rows]="transferRows()"
           [structure]="transferTableStructure()"
+          [showPagination]="true"
+          [currentPage]="transfersPage()"
+          [totalPages]="transfersPageCount()"
+          [pageSize]="transfersPageSize()"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+          [maxVisiblePages]="5"
+          [showPageSizeSelector]="true"
+          [showTopPagination]="true"
+          (pageChange)="onTransfersPageChange($event)"
+          (pageSizeChange)="onTransfersPageSizeChange($event)"
         ></app-transfers-table-section>
       </div>
     }

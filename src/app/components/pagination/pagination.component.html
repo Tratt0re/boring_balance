@@ -1,0 +1,63 @@
+<div class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto]">
+  <div class="md:justify-self-start">
+    @if (showPageSizeSelector()) {
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-muted-foreground">{{ pageSizeLabel() }}</span>
+        <z-select
+          [zValue]="pageSizeValue()"
+          [zLabel]="pageSizeValue()"
+          (zSelectionChange)="onPageSizeSelectionChange($event)"
+        >
+          @for (option of normalizedPageSizeOptions(); track option) {
+            <z-select-item [zValue]="option.toString()" [zLabel]="option.toString()" />
+          }
+        </z-select>
+      </div>
+    }
+  </div>
+
+  <div class="md:justify-self-end">
+    @if (showTopPagination()) {
+      <div class="flex items-center gap-2">
+        <button
+          z-button
+          type="button"
+          zType="secondary"
+          [zDisabled]="normalizedCurrentPage() <= 1"
+          (click)="goToPreviousPage()"
+        >
+          <z-icon zType="chevron-left" aria-hidden="true" />
+          {{ 'common.pagination.previous' | translate }}
+        </button>
+
+        <button
+          z-button
+          type="button"
+          zType="secondary"
+          [zDisabled]="normalizedCurrentPage() >= normalizedTotalPages()"
+          (click)="goToNextPage()"
+        >
+          {{ 'common.pagination.next' | translate }}
+          <z-icon zType="chevron-right" aria-hidden="true" />
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="md:col-span-2">
+    <ng-content />
+  </div>
+
+  <p class="text-xs text-muted-foreground md:justify-self-start">
+    {{ 'common.pagination.counter' | translate: { current: normalizedCurrentPage(), total: normalizedTotalPages() } }}
+  </p>
+
+  <div class="md:justify-self-end">
+    <z-pagination
+      [zPageIndex]="normalizedCurrentPage()"
+      [zTotal]="normalizedTotalPages()"
+      [zVisiblePages]="normalizedMaxVisiblePages()"
+      (zPageIndexChange)="onPageChange($event)"
+    />
+  </div>
+</div>

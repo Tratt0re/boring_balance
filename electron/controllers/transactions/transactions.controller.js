@@ -25,8 +25,11 @@ const TRANSACTION_FIELDS = new Set([
   'transfer_id',
   'settled',
 ]);
-const LIST_PAYLOAD_FIELDS = new Set(['filters']);
+const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'categories', 'accounts', 'settled']);
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 250;
 
 function normalizeOptionalTags(value, label) {
   if (value === undefined) {
@@ -103,7 +106,13 @@ function normalizeOptionalIdArray(value, label) {
 
 function normalizeListFilters(payload) {
   if (payload === undefined || payload === null) {
-    return {};
+    return {
+      filters: {},
+      pagination: {
+        page: DEFAULT_PAGE,
+        page_size: DEFAULT_PAGE_SIZE,
+      },
+    };
   }
 
   const body = ensurePlainObject(payload, 'payload');
@@ -111,17 +120,32 @@ function normalizeListFilters(payload) {
   const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
   assertAllowedKeys(filters, LIST_FILTER_FIELDS, 'payload.filters');
 
-  return pickDefined({
-    date_from:
-      filters.date_from === undefined
-        ? undefined
-        : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
-    date_to:
-      filters.date_to === undefined ? undefined : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
-    categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
-    accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
-    settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
-  });
+  const page = body.page === undefined ? DEFAULT_PAGE : normalizePositiveInteger(body.page, 'payload.page');
+  const pageSize =
+    body.page_size === undefined ? DEFAULT_PAGE_SIZE : normalizePositiveInteger(body.page_size, 'payload.page_size');
+  if (pageSize > MAX_PAGE_SIZE) {
+    throw new Error(`payload.page_size cannot be greater than ${MAX_PAGE_SIZE}.`);
+  }
+
+  return {
+    filters: pickDefined({
+      date_from:
+        filters.date_from === undefined
+          ? undefined
+          : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
+      date_to:
+        filters.date_to === undefined
+          ? undefined
+          : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
+      categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
+      accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+      settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
+    }),
+    pagination: {
+      page,
+      page_size: pageSize,
+    },
+  };
 }
 
 function create(payload) {
@@ -140,8 +164,8 @@ function get(payload) {
 }
 
 function list(payload) {
-  const filters = normalizeListFilters(payload);
-  return transactionsModel.list(filters);
+  const { filters, pagination } = normalizeListFilters(payload);
+  return transactionsModel.list(filters, pagination);
 }
 
 function update(payload) {

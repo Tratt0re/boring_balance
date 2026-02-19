@@ -10,6 +10,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import type { ClassValue } from 'clsx';
 
@@ -19,6 +20,7 @@ import {
   type ZardButtonTypeVariants,
 } from '@/shared/components/button';
 import { ZardIconComponent } from '@/shared/components/icon';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 import {
   paginationContentVariants,
   paginationEllipsisVariants,
@@ -71,7 +73,7 @@ export class ZardPaginationItemComponent {}
       [class]="class()"
       [zDisabled]="zDisabled()"
       [zSize]="zSize()"
-      [zType]="zType()"
+      [zType]="zButtonType()"
     >
       <ng-content />
     </z-button>
@@ -88,25 +90,29 @@ export class ZardPaginationButtonComponent {
   readonly zActive = input(false, { transform: booleanAttribute });
   readonly zDisabled = input(false, { transform: booleanAttribute });
   readonly zSize = input<ZardButtonSizeVariants>('default');
+  readonly zType = input<ZardButtonTypeVariants | null>(null);
 
-  protected readonly zType = computed<ZardButtonTypeVariants>(() => (this.zActive() ? 'outline' : 'ghost'));
+  protected readonly zButtonType = computed<ZardButtonTypeVariants>(() =>
+    this.zType() ?? (this.zActive() ? 'outline' : 'ghost'),
+  );
 }
 
 @Component({
   selector: 'z-pagination-previous',
-  imports: [ZardPaginationButtonComponent, ZardIconComponent],
+  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
   template: `
     <button
       type="button"
       z-pagination-button
+      [attr.aria-label]="'common.pagination.tooltips.previousPage' | translate"
       [attr.disabled]="zDisabled() ? '' : null"
+      [zTooltip]="'common.pagination.tooltips.previousPage' | translate"
+      [zType]="'secondary'"
       [class]="classes()"
       [zSize]="zSize()"
       [zDisabled]="zDisabled()"
     >
-      <span class="sr-only">To previous page</span>
       <z-icon zType="chevron-left" aria-hidden="true" />
-      <span class="hidden sm:block" aria-hidden="true">Previous</span>
     </button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,18 +129,19 @@ export class ZardPaginationPreviousComponent {
 
 @Component({
   selector: 'z-pagination-next',
-  imports: [ZardPaginationButtonComponent, ZardIconComponent],
+  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
   template: `
     <button
       type="button"
       z-pagination-button
+      [attr.aria-label]="'common.pagination.tooltips.nextPage' | translate"
       [attr.disabled]="zDisabled() ? '' : null"
+      [zTooltip]="'common.pagination.tooltips.nextPage' | translate"
+      [zType]="'secondary'"
       [class]="classes()"
       [zDisabled]="zDisabled()"
       [zSize]="zSize()"
     >
-      <span class="sr-only">To next page</span>
-      <span class="hidden sm:block" aria-hidden="true">Next</span>
       <z-icon zType="chevron-right" aria-hidden="true" />
     </button>
   `,
@@ -148,6 +155,66 @@ export class ZardPaginationNextComponent {
   readonly zSize = input<ZardButtonSizeVariants>('default');
 
   protected readonly classes = computed(() => mergeClasses(paginationNextVariants(), this.class()));
+}
+
+@Component({
+  selector: 'z-pagination-first',
+  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  template: `
+    <button
+      type="button"
+      z-pagination-button
+      [attr.aria-label]="'common.pagination.tooltips.firstPage' | translate"
+      [attr.disabled]="zDisabled() ? '' : null"
+      [zTooltip]="'common.pagination.tooltips.firstPage' | translate"
+      [zType]="'secondary'"
+      [class]="classes()"
+      [zDisabled]="zDisabled()"
+      [zSize]="zSize()"
+    >
+      <z-icon zType="chevrons-left" aria-hidden="true" />
+    </button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  exportAs: 'zPaginationFirst',
+})
+export class ZardPaginationFirstComponent {
+  readonly class = input<ClassValue>('');
+  readonly zDisabled = input(false, { transform: booleanAttribute });
+  readonly zSize = input<ZardButtonSizeVariants>('default');
+
+  protected readonly classes = computed(() => mergeClasses('size-9 p-0', this.class()));
+}
+
+@Component({
+  selector: 'z-pagination-last',
+  imports: [TranslatePipe, ZardPaginationButtonComponent, ZardIconComponent, ...ZardTooltipImports],
+  template: `
+    <button
+      type="button"
+      z-pagination-button
+      [attr.aria-label]="'common.pagination.tooltips.lastPage' | translate"
+      [attr.disabled]="zDisabled() ? '' : null"
+      [zTooltip]="'common.pagination.tooltips.lastPage' | translate"
+      [zType]="'secondary'"
+      [class]="classes()"
+      [zDisabled]="zDisabled()"
+      [zSize]="zSize()"
+    >
+      <z-icon zType="chevrons-right" aria-hidden="true" />
+    </button>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  exportAs: 'zPaginationLast',
+})
+export class ZardPaginationLastComponent {
+  readonly class = input<ClassValue>('');
+  readonly zDisabled = input(false, { transform: booleanAttribute });
+  readonly zSize = input<ZardButtonSizeVariants>('default');
+
+  protected readonly classes = computed(() => mergeClasses('size-9 p-0', this.class()));
 }
 
 @Component({
@@ -173,11 +240,14 @@ export class ZardPaginationEllipsisComponent {
 @Component({
   selector: 'z-pagination',
   imports: [
+    TranslatePipe,
     ZardPaginationContentComponent,
     ZardPaginationItemComponent,
     ZardPaginationButtonComponent,
+    ZardPaginationFirstComponent,
     ZardPaginationPreviousComponent,
     ZardPaginationNextComponent,
+    ZardPaginationLastComponent,
     NgTemplateOutlet,
   ],
   template: `
@@ -185,6 +255,14 @@ export class ZardPaginationEllipsisComponent {
       <ng-container *ngTemplateOutlet="zContent()" />
     } @else {
       <ul z-pagination-content>
+        <li z-pagination-item>
+          <z-pagination-first
+            [zSize]="zSize()"
+            [zDisabled]="zDisabled() || zPageIndex() === 1"
+            (click)="goToPage(1)"
+          />
+        </li>
+
         <li z-pagination-item>
           @let pagePrevious = Math.max(1, zPageIndex() - 1);
           <z-pagination-previous
@@ -207,7 +285,13 @@ export class ZardPaginationEllipsisComponent {
               [zSize]="zSize()"
               (click)="goToPage(page)"
             >
-              <span class="sr-only">{{ pages().length === page ? 'To last page, page' : 'To page' }}</span>
+              <span class="sr-only">
+                {{
+                  page === zTotal()
+                    ? ('common.pagination.tooltips.toLastPage' | translate)
+                    : ('common.pagination.tooltips.toPage' | translate)
+                }}
+              </span>
               {{ page }}
             </button>
           </li>
@@ -219,6 +303,14 @@ export class ZardPaginationEllipsisComponent {
             [zSize]="zSize()"
             [zDisabled]="zDisabled() || zPageIndex() === zTotal()"
             (click)="goToPage(pageNext)"
+          />
+        </li>
+
+        <li z-pagination-item>
+          <z-pagination-last
+            [zSize]="zSize()"
+            [zDisabled]="zDisabled() || zPageIndex() === zTotal()"
+            (click)="goToPage(zTotal())"
           />
         </li>
       </ul>
@@ -237,6 +329,7 @@ export class ZardPaginationEllipsisComponent {
 export class ZardPaginationComponent {
   readonly zPageIndex = model<number>(1);
   readonly zTotal = input<number>(1);
+  readonly zVisiblePages = input<number>(5);
   readonly zSize = input<ZardButtonSizeVariants>('default');
   readonly zDisabled = input(false, { transform: booleanAttribute });
   readonly zContent = input<TemplateRef<void> | undefined>();
@@ -248,12 +341,42 @@ export class ZardPaginationComponent {
   readonly Math = Math;
 
   protected readonly classes = computed(() => mergeClasses(paginationVariants(), this.class()));
-  readonly pages = computed<number[]>(() => Array.from({ length: Math.max(0, this.zTotal()) }, (_, i) => i + 1));
+  readonly pages = computed<number[]>(() => {
+    const total = Math.max(1, Math.trunc(this.zTotal()));
+    const visiblePages = Math.max(1, Math.trunc(this.zVisiblePages()));
+    const current = this.clampPage(this.zPageIndex());
+
+    if (total <= visiblePages) {
+      return Array.from({ length: total }, (_, index) => index + 1);
+    }
+
+    const halfWindow = Math.floor(visiblePages / 2);
+    let start = Math.max(1, current - halfWindow);
+    let end = start + visiblePages - 1;
+
+    if (end > total) {
+      end = total;
+      start = Math.max(1, end - visiblePages + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+  });
+
+  private clampPage(page: number): number {
+    const total = Math.max(1, Math.trunc(this.zTotal()));
+    const normalizedPage = Math.trunc(page);
+    if (!Number.isFinite(normalizedPage)) {
+      return 1;
+    }
+
+    return Math.min(Math.max(1, normalizedPage), total);
+  }
 
   goToPage(page: number): void {
-    if (!this.zDisabled() && page !== this.zPageIndex()) {
-      this.zPageIndex.set(page);
-      this.zPageIndexChange.emit(page);
+    const nextPage = this.clampPage(page);
+    if (!this.zDisabled() && nextPage !== this.zPageIndex()) {
+      this.zPageIndex.set(nextPage);
+      this.zPageIndexChange.emit(nextPage);
     }
   }
 }

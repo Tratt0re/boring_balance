@@ -15,6 +15,14 @@ export interface TransactionUpdateResult {
   readonly row: TransactionModel | null;
 }
 
+export interface TransactionListResult {
+  readonly rows: readonly TransactionModel[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly totalPages: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,14 +61,30 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     return row ? TransactionModel.fromDTO(row) : null;
   }
 
-  async listTransactions(payload?: DTO.TransactionListTransactionsDto): Promise<readonly TransactionModel[]> {
-    const rows = await this.ipcClient.listTransactions(payload);
-    return rows.map((row) => TransactionModel.fromDTO(row));
+  async listTransactions(payload?: DTO.TransactionListTransactionsDto): Promise<TransactionListResult> {
+    const response = await this.ipcClient.listTransactions(payload);
+    const pageSize = response.page_size;
+
+    return {
+      rows: response.rows.map((row) => TransactionModel.fromDTO(row)),
+      total: response.total,
+      page: response.page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
+    };
   }
 
-  async listTransfers(payload?: DTO.TransactionListTransfersDto): Promise<readonly TransactionModel[]> {
-    const rows = await this.ipcClient.listTransfers(payload);
-    return rows.map((row) => TransactionModel.fromDTO(row));
+  async listTransfers(payload?: DTO.TransactionListTransfersDto): Promise<TransactionListResult> {
+    const response = await this.ipcClient.listTransfers(payload);
+    const pageSize = response.page_size;
+
+    return {
+      rows: response.rows.map((row) => TransactionModel.fromDTO(row)),
+      total: response.total,
+      page: response.page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
+    };
   }
 
   async update(payload: DTO.TransactionUpdateDto): Promise<TransactionUpdateResult> {

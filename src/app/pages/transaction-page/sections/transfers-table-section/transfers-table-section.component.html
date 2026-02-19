@@ -1,6 +1,7 @@
 <app-data-table
   [data]="rows()"
   [structure]="structure()"
+  [stickyHeader]="true"
   [title]="'transactions.transfers.title'"
   description="transactions.transfers.table.description"
   emptyMessage="transactions.transfers.table.emptyMessage"
@@ -10,4 +11,15 @@
   [hoverable]="true"
   [selectable]="false"
   [hasActionColumn]="false"
+  [showPagination]="showPagination()"
+  [currentPage]="currentPage()"
+  [totalPages]="totalPages()"
+  [pageSize]="pageSize()"
+  [pageSizeOptions]="pageSizeOptions()"
+  [maxVisiblePages]="maxVisiblePages()"
+  [pageSizeLabel]="pageSizeLabel()"
+  [showPageSizeSelector]="showPageSizeSelector()"
+  [showTopPagination]="showTopPagination()"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)"
 ></app-data-table>

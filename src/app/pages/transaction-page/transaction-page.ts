@@ -37,6 +37,8 @@ import { TransfersTableSectionComponent } from './sections/transfers-table-secti
 import { TransactionsTableSectionComponent } from './sections/transactions-table-section/transactions-table-section.component';
 
 const TRANSFER_CATEGORY_ID = 2;
+const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
 
@@ -240,11 +242,6 @@ const createTransferTableStructure = (
   ] as const;
 };
 
-const sortTransfers = (transfers: readonly TransferModel[]): readonly TransferModel[] =>
-  [...transfers].sort(
-    (left, right) => Number(right.occurredAt) - Number(left.occurredAt) || right.transferId.localeCompare(left.transferId),
-  );
-
 @Component({
   selector: 'app-transaction-page',
   imports: [
@@ -261,8 +258,21 @@ export class TransactionPage implements OnInit, OnDestroy {
   protected readonly activeView = signal<TransactionsPageView>('common');
   protected readonly transactions = signal<readonly TransactionTableRow[]>([]);
   protected readonly transfers = signal<readonly TransferModel[]>([]);
+  protected readonly transactionsTotal = signal(0);
+  protected readonly transfersTotal = signal(0);
+  protected readonly transactionsPage = signal(1);
+  protected readonly transfersPage = signal(1);
+  protected readonly transactionsPageSize = signal(DEFAULT_PAGE_SIZE);
+  protected readonly transfersPageSize = signal(DEFAULT_PAGE_SIZE);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
+  protected readonly transactionsPageCount = computed(() =>
+    Math.max(1, Math.ceil(this.transactionsTotal() / this.transactionsPageSize())),
+  );
+  protected readonly transfersPageCount = computed(() =>
+    Math.max(1, Math.ceil(this.transfersTotal() / this.transfersPageSize())),
+  );
   protected readonly transferRows = computed<readonly TransferTableRow[]>(() =>
     this.transfers().map((transfer) => this.toTransferRow(transfer)),
   );
@@ -339,6 +349,50 @@ export class TransactionPage implements OnInit, OnDestroy {
 
     this.activeView.set(nextView);
     this.activateToolbarActions();
+  }
+
+  protected onTransactionsPageChange(page: number): void {
+    if (page === this.transactionsPage()) {
+      return;
+    }
+
+    this.transactionsPage.set(page);
+    void this.reloadTransactionsPage();
+  }
+
+  protected onTransfersPageChange(page: number): void {
+    if (page === this.transfersPage()) {
+      return;
+    }
+
+    this.transfersPage.set(page);
+    void this.reloadTransfersPage();
+  }
+
+  protected onTransactionsPageSizeChange(nextPageSize: number): void {
+    if (
+      !PAGE_SIZE_OPTIONS.includes(nextPageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ||
+      nextPageSize === this.transactionsPageSize()
+    ) {
+      return;
+    }
+
+    this.transactionsPageSize.set(nextPageSize);
+    this.transactionsPage.set(1);
+    void this.reloadTransactionsPage();
+  }
+
+  protected onTransfersPageSizeChange(nextPageSize: number): void {
+    if (
+      !PAGE_SIZE_OPTIONS.includes(nextPageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ||
+      nextPageSize === this.transfersPageSize()
+    ) {
+      return;
+    }
+
+    this.transfersPageSize.set(nextPageSize);
+    this.transfersPage.set(1);
+    void this.reloadTransfersPage();
   }
 
   protected onEditableValueChange(event: EditableValueChangeEvent): void {
@@ -621,8 +675,14 @@ export class TransactionPage implements OnInit, OnDestroy {
             orderDirection: 'ASC',
           },
         }),
-        this.listAllTransactions(),
-        this.listAllTransfers(),
+        this.transactionsService.listTransactions({
+          page: this.transactionsPage(),
+          page_size: this.transactionsPageSize(),
+        }),
+        this.transactionsService.listTransfers({
+          page: this.transfersPage(),
+          page_size: this.transfersPageSize(),
+        }),
       ]);
 
       const visibleCategories = categories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
@@ -668,11 +728,20 @@ export class TransactionPage implements OnInit, OnDestroy {
         })),
       );
 
-      this.transactions.set(transactions.map((transaction) => this.toTransactionRow(transaction)));
-      this.transfers.set(TransferModel.fromTransactions(transferTransactions));
+      this.transactionsPage.set(transactions.page);
+      this.transactionsTotal.set(transactions.total);
+      this.transactions.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
+
+      this.transfersPage.set(transferTransactions.page);
+      this.transfersTotal.set(transferTransactions.total);
+      this.transfers.set(TransferModel.fromTransactions(transferTransactions.rows));
     } catch (error) {
       this.transactions.set([]);
       this.transfers.set([]);
+      this.transactionsTotal.set(0);
+      this.transfersTotal.set(0);
+      this.transactionsPage.set(1);
+      this.transfersPage.set(1);
       this.accountOptions.set([]);
       this.categoryOptions.set([]);
       this.accountNameById.set(new Map());
@@ -689,12 +758,38 @@ export class TransactionPage implements OnInit, OnDestroy {
     }
   }
 
-  private async listAllTransactions(): Promise<readonly TransactionModel[]> {
-    return this.transactionsService.listTransactions();
+  private async reloadTransactionsPage(): Promise<void> {
+    try {
+      this.loadError.set(null);
+      const transactions = await this.transactionsService.listTransactions({
+        page: this.transactionsPage(),
+        page_size: this.transactionsPageSize(),
+      });
+
+      this.transactionsPage.set(transactions.page);
+      this.transactionsTotal.set(transactions.total);
+      this.transactions.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
+    } catch (error) {
+      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transactions.');
+      console.error('[transaction-page] Failed to reload transactions:', error);
+    }
   }
 
-  private async listAllTransfers(): Promise<readonly TransactionModel[]> {
-    return this.transactionsService.listTransfers();
+  private async reloadTransfersPage(): Promise<void> {
+    try {
+      this.loadError.set(null);
+      const transfers = await this.transactionsService.listTransfers({
+        page: this.transfersPage(),
+        page_size: this.transfersPageSize(),
+      });
+
+      this.transfersPage.set(transfers.page);
+      this.transfersTotal.set(transfers.total);
+      this.transfers.set(TransferModel.fromTransactions(transfers.rows));
+    } catch (error) {
+      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transfers.');
+      console.error('[transaction-page] Failed to reload transfers:', error);
+    }
   }
 
   private async updateTransaction(id: number, changes: TransactionUpdateDto['changes']): Promise<void> {
@@ -708,11 +803,11 @@ export class TransactionPage implements OnInit, OnDestroy {
       }
 
       if (result.changed > 0) {
-        await this.loadTransactionPageData();
+        await this.reloadTransactionsPage();
       }
     } catch (error) {
       console.error('[transaction-page] Failed to update transaction:', error);
-      await this.loadTransactionPageData();
+      await this.reloadTransactionsPage();
     }
   }
 
@@ -726,14 +821,13 @@ export class TransactionPage implements OnInit, OnDestroy {
       const result = await this.transactionsService.update({ id, changes });
 
       if (result.row) {
-        const updatedRow = this.toTransactionRow(result.row);
-        this.transactions.update((rows) => rows.map((row) => (row.id === id ? updatedRow : row)));
+        await this.reloadTransactionsPage();
         dialogRef.close(result.row);
         return;
       }
 
       if (result.changed > 0) {
-        await this.loadTransactionPageData();
+        await this.reloadTransactionsPage();
       }
       dialogRef.close({ id, changes });
     } catch (error) {
@@ -754,14 +848,8 @@ export class TransactionPage implements OnInit, OnDestroy {
         return;
       }
 
-      const createdRow = this.toTransactionRow(created);
-      this.transactions.update((rows) =>
-        [...rows, createdRow].sort(
-          (left, right) =>
-            Number(right.occurredAt) - Number(left.occurredAt) ||
-            Number(right.id) - Number(left.id),
-        ),
-      );
+      this.transactionsPage.set(1);
+      await this.reloadTransactionsPage();
       dialogRef.close(created);
     } catch (error) {
       console.error('[transaction-page] Failed to create transaction:', error);
@@ -773,14 +861,14 @@ export class TransactionPage implements OnInit, OnDestroy {
     try {
       const result = await this.transactionsService.remove({ id });
       if (result.changed > 0) {
-        this.transactions.update((rows) => rows.filter((row) => row.id !== id));
+        await this.reloadTransactionsPage();
         return;
       }
 
-      await this.loadTransactionPageData();
+      await this.reloadTransactionsPage();
     } catch (error) {
       console.error('[transaction-page] Failed to delete transaction:', error);
-      await this.loadTransactionPageData();
+      await this.reloadTransactionsPage();
     }
   }
 
@@ -791,7 +879,8 @@ export class TransactionPage implements OnInit, OnDestroy {
   ): Promise<void> {
     try {
       const created = await this.transactionsService.createTransfer(payload);
-      this.upsertTransferRows(created.transactions);
+      this.transfersPage.set(1);
+      await this.reloadTransfersPage();
       dialogRef.close(created);
     } catch (error) {
       console.error('[transaction-page] Failed to create transfer:', error);
@@ -806,7 +895,7 @@ export class TransactionPage implements OnInit, OnDestroy {
   ): Promise<void> {
     try {
       const updated = await this.transactionsService.updateTransfer(payload);
-      this.upsertTransferRows(updated.transactions);
+      await this.reloadTransfersPage();
       dialogRef.close(updated);
     } catch (error) {
       console.error('[transaction-page] Failed to update transfer:', error);
@@ -818,31 +907,15 @@ export class TransactionPage implements OnInit, OnDestroy {
     try {
       const result = await this.transactionsService.deleteTransfer({ transfer_id: transferId });
       if (result.changed > 0) {
-        this.transfers.update((rows) => rows.filter((row) => row.transferId !== transferId));
+        await this.reloadTransfersPage();
         return;
       }
 
-      await this.loadTransactionPageData();
+      await this.reloadTransfersPage();
     } catch (error) {
       console.error('[transaction-page] Failed to delete transfer:', error);
-      await this.loadTransactionPageData();
+      await this.reloadTransfersPage();
     }
-  }
-
-  private upsertTransferRows(rows: readonly TransactionModel[]): void {
-    const createdTransfers = TransferModel.fromTransactions(rows);
-    if (createdTransfers.length === 0) {
-      return;
-    }
-
-    this.transfers.update((currentRows) => {
-      const byTransferId = new Map(currentRows.map((row) => [row.transferId, row] as const));
-      for (const transfer of createdTransfers) {
-        byTransferId.set(transfer.transferId, transfer);
-      }
-
-      return sortTransfers([...byTransferId.values()]);
-    });
   }
 
   private toTransactionRow(transaction: TransactionModel): TransactionTableRow {
