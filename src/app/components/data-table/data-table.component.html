@@ -33,286 +33,311 @@
     </header>
   }
 
-  <div [class]="containerClasses()">
-    <table z-table [class]="tableClasses()">
-      <thead z-table-header>
-        <tr z-table-row>
-          @if (selectable()) {
-            <th z-table-head class="w-10">
-              <z-checkbox
-                zSize="default"
-                [zNoLabelSpacing]="true"
-                [zChecked]="allVisibleRowsSelected()"
-                [zDisabled]="sortedRows().length === 0"
-                [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
-                (zCheckedChange)="onToggleAllRowsChange($event)"
-              >
-                <span class="sr-only">Select all rows</span>
-              </z-checkbox>
-            </th>
-          }
-
-          @if (renderActionColumnAtStart()) {
-            <th z-table-head class="w-24">{{ actionColumnName() | translate }}</th>
-          }
-
-          @for (column of columns(); track column.columnKey) {
-            <th z-table-head>
-              @if (column.sortable) {
-                <z-button
-                  zType="ghost"
-                  zSize="sm"
-                  class="h-auto px-0 py-0 text-left hover:bg-transparent hover:text-foreground"
-                  (click)="onSortColumn(column)"
+  <ng-template #tableContent>
+    <div [class]="containerClasses()">
+      <table z-table [class]="tableClasses()">
+        <thead z-table-header>
+          <tr z-table-row>
+            @if (selectable()) {
+              <th z-table-head [class]="stickyHeaderCheckboxCellClasses()">
+                <z-checkbox
+                  zSize="default"
+                  [zNoLabelSpacing]="true"
+                  [zChecked]="allVisibleRowsSelected()"
+                  [zDisabled]="sortedRows().length === 0"
+                  [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
+                  (zCheckedChange)="onToggleAllRowsChange($event)"
                 >
-                  <span>{{ column.columnName | translate }}</span>
-                  <z-icon [zType]="sortIcon(column)" class="size-4" />
-                </z-button>
-              } @else {
-                {{ column.columnName | translate }}
-              }
-            </th>
-          }
+                  <span class="sr-only">Select all rows</span>
+                </z-checkbox>
+              </th>
+            }
 
-          @if (renderActionColumnAtEnd()) {
-            <th z-table-head class="w-24">{{ actionColumnName() | translate }}</th>
-          }
-        </tr>
-      </thead>
+            @if (renderActionColumnAtStart()) {
+              <th z-table-head [class]="stickyHeaderActionCellClasses()">
+                {{ actionColumnName() | translate }}
+              </th>
+            }
 
-      <tbody z-table-body>
-        @if (sortedRows().length > 0) {
-          @for (row of sortedRows(); track rowTrackKey($index, row)) {
-            <tr z-table-row [class]="rowClassName(row)" [attr.data-state]="isRowSelected(row) ? 'selected' : null">
-              @if (selectable()) {
-                <td z-table-cell class="w-10">
-                  <z-checkbox
-                    zSize="default"
-                    [zNoLabelSpacing]="true"
-                    [zChecked]="isRowSelected(row)"
-                    (zCheckedChange)="onToggleRowChange($event, row)"
+            @for (column of columns(); track column.columnKey) {
+              <th z-table-head [class]="stickyHeaderCellClasses()">
+                @if (column.sortable) {
+                  <z-button
+                    zType="ghost"
+                    zSize="sm"
+                    [class]="sortableHeaderButtonClasses()"
+                    (click)="onSortColumn(column)"
                   >
-                    <span class="sr-only">Select row</span>
-                  </z-checkbox>
-                </td>
-              }
+                    <span>{{ column.columnName | translate }}</span>
+                    <z-icon [zType]="sortIcon(column)" class="size-4" />
+                  </z-button>
+                } @else {
+                  {{ column.columnName | translate }}
+                }
+              </th>
+            }
 
-              @if (renderActionColumnAtStart()) {
-                <td z-table-cell>
-                  <div class="flex items-center gap-1">
-                    @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
-                      <z-button
-                        zSize="sm"
-                        [zType]="actionItem.buttonType ?? 'ghost'"
-                        [attr.aria-label]="actionItem.label | translate"
-                        [attr.title]="actionItem.label | translate"
-                        (click)="onActionClick(actionItem, row)"
-                      >
-                        <z-icon [zType]="actionItem.icon" class="size-4" />
-                      </z-button>
-                    }
-                  </div>
-                </td>
-              }
+            @if (renderActionColumnAtEnd()) {
+              <th z-table-head [class]="stickyHeaderActionCellClasses()">
+                {{ actionColumnName() | translate }}
+              </th>
+            }
+          </tr>
+        </thead>
 
-              @for (column of columns(); track column.columnKey) {
-                <td z-table-cell>
-                  @if (isEditableColumn(column)) {
-                    <div class="group flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
-                      @switch (column.editableType) {
-                        @case ('checkbox') {
-                          <z-checkbox
-                            zSize="default"
-                            [zNoLabelSpacing]="true"
-                            [zChecked]="getEditableChecked(row, column)"
-                            [zDisabled]="isEditableDisabled(column, row)"
-                            (zCheckedChange)="onEditableCheckboxValueChange($event, row, column)"
-                          >
-                            <span class="sr-only">{{ column.columnName | translate }}</span>
-                          </z-checkbox>
-                        }
+        <tbody z-table-body>
+          @if (sortedRows().length > 0) {
+            @for (row of sortedRows(); track rowTrackKey($index, row)) {
+              <tr z-table-row [class]="rowClassName(row)" [attr.data-state]="isRowSelected(row) ? 'selected' : null">
+                @if (selectable()) {
+                  <td z-table-cell class="w-10">
+                    <z-checkbox
+                      zSize="default"
+                      [zNoLabelSpacing]="true"
+                      [zChecked]="isRowSelected(row)"
+                      (zCheckedChange)="onToggleRowChange($event, row)"
+                    >
+                      <span class="sr-only">Select row</span>
+                    </z-checkbox>
+                  </td>
+                }
 
-                        @case ('switch') {
-                          <z-switch
-                            [zChecked]="getEditableChecked(row, column)"
-                            [zDisabled]="isEditableDisabled(column, row)"
-                            (zCheckedChange)="onEditableSwitchChange($event, row, column)"
-                          >
-                            <span class="sr-only">{{ column.columnName | translate }}</span>
-                          </z-switch>
-                        }
-
-                        @case ('select') {
-                          @if (isEditableDisabled(column, row)) {
-                            @if (getEditableSelectOption(row, column); as selectedOption) {
-                              <span class="inline-flex min-w-0 items-center gap-2 text-sm">
-                                @if (selectedOption.colorHex; as optionColorHex) {
-                                  <span
-                                    class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
-                                    [style.backgroundColor]="optionColorHex"
-                                  ></span>
-                                }
-                                @if (selectedOption.icon; as optionIcon) {
-                                  <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
-                                }
-                                @if (shouldShowEditableSelectLabel(column)) {
-                                  <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
-                                }
-                              </span>
-                            } @else {
-                              <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
-                            }
-                          } @else {
-                            <z-select
-                              class="data-active:border-0 data-active:ring-0 [&_button]:border-0 [&_button]:px-0 [&_button]:py-0 [&_button]:bg-transparent [&_button]:shadow-none [&_button]:focus-visible:border-0 [&_button]:focus-visible:ring-0 dark:[&_button]:bg-transparent dark:[&_button]:hover:bg-transparent"
-                              [zChevronClass]="editablePickerIconClass()"
-                              [zValue]="getEditableSelectValue(row, column)"
-                              [zShowSelectedLabel]="shouldShowEditableSelectLabel(column)"
-                              [zDisabled]="isEditableDisabled(column, row)"
-                              [zPlaceholder]="column.placeholder ? (column.placeholder | translate) : ''"
-                              (zSelectionChange)="onEditableSelectValueChange($event, row, column)"
-                            >
-                              @for (option of column.options ?? []; track option.value) {
-                                <z-select-item
-                                  [zValue]="stringifyOptionValue(option.value)"
-                                  [zLabel]="getEditableOptionLabel(option)"
-                                  [zIcon]="option.icon ?? null"
-                                  [zColorHex]="option.colorHex ?? null"
-                                />
-                              }
-                            </z-select>
-                          }
-                        }
-
-                        @case ('combobox') {
-                          @if (isEditableDisabled(column, row)) {
-                            @if (getEditableSelectOption(row, column); as selectedOption) {
-                              <span class="inline-flex min-w-0 items-center gap-2 text-sm">
-                                @if (selectedOption.colorHex; as optionColorHex) {
-                                  <span
-                                    class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
-                                    [style.backgroundColor]="optionColorHex"
-                                  ></span>
-                                }
-                                @if (selectedOption.icon; as optionIcon) {
-                                  <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
-                                }
-                                @if (shouldShowEditableSelectLabel(column)) {
-                                  <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
-                                }
-                              </span>
-                            } @else {
-                              <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
-                            }
-                          } @else {
-                            <z-combobox
-                              zWidth="full"
-                              buttonVariant="ghost"
-                              zButtonClass="!border-0 !px-0 !py-0 !h-auto !bg-transparent !shadow-none !hover:bg-transparent !focus-visible:border-0 !focus-visible:ring-0 dark:!bg-transparent dark:!hover:bg-transparent"
-                              [zChevronClass]="editablePickerIconClass()"
-                              [value]="getEditableComboboxValue(row, column)"
-                              [options]="getEditableComboboxOptions(column)"
-                              [placeholder]="column.placeholder ? (column.placeholder | translate) : ''"
-                              [disabled]="isEditableDisabled(column, row)"
-                              (zValueChange)="onEditableComboboxValueChange($event, row, column)"
-                            />
-                          }
-                        }
-
-                        @case ('date') {
-                          @if (isEditableDisabled(column, row)) {
-                            <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
-                          } @else {
-                            <z-date-picker
-                              zCalendarIconClass="text-primary opacity-70"
-                              [value]="getEditableDateValue(row, column)"
-                              zIconPosition="right"
-                              [zBorderless]="true"
-                              [zPaddingless]="true"
-                              [disabled]="isEditableDisabled(column, row)"
-                              [placeholder]="column.placeholder ? (column.placeholder | translate) : ('Pick a date' | translate)"
-                              (dateChange)="onEditableDateChange($event, row, column)"
-                            />
-                          }
-                        }
-
-                        @default {
-                          @if (isEditableDisabled(column, row)) {
-                            <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
-                          } @else {
-                            <div class="relative">
-                              <input
-                                z-input
-                                class="pr-6"
-                                [zBorderless]="true"
-                                [type]="getEditableInputType(column)"
-                                [value]="getEditableInputValue(row, column)"
-                                [zStatus]="getEditableError(row, column) ? 'error' : undefined"
-                                [attr.placeholder]="column.placeholder ? (column.placeholder | translate) : null"
-                                [attr.aria-label]="column.columnName | translate"
-                                (input)="onEditableTextInput($event, row, column)"
-                                (keydown.enter)="onEditableTextEnter($event, row, column)"
-                                (blur)="onEditableTextBlur($event, row, column)"
-                              />
-                              <z-icon
-                                zType="pencil"
-                                class="pointer-events-none absolute right-0 top-1/2 size-3.5 -translate-y-1/2 text-primary opacity-70"
-                              />
-                            </div>
-                          }
-                        }
-                      }
-
-                      @if (getVisibleEditableError(row, column); as validationError) {
-                        <p class="text-xs text-destructive">{{ validationError }}</p>
+                @if (renderActionColumnAtStart()) {
+                  <td z-table-cell>
+                    <div class="flex items-center gap-1">
+                      @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
+                        <z-button
+                          zSize="sm"
+                          [zType]="actionItem.buttonType ?? 'ghost'"
+                          [attr.aria-label]="actionItem.label | translate"
+                          [attr.title]="actionItem.label | translate"
+                          (click)="onActionClick(actionItem, row)"
+                        >
+                          <z-icon [zType]="actionItem.icon" class="size-4" />
+                        </z-button>
                       }
                     </div>
-                  } @else {
-                    @if (isBadgeColumn(column)) {
-                      <z-badge
-                        [zType]="column.badge?.type ?? 'secondary'"
-                        [zShape]="column.badge?.shape ?? 'pill'"
-                        [attr.style]="badgeInlineStyle(row, column)"
-                      >
-                        @if (badgeIcon(row, column); as badgeIcon) {
-                          <z-icon [zType]="badgeIcon" class="size-3" />
-                        }
-                        {{ formatCellValue(row, column) }}
-                      </z-badge>
-                    } @else {
-                      {{ formatCellValue(row, column) }}
-                    }
-                  }
-                </td>
-              }
+                  </td>
+                }
 
-              @if (renderActionColumnAtEnd()) {
-                <td z-table-cell>
-                  <div class="flex items-center justify-end gap-1">
-                    @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
-                      <z-button
-                        zSize="sm"
-                        [zType]="actionItem.buttonType ?? 'ghost'"
-                        [attr.aria-label]="actionItem.label | translate"
-                        [attr.title]="actionItem.label | translate"
-                        (click)="onActionClick(actionItem, row)"
-                      >
-                        <z-icon [zType]="actionItem.icon" class="size-4" />
-                      </z-button>
+                @for (column of columns(); track column.columnKey) {
+                  <td z-table-cell>
+                    @if (isEditableColumn(column)) {
+                      <div class="group flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
+                        @switch (column.editableType) {
+                          @case ('checkbox') {
+                            <z-checkbox
+                              zSize="default"
+                              [zNoLabelSpacing]="true"
+                              [zChecked]="getEditableChecked(row, column)"
+                              [zDisabled]="isEditableDisabled(column, row)"
+                              (zCheckedChange)="onEditableCheckboxValueChange($event, row, column)"
+                            >
+                              <span class="sr-only">{{ column.columnName | translate }}</span>
+                            </z-checkbox>
+                          }
+
+                          @case ('switch') {
+                            <z-switch
+                              [zChecked]="getEditableChecked(row, column)"
+                              [zDisabled]="isEditableDisabled(column, row)"
+                              (zCheckedChange)="onEditableSwitchChange($event, row, column)"
+                            >
+                              <span class="sr-only">{{ column.columnName | translate }}</span>
+                            </z-switch>
+                          }
+
+                          @case ('select') {
+                            @if (isEditableDisabled(column, row)) {
+                              @if (getEditableSelectOption(row, column); as selectedOption) {
+                                <span class="inline-flex min-w-0 items-center gap-2 text-sm">
+                                  @if (selectedOption.colorHex; as optionColorHex) {
+                                    <span
+                                      class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+                                      [style.backgroundColor]="optionColorHex"
+                                    ></span>
+                                  }
+                                  @if (selectedOption.icon; as optionIcon) {
+                                    <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                  }
+                                  @if (shouldShowEditableSelectLabel(column)) {
+                                    <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                  }
+                                </span>
+                              } @else {
+                                <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                              }
+                            } @else {
+                              <z-select
+                                class="data-active:border-0 data-active:ring-0 [&_button]:border-0 [&_button]:px-0 [&_button]:py-0 [&_button]:bg-transparent [&_button]:shadow-none [&_button]:focus-visible:border-0 [&_button]:focus-visible:ring-0 dark:[&_button]:bg-transparent dark:[&_button]:hover:bg-transparent"
+                                [zChevronClass]="editablePickerIconClass()"
+                                [zValue]="getEditableSelectValue(row, column)"
+                                [zShowSelectedLabel]="shouldShowEditableSelectLabel(column)"
+                                [zDisabled]="isEditableDisabled(column, row)"
+                                [zPlaceholder]="column.placeholder ? (column.placeholder | translate) : ''"
+                                (zSelectionChange)="onEditableSelectValueChange($event, row, column)"
+                              >
+                                @for (option of column.options ?? []; track option.value) {
+                                  <z-select-item
+                                    [zValue]="stringifyOptionValue(option.value)"
+                                    [zLabel]="getEditableOptionLabel(option)"
+                                    [zIcon]="option.icon ?? null"
+                                    [zColorHex]="option.colorHex ?? null"
+                                  />
+                                }
+                              </z-select>
+                            }
+                          }
+
+                          @case ('combobox') {
+                            @if (isEditableDisabled(column, row)) {
+                              @if (getEditableSelectOption(row, column); as selectedOption) {
+                                <span class="inline-flex min-w-0 items-center gap-2 text-sm">
+                                  @if (selectedOption.colorHex; as optionColorHex) {
+                                    <span
+                                      class="inline-block h-3.5 w-6 shrink-0 rounded-sm border border-border/70"
+                                      [style.backgroundColor]="optionColorHex"
+                                    ></span>
+                                  }
+                                  @if (selectedOption.icon; as optionIcon) {
+                                    <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                  }
+                                  @if (shouldShowEditableSelectLabel(column)) {
+                                    <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                  }
+                                </span>
+                              } @else {
+                                <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                              }
+                            } @else {
+                              <z-combobox
+                                zWidth="full"
+                                buttonVariant="ghost"
+                                zButtonClass="!border-0 !px-0 !py-0 !h-auto !bg-transparent !shadow-none !hover:bg-transparent !focus-visible:border-0 !focus-visible:ring-0 dark:!bg-transparent dark:!hover:bg-transparent"
+                                [zChevronClass]="editablePickerIconClass()"
+                                [value]="getEditableComboboxValue(row, column)"
+                                [options]="getEditableComboboxOptions(column)"
+                                [placeholder]="column.placeholder ? (column.placeholder | translate) : ''"
+                                [disabled]="isEditableDisabled(column, row)"
+                                (zValueChange)="onEditableComboboxValueChange($event, row, column)"
+                              />
+                            }
+                          }
+
+                          @case ('date') {
+                            @if (isEditableDisabled(column, row)) {
+                              <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                            } @else {
+                              <z-date-picker
+                                zCalendarIconClass="text-primary opacity-70"
+                                [value]="getEditableDateValue(row, column)"
+                                zIconPosition="right"
+                                [zBorderless]="true"
+                                [zPaddingless]="true"
+                                [disabled]="isEditableDisabled(column, row)"
+                                [placeholder]="column.placeholder ? (column.placeholder | translate) : ('Pick a date' | translate)"
+                                (dateChange)="onEditableDateChange($event, row, column)"
+                              />
+                            }
+                          }
+
+                          @default {
+                            @if (isEditableDisabled(column, row)) {
+                              <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                            } @else {
+                              <div class="relative">
+                                <input
+                                  z-input
+                                  class="pr-6"
+                                  [zBorderless]="true"
+                                  [type]="getEditableInputType(column)"
+                                  [value]="getEditableInputValue(row, column)"
+                                  [zStatus]="getEditableError(row, column) ? 'error' : undefined"
+                                  [attr.placeholder]="column.placeholder ? (column.placeholder | translate) : null"
+                                  [attr.aria-label]="column.columnName | translate"
+                                  (input)="onEditableTextInput($event, row, column)"
+                                  (keydown.enter)="onEditableTextEnter($event, row, column)"
+                                  (blur)="onEditableTextBlur($event, row, column)"
+                                />
+                                <z-icon
+                                  zType="pencil"
+                                  class="pointer-events-none absolute right-0 top-1/2 size-3.5 -translate-y-1/2 text-primary opacity-70"
+                                />
+                              </div>
+                            }
+                          }
+                        }
+
+                        @if (getVisibleEditableError(row, column); as validationError) {
+                          <p class="text-xs text-destructive">{{ validationError }}</p>
+                        }
+                      </div>
+                    } @else {
+                      @if (isBadgeColumn(column)) {
+                        <z-badge
+                          [zType]="column.badge?.type ?? 'secondary'"
+                          [zShape]="column.badge?.shape ?? 'pill'"
+                          [attr.style]="badgeInlineStyle(row, column)"
+                        >
+                          @if (badgeIcon(row, column); as badgeIcon) {
+                            <z-icon [zType]="badgeIcon" class="size-3" />
+                          }
+                          {{ formatCellValue(row, column) }}
+                        </z-badge>
+                      } @else {
+                        {{ formatCellValue(row, column) }}
+                      }
                     }
-                  </div>
-                </td>
-              }
+                  </td>
+                }
+
+                @if (renderActionColumnAtEnd()) {
+                  <td z-table-cell>
+                    <div class="flex items-center justify-end gap-1">
+                      @for (actionItem of visibleRowActionItems(row); track actionItem.id) {
+                        <z-button
+                          zSize="sm"
+                          [zType]="actionItem.buttonType ?? 'ghost'"
+                          [attr.aria-label]="actionItem.label | translate"
+                          [attr.title]="actionItem.label | translate"
+                          (click)="onActionClick(actionItem, row)"
+                        >
+                          <z-icon [zType]="actionItem.icon" class="size-4" />
+                        </z-button>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (showEmpty()) {
+            <tr z-table-row>
+              <td z-table-cell [attr.colspan]="visibleColumnCount()" class="py-6 text-center text-muted-foreground">
+                {{ emptyMessage() | translate }}
+              </td>
             </tr>
           }
-        } @else if (showEmpty()) {
-          <tr z-table-row>
-            <td z-table-cell [attr.colspan]="visibleColumnCount()" class="py-6 text-center text-muted-foreground">
-              {{ emptyMessage() | translate }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+
+  @if (showPagination()) {
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions()"
+      [maxVisiblePages]="maxVisiblePages()"
+      [pageSizeLabel]="pageSizeLabel()"
+      [showPageSizeSelector]="showPageSizeSelector()"
+      [showTopPagination]="showTopPagination()"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    >
+      <ng-container *ngTemplateOutlet="tableContent" />
+    </app-pagination>
+  } @else {
+    <ng-container *ngTemplateOutlet="tableContent" />
+  }
 </section>

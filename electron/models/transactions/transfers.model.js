@@ -5,6 +5,9 @@ const { TRANSFER_CATEGORY_ID } = require('./constants');
 const { EMPTY_TAGS_JSON, normalizeRowsTags, normalizeRowTags } = require('./tags');
 
 const transactionsBaseModel = createBaseModel('transactions');
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const TRANSFER_ROWS_PER_TRANSFER = 2;
 
 function buildOccurredAtFilter(filters = {}) {
   const occurredAtFilter = {};
@@ -37,15 +40,47 @@ function buildListWhere(filters = {}) {
   return where;
 }
 
-function list(filters = {}) {
-  const rows = transactionsBaseModel.list(buildListWhere(filters), {
+function normalizePagination(pagination = {}) {
+  const page = Number.isInteger(pagination.page) && pagination.page > 0 ? pagination.page : DEFAULT_PAGE;
+  const pageSize =
+    Number.isInteger(pagination.page_size) && pagination.page_size > 0
+      ? pagination.page_size
+      : DEFAULT_PAGE_SIZE;
+
+  return {
+    page,
+    page_size: pageSize,
+  };
+}
+
+function list(filters = {}, pagination = {}) {
+  const where = buildListWhere(filters);
+  const normalizedPagination = normalizePagination(pagination);
+  const totalRows = transactionsBaseModel.count(where);
+  const totalTransfers = Math.ceil(totalRows / TRANSFER_ROWS_PER_TRANSFER);
+  const totalPages =
+    totalTransfers === 0
+      ? DEFAULT_PAGE
+      : Math.max(DEFAULT_PAGE, Math.ceil(totalTransfers / normalizedPagination.page_size));
+  const page = Math.min(normalizedPagination.page, totalPages);
+  const pageRowLimit = normalizedPagination.page_size * TRANSFER_ROWS_PER_TRANSFER;
+  const offset = (page - 1) * pageRowLimit;
+
+  const rows = transactionsBaseModel.list(where, {
     orderBy: [
       { column: 'occurred_at', direction: 'DESC' },
       { column: 'id', direction: 'DESC' },
     ],
+    limit: pageRowLimit,
+    offset,
   });
 
-  return normalizeRowsTags(rows);
+  return {
+    rows: normalizeRowsTags(rows),
+    total: totalTransfers,
+    page,
+    page_size: normalizedPagination.page_size,
+  };
 }
 
 function create(payload) {

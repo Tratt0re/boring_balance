@@ -2,7 +2,20 @@
   "common": {
     "actions": "Azioni",
     "yes": "Si",
-    "no": "No"
+    "no": "No",
+    "pagination": {
+      "previous": "Precedente",
+      "next": "Successivo",
+      "counter": "{{current}} di {{total}} pagine",
+      "tooltips": {
+        "firstPage": "Vai alla prima pagina",
+        "previousPage": "Vai alla pagina precedente",
+        "nextPage": "Vai alla pagina successiva",
+        "lastPage": "Vai all'ultima pagina",
+        "toPage": "Vai alla pagina",
+        "toLastPage": "Vai all'ultima pagina, pagina"
+      }
+    }
   },
   "nav": {
     "sections": {
@@ -162,6 +175,10 @@
     "view": {
       "commonTransactions": "Movimenti comuni",
       "transfers": "Trasferimenti"
+    },
+    "pagination": {
+      "summary": "{{start}}-{{end}} di {{total}}",
+      "rowsPerPage": "Righe per pagina"
     },
     "table": {
       "description": "Cronologia movimenti",

@@ -10,10 +10,12 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { ClassValue } from 'clsx';
 
+import { AppPaginationComponent } from '@/components/pagination/pagination.component';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -53,7 +55,9 @@ type RowClassResolver = (row: TableRow) => ClassValue | null | undefined;
 @Component({
   selector: 'app-data-table',
   imports: [
+    NgTemplateOutlet,
     TranslatePipe,
+    AppPaginationComponent,
     ZardBadgeComponent,
     ZardButtonComponent,
     ZardCheckboxComponent,
@@ -94,13 +98,26 @@ export class AppDataTableComponent {
   readonly striped = input(false, { transform: booleanAttribute });
   readonly hoverable = input(true, { transform: booleanAttribute });
   readonly selectable = input(false, { transform: booleanAttribute });
+  readonly stickyHeader = input(false, { transform: booleanAttribute });
+  readonly highContrastHeader = input(false, { transform: booleanAttribute });
   readonly hasActionColumn = input(false, { transform: booleanAttribute });
   readonly actionColumnPosition = input<TableActionColumnPosition>('end');
+  readonly showPagination = input(false, { transform: booleanAttribute });
+  readonly currentPage = input(1);
+  readonly totalPages = input(1);
+  readonly pageSize = input(10);
+  readonly pageSizeOptions = input<readonly number[]>([10, 25, 50]);
+  readonly maxVisiblePages = input(5);
+  readonly pageSizeLabel = input('Rows per page');
+  readonly showPageSizeSelector = input(false, { transform: booleanAttribute });
+  readonly showTopPagination = input(false, { transform: booleanAttribute });
 
   readonly selectedRowsChange = output<readonly TableRow[]>();
   readonly sortChange = output<TableSortState | null>();
   readonly editableValueChange = output<EditableValueChangeEvent>();
   readonly editableValidationError = output<EditableValidationErrorEvent>();
+  readonly pageChange = output<number>();
+  readonly pageSizeChange = output<number>();
 
   private readonly sortState = signal<TableSortState | null>(null);
   private readonly selectedRowsState = signal<ReadonlySet<TableRow>>(new Set<TableRow>());
@@ -176,15 +193,57 @@ export class AppDataTableComponent {
   });
 
   protected readonly containerClasses = computed(() =>
-    mergeClasses('overflow-x-auto rounded-md', this.bordered() ? 'border border-border' : ''),
+    mergeClasses(
+      'rounded-md bg-background',
+      this.stickyHeader() ? 'overflow-visible' : 'overflow-x-auto',
+      this.bordered() ? 'ring-1 ring-border' : '',
+    ),
   );
 
   protected readonly tableClasses = computed(() =>
     mergeClasses(
       this.class(),
+      this.stickyHeader() ? 'border-separate border-spacing-0' : '',
       this.striped() ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
       this.hoverable() ? '' : '[&_tbody_tr:hover]:!bg-transparent',
     ),
+  );
+  protected readonly headerBackgroundClass = computed(() =>
+    this.highContrastHeader()
+      ? 'bg-high-contrast-table-header text-high-contrast-table-header-foreground'
+      : this.stickyHeader()
+        ? 'bg-background'
+        : '',
+  );
+  protected readonly headerBorderClass = computed(() =>
+    this.highContrastHeader()
+      ? 'border-b-high-contrast-table-header'
+      : this.stickyHeader()
+        ? 'border-b-border'
+        : '',
+  );
+  protected readonly sortableHeaderButtonClasses = computed(() =>
+    mergeClasses(
+      'h-auto px-0 py-0 text-left hover:bg-transparent',
+      this.highContrastHeader()
+        ? 'text-high-contrast-table-header-foreground hover:text-high-contrast-table-header-foreground'
+        : 'hover:text-foreground',
+    ),
+  );
+  protected readonly stickyHeaderCellClasses = computed(() =>
+    mergeClasses(
+      this.stickyHeader()
+        ? 'relative sticky -top-[24px] z-30 h-[40px] min-h-[40px] border-b first:rounded-tl-md last:rounded-tr-md'
+        : '',
+      this.headerBackgroundClass(),
+      this.headerBorderClass(),
+    ),
+  );
+  protected readonly stickyHeaderCheckboxCellClasses = computed(() =>
+    mergeClasses('w-10', this.stickyHeaderCellClasses()),
+  );
+  protected readonly stickyHeaderActionCellClasses = computed(() =>
+    mergeClasses('w-24', this.stickyHeaderCellClasses()),
   );
 
   protected readonly sortedRows = computed(() => {
@@ -269,6 +328,14 @@ export class AppDataTableComponent {
 
     this.sortState.set(null);
     this.sortChange.emit(null);
+  }
+
+  protected onPageChange(page: number): void {
+    this.pageChange.emit(page);
+  }
+
+  protected onPageSizeChange(pageSize: number): void {
+    this.pageSizeChange.emit(pageSize);
   }
 
   protected sortIcon(column: TableColumn): 'chevrons-up-down' | 'chevron-up' | 'chevron-down' {

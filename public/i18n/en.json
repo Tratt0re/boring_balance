@@ -2,7 +2,20 @@
   "common": {
     "actions": "Actions",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "counter": "{{current}} of {{total}} pages",
+      "tooltips": {
+        "firstPage": "Go to first page",
+        "previousPage": "Go to previous page",
+        "nextPage": "Go to next page",
+        "lastPage": "Go to last page",
+        "toPage": "To page",
+        "toLastPage": "To last page, page"
+      }
+    }
   },
   "nav": {
     "sections": {
@@ -162,6 +175,10 @@
     "view": {
       "commonTransactions": "Common transactions",
       "transfers": "Transfers"
+    },
+    "pagination": {
+      "summary": "{{start}}-{{end}} of {{total}}",
+      "rowsPerPage": "Rows per page"
     },
     "transfers": {
       "title": "Transfers",

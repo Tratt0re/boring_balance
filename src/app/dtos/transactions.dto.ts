@@ -70,6 +70,8 @@ export interface TransactionListTransactionsFiltersDto {
 
 export interface TransactionListTransactionsDto {
   readonly filters?: TransactionListTransactionsFiltersDto;
+  readonly page?: number;
+  readonly page_size?: number;
 }
 
 export interface TransactionListTransfersFiltersDto {
@@ -80,6 +82,15 @@ export interface TransactionListTransfersFiltersDto {
 
 export interface TransactionListTransfersDto {
   readonly filters?: TransactionListTransfersFiltersDto;
+  readonly page?: number;
+  readonly page_size?: number;
+}
+
+export interface TransactionListResponseDto {
+  readonly rows: readonly TransactionDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
 }
 
 export interface TransactionUpdateDto {
@@ -105,7 +116,7 @@ export type TransactionCreateTransferResponse = TransactionCreateTransferRespons
 export type TransactionUpdateTransferResponse = TransactionCreateTransferResponseDto;
 export type TransactionDeleteTransferResponse = RemoveResponseDto;
 export type TransactionGetResponse = TransactionDto | null;
-export type TransactionListTransactionsResponse = TransactionDto[];
-export type TransactionListTransfersResponse = TransactionDto[];
+export type TransactionListTransactionsResponse = TransactionListResponseDto;
+export type TransactionListTransfersResponse = TransactionListResponseDto;
 export type TransactionUpdateResponse = UpdateResponseDto<TransactionDto>;
 export type TransactionRemoveResponse = RemoveResponseDto;
