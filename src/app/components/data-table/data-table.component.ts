@@ -450,6 +450,14 @@ export class AppDataTableComponent {
     return actionItem.disabled ?? false;
   }
 
+  protected showTableActionLabel(actionItem: TableHeaderActionItem): boolean {
+    if (!actionItem.icon) {
+      return true;
+    }
+
+    return actionItem.showLabel ?? true;
+  }
+
   protected visibleRowActionItems(row: TableRow): readonly ActionItem[] {
     return this.actionItems().filter((actionItem) => this.shouldRenderAction(actionItem, row));
   }
@@ -643,10 +651,15 @@ export class AppDataTableComponent {
   }
 
   protected onEditableComboboxValueChange(
-    value: string | null,
+    value: string | string[] | null,
     row: TableRow,
     column: EditableColumnDataItem,
   ): void {
+    if (Array.isArray(value)) {
+      console.warn('[app-data-table] Combobox editor received multiple values, expected a single value.', value);
+      return;
+    }
+
     const normalizedValue = this.resolveComboboxValue(value, column);
     this.applyEditableChange(row, column, normalizedValue);
   }

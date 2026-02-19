@@ -109,7 +109,11 @@ export class UpsertAccountDialogComponent {
     this.clearSubmitError();
   }
 
-  protected onIconChange(value: string | null): void {
+  protected onIconChange(value: string | string[] | null): void {
+    if (Array.isArray(value)) {
+      return;
+    }
+
     this.icon.set(value ?? '');
     this.clearSubmitError();
   }

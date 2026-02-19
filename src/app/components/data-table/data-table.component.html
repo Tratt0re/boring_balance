@@ -15,19 +15,22 @@
       @if (visibleTableActions().length > 0) {
         <div class="flex flex-wrap items-center gap-2 sm:justify-end">
           @for (tableAction of visibleTableActions(); track tableAction.id) {
-            <z-button
-              zSize="sm"
-              [zTooltip]="tableAction.label | translate"
-              [zType]="tableAction.buttonType ?? 'default'"
-              [attr.aria-label]="tableAction.label | translate"
-              [attr.title]="tableAction.label | translate"
-              (click)="onTableActionClick(tableAction)"
-            >
-              @if (tableAction.icon; as tableActionIcon) {
-                <z-icon [zType]="tableActionIcon" class="size-4" />
-              }
-              <span>{{ tableAction.label | translate }}</span>
-            </z-button>
+            <span class="inline-flex" [zTooltip]="tableAction.label | translate">
+              <z-button
+                zSize="sm"
+                [zType]="tableAction.buttonType ?? 'default'"
+                [attr.aria-label]="tableAction.label | translate"
+                [attr.title]="tableAction.label | translate"
+                (click)="onTableActionClick(tableAction)"
+              >
+                @if (tableAction.icon; as tableActionIcon) {
+                  <z-icon [zType]="tableActionIcon" class="size-4" />
+                }
+                @if (showTableActionLabel(tableAction)) {
+                  <span>{{ tableAction.label | translate }}</span>
+                }
+              </z-button>
+            </span>
           }
         </div>
       }

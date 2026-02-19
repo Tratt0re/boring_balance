@@ -28,6 +28,7 @@ import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 import type { ZardSheetRef } from './sheet-ref';
 import { sheetVariants, type ZardSheetVariants } from './sheet.variants';
 import { ZardButtonComponent } from '@/shared/components/button/button.component';
+import type { ZardButtonTypeVariants } from '@/shared/components/button/button.variants';
 import { ZardIconComponent } from '@/shared/components/icon/icon.component';
 import type { ZardIcon } from '@/shared/components/icon/icons';
 
@@ -43,11 +44,16 @@ export class ZardSheetOptions<T, U> {
   zHeight?: string;
   zHideFooter?: boolean;
   zMaskClosable?: boolean;
+  zMiddleDisabled?: boolean;
+  zMiddleIcon?: ZardIcon;
+  zMiddleText?: string | null;
+  zMiddleType?: ZardButtonTypeVariants;
   zOkDestructive?: boolean;
   zOkDisabled?: boolean;
   zOkIcon?: ZardIcon;
   zOkText?: string | null;
   zOnCancel?: EventEmitter<T> | OnClickCallback<T> = noopFn;
+  zOnMiddle?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   zOnOk?: EventEmitter<T> | OnClickCallback<T> = noopFn;
   zSide?: ZardSheetVariants['zSide'] = 'left';
   zSize?: ZardSheetVariants['zSize'] = 'default';
@@ -90,7 +96,7 @@ export class ZardSheetOptions<T, U> {
       </header>
     }
 
-    <main class="flex w-full flex-col space-y-4">
+    <main class="flex min-h-0 w-full flex-1 flex-col space-y-4 overflow-y-auto">
       <ng-template cdkPortalOutlet />
 
       @if (isStringContent) {
@@ -115,6 +121,24 @@ export class ZardSheetOptions<T, U> {
             }
 
             {{ config.zOkText ?? 'OK' }}
+          </button>
+        }
+
+        @if (config.zMiddleText !== null && config.zMiddleText !== undefined) {
+          <button
+            type="button"
+            data-testid="z-middle-button"
+            class="cursor-pointer"
+            z-button
+            [zType]="config.zMiddleType ?? 'outline'"
+            [disabled]="config.zMiddleDisabled"
+            (click)="onMiddleClick()"
+          >
+            @if (config.zMiddleIcon) {
+              <z-icon [zType]="config.zMiddleIcon" />
+            }
+
+            {{ config.zMiddleText }}
           </button>
         }
 
@@ -170,6 +194,7 @@ export class ZardSheetComponent<T, U> extends BasePortalOutlet {
   readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 
   readonly okTriggered = output<void>();
+  readonly middleTriggered = output<void>();
   readonly cancelTriggered = output<void>();
   readonly state = signal<'closed' | 'open'>('closed');
 
@@ -198,6 +223,10 @@ export class ZardSheetComponent<T, U> extends BasePortalOutlet {
 
   onOkClick() {
     this.okTriggered.emit();
+  }
+
+  onMiddleClick() {
+    this.middleTriggered.emit();
   }
 
   onCloseClick() {

@@ -282,6 +282,7 @@
       "emptyMessage": "No transactions found.",
       "actions": {
         "add": "Add transaction",
+        "filter": "Filter transactions",
         "edit": "Edit transaction",
         "delete": "Delete transaction"
       },
@@ -292,6 +293,42 @@
         "amount": "Amount",
         "category": "Category",
         "description": "Description"
+      }
+    },
+    "filters": {
+      "title": "Filter transactions",
+      "description": "Apply one or more optional filters to narrow the transaction list.",
+      "fields": {
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "settled": "Settlement status",
+        "category": "Category",
+        "account": "Account"
+      },
+      "placeholders": {
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "settled": "Any status",
+        "category": "Select a category",
+        "account": "Select an account",
+        "searchCategory": "Search categories...",
+        "searchAccount": "Search accounts..."
+      },
+      "options": {
+        "settled": {
+          "any": "Any status",
+          "yes": "Settled",
+          "no": "Not settled"
+        }
+      },
+      "empty": {
+        "category": "No categories found.",
+        "account": "No accounts found."
+      },
+      "actions": {
+        "apply": "Apply filters",
+        "reset": "Reset filters",
+        "cancel": "Cancel"
       }
     },
     "dialog": {

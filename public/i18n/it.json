@@ -212,6 +212,7 @@
       "emptyMessage": "Nessun movimento trovato.",
       "actions": {
         "add": "Aggiungi movimento",
+        "filter": "Filtra movimenti",
         "edit": "Modifica movimento",
         "delete": "Elimina movimento"
       },
@@ -222,6 +223,42 @@
         "amount": "Importo",
         "category": "Categoria",
         "description": "Descrizione"
+      }
+    },
+    "filters": {
+      "title": "Filtra movimenti",
+      "description": "Applica uno o piu filtri opzionali per restringere l'elenco dei movimenti.",
+      "fields": {
+        "dateFrom": "Data da",
+        "dateTo": "Data a",
+        "settled": "Stato regolazione",
+        "category": "Categoria",
+        "account": "Conto"
+      },
+      "placeholders": {
+        "dateFrom": "Data da",
+        "dateTo": "Data a",
+        "settled": "Qualsiasi stato",
+        "category": "Seleziona una categoria",
+        "account": "Seleziona un conto",
+        "searchCategory": "Cerca categorie...",
+        "searchAccount": "Cerca conti..."
+      },
+      "options": {
+        "settled": {
+          "any": "Qualsiasi stato",
+          "yes": "Regolati",
+          "no": "Non regolati"
+        }
+      },
+      "empty": {
+        "category": "Nessuna categoria trovata.",
+        "account": "Nessun conto trovato."
+      },
+      "actions": {
+        "apply": "Applica filtri",
+        "reset": "Reimposta filtri",
+        "cancel": "Annulla"
       }
     },
     "dialog": {

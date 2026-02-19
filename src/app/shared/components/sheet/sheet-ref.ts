@@ -8,6 +8,7 @@ import type { ZardSheetComponent, ZardSheetOptions } from './sheet.component';
 
 const enum eTriggerAction {
   CANCEL = 'cancel',
+  MIDDLE = 'middle',
   OK = 'ok',
 }
 
@@ -24,6 +25,7 @@ export class ZardSheetRef<T = any, R = any, U = any> {
     @Inject(PLATFORM_ID) private platformId: object,
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
+    this.containerInstance.middleTriggered.subscribe(() => this.trigger(eTriggerAction.MIDDLE));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
 
     if ((this.config.zMaskClosable ?? true) && isPlatformBrowser(this.platformId)) {
@@ -74,7 +76,7 @@ export class ZardSheetRef<T = any, R = any, U = any> {
   }
 
   private trigger(action: eTriggerAction) {
-    const trigger = { ok: this.config.zOnOk, cancel: this.config.zOnCancel }[action];
+    const trigger = { ok: this.config.zOnOk, middle: this.config.zOnMiddle, cancel: this.config.zOnCancel }[action];
 
     if (trigger instanceof EventEmitter) {
       trigger.emit(this.getContentComponent());

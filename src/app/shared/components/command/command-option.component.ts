@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -45,6 +46,13 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
         @if (zShortcut()) {
           <span [class]="shortcutClasses()">{{ zShortcut() }}</span>
         }
+        @if (zShowSelectedIndicator()) {
+          <span class="ml-2 flex size-4 shrink-0 items-center justify-center">
+            @if (zSelected()) {
+              <z-icon zType="check" class="size-4" />
+            }
+          </span>
+        }
       </div>
     }
   `,
@@ -62,12 +70,15 @@ export class ZardCommandOptionComponent {
   readonly zIcon = input<ZardIcon>();
   readonly zShortcut = input<string>('');
   readonly zDisabled = input(false, { transform });
+  readonly zSelected = input(false, { transform: booleanAttribute });
+  readonly zShowSelectedIndicator = input(false, { transform: booleanAttribute });
   readonly variant = input<ZardCommandItemVariants>('default');
   readonly class = input<ClassValue>('');
   readonly parentCommand = input<ZardCommandComponent | null>(null);
   readonly commandGroup = input<ZardCommandOptionGroupComponent | null>(null);
 
-  readonly isSelected = signal(false);
+  readonly isActive = signal(false);
+  readonly isSelected = computed(() => this.isActive() || this.zSelected());
 
   protected readonly classes = computed(() => {
     const baseClasses = commandItemVariants({ variant: this.variant() });
@@ -129,7 +140,7 @@ export class ZardCommandOptionComponent {
   }
 
   setSelected(selected: boolean) {
-    this.isSelected.set(selected);
+    this.isActive.set(selected);
   }
 
   focus() {
