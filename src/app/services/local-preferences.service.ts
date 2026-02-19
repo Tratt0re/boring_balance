@@ -75,6 +75,14 @@ export class LocalPreferencesService {
     this.setText(LocalPreferenceKey.ONBOARDING_COMPLETED, onboardingCompleted ? '1' : '0');
   }
 
+  getTransactionsTableState<T>(): T | null {
+    return this.getJson<T>(LocalPreferenceKey.TRANSACTIONS_TABLE_STATE);
+  }
+
+  setTransactionsTableState(value: unknown): void {
+    this.setJson(LocalPreferenceKey.TRANSACTIONS_TABLE_STATE, value);
+  }
+
   private getText(key: LocalPreferenceKey): string | undefined {
     if (!this.isBrowser) {
       return undefined;
@@ -100,6 +108,40 @@ export class LocalPreferencesService {
 
     try {
       localStorage.setItem(key, value);
+    } catch {
+      // Ignore localStorage write errors (private mode, quota, etc.).
+    }
+  }
+
+  private getJson<T>(key: LocalPreferenceKey): T | null {
+    const value = this.getText(key);
+    if (!value) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
+  }
+
+  private setJson(key: LocalPreferenceKey, value: unknown): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    if (value === null || value === undefined) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        // Ignore localStorage write errors (private mode, quota, etc.).
+      }
+      return;
+    }
+
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
     } catch {
       // Ignore localStorage write errors (private mode, quota, etc.).
     }
