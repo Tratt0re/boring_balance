@@ -1,4 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
+import { A11yModule } from '@angular/cdk/a11y';
 import {
   BasePortalOutlet,
   CdkPortalOutlet,
@@ -64,102 +65,104 @@ export class ZardSheetOptions<T, U> {
 
 @Component({
   selector: 'z-sheet',
-  imports: [OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent],
+  imports: [OverlayModule, PortalModule, A11yModule, ZardButtonComponent, ZardIconComponent],
   template: `
-    @if (config.zClosable || config.zClosable === undefined) {
-      <button
-        type="button"
-        data-testid="z-close-header-button"
-        z-button
-        zType="ghost"
-        zSize="sm"
-        class="absolute top-1 right-1 cursor-pointer"
-        (click)="onCloseClick()"
-      >
-        <z-icon zType="x" />
-      </button>
-    }
-
-    @if (config.zTitle || config.zDescription) {
-      <header data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
-        @if (config.zTitle) {
-          <h4 data-testid="z-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
-            {{ config.zTitle }}
-          </h4>
-
-          @if (config.zDescription) {
-            <p data-testid="z-description" data-slot="sheet-description" class="text-muted-foreground text-sm">
-              {{ config.zDescription }}
-            </p>
-          }
-        }
-      </header>
-    }
-
-    <main class="flex min-h-0 w-full flex-1 flex-col space-y-4 overflow-y-auto">
-      <ng-template cdkPortalOutlet />
-
-      @if (isStringContent) {
-        <div data-testid="z-content" data-slot="sheet-content" [innerHTML]="config.zContent"></div>
+    <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
+      @if (config.zClosable || config.zClosable === undefined) {
+        <button
+          type="button"
+          data-testid="z-close-header-button"
+          z-button
+          zType="ghost"
+          zSize="sm"
+          class="absolute top-1 right-1 cursor-pointer"
+          (click)="onCloseClick()"
+        >
+          <z-icon zType="x" />
+        </button>
       }
-    </main>
 
-    @if (!config.zHideFooter) {
-      <footer data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 p-4">
-        @if (config.zOkText !== null) {
-          <button
-            type="button"
-            data-testid="z-ok-button"
-            class="cursor-pointer"
-            z-button
-            [zType]="config.zOkDestructive ? 'destructive' : 'default'"
-            [disabled]="config.zOkDisabled"
-            (click)="onOkClick()"
-          >
-            @if (config.zOkIcon) {
-              <z-icon [zType]="config.zOkIcon" />
+      @if (config.zTitle || config.zDescription) {
+        <header data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
+          @if (config.zTitle) {
+            <h4 data-testid="z-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
+              {{ config.zTitle }}
+            </h4>
+
+            @if (config.zDescription) {
+              <p data-testid="z-description" data-slot="sheet-description" class="text-muted-foreground text-sm">
+                {{ config.zDescription }}
+              </p>
             }
+          }
+        </header>
+      }
 
-            {{ config.zOkText ?? 'OK' }}
-          </button>
+      <main class="flex min-h-0 w-full flex-1 flex-col space-y-4 overflow-y-auto">
+        <ng-template cdkPortalOutlet />
+
+        @if (isStringContent) {
+          <div data-testid="z-content" data-slot="sheet-content" [innerHTML]="config.zContent"></div>
         }
+      </main>
 
-        @if (config.zMiddleText !== null && config.zMiddleText !== undefined) {
-          <button
-            type="button"
-            data-testid="z-middle-button"
-            class="cursor-pointer"
-            z-button
-            [zType]="config.zMiddleType ?? 'outline'"
-            [disabled]="config.zMiddleDisabled"
-            (click)="onMiddleClick()"
-          >
-            @if (config.zMiddleIcon) {
-              <z-icon [zType]="config.zMiddleIcon" />
-            }
+      @if (!config.zHideFooter) {
+        <footer data-slot="sheet-footer" class="mt-auto flex flex-col gap-2 p-4">
+          @if (config.zOkText !== null) {
+            <button
+              type="button"
+              data-testid="z-ok-button"
+              class="cursor-pointer"
+              z-button
+              [zType]="config.zOkDestructive ? 'destructive' : 'default'"
+              [disabled]="config.zOkDisabled"
+              (click)="onOkClick()"
+            >
+              @if (config.zOkIcon) {
+                <z-icon [zType]="config.zOkIcon" />
+              }
 
-            {{ config.zMiddleText }}
-          </button>
-        }
+              {{ config.zOkText ?? 'OK' }}
+            </button>
+          }
 
-        @if (config.zCancelText !== null) {
-          <button
-            type="button"
-            data-testid="z-cancel-button"
-            class="cursor-pointer"
-            z-button
-            zType="outline"
-            (click)="onCloseClick()"
-          >
-            @if (config.zCancelIcon) {
-              <z-icon [zType]="config.zCancelIcon" />
-            }
+          @if (config.zMiddleText !== null && config.zMiddleText !== undefined) {
+            <button
+              type="button"
+              data-testid="z-middle-button"
+              class="cursor-pointer"
+              z-button
+              [zType]="config.zMiddleType ?? 'outline'"
+              [disabled]="config.zMiddleDisabled"
+              (click)="onMiddleClick()"
+            >
+              @if (config.zMiddleIcon) {
+                <z-icon [zType]="config.zMiddleIcon" />
+              }
 
-            {{ config.zCancelText ?? 'Cancel' }}
-          </button>
-        }
-      </footer>
-    }
+              {{ config.zMiddleText }}
+            </button>
+          }
+
+          @if (config.zCancelText !== null) {
+            <button
+              type="button"
+              data-testid="z-cancel-button"
+              class="cursor-pointer"
+              z-button
+              zType="outline"
+              (click)="onCloseClick()"
+            >
+              @if (config.zCancelIcon) {
+                <z-icon [zType]="config.zCancelIcon" />
+              }
+
+              {{ config.zCancelText ?? 'Cancel' }}
+            </button>
+          }
+        </footer>
+      }
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

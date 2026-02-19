@@ -29,6 +29,7 @@ import {
 } from '@/pages/transaction-page/components/upsert-transaction-dialog/upsert-transaction-dialog.component';
 import { AccountsService } from '@/services/accounts.service';
 import { CategoriesService } from '@/services/categories.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { TransactionsService } from '@/services/transactions.service';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
@@ -83,6 +84,20 @@ interface TransactionTableFilters {
   readonly settled: boolean | null;
   readonly categoryIds: readonly number[];
   readonly accountIds: readonly number[];
+}
+
+interface PersistedTransactionTableFilters {
+  readonly dateFrom: number | null;
+  readonly dateTo: number | null;
+  readonly settled: boolean | null;
+  readonly categoryIds: readonly number[];
+  readonly accountIds: readonly number[];
+}
+
+interface PersistedTransactionsTableState {
+  readonly page: number;
+  readonly pageSize: number;
+  readonly filters: PersistedTransactionTableFilters;
 }
 
 const DEFAULT_TRANSACTION_TABLE_FILTERS: TransactionTableFilters = {
@@ -242,16 +257,31 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       filters.accountIds.length > 0
     );
   });
-  protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => [
-    {
-      id: 'transaction-filters',
-      icon: 'filter',
-      label: 'transactions.table.actions.filter',
-      showLabel: false,
-      buttonType: this.hasActiveFilters() ? 'secondary' : 'outline',
-      action: () => this.openFilterSheet(),
-    },
-  ]);
+  protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => {
+    const actions: TableHeaderActionItem[] = [
+      {
+        id: 'transaction-filters',
+        icon: 'filter',
+        label: 'transactions.table.actions.filter',
+        showLabel: false,
+        buttonType: 'outline',
+        action: () => this.openFilterSheet(),
+      },
+    ];
+
+    if (this.hasActiveFilters()) {
+      actions.push({
+        id: 'transaction-filters-reset',
+        icon: 'funnel-x',
+        label: 'transactions.filters.actions.reset',
+        showLabel: false,
+        buttonType: 'secondary',
+        action: () => this.onResetFiltersAction(),
+      });
+    }
+
+    return actions;
+  });
 
   private readonly addTransactionToolbarAction: ToolbarAction = {
     id: 'add-transaction',
@@ -268,6 +298,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
+    private readonly localPreferencesService: LocalPreferencesService,
     private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
@@ -276,6 +307,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.restorePersistedTableState();
     this.activateToolbarActions();
     void this.loadInitialData();
   }
@@ -291,6 +323,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     this.page.set(nextPage);
+    this.persistTableState();
     void this.reloadTransactionsPage();
   }
 
@@ -304,6 +337,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     this.pageSize.set(nextPageSize);
     this.page.set(1);
+    this.persistTableState();
     void this.reloadTransactionsPage();
   }
 
@@ -347,6 +381,17 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         return sheetContent.getValues();
       },
     });
+  }
+
+  private onResetFiltersAction(): void {
+    if (!this.hasActiveFilters()) {
+      return;
+    }
+
+    this.filters.set(DEFAULT_TRANSACTION_TABLE_FILTERS);
+    this.page.set(1);
+    this.persistTableState();
+    void this.reloadTransactionsPage();
   }
 
   private activateToolbarActions(): void {
@@ -478,6 +523,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     this.filters.set(nextFilters);
     this.page.set(1);
+    this.persistTableState();
     void this.reloadTransactionsPage();
   }
 
@@ -754,6 +800,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.page.set(transactions.page);
       this.total.set(transactions.total);
       this.rows.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
+      this.persistTableState();
     } catch (error) {
       this.rows.set([]);
       this.total.set(0);
@@ -782,6 +829,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.page.set(transactions.page);
       this.total.set(transactions.total);
       this.rows.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
+      this.persistTableState();
     } catch (error) {
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transactions.');
       console.error('[transactions-table-section] Failed to reload transactions:', error);
@@ -866,6 +914,76 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       console.error('[transactions-table-section] Failed to delete transaction:', error);
       await this.reloadTransactionsPage();
     }
+  }
+
+  private restorePersistedTableState(): void {
+    const persistedState =
+      this.localPreferencesService.getTransactionsTableState<Partial<PersistedTransactionsTableState>>();
+    if (!persistedState) {
+      return;
+    }
+
+    const parsedPageSize = this.toAllowedPageSize(persistedState.pageSize);
+    const parsedPage = this.toPositiveInteger(persistedState.page) ?? 1;
+    const parsedFilters = this.toPersistedFilters(persistedState.filters);
+
+    this.pageSize.set(parsedPageSize);
+    this.page.set(parsedPage);
+    this.filters.set(parsedFilters);
+  }
+
+  private persistTableState(): void {
+    const filters = this.filters();
+    const state: PersistedTransactionsTableState = {
+      page: this.page(),
+      pageSize: this.pageSize(),
+      filters: {
+        dateFrom: filters.dateFrom?.getTime() ?? null,
+        dateTo: filters.dateTo?.getTime() ?? null,
+        settled: filters.settled,
+        categoryIds: [...filters.categoryIds],
+        accountIds: [...filters.accountIds],
+      },
+    };
+
+    this.localPreferencesService.setTransactionsTableState(state);
+  }
+
+  private toPersistedFilters(value: unknown): TransactionTableFilters {
+    if (!value || typeof value !== 'object') {
+      return DEFAULT_TRANSACTION_TABLE_FILTERS;
+    }
+
+    const filters = value as Partial<PersistedTransactionTableFilters>;
+    return {
+      dateFrom: this.toDateValue(filters.dateFrom),
+      dateTo: this.toDateValue(filters.dateTo),
+      settled: this.toSettledFilterValue(filters.settled),
+      categoryIds: this.toPositiveIntegerArray(filters.categoryIds),
+      accountIds: this.toPositiveIntegerArray(filters.accountIds),
+    };
+  }
+
+  private toPositiveInteger(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
+      return value;
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      const parsedValue = Number.parseInt(value, 10);
+      return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
+    }
+
+    return null;
+  }
+
+  private toAllowedPageSize(value: unknown): number {
+    const pageSize = this.toPositiveInteger(value);
+    if (!pageSize) {
+      return DEFAULT_PAGE_SIZE;
+    }
+
+    return PAGE_SIZE_OPTIONS.includes(pageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ? pageSize : DEFAULT_PAGE_SIZE;
   }
 
   private toTransactionRow(transaction: TransactionModel): TransactionTableRow {

@@ -4,6 +4,7 @@ export enum LocalPreferenceKey {
   LANGUAGE = 'language',
   CURRENCY = 'currency',
   ONBOARDING_COMPLETED = 'onboarding_completed',
+  TRANSACTIONS_TABLE_STATE = 'transactions_table_state',
 }
 
 export type ThemePreference = 'light' | 'dark' | 'system';
