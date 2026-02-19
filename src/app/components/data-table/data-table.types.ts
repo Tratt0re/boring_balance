@@ -7,8 +7,13 @@ export type TableActionColumnPosition = 'start' | 'end';
 export type TableSortDirection = 'asc' | 'desc';
 export type EditableCellType = 'input' | 'checkbox' | 'select' | 'combobox' | 'switch' | 'date';
 export type EditableInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
+export type TableWidthValue = string | number;
 
-export interface TableDataItem {}
+export interface TableDataStructureItem {
+  readonly minWidth?: TableWidthValue;
+  readonly maxWidth?: TableWidthValue;
+  readonly showLabel?: boolean;
+}
 
 export interface TableBadgeConfig {
   readonly icon?: ZardIcon;
@@ -19,13 +24,21 @@ export interface TableBadgeConfig {
   readonly fullWidth?: boolean;
 }
 
-export interface ColumnDataItem extends TableDataItem {
+export interface TableCellIconConfig {
+  readonly icon?: ZardIcon;
+  readonly iconColumnKey?: string;
+  readonly colorHex?: string;
+  readonly colorHexColumnKey?: string;
+}
+
+export interface ColumnDataItem extends TableDataStructureItem {
   readonly columnName: string;
   readonly columnKey: string;
   readonly type?: TableCellType;
   readonly sortable?: boolean;
   readonly translate?: boolean;
   readonly badge?: TableBadgeConfig;
+  readonly cellIcon?: TableCellIconConfig;
 }
 
 export interface EditableOptionItem {
@@ -74,10 +87,11 @@ export interface TableHeaderActionItem {
   readonly disabled?: boolean | (() => boolean);
 }
 
-export interface ActionDataItem extends TableDataItem {
+export interface ActionDataItem extends TableDataStructureItem {
   readonly actionItems: readonly ActionItem[];
 }
 
+export type TableDataItem = ColumnDataItem | EditableColumnDataItem | ActionDataItem;
 export type TableDataStructure = TableDataItem;
 
 export interface TableSortState {

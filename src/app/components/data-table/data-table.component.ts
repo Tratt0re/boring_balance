@@ -43,6 +43,7 @@ import type {
   TableDataItem,
   TableSortDirection,
   TableSortState,
+  TableWidthValue,
 } from './data-table.types';
 
 type TableRow = object;
@@ -93,6 +94,8 @@ export class AppDataTableComponent {
   readonly rowClass = input<RowClassResolver | null>(null);
   readonly class = input<ClassValue>('');
 
+  readonly minHeight = input<TableWidthValue | null>(null);
+  readonly maxHeight = input<TableWidthValue | null>(null);
   readonly showEmpty = input(true, { transform: booleanAttribute });
   readonly bordered = input(false, { transform: booleanAttribute });
   readonly striped = input(false, { transform: booleanAttribute });
@@ -150,6 +153,16 @@ export class AppDataTableComponent {
     return items;
   });
 
+  protected readonly actionColumn = computed<ActionDataItem | null>(() => {
+    for (const item of this.structure()) {
+      if (this.isActionDataItem(item)) {
+        return item;
+      }
+    }
+
+    return null;
+  });
+
   protected readonly visibleTableActions = computed(() =>
     this.tableActions().filter((actionItem) => !this.isTableActionDisabled(actionItem)),
   );
@@ -192,9 +205,20 @@ export class AppDataTableComponent {
     return count;
   });
 
+  protected readonly hasColumnWidthConstraints = computed(() =>
+    this.columns().some((column) => column.minWidth !== undefined || column.maxWidth !== undefined) ||
+    this.hasActionColumnWidthConstraints(),
+  );
+
+  protected readonly hasActionColumnWidthConstraints = computed(() => {
+    const actionColumn = this.actionColumn();
+    return actionColumn !== null && (actionColumn.minWidth !== undefined || actionColumn.maxWidth !== undefined);
+  });
+
   protected readonly containerClasses = computed(() =>
     mergeClasses(
       'rounded-md bg-background',
+      'min-h-[var(--app-data-table-min-h)] max-h-[var(--app-data-table-max-h)]',
       this.stickyHeader() ? 'overflow-visible' : 'overflow-x-auto',
       this.bordered() ? 'ring-1 ring-border' : '',
     ),
@@ -203,6 +227,7 @@ export class AppDataTableComponent {
   protected readonly tableClasses = computed(() =>
     mergeClasses(
       this.class(),
+      this.hasColumnWidthConstraints() ? 'table-fixed' : 'table-auto',
       this.stickyHeader() ? 'border-separate border-spacing-0' : '',
       this.highContrastHeader() ? '[&_th]:text-high-contrast-table-header-foreground' : '',
       this.striped() ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
@@ -244,7 +269,7 @@ export class AppDataTableComponent {
     mergeClasses('w-10', this.stickyHeaderCellClasses()),
   );
   protected readonly stickyHeaderActionCellClasses = computed(() =>
-    mergeClasses('w-24', this.stickyHeaderCellClasses()),
+    mergeClasses(this.actionColumnWidthClass(), this.stickyHeaderCellClasses()),
   );
 
   protected readonly sortedRows = computed(() => {
@@ -627,6 +652,91 @@ export class AppDataTableComponent {
 
   protected formatCellValue(row: TableRow, column: ColumnDataItem): string {
     return this.formatColumnValue(this.getRawValue(row, column.columnKey), column);
+  }
+
+  protected cellIcon(row: TableRow, column: ColumnDataItem): ZardIcon | null {
+    const iconColumnKey = column.cellIcon?.iconColumnKey;
+    if (iconColumnKey) {
+      const iconValue = this.getRawValue(row, iconColumnKey);
+      if (typeof iconValue === 'string' && iconValue.length > 0) {
+        return iconValue as ZardIcon;
+      }
+    }
+
+    return column.cellIcon?.icon ?? null;
+  }
+
+  protected cellIconColor(row: TableRow, column: ColumnDataItem): string | null {
+    const colorColumnKey = column.cellIcon?.colorHexColumnKey;
+    if (colorColumnKey) {
+      const colorValue = this.getRawValue(row, colorColumnKey);
+      if (typeof colorValue === 'string' && colorValue.trim().length > 0) {
+        return colorValue;
+      }
+    }
+
+    const fallbackColor = column.cellIcon?.colorHex;
+    return typeof fallbackColor === 'string' && fallbackColor.trim().length > 0 ? fallbackColor : null;
+  }
+
+  protected columnMinWidth(column: TableColumn): string | null {
+    return this.normalizeSizeValue(column.minWidth);
+  }
+
+  protected columnMaxWidth(column: TableColumn): string | null {
+    return this.normalizeSizeValue(column.maxWidth);
+  }
+
+  protected columnWidth(column: TableColumn): string | null {
+    const minWidth = this.columnMinWidth(column);
+    const maxWidth = this.columnMaxWidth(column);
+
+    if (minWidth && maxWidth && minWidth === maxWidth) {
+      return minWidth;
+    }
+
+    // Fixed table layout prioritizes explicit width. If only one bound exists, use it as preferred width.
+    return maxWidth ?? minWidth;
+  }
+
+  protected actionColumnMinWidth(): string | null {
+    return this.normalizeSizeValue(this.actionColumn()?.minWidth);
+  }
+
+  protected actionColumnMaxWidth(): string | null {
+    return this.normalizeSizeValue(this.actionColumn()?.maxWidth);
+  }
+
+  protected actionColumnWidth(): string | null {
+    const minWidth = this.actionColumnMinWidth();
+    const maxWidth = this.actionColumnMaxWidth();
+
+    if (minWidth && maxWidth && minWidth === maxWidth) {
+      return minWidth;
+    }
+
+    return maxWidth ?? minWidth;
+  }
+
+  protected actionColumnWidthClass(): string {
+    return this.hasActionColumnWidthConstraints() ? '' : 'w-24';
+  }
+
+  protected showColumnLabel(column: TableColumn): boolean {
+    return column.showLabel ?? true;
+  }
+
+  protected showActionColumnLabel(): boolean {
+    const actionColumn = this.actionColumn();
+    return actionColumn?.showLabel ?? true;
+  }
+
+  protected containerMinHeightValue(): string | null {
+    return this.normalizeSizeValue(this.minHeight());
+  }
+
+  protected containerMaxHeightValue(): string | null {
+    return this.normalizeSizeValue(this.maxHeight());
   }
 
   protected isBadgeColumn(column: ColumnDataItem): boolean {
@@ -1162,6 +1272,57 @@ export class AppDataTableComponent {
     }
 
     return null;
+  }
+
+  private normalizeSizeValue(value: TableWidthValue | null | undefined): string | null {
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value) || value <= 0) {
+        return null;
+      }
+
+      return `${value}px`;
+    }
+
+    if (typeof value === 'string') {
+      const normalizedValue = value.trim();
+      if (normalizedValue.length === 0 || /[[\]]/.test(normalizedValue)) {
+        return null;
+      }
+
+      const fractionSizeValue = this.resolveTailwindFractionSize(normalizedValue);
+      if (fractionSizeValue !== null) {
+        return fractionSizeValue;
+      }
+
+      return normalizedValue;
+    }
+
+    return null;
+  }
+
+  private resolveTailwindFractionSize(value: string): string | null {
+    if (value === 'w-full' || value === 'full') {
+      return '100%';
+    }
+
+    const fractionMatch = /^(?:(?:w|min-w|max-w)-)?(\d+)\/(\d+)$/.exec(value);
+    if (!fractionMatch) {
+      return null;
+    }
+
+    const numerator = Number(fractionMatch[1]);
+    const denominator = Number(fractionMatch[2]);
+    if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || numerator <= 0 || denominator <= 0) {
+      return null;
+    }
+
+    const percent = (numerator / denominator) * 100;
+    if (!Number.isFinite(percent) || percent <= 0) {
+      return null;
+    }
+
+    const normalizedPercent = Number(percent.toFixed(6));
+    return `${normalizedPercent}%`;
   }
 
   private isEmptyValue(value: unknown): boolean {

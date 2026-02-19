@@ -34,8 +34,44 @@
   }
 
   <ng-template #tableContent>
-    <div [class]="containerClasses()">
+    <div
+      [class]="containerClasses()"
+      [style.--app-data-table-min-h]="containerMinHeightValue()"
+      [style.--app-data-table-max-h]="containerMaxHeightValue()"
+    >
       <table z-table [class]="tableClasses()">
+        <colgroup>
+          @if (selectable()) {
+            <col class="w-10" />
+          }
+
+          @if (renderActionColumnAtStart()) {
+            <col
+              [class]="actionColumnWidthClass()"
+              [style.width]="actionColumnWidth()"
+              [style.min-width]="actionColumnMinWidth()"
+              [style.max-width]="actionColumnMaxWidth()"
+            />
+          }
+
+          @for (column of columns(); track column.columnKey) {
+            <col
+              [style.width]="columnWidth(column)"
+              [style.min-width]="columnMinWidth(column)"
+              [style.max-width]="columnMaxWidth(column)"
+            />
+          }
+
+          @if (renderActionColumnAtEnd()) {
+            <col
+              [class]="actionColumnWidthClass()"
+              [style.width]="actionColumnWidth()"
+              [style.min-width]="actionColumnMinWidth()"
+              [style.max-width]="actionColumnMaxWidth()"
+            />
+          }
+        </colgroup>
+
         <thead z-table-header>
           <tr z-table-row>
             @if (selectable()) {
@@ -55,31 +91,55 @@
 
             @if (renderActionColumnAtStart()) {
               <th z-table-head [class]="stickyHeaderActionCellClasses()">
-                {{ actionColumnName() | translate }}
+                @if (showActionColumnLabel()) {
+                  {{ actionColumnName() | translate }}
+                } @else {
+                  <span class="sr-only">{{ actionColumnName() | translate }}</span>
+                }
               </th>
             }
 
             @for (column of columns(); track column.columnKey) {
               <th z-table-head [class]="stickyHeaderCellClasses()">
-                @if (column.sortable) {
+                @if (showColumnLabel(column)) {
+                  @if (column.sortable) {
+                    <z-button
+                      zType="ghost"
+                      zSize="sm"
+                      [class]="sortableHeaderButtonClasses()"
+                      (click)="onSortColumn(column)"
+                    >
+                      <span>{{ column.columnName | translate }}</span>
+                      <z-icon [zType]="sortIcon(column)" class="size-4" />
+                    </z-button>
+                  } @else {
+                    {{ column.columnName | translate }}
+                  }
+                } @else if (column.sortable) {
                   <z-button
                     zType="ghost"
                     zSize="sm"
                     [class]="sortableHeaderButtonClasses()"
+                    [attr.aria-label]="column.columnName | translate"
+                    [attr.title]="column.columnName | translate"
                     (click)="onSortColumn(column)"
                   >
-                    <span>{{ column.columnName | translate }}</span>
+                    <span class="sr-only">{{ column.columnName | translate }}</span>
                     <z-icon [zType]="sortIcon(column)" class="size-4" />
                   </z-button>
                 } @else {
-                  {{ column.columnName | translate }}
+                  <span class="sr-only">{{ column.columnName | translate }}</span>
                 }
               </th>
             }
 
             @if (renderActionColumnAtEnd()) {
               <th z-table-head [class]="stickyHeaderActionCellClasses()">
-                {{ actionColumnName() | translate }}
+                @if (showActionColumnLabel()) {
+                  {{ actionColumnName() | translate }}
+                } @else {
+                  <span class="sr-only">{{ actionColumnName() | translate }}</span>
+                }
               </th>
             }
           </tr>
@@ -284,6 +344,15 @@
                           }
                           {{ formatCellValue(row, column) }}
                         </z-badge>
+                      } @else if (cellIcon(row, column); as cellIcon) {
+                        <span class="inline-flex min-w-0 items-center gap-2">
+                          <z-icon
+                            [zType]="cellIcon"
+                            class="size-3.5 shrink-0 text-(--app-data-table-cell-icon-color) opacity-80"
+                            [style.--app-data-table-cell-icon-color]="cellIconColor(row, column) ?? 'var(--color-primary)'"
+                          />
+                          <span class="truncate">{{ formatCellValue(row, column) }}</span>
+                        </span>
                       } @else {
                         {{ formatCellValue(row, column) }}
                       }

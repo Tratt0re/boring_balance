@@ -39,6 +39,15 @@ import { TransactionsTableSectionComponent } from './sections/transactions-table
 const TRANSFER_CATEGORY_ID = 2;
 const DEFAULT_PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
+const TRANSACTION_COLUMN_WIDTH = {
+  occurredAt: 'w-1/14',
+  settled: 'w-1/14',
+  account: 'w-2/28',
+  amount: 'w-1/14',
+  category: 'w-3/28',
+  description: 'w-5/28',
+  action: 'w-1/14',
+} as const;
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
 
@@ -98,25 +107,25 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] =
       columnKey: 'occurredAt',
       type: 'date',
       sortable: true,
+      maxWidth: TRANSACTION_COLUMN_WIDTH.occurredAt,
     },
     {
       columnName: 'transactions.table.columns.settled',
       columnKey: 'settled',
       type: 'boolean',
       sortable: true,
-      editableType: 'switch',
+      editableType: 'checkbox',
+      maxWidth: TRANSACTION_COLUMN_WIDTH.settled,
     },
     {
       columnName: 'transactions.table.columns.account',
       columnKey: 'account',
-      type: 'badge',
+      type: 'string',
       sortable: true,
-      badge: {
-        type: 'secondary',
-        shape: 'pill',
+      maxWidth: TRANSACTION_COLUMN_WIDTH.account,
+      cellIcon: {
         iconColumnKey: 'accountIcon',
         colorHexColumnKey: 'accountColorHex',
-        fullWidth: true,
       },
     },
     {
@@ -124,12 +133,14 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] =
       columnKey: 'amount',
       type: 'currency',
       sortable: true,
+      maxWidth: TRANSACTION_COLUMN_WIDTH.amount,
     },
     {
       columnName: 'transactions.table.columns.category',
       columnKey: 'category',
       type: 'badge',
       sortable: true,
+      maxWidth: TRANSACTION_COLUMN_WIDTH.category,
       badge: {
         type: 'secondary',
         shape: 'pill',
@@ -143,6 +154,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] =
       columnKey: 'description',
       type: 'string',
       sortable: true,
+      maxWidth: TRANSACTION_COLUMN_WIDTH.description,
     },
   ] as const;
 
@@ -194,6 +206,9 @@ const createTransactionTableStructure = (
   [
     ...TRANSACTION_TABLE_COLUMNS,
     {
+      minWidth: TRANSACTION_COLUMN_WIDTH.action,
+      maxWidth: TRANSACTION_COLUMN_WIDTH.action,
+      showLabel: false,
       actionItems: [
         {
           id: 'edit',
