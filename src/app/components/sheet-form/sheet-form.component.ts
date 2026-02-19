@@ -8,6 +8,7 @@ import {
   type ZardComboboxOption,
 } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
+import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { Z_SHEET_DATA } from '@/shared/components/sheet';
 import { mergeClasses } from '@/shared/utils/merge-classes';
@@ -19,6 +20,7 @@ import type {
   AppSheetFieldValue,
   AppSheetFieldValueMap,
   AppSheetFormData,
+  AppSheetInputField,
   AppSheetSelectField,
   AppSheetSelectOption,
 } from './sheet-form.types';
@@ -46,7 +48,7 @@ const GRID_SPAN_CLASS_BY_VALUE = {
 
 @Component({
   selector: 'app-sheet-form',
-  imports: [ZardDatePickerComponent, ZardComboboxComponent, ZardCheckboxComponent, ...ZardSelectImports],
+  imports: [ZardDatePickerComponent, ZardComboboxComponent, ZardCheckboxComponent, ZardInputDirective, ...ZardSelectImports],
   templateUrl: './sheet-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -131,6 +133,10 @@ export class AppSheetFormComponent {
     this.patchValue(field.id, this.normalizeFieldValue(field, value));
   }
 
+  protected onInputChange(field: AppSheetInputField, value: string): void {
+    this.patchValue(field.id, this.normalizeFieldValue(field, value));
+  }
+
   protected dateValue(field: AppSheetDatePickerField): Date | null {
     return this.normalizeDateValue(this.fieldValueState()[field.id]);
   }
@@ -181,6 +187,15 @@ export class AppSheetFormComponent {
     }
 
     return currentValue.trim();
+  }
+
+  protected inputValue(field: AppSheetInputField): string {
+    const currentValue = this.fieldValueState()[field.id];
+    if (typeof currentValue !== 'string') {
+      return '';
+    }
+
+    return currentValue;
   }
 
   protected comboboxOptions(field: AppSheetComboboxField): ZardComboboxOption[] {
@@ -252,6 +267,10 @@ export class AppSheetFormComponent {
     return field.type === 'checkbox';
   }
 
+  protected isInputField(field: AppSheetField): field is AppSheetInputField {
+    return field.type === 'input';
+  }
+
   protected minDate(field: AppSheetDatePickerField): Date | null {
     return this.normalizeDateValue(field.minDate);
   }
@@ -276,6 +295,10 @@ export class AppSheetFormComponent {
 
     if (field.type === 'select') {
       return DEFAULT_COMBOBOX_PLACEHOLDER;
+    }
+
+    if (field.type === 'input') {
+      return '';
     }
 
     return '';
@@ -371,6 +394,14 @@ export class AppSheetFormComponent {
       }
       case 'checkbox':
         return Boolean(value);
+      case 'input': {
+        if (typeof value !== 'string') {
+          return null;
+        }
+
+        const normalizedValue = value.trim();
+        return normalizedValue.length > 0 ? normalizedValue : null;
+      }
       default:
         return null;
     }
@@ -415,6 +446,8 @@ export class AppSheetFormComponent {
         return typeof value !== 'string' || value.trim().length === 0;
       case 'date-picker':
         return !(value instanceof Date) || Number.isNaN(value.getTime());
+      case 'input':
+        return typeof value !== 'string' || value.trim().length === 0;
       default:
         return true;
     }

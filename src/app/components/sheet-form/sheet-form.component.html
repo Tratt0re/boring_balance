@@ -111,6 +111,30 @@
             <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
           }
         </div>
+      } @else if (isInputField(field)) {
+        <div>
+          @if (field.label) {
+            <label class="mb-1.5 block text-sm font-medium">
+              {{ displayLabel(field) }}
+              @if (field.required) {
+                <span class="text-destructive">*</span>
+              }
+            </label>
+          }
+
+          <input
+            z-input
+            [type]="field.inputType ?? 'text'"
+            [value]="inputValue(field)"
+            [placeholder]="displayPlaceholder(field)"
+            [disabled]="field.disabled ?? false"
+            (input)="onInputChange(field, $any($event.target).value)"
+          />
+
+          @if (field.description) {
+            <p class="mt-1 text-xs text-muted-foreground">{{ displayDescription(field) }}</p>
+          }
+        </div>
       }
     </div>
   }

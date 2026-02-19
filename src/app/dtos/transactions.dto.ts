@@ -63,6 +63,8 @@ export interface TransactionGetDto {
 export interface TransactionListTransactionsFiltersDto {
   readonly date_from?: UnixTimestampMilliseconds;
   readonly date_to?: UnixTimestampMilliseconds;
+  readonly amount_from?: number;
+  readonly amount_to?: number;
   readonly categories?: readonly RowId[];
   readonly accounts?: readonly RowId[];
   readonly settled?: BooleanFlagInput;

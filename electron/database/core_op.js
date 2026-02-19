@@ -117,6 +117,25 @@ function appendOperatorCondition(clauses, params, quotedColumn, operator, value,
       params.push(value);
       return;
     }
+    case 'absGt':
+    case 'absGte':
+    case 'absLt':
+    case 'absLte': {
+      if (value === null) {
+        throw new Error(`${label}.${operator} cannot be null.`);
+      }
+
+      const sqlOperator = {
+        absGt: '>',
+        absGte: '>=',
+        absLt: '<',
+        absLte: '<=',
+      }[operator];
+
+      clauses.push(`ABS(${quotedColumn}) ${sqlOperator} ?`);
+      params.push(value);
+      return;
+    }
     case 'in':
       appendInCondition(clauses, params, quotedColumn, value, `${label}.in`);
       return;
@@ -146,7 +165,7 @@ function appendOperatorCondition(clauses, params, quotedColumn, operator, value,
  * - `null` value: `{ column: null }` => `"column" IS NULL`
  * - array value: `{ column: [1, 2] }` => `"column" IN (?, ?)`
  * - operator object:
- *   - `{ eq, ne, gt, gte, lt, lte, in, notIn, isNull }`
+ *   - `{ eq, ne, gt, gte, lt, lte, absGt, absGte, absLt, absLte, in, notIn, isNull }`
  *
  * @param {Record<string, unknown>} where - Column/value filters.
  * @returns {{ clause: string, params: unknown[] }} SQL fragment and parameter list.
