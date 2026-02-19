@@ -204,6 +204,7 @@ export class AppDataTableComponent {
     mergeClasses(
       this.class(),
       this.stickyHeader() ? 'border-separate border-spacing-0' : '',
+      this.highContrastHeader() ? '[&_th]:text-high-contrast-table-header-foreground' : '',
       this.striped() ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
       this.hoverable() ? '' : '[&_tbody_tr:hover]:!bg-transparent',
     ),
