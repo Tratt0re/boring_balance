@@ -4,6 +4,7 @@ const {
   ensurePlainObject,
   extractString,
   normalizeAmountToCents,
+  normalizeOptionalString,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
   normalizePositiveInteger,
@@ -12,11 +13,12 @@ const {
 
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'amount_from', 'amount_to', 'accounts']);
-const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount']);
-const UPDATE_FIELDS = new Set(['transfer_id', 'occurred_at', 'from_account_id', 'to_account_id', 'amount']);
+const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description']);
+const UPDATE_FIELDS = new Set(['transfer_id', 'occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description']);
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
+const DESCRIPTION_MAX_LENGTH = 50;
 
 function normalizeOptionalIdArray(value, label) {
   if (value === undefined) {
@@ -100,6 +102,9 @@ function normalizeCreatePayload(payload) {
   const fromAccountId = normalizePositiveInteger(body.from_account_id, 'payload.from_account_id');
   const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
   const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
+  const description = normalizeOptionalString(body.description, 'payload.description', {
+    maxLength: DESCRIPTION_MAX_LENGTH,
+  });
 
   if (amountCents <= 0) {
     throw new Error('payload.amount must be a positive number.');
@@ -114,6 +119,7 @@ function normalizeCreatePayload(payload) {
     from_account_id: fromAccountId,
     to_account_id: toAccountId,
     amount_cents: amountCents,
+    description: description ?? null,
     created_at: nowUnixTimestampMilliseconds(),
   };
 }
@@ -127,6 +133,9 @@ function normalizeUpdatePayload(payload) {
   const fromAccountId = normalizePositiveInteger(body.from_account_id, 'payload.from_account_id');
   const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
   const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
+  const description = normalizeOptionalString(body.description, 'payload.description', {
+    maxLength: DESCRIPTION_MAX_LENGTH,
+  });
 
   if (amountCents <= 0) {
     throw new Error('payload.amount must be a positive number.');
@@ -142,6 +151,7 @@ function normalizeUpdatePayload(payload) {
     from_account_id: fromAccountId,
     to_account_id: toAccountId,
     amount_cents: amountCents,
+    description: description ?? null,
     updated_at: nowUnixTimestampMilliseconds(),
   };
 }

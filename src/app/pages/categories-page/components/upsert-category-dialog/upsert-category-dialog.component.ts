@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
@@ -7,6 +9,10 @@ import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/compone
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
+
+const CATEGORY_NAME_MIN_LENGTH = 2;
+const CATEGORY_NAME_MAX_LENGTH = 64;
+const CATEGORY_DESCRIPTION_MAX_LENGTH = 50;
 
 const CATEGORY_TYPE_OPTIONS = [
   { label: 'category.type.income', value: 'income' },
@@ -28,7 +34,7 @@ export interface UpsertCategoryDialogData {
 
 @Component({
   selector: 'app-upsert-category-dialog',
-  imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
+  imports: [ReactiveFormsModule, TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
   templateUrl: './upsert-category-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,32 +45,24 @@ export class UpsertCategoryDialogComponent {
   protected readonly colorOptions = APP_COLOR_OPTIONS;
   protected readonly iconOptions = APP_ICON_OPTIONS;
   protected readonly typeOptions = CATEGORY_TYPE_OPTIONS;
+  protected readonly descriptionMaxLength = CATEGORY_DESCRIPTION_MAX_LENGTH;
 
-  protected readonly name = signal(this.initialCategory?.name ?? '');
-  protected readonly description = signal(this.initialCategory?.description ?? '');
-  protected readonly colorKey = signal(this.initialCategory?.colorKey ?? '');
-  protected readonly icon = signal(this.initialCategory?.icon ?? '');
-  protected readonly type = signal<CategoryType | ''>(this.initialCategory?.type ?? '');
-  protected readonly nameTouched = signal(false);
-  protected readonly descriptionTouched = signal(false);
-  protected readonly typeTouched = signal(false);
+  protected readonly form = new FormGroup({
+    name: new FormControl(this.initialCategory?.name ?? '', { nonNullable: true }),
+    description: new FormControl(this.initialCategory?.description ?? '', { nonNullable: true }),
+    colorKey: new FormControl(this.initialCategory?.colorKey ?? '', { nonNullable: true }),
+    icon: new FormControl<string | null>(this.initialCategory?.icon ?? null),
+    type: new FormControl<CategoryType | ''>(this.initialCategory?.type ?? '', { nonNullable: true }),
+  });
+
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  protected readonly nameErrorKey = computed(() => this.getNameError(this.name()));
-  protected readonly descriptionErrorKey = computed(() => this.getDescriptionError(this.description()));
-  protected readonly typeErrorKey = computed(() => this.getTypeError(this.type()));
-  protected readonly visibleNameErrorKey = computed(() =>
-    this.submitAttempted() || this.nameTouched() ? this.nameErrorKey() : null,
-  );
-  protected readonly visibleDescriptionErrorKey = computed(() =>
-    this.submitAttempted() || this.descriptionTouched() ? this.descriptionErrorKey() : null,
-  );
-  protected readonly visibleTypeErrorKey = computed(() =>
-    this.submitAttempted() || this.typeTouched() ? this.typeErrorKey() : null,
-  );
-
-  constructor(private readonly translateService: TranslateService) {}
+  constructor(private readonly translateService: TranslateService) {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.clearSubmitError();
+    });
+  }
 
   public collectCreatePayload(): CategoryCreateDto | null {
     const changes = this.collectNormalizedChanges('categories.dialog.add.errors.fixValidation');
@@ -87,56 +85,35 @@ export class UpsertCategoryDialogComponent {
     this.errorKey.set(errorKey);
   }
 
-  protected onNameInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.name.set(nextValue);
-    this.clearSubmitError();
-  }
-
-  protected onNameBlur(): void {
-    this.nameTouched.set(true);
-  }
-
-  protected onDescriptionInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.description.set(nextValue);
-    this.clearSubmitError();
-  }
-
-  protected onDescriptionBlur(): void {
-    this.descriptionTouched.set(true);
-  }
-
-  protected onTypeChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleNameErrorKey(): string | null {
+    const control = this.form.controls.name;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.typeTouched.set(true);
-    if (this.isCategoryType(value)) {
-      this.type.set(value);
-    } else {
-      this.type.set('');
-    }
-    this.clearSubmitError();
+    return this.getNameError(control.value);
   }
 
-  protected onColorChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleDescriptionErrorKey(): string | null {
+    const control = this.form.controls.description;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.colorKey.set(value);
-    this.clearSubmitError();
+    return this.getDescriptionError(control.value);
   }
 
-  protected onIconChange(value: string | string[] | null): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleTypeErrorKey(): string | null {
+    const control = this.form.controls.type;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.icon.set(value ?? '');
-    this.clearSubmitError();
+    return this.getTypeError(control.value);
+  }
+
+  protected descriptionLength(): number {
+    return this.form.controls.description.value.length;
   }
 
   protected getIconComboboxOptions(): ZardComboboxOption[] {
@@ -149,22 +126,21 @@ export class UpsertCategoryDialogComponent {
 
   private collectNormalizedChanges(invalidFormErrorKey: string): CategoryUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
-    this.nameTouched.set(true);
-    this.descriptionTouched.set(true);
-    this.typeTouched.set(true);
+    this.form.markAllAsTouched();
 
     if (this.hasValidationError()) {
       this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
-    const name = this.normalizeRequiredString(this.name());
+    const values = this.form.getRawValue();
+    const name = this.normalizeRequiredString(values.name);
     if (!name) {
       this.errorKey.set('categories.dialog.add.errors.nameRequired');
       return null;
     }
 
-    const type = this.type();
+    const type = values.type;
     if (!this.isCategoryType(type)) {
       this.errorKey.set('categories.dialog.add.errors.typeRequired');
       return null;
@@ -173,15 +149,19 @@ export class UpsertCategoryDialogComponent {
     this.errorKey.set(null);
     return {
       name,
-      description: this.normalizeNullableString(this.description()),
-      color_key: this.normalizeColor(this.colorKey()),
-      icon: this.normalizeIcon(this.icon()),
+      description: this.normalizeNullableString(values.description),
+      color_key: this.normalizeColor(values.colorKey),
+      icon: this.normalizeIcon(values.icon),
       type,
     };
   }
 
   private hasValidationError(): boolean {
-    return this.nameErrorKey() !== null || this.descriptionErrorKey() !== null || this.typeErrorKey() !== null;
+    return (
+      this.getNameError(this.form.controls.name.value) !== null ||
+      this.getDescriptionError(this.form.controls.description.value) !== null ||
+      this.getTypeError(this.form.controls.type.value) !== null
+    );
   }
 
   private getNameError(value: string): string | null {
@@ -189,19 +169,23 @@ export class UpsertCategoryDialogComponent {
     if (trimmed.length === 0) {
       return 'categories.dialog.add.errors.nameRequired';
     }
-    if (trimmed.length < 2) {
+
+    if (trimmed.length < CATEGORY_NAME_MIN_LENGTH) {
       return 'categories.dialog.add.errors.nameMinLength';
     }
-    if (trimmed.length > 64) {
+
+    if (trimmed.length > CATEGORY_NAME_MAX_LENGTH) {
       return 'categories.dialog.add.errors.nameMaxLength';
     }
+
     return null;
   }
 
   private getDescriptionError(value: string): string | null {
-    if (value.trim().length > 160) {
+    if (value.length > CATEGORY_DESCRIPTION_MAX_LENGTH) {
       return 'categories.dialog.add.errors.descriptionMaxLength';
     }
+
     return null;
   }
 
@@ -209,6 +193,7 @@ export class UpsertCategoryDialogComponent {
     if (!this.isCategoryType(value)) {
       return 'categories.dialog.add.errors.typeRequired';
     }
+
     return null;
   }
 

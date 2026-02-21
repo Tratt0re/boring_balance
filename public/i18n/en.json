@@ -59,6 +59,21 @@
       "exclude": "Exclude"
     }
   },
+  "account": {
+    "type": {
+      "cash": "Cash",
+      "bank": "Bank",
+      "savings": "Savings",
+      "brokerage": "Brokerage",
+      "crypto": "Crypto",
+      "credit": "Credit"
+    },
+    "display_mode": {
+      "cashflow": "Cashflow",
+      "allocation": "Allocation",
+      "valuation": "Valuation"
+    }
+  },
   "accounts": {
     "table": {
       "description": "Account configuration",
@@ -66,10 +81,13 @@
       "actions": {
         "add": "Add account",
         "edit": "Edit account",
-        "archive": "Archive account"
+        "archive": "Archive account",
+        "locked": "Locked account"
       },
       "columns": {
         "name": "Name",
+        "type": "Type",
+        "displayMode": "Display mode",
         "description": "Description",
         "color": "Color",
         "icon": "Icon"
@@ -81,12 +99,16 @@
         "description": "Create a new account with visual settings.",
         "fields": {
           "name": "Name",
+          "type": "Type",
+          "displayMode": "Display mode",
           "description": "Description",
           "color": "Color",
           "icon": "Icon"
         },
         "placeholders": {
           "name": "Account name",
+          "type": "Select type",
+          "displayMode": "Select display mode",
           "description": "Account description",
           "color": "Select color",
           "icon": "Select icon"
@@ -100,7 +122,9 @@
           "nameRequired": "Name is required.",
           "nameMinLength": "Name must be at least 2 characters.",
           "nameMaxLength": "Name must be at most 64 characters.",
-          "descriptionMaxLength": "Description must be at most 160 characters.",
+          "typeRequired": "Account type is required.",
+          "displayModeRequired": "Display mode is required.",
+          "descriptionMaxLength": "Description must be at most 50 characters.",
           "createFailed": "Failed to create account."
         }
       },
@@ -171,7 +195,7 @@
           "nameRequired": "Name is required.",
           "nameMinLength": "Name must be at least 2 characters.",
           "nameMaxLength": "Name must be at most 64 characters.",
-          "descriptionMaxLength": "Description must be at most 160 characters.",
+          "descriptionMaxLength": "Description must be at most 50 characters.",
           "typeRequired": "Category type is required.",
           "createFailed": "Failed to create category."
         }
@@ -233,13 +257,15 @@
             "occurredAt": "Date",
             "fromAccount": "From account",
             "toAccount": "To account",
-            "amount": "Amount"
+            "amount": "Amount",
+            "description": "Description"
           },
           "placeholders": {
             "occurredAt": "Pick a date",
             "fromAccount": "Select source account",
             "toAccount": "Select destination account",
-            "amount": "0.00"
+            "amount": "0.00",
+            "description": "Optional description"
           },
           "actions": {
             "cancel": "Cancel",
@@ -253,6 +279,7 @@
             "accountsMustDiffer": "Source and destination accounts must be different.",
             "amountRequired": "Amount is required.",
             "amountInvalid": "Amount must be a positive number.",
+            "descriptionMaxLength": "Description must be at most 50 characters.",
             "createFailed": "Failed to create transfer."
           }
         },
@@ -393,7 +420,7 @@
           "amountRequired": "Amount is required.",
           "amountInvalid": "Amount must be a valid number.",
           "categoryRequired": "Category is required.",
-          "descriptionMaxLength": "Description must be at most 160 characters.",
+          "descriptionMaxLength": "Description must be at most 50 characters.",
           "createFailed": "Failed to create transaction."
         }
       },

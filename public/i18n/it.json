@@ -59,6 +59,21 @@
       "exclude": "Escluso"
     }
   },
+  "account": {
+    "type": {
+      "cash": "Contanti",
+      "bank": "Banca",
+      "savings": "Risparmio",
+      "brokerage": "Investimenti",
+      "crypto": "Cripto",
+      "credit": "Credito"
+    },
+    "display_mode": {
+      "cashflow": "Flusso cassa",
+      "allocation": "Allocazione",
+      "valuation": "Valutazione"
+    }
+  },
   "accounts": {
     "table": {
       "description": "Configurazione conti",
@@ -66,10 +81,13 @@
       "actions": {
         "add": "Aggiungi conto",
         "edit": "Modifica conto",
-        "archive": "Archivia conto"
+        "archive": "Archivia conto",
+        "locked": "Conto bloccato"
       },
       "columns": {
         "name": "Nome",
+        "type": "Tipo",
+        "displayMode": "Modalita vista",
         "description": "Descrizione",
         "color": "Colore",
         "icon": "Icona"
@@ -81,12 +99,16 @@
         "description": "Crea un nuovo conto con impostazioni visive.",
         "fields": {
           "name": "Nome",
+          "type": "Tipo",
+          "displayMode": "Modalita vista",
           "description": "Descrizione",
           "color": "Colore",
           "icon": "Icona"
         },
         "placeholders": {
           "name": "Nome conto",
+          "type": "Seleziona tipo",
+          "displayMode": "Seleziona modalita vista",
           "description": "Descrizione conto",
           "color": "Seleziona colore",
           "icon": "Seleziona icona"
@@ -100,7 +122,9 @@
           "nameRequired": "Il nome e obbligatorio.",
           "nameMinLength": "Il nome deve contenere almeno 2 caratteri.",
           "nameMaxLength": "Il nome deve contenere al massimo 64 caratteri.",
-          "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
+          "typeRequired": "Il tipo conto e obbligatorio.",
+          "displayModeRequired": "La modalita vista e obbligatoria.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 50 caratteri.",
           "createFailed": "Creazione del conto non riuscita."
         }
       },
@@ -171,7 +195,7 @@
           "nameRequired": "Il nome è obbligatorio.",
           "nameMinLength": "Il nome deve contenere almeno 2 caratteri.",
           "nameMaxLength": "Il nome deve contenere al massimo 64 caratteri.",
-          "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 50 caratteri.",
           "typeRequired": "Il tipo di categoria è obbligatorio.",
           "createFailed": "Creazione della categoria non riuscita."
         }
@@ -295,7 +319,7 @@
           "amountRequired": "L'importo e obbligatorio.",
           "amountInvalid": "L'importo deve essere un numero valido.",
           "categoryRequired": "La categoria e obbligatoria.",
-          "descriptionMaxLength": "La descrizione deve contenere al massimo 160 caratteri.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 50 caratteri.",
           "createFailed": "Creazione del movimento non riuscita."
         }
       },
@@ -346,13 +370,15 @@
             "occurredAt": "Data",
             "fromAccount": "Conto di origine",
             "toAccount": "Conto di destinazione",
-            "amount": "Importo"
+            "amount": "Importo",
+            "description": "Descrizione"
           },
           "placeholders": {
             "occurredAt": "Seleziona una data",
             "fromAccount": "Seleziona conto di origine",
             "toAccount": "Seleziona conto di destinazione",
-            "amount": "0.00"
+            "amount": "0.00",
+            "description": "Descrizione facoltativa"
           },
           "actions": {
             "cancel": "Annulla",
@@ -366,6 +392,7 @@
             "accountsMustDiffer": "Il conto di origine e quello di destinazione devono essere diversi.",
             "amountRequired": "L'importo e obbligatorio.",
             "amountInvalid": "L'importo deve essere un numero positivo.",
+            "descriptionMaxLength": "La descrizione deve contenere al massimo 50 caratteri.",
             "createFailed": "Creazione del trasferimento non riuscita."
           }
         },

@@ -31,6 +31,7 @@ const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'a
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
+const DESCRIPTION_MAX_LENGTH = 50;
 
 function mergeSystemCategoryFilter(where = {}) {
   const nextWhere = { ...where };
@@ -83,7 +84,9 @@ function normalizeCategoryChanges(value, label, options = {}) {
         ? undefined
         : requireString(changesInput.name, `${label}.name`, { allowEmpty: false }),
     parent_id: normalizeOptionalInteger(changesInput.parent_id, `${label}.parent_id`),
-    description: normalizeOptionalString(changesInput.description, `${label}.description`),
+    description: normalizeOptionalString(changesInput.description, `${label}.description`, {
+      maxLength: DESCRIPTION_MAX_LENGTH,
+    }),
     color_key: normalizeOptionalString(changesInput.color_key, `${label}.color_key`),
     icon: normalizeOptionalString(changesInput.icon, `${label}.icon`),
     type:

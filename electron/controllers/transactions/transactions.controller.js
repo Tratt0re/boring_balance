@@ -38,6 +38,7 @@ const LIST_FILTER_FIELDS = new Set([
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
+const DESCRIPTION_MAX_LENGTH = 50;
 
 function normalizeOptionalTags(value, label) {
   if (value === undefined) {
@@ -75,7 +76,9 @@ function normalizeTransactionChanges(value, label, options = {}) {
       changesInput.amount === undefined
         ? undefined
         : normalizeAmountToCents(changesInput.amount, `${label}.amount`),
-    description: normalizeOptionalString(changesInput.description, `${label}.description`),
+    description: normalizeOptionalString(changesInput.description, `${label}.description`, {
+      maxLength: DESCRIPTION_MAX_LENGTH,
+    }),
     tags: normalizedTags === undefined ? undefined : JSON.stringify(normalizedTags),
     transfer_id: normalizeOptionalString(changesInput.transfer_id, `${label}.transfer_id`),
     settled: normalizeOptionalBooleanFlag(changesInput.settled, `${label}.settled`),

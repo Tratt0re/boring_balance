@@ -101,10 +101,10 @@ export interface ZardComboboxGroup {
         } @else {
           @if (selectedOption(); as selectedOption) {
             @if (selectedOption.icon; as selectedIcon) {
-              <z-icon zSize="sm" [zType]="selectedIcon" class="mr-2 shrink-0 text-primary opacity-70" />
+              <z-icon zSize="sm" [zType]="selectedIcon" class="shrink-0 text-primary opacity-70" />
             }
           }
-          {{ displayValue() ?? placeholder() }}
+          <span class="truncate">{{ displayValue() ?? placeholder() }}</span>
         }
       </span>
       <z-icon zType="chevrons-up-down" [class]="chevronClasses()" />
@@ -247,7 +247,7 @@ export class ZardComboboxComponent implements ControlValueAccessor {
     ),
   );
   protected readonly valueContainerClasses = computed(() =>
-    mergeClasses('min-w-0 flex-1 text-left', this.multiple() ? '' : 'truncate'),
+    mergeClasses('min-w-0 flex-1 text-left', this.multiple() ? '' : 'flex items-center gap-2'),
   );
   protected readonly chevronClasses = computed(() => mergeClasses('ml-2 shrink-0', this.zChevronClass()));
 

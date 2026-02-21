@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
-import { TransactionModel } from '@/models';
+import { TransactionModel, TransferModel } from '@/models';
 import { BaseIpcService } from './base-ipc.service';
 
 export interface TransactionTransferResult {
   readonly transferId: string;
+  readonly transfer: TransferModel;
   readonly transactions: readonly TransactionModel[];
 }
 
@@ -17,6 +18,14 @@ export interface TransactionUpdateResult {
 
 export interface TransactionListResult {
   readonly rows: readonly TransactionModel[];
+  readonly total: number;
+  readonly page: number;
+  readonly pageSize: number;
+  readonly totalPages: number;
+}
+
+export interface TransferListResult {
+  readonly rows: readonly TransferModel[];
   readonly total: number;
   readonly page: number;
   readonly pageSize: number;
@@ -40,6 +49,7 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     const transfer = await this.ipcClient.createTransfer(payload);
     return {
       transferId: transfer.transfer_id,
+      transfer: TransferModel.fromDTO(transfer.transfer),
       transactions: transfer.transactions.map((row) => TransactionModel.fromDTO(row)),
     };
   }
@@ -48,6 +58,7 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     const transfer = await this.ipcClient.updateTransfer(payload);
     return {
       transferId: transfer.transfer_id,
+      transfer: TransferModel.fromDTO(transfer.transfer),
       transactions: transfer.transactions.map((row) => TransactionModel.fromDTO(row)),
     };
   }
@@ -74,12 +85,12 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     };
   }
 
-  async listTransfers(payload?: DTO.TransactionListTransfersDto): Promise<TransactionListResult> {
+  async listTransfers(payload?: DTO.TransactionListTransfersDto): Promise<TransferListResult> {
     const response = await this.ipcClient.listTransfers(payload);
     const pageSize = response.page_size;
 
     return {
-      rows: response.rows.map((row) => TransactionModel.fromDTO(row)),
+      rows: response.rows.map((row) => TransferModel.fromDTO(row)),
       total: response.total,
       page: response.page,
       pageSize,

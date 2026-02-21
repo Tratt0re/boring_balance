@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
@@ -7,6 +9,8 @@ import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
+
+const TRANSFER_DESCRIPTION_MAX_LENGTH = 50;
 
 interface DialogSelectOption {
   readonly value: string;
@@ -19,6 +23,7 @@ export interface TransferDialogInitialValue {
   readonly fromAccountId: number;
   readonly toAccountId: number;
   readonly amount: number;
+  readonly description: string | null;
 }
 
 export interface UpsertTransferDialogData {
@@ -28,7 +33,7 @@ export interface UpsertTransferDialogData {
 
 @Component({
   selector: 'app-upsert-transfer-dialog',
-  imports: [TranslatePipe, ZardDatePickerComponent, ZardInputDirective, ...ZardSelectImports],
+  imports: [ReactiveFormsModule, TranslatePipe, ZardDatePickerComponent, ZardInputDirective, ...ZardSelectImports],
   templateUrl: './upsert-transfer-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -37,38 +42,30 @@ export class UpsertTransferDialogComponent {
   private readonly initialTransfer = this.data?.transfer;
 
   protected readonly accountOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.accountOptions);
+  protected readonly descriptionMaxLength = TRANSFER_DESCRIPTION_MAX_LENGTH;
 
-  protected readonly occurredAt = signal<Date | null>(
-    this.initialTransfer ? new Date(this.initialTransfer.occurredAt) : new Date(),
-  );
-  protected readonly fromAccountId = signal(this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : '');
-  protected readonly toAccountId = signal(this.initialTransfer ? `${this.initialTransfer.toAccountId}` : '');
-  protected readonly amount = signal(this.initialTransfer ? `${this.initialTransfer.amount}` : '');
+  protected readonly form = new FormGroup({
+    occurredAt: new FormControl<Date | null>(
+      this.initialTransfer ? new Date(this.initialTransfer.occurredAt) : new Date(),
+    ),
+    fromAccountId: new FormControl(this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : '', {
+      nonNullable: true,
+    }),
+    toAccountId: new FormControl(this.initialTransfer ? `${this.initialTransfer.toAccountId}` : '', {
+      nonNullable: true,
+    }),
+    amount: new FormControl(this.initialTransfer ? `${this.initialTransfer.amount}` : '', { nonNullable: true }),
+    description: new FormControl(this.initialTransfer?.description ?? '', { nonNullable: true }),
+  });
 
-  protected readonly occurredAtTouched = signal(false);
-  protected readonly fromAccountTouched = signal(false);
-  protected readonly toAccountTouched = signal(false);
-  protected readonly amountTouched = signal(false);
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  protected readonly occurredAtErrorKey = computed(() => this.getOccurredAtError(this.occurredAt()));
-  protected readonly fromAccountErrorKey = computed(() => this.getFromAccountError(this.fromAccountId()));
-  protected readonly toAccountErrorKey = computed(() => this.getToAccountError(this.toAccountId(), this.fromAccountId()));
-  protected readonly amountErrorKey = computed(() => this.getAmountError(this.amount()));
-
-  protected readonly visibleOccurredAtErrorKey = computed(() =>
-    this.submitAttempted() || this.occurredAtTouched() ? this.occurredAtErrorKey() : null,
-  );
-  protected readonly visibleFromAccountErrorKey = computed(() =>
-    this.submitAttempted() || this.fromAccountTouched() ? this.fromAccountErrorKey() : null,
-  );
-  protected readonly visibleToAccountErrorKey = computed(() =>
-    this.submitAttempted() || this.toAccountTouched() ? this.toAccountErrorKey() : null,
-  );
-  protected readonly visibleAmountErrorKey = computed(() =>
-    this.submitAttempted() || this.amountTouched() ? this.amountErrorKey() : null,
-  );
+  constructor() {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.clearSubmitError();
+    });
+  }
 
   public collectCreatePayload(): TransactionCreateTransferDto | null {
     const values = this.collectNormalizedValues('transactions.transfers.dialog.add.errors.fixValidation');
@@ -81,6 +78,7 @@ export class UpsertTransferDialogComponent {
       from_account_id: values.fromAccountId,
       to_account_id: values.toAccountId,
       amount: values.amount,
+      description: values.description,
     };
   }
 
@@ -101,6 +99,7 @@ export class UpsertTransferDialogComponent {
       from_account_id: values.fromAccountId,
       to_account_id: values.toAccountId,
       amount: values.amount,
+      description: values.description,
     };
   }
 
@@ -108,49 +107,62 @@ export class UpsertTransferDialogComponent {
     this.errorKey.set(errorKey);
   }
 
-  protected onOccurredAtChange(value: Date | null): void {
-    this.occurredAt.set(value);
-    this.occurredAtTouched.set(true);
-    this.clearSubmitError();
-  }
-
-  protected onFromAccountChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleOccurredAtErrorKey(): string | null {
+    const control = this.form.controls.occurredAt;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.fromAccountId.set(value);
-    this.fromAccountTouched.set(true);
-    this.clearSubmitError();
+    return this.getOccurredAtError(control.value);
   }
 
-  protected onToAccountChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleFromAccountErrorKey(): string | null {
+    const control = this.form.controls.fromAccountId;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.toAccountId.set(value);
-    this.toAccountTouched.set(true);
-    this.clearSubmitError();
+    return this.getFromAccountError(control.value);
   }
 
-  protected onAmountInput(event: Event): void {
-    const value = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.amount.set(value);
-    this.clearSubmitError();
+  protected visibleToAccountErrorKey(): string | null {
+    const control = this.form.controls.toAccountId;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getToAccountError(control.value, this.form.controls.fromAccountId.value);
   }
 
-  protected onAmountBlur(): void {
-    this.amountTouched.set(true);
+  protected visibleAmountErrorKey(): string | null {
+    const control = this.form.controls.amount;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getAmountError(control.value);
+  }
+
+  protected visibleDescriptionErrorKey(): string | null {
+    const control = this.form.controls.description;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getDescriptionError(control.value);
+  }
+
+  protected descriptionLength(): number {
+    return this.form.controls.description.value.length;
   }
 
   protected isFromAccountOptionDisabled(optionValue: string): boolean {
-    const selectedToAccountId = this.toAccountId();
+    const selectedToAccountId = this.form.controls.toAccountId.value;
     return selectedToAccountId.length > 0 && selectedToAccountId === optionValue;
   }
 
   protected isToAccountOptionDisabled(optionValue: string): boolean {
-    const selectedFromAccountId = this.fromAccountId();
+    const selectedFromAccountId = this.form.controls.fromAccountId.value;
     return selectedFromAccountId.length > 0 && selectedFromAccountId === optionValue;
   }
 
@@ -159,31 +171,31 @@ export class UpsertTransferDialogComponent {
     fromAccountId: number;
     toAccountId: number;
     amount: number;
+    description: string | null;
   } | null {
     this.submitAttempted.set(true);
-    this.occurredAtTouched.set(true);
-    this.fromAccountTouched.set(true);
-    this.toAccountTouched.set(true);
-    this.amountTouched.set(true);
+    this.form.markAllAsTouched();
 
     if (this.hasValidationError()) {
       this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
-    const occurredAt = this.toOccurredAt(this.occurredAt());
+    const values = this.form.getRawValue();
+
+    const occurredAt = this.toOccurredAt(values.occurredAt);
     if (occurredAt === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.dateRequired');
       return null;
     }
 
-    const fromAccountId = this.toPositiveInteger(this.fromAccountId());
+    const fromAccountId = this.toPositiveInteger(values.fromAccountId);
     if (fromAccountId === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.fromAccountRequired');
       return null;
     }
 
-    const toAccountId = this.toPositiveInteger(this.toAccountId());
+    const toAccountId = this.toPositiveInteger(values.toAccountId);
     if (toAccountId === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.toAccountRequired');
       return null;
@@ -194,7 +206,7 @@ export class UpsertTransferDialogComponent {
       return null;
     }
 
-    const amount = this.toAmount(this.amount());
+    const amount = this.toAmount(values.amount);
     if (amount === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.amountInvalid');
       return null;
@@ -206,15 +218,17 @@ export class UpsertTransferDialogComponent {
       fromAccountId,
       toAccountId,
       amount,
+      description: this.toDescription(values.description),
     };
   }
 
   private hasValidationError(): boolean {
     return (
-      this.occurredAtErrorKey() !== null ||
-      this.fromAccountErrorKey() !== null ||
-      this.toAccountErrorKey() !== null ||
-      this.amountErrorKey() !== null
+      this.getOccurredAtError(this.form.controls.occurredAt.value) !== null ||
+      this.getFromAccountError(this.form.controls.fromAccountId.value) !== null ||
+      this.getToAccountError(this.form.controls.toAccountId.value, this.form.controls.fromAccountId.value) !== null ||
+      this.getAmountError(this.form.controls.amount.value) !== null ||
+      this.getDescriptionError(this.form.controls.description.value) !== null
     );
   }
 
@@ -246,6 +260,12 @@ export class UpsertTransferDialogComponent {
     }
 
     return this.toAmount(value) === null ? 'transactions.transfers.dialog.add.errors.amountInvalid' : null;
+  }
+
+  private getDescriptionError(value: string): string | null {
+    return value.length > TRANSFER_DESCRIPTION_MAX_LENGTH
+      ? 'transactions.transfers.dialog.add.errors.descriptionMaxLength'
+      : null;
   }
 
   private toOccurredAt(value: Date | null): number | null {
@@ -280,6 +300,15 @@ export class UpsertTransferDialogComponent {
     }
 
     return parsed;
+  }
+
+  private toDescription(value: unknown): string | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+
+    const normalizedValue = `${value}`.trim();
+    return normalizedValue.length === 0 ? null : normalizedValue;
   }
 
   private clearSubmitError(): void {

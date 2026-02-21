@@ -1,4 +1,4 @@
-<div class="grid gap-4 sm:grid-cols-2">
+<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="category-name">
       {{ 'categories.dialog.add.fields.name' | translate }}
@@ -8,13 +8,11 @@
       id="category-name"
       z-input
       type="text"
+      formControlName="name"
       maxlength="64"
       aria-required="true"
       [attr.aria-invalid]="visibleNameErrorKey() ? 'true' : null"
-      [value]="name()"
       [attr.placeholder]="'categories.dialog.add.placeholders.name' | translate"
-      (blur)="onNameBlur()"
-      (input)="onNameInput($event)"
     />
     @if (visibleNameErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
@@ -25,17 +23,17 @@
     <label class="mb-1.5 block text-sm font-medium" for="category-description">
       {{ 'categories.dialog.add.fields.description' | translate }}
     </label>
-    <input
+    <textarea
       id="category-description"
       z-input
-      type="text"
-      maxlength="160"
+      formControlName="description"
+      rows="3"
+      class="max-h-32 resize-y"
+      [attr.maxlength]="descriptionMaxLength"
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
-      [value]="description()"
       [attr.placeholder]="'categories.dialog.add.placeholders.description' | translate"
-      (blur)="onDescriptionBlur()"
-      (input)="onDescriptionInput($event)"
-    />
+    ></textarea>
+    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
     @if (visibleDescriptionErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
@@ -46,11 +44,7 @@
       {{ 'categories.dialog.add.fields.type' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select
-      [zValue]="type()"
-      [zPlaceholder]="'categories.dialog.add.placeholders.type' | translate"
-      (zSelectionChange)="onTypeChange($event)"
-    >
+    <z-select formControlName="type" [zPlaceholder]="'categories.dialog.add.placeholders.type' | translate">
       @for (option of typeOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -62,11 +56,7 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">{{ 'categories.dialog.add.fields.color' | translate }}</label>
-    <z-select
-      [zValue]="colorKey()"
-      [zPlaceholder]="'categories.dialog.add.placeholders.color' | translate"
-      (zSelectionChange)="onColorChange($event)"
-    >
+    <z-select formControlName="colorKey" [zPlaceholder]="'categories.dialog.add.placeholders.color' | translate">
       @for (option of colorOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zColorHex]="option.colorHex ?? null" />
       }
@@ -77,14 +67,13 @@
     <label class="mb-1.5 block text-sm font-medium">{{ 'categories.dialog.add.fields.icon' | translate }}</label>
     <z-combobox
       zWidth="full"
-      [value]="icon() || null"
+      formControlName="icon"
       [placeholder]="'categories.dialog.add.placeholders.icon' | translate"
       [options]="getIconComboboxOptions()"
-      (zValueChange)="onIconChange($event)"
     />
   </div>
 
   @if (errorKey(); as currentError) {
     <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
   }
-</div>
+</form>

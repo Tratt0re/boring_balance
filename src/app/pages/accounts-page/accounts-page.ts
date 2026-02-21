@@ -18,20 +18,29 @@ import {
   type UpsertAccountDialogData,
 } from './components/upsert-account-dialog/upsert-account-dialog.component';
 
+const isAccountReadonly = (row: object): boolean => {
+  const account = row as AccountTableRow;
+  return account.locked || account.archived;
+};
+
 interface AccountTableRow {
   readonly id: number;
   readonly name: string;
+  readonly type: AccountModel['type'];
+  readonly typeLabel: string;
   readonly description: string | null;
   readonly colorKey: string | null;
   readonly icon: string | null;
   readonly iconColorHex: string | null;
+  readonly locked: boolean;
   readonly archived: boolean;
 }
 
 const ACCOUNT_COLUMN_WIDTH = {
-  name: '1/4',
-  description: '2/4',
-  action: '1/4',
+  name: '2/10',
+  type: '1/10',
+  description: '5/10',
+  action: '2/10',
 } as const;
 
 const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
@@ -47,6 +56,18 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
       iconColumnKey: 'icon',
       colorHex: `var(--${DEFAULT_VISUAL_COLOR_KEY})`,
       colorHexColumnKey: 'iconColorHex',
+    },
+  },
+  {
+    columnName: 'accounts.table.columns.type',
+    columnKey: 'typeLabel',
+    type: 'badge',
+    sortable: true,
+    minWidth: ACCOUNT_COLUMN_WIDTH.type,
+    maxWidth: ACCOUNT_COLUMN_WIDTH.type,
+    badge: {
+      shape: 'pill',
+      type: 'secondary',
     },
   },
   {
@@ -75,7 +96,7 @@ const createAccountTableStructure = (
           icon: 'pencil',
           label: 'accounts.table.actions.edit',
           buttonType: 'ghost',
-          disabled: (row: object) => (row as AccountTableRow).archived,
+          disabled: isAccountReadonly,
           action: onEditAction,
         },
         {
@@ -83,8 +104,18 @@ const createAccountTableStructure = (
           icon: 'archive',
           label: 'accounts.table.actions.archive',
           buttonType: 'ghost',
-          disabled: (row: object) => (row as AccountTableRow).archived,
+          disabled: isAccountReadonly,
           action: onArchiveAction,
+        },
+        {
+          id: 'readonly-lock',
+          icon: 'lock',
+          label: 'accounts.table.actions.locked',
+          buttonType: 'ghost',
+          visible: isAccountReadonly,
+          disabled: () => true,
+          showWhenDisabled: true,
+          action: () => undefined,
         },
       ],
     },
@@ -108,7 +139,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
   protected readonly accountRowClass = (row: object): string =>
-    (row as AccountTableRow).archived ? 'bg-primary-foreground' : '';
+    isAccountReadonly(row) ? 'bg-primary-foreground' : '';
   protected readonly accountTableStructure = createAccountTableStructure(
     (row) => this.onEditAccount(row),
     (row) => this.onArchiveAccount(row),
@@ -173,17 +204,20 @@ export class AccountsPage implements OnInit, OnDestroy {
     return {
       id: account.id,
       name: account.name,
+      type: account.type,
+      typeLabel: `account.type.${account.type}`,
       description: account.description,
       colorKey: account.colorKey,
       icon: account.icon,
       iconColorHex: `var(--${account.colorKey ?? DEFAULT_VISUAL_COLOR_KEY})`,
+      locked: account.locked,
       archived: account.archived,
     };
   }
 
   private onEditAccount(row: object): void {
     const account = row as AccountTableRow;
-    if (account.archived) {
+    if (isAccountReadonly(account)) {
       return;
     }
 
@@ -196,6 +230,7 @@ export class AccountsPage implements OnInit, OnDestroy {
       zData: {
         account: {
           name: account.name,
+          type: account.type,
           description: account.description,
           colorKey: account.colorKey,
           icon: account.icon,
@@ -229,7 +264,7 @@ export class AccountsPage implements OnInit, OnDestroy {
 
   private onArchiveAccount(row: object): void {
     const account = row as AccountTableRow;
-    if (account.archived) {
+    if (isAccountReadonly(account)) {
       return;
     }
 

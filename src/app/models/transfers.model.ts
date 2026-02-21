@@ -1,58 +1,44 @@
+import type { TransferDto } from '@/dtos';
+
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
-import type { TransactionModel } from './transactions.model';
+
+const AMOUNT_CENTS_DIVISOR = 100;
 
 export class TransferModel {
   constructor(
     public readonly transferId: string,
     public readonly occurredAt: UnixTimestampMilliseconds,
-    public readonly fromTransaction: TransactionModel,
-    public readonly toTransaction: TransactionModel,
+    public readonly fromAccountId: RowId,
+    public readonly toAccountId: RowId,
     public readonly amount: number,
+    public readonly description: string | null,
+    public readonly createdAt: UnixTimestampMilliseconds,
+    public readonly updatedAt: UnixTimestampMilliseconds | null,
   ) {}
 
-  get fromAccountId(): RowId {
-    return this.fromTransaction.accountId;
-  }
-
-  get toAccountId(): RowId {
-    return this.toTransaction.accountId;
-  }
-
-  static fromTransactions(transactions: readonly TransactionModel[]): readonly TransferModel[] {
-    const groupedByTransferId = new Map<string, TransactionModel[]>();
-
-    for (const transaction of transactions) {
-      if (!transaction.transferId) {
-        continue;
-      }
-
-      const transferRows = groupedByTransferId.get(transaction.transferId) ?? [];
-      transferRows.push(transaction);
-      groupedByTransferId.set(transaction.transferId, transferRows);
-    }
-
-    const transfers: TransferModel[] = [];
-    for (const [transferId, transferRows] of groupedByTransferId.entries()) {
-      const fromTransaction = transferRows.find((row) => row.amount < 0);
-      const toTransaction = transferRows.find((row) => row.amount > 0);
-
-      if (!fromTransaction || !toTransaction) {
-        continue;
-      }
-
-      transfers.push(
-        new TransferModel(
-          transferId,
-          fromTransaction.occurredAt,
-          fromTransaction,
-          toTransaction,
-          Math.abs(fromTransaction.amount),
-        ),
-      );
-    }
-
-    return transfers.sort(
-      (left, right) => Number(right.occurredAt) - Number(left.occurredAt) || right.transferId.localeCompare(left.transferId),
+  static fromDTO(dto: TransferDto): TransferModel {
+    return new TransferModel(
+      dto.id,
+      dto.occurred_at,
+      dto.from_account_id,
+      dto.to_account_id,
+      dto.amount_cents / AMOUNT_CENTS_DIVISOR,
+      dto.description,
+      dto.created_at,
+      dto.updated_at,
     );
+  }
+
+  toDTO(): TransferDto {
+    return {
+      id: this.transferId,
+      occurred_at: this.occurredAt,
+      from_account_id: this.fromAccountId,
+      to_account_id: this.toAccountId,
+      amount_cents: Math.round(this.amount * AMOUNT_CENTS_DIVISOR),
+      description: this.description,
+      created_at: this.createdAt,
+      updated_at: this.updatedAt,
+    };
   }
 }

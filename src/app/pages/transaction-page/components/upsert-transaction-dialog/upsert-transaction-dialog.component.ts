@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
@@ -8,6 +10,8 @@ import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
+
+const TRANSACTION_DESCRIPTION_MAX_LENGTH = 50;
 
 interface DialogSelectOption {
   readonly value: string;
@@ -40,7 +44,14 @@ export interface UpsertTransactionDialogData {
 
 @Component({
   selector: 'app-upsert-transaction-dialog',
-  imports: [TranslatePipe, ZardDatePickerComponent, ZardInputDirective, ZardSwitchComponent, ...ZardSelectImports],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ZardDatePickerComponent,
+    ZardInputDirective,
+    ZardSwitchComponent,
+    ...ZardSelectImports,
+  ],
   templateUrl: './upsert-transaction-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -50,45 +61,31 @@ export class UpsertTransactionDialogComponent {
 
   protected readonly accountOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.accountOptions);
   protected readonly categoryOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.categoryOptions);
+  protected readonly descriptionMaxLength = TRANSACTION_DESCRIPTION_MAX_LENGTH;
 
-  protected readonly occurredAt = signal<Date | null>(
-    this.initialTransaction ? new Date(this.initialTransaction.occurredAt) : new Date(),
-  );
-  protected readonly settled = signal(this.initialTransaction?.settled ?? false);
-  protected readonly accountId = signal(this.initialTransaction ? `${this.initialTransaction.accountId}` : '');
-  protected readonly amount = signal(this.initialTransaction ? `${this.initialTransaction.amount}` : '');
-  protected readonly categoryId = signal(this.initialTransaction ? `${this.initialTransaction.categoryId}` : '');
-  protected readonly description = signal(this.initialTransaction?.description ?? '');
+  protected readonly form = new FormGroup({
+    occurredAt: new FormControl<Date | null>(
+      this.initialTransaction ? new Date(this.initialTransaction.occurredAt) : new Date(),
+    ),
+    settled: new FormControl(this.initialTransaction?.settled ?? false, { nonNullable: true }),
+    accountId: new FormControl(this.initialTransaction ? `${this.initialTransaction.accountId}` : '', {
+      nonNullable: true,
+    }),
+    amount: new FormControl(this.initialTransaction ? `${this.initialTransaction.amount}` : '', { nonNullable: true }),
+    categoryId: new FormControl(this.initialTransaction ? `${this.initialTransaction.categoryId}` : '', {
+      nonNullable: true,
+    }),
+    description: new FormControl(this.initialTransaction?.description ?? '', { nonNullable: true }),
+  });
 
-  protected readonly occurredAtTouched = signal(false);
-  protected readonly accountIdTouched = signal(false);
-  protected readonly amountTouched = signal(false);
-  protected readonly categoryIdTouched = signal(false);
-  protected readonly descriptionTouched = signal(false);
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  protected readonly occurredAtErrorKey = computed(() => this.getOccurredAtError(this.occurredAt()));
-  protected readonly accountIdErrorKey = computed(() => this.getAccountIdError(this.accountId()));
-  protected readonly amountErrorKey = computed(() => this.getAmountError(this.amount()));
-  protected readonly categoryIdErrorKey = computed(() => this.getCategoryIdError(this.categoryId()));
-  protected readonly descriptionErrorKey = computed(() => this.getDescriptionError(this.description()));
-
-  protected readonly visibleOccurredAtErrorKey = computed(() =>
-    this.submitAttempted() || this.occurredAtTouched() ? this.occurredAtErrorKey() : null,
-  );
-  protected readonly visibleAccountIdErrorKey = computed(() =>
-    this.submitAttempted() || this.accountIdTouched() ? this.accountIdErrorKey() : null,
-  );
-  protected readonly visibleAmountErrorKey = computed(() =>
-    this.submitAttempted() || this.amountTouched() ? this.amountErrorKey() : null,
-  );
-  protected readonly visibleCategoryIdErrorKey = computed(() =>
-    this.submitAttempted() || this.categoryIdTouched() ? this.categoryIdErrorKey() : null,
-  );
-  protected readonly visibleDescriptionErrorKey = computed(() =>
-    this.submitAttempted() || this.descriptionTouched() ? this.descriptionErrorKey() : null,
-  );
+  constructor() {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.clearSubmitError();
+    });
+  }
 
   public collectCreatePayload(): TransactionCreateDto | null {
     const values = this.collectNormalizedValues('transactions.dialog.add.errors.fixValidation');
@@ -126,99 +123,99 @@ export class UpsertTransactionDialogComponent {
     this.errorKey.set(errorKey);
   }
 
-  protected onOccurredAtChange(value: Date | null): void {
-    this.occurredAt.set(value);
-    this.occurredAtTouched.set(true);
-    this.clearSubmitError();
-  }
-
-  protected onSettledChange(checked: boolean): void {
-    this.settled.set(checked);
-    this.clearSubmitError();
-  }
-
-  protected onAccountIdChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleOccurredAtErrorKey(): string | null {
+    const control = this.form.controls.occurredAt;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.accountId.set(value);
-    this.accountIdTouched.set(true);
-    this.clearSubmitError();
+    return this.getOccurredAtError(control.value);
   }
 
-  protected onAmountInput(event: Event): void {
-    const value = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.amount.set(value);
-    this.clearSubmitError();
-  }
-
-  protected onAmountBlur(): void {
-    this.amountTouched.set(true);
-  }
-
-  protected onCategoryIdChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleAccountIdErrorKey(): string | null {
+    const control = this.form.controls.accountId;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.categoryId.set(value);
-    this.categoryIdTouched.set(true);
-    this.clearSubmitError();
+    return this.getAccountIdError(control.value);
   }
 
-  protected onDescriptionInput(event: Event): void {
-    const value = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.description.set(value);
-    this.clearSubmitError();
+  protected visibleAmountErrorKey(): string | null {
+    const control = this.form.controls.amount;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getAmountError(control.value);
   }
 
-  protected onDescriptionBlur(): void {
-    this.descriptionTouched.set(true);
+  protected visibleCategoryIdErrorKey(): string | null {
+    const control = this.form.controls.categoryId;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getCategoryIdError(control.value);
+  }
+
+  protected visibleDescriptionErrorKey(): string | null {
+    const control = this.form.controls.description;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getDescriptionError(control.value);
+  }
+
+  protected settledValue(): boolean {
+    return this.form.controls.settled.value;
+  }
+
+  protected descriptionLength(): number {
+    return this.form.controls.description.value.length;
   }
 
   private hasValidationError(): boolean {
     return (
-      this.occurredAtErrorKey() !== null ||
-      this.accountIdErrorKey() !== null ||
-      this.amountErrorKey() !== null ||
-      this.categoryIdErrorKey() !== null ||
-      this.descriptionErrorKey() !== null
+      this.getOccurredAtError(this.form.controls.occurredAt.value) !== null ||
+      this.getAccountIdError(this.form.controls.accountId.value) !== null ||
+      this.getAmountError(this.form.controls.amount.value) !== null ||
+      this.getCategoryIdError(this.form.controls.categoryId.value) !== null ||
+      this.getDescriptionError(this.form.controls.description.value) !== null
     );
   }
 
   private collectNormalizedValues(invalidFormErrorKey: string): NormalizedTransactionValues | null {
     this.submitAttempted.set(true);
-    this.occurredAtTouched.set(true);
-    this.accountIdTouched.set(true);
-    this.amountTouched.set(true);
-    this.categoryIdTouched.set(true);
-    this.descriptionTouched.set(true);
+    this.form.markAllAsTouched();
 
     if (this.hasValidationError()) {
       this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
-    const occurredAt = this.toOccurredAt(this.occurredAt());
+    const values = this.form.getRawValue();
+
+    const occurredAt = this.toOccurredAt(values.occurredAt);
     if (occurredAt === null) {
       this.errorKey.set('transactions.dialog.add.errors.dateRequired');
       return null;
     }
 
-    const accountId = this.toPositiveInteger(this.accountId());
+    const accountId = this.toPositiveInteger(values.accountId);
     if (accountId === null) {
       this.errorKey.set('transactions.dialog.add.errors.accountRequired');
       return null;
     }
 
-    const amount = this.toAmount(this.amount());
+    const amount = this.toAmount(values.amount);
     if (amount === null) {
       this.errorKey.set('transactions.dialog.add.errors.amountInvalid');
       return null;
     }
 
-    const categoryId = this.toPositiveInteger(this.categoryId());
+    const categoryId = this.toPositiveInteger(values.categoryId);
     if (categoryId === null) {
       this.errorKey.set('transactions.dialog.add.errors.categoryRequired');
       return null;
@@ -227,11 +224,11 @@ export class UpsertTransactionDialogComponent {
     this.errorKey.set(null);
     return {
       occurredAt,
-      settled: this.settled(),
+      settled: values.settled,
       accountId,
       amount,
       categoryId,
-      description: this.normalizeNullableString(this.description()),
+      description: this.normalizeNullableString(values.description),
     };
   }
 
@@ -256,7 +253,9 @@ export class UpsertTransactionDialogComponent {
   }
 
   private getDescriptionError(value: string): string | null {
-    return value.trim().length > 160 ? 'transactions.dialog.add.errors.descriptionMaxLength' : null;
+    return value.length > TRANSACTION_DESCRIPTION_MAX_LENGTH
+      ? 'transactions.dialog.add.errors.descriptionMaxLength'
+      : null;
   }
 
   private toOccurredAt(value: Date | null): number | null {

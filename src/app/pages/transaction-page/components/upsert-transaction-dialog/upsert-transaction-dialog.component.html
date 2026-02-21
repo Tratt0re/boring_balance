@@ -1,4 +1,4 @@
-<div class="grid gap-4 sm:grid-cols-2">
+<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div>
     <label class="mb-1.5 block text-sm font-medium">
       {{ 'transactions.dialog.add.fields.occurredAt' | translate }}
@@ -6,9 +6,8 @@
     </label>
     <z-date-picker
       zIconPosition="right"
-      [value]="occurredAt()"
+      formControlName="occurredAt"
       [placeholder]="'transactions.dialog.add.placeholders.occurredAt' | translate"
-      (dateChange)="onOccurredAtChange($event)"
     />
     @if (visibleOccurredAtErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
@@ -17,8 +16,8 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">{{ 'transactions.dialog.add.fields.settled' | translate }}</label>
-    <z-switch [zChecked]="settled()" (zCheckedChange)="onSettledChange($event)">
-      {{ settled() ? ('common.yes' | translate) : ('common.no' | translate) }}
+    <z-switch formControlName="settled">
+      {{ settledValue() ? ('common.yes' | translate) : ('common.no' | translate) }}
     </z-switch>
   </div>
 
@@ -27,11 +26,7 @@
       {{ 'transactions.dialog.add.fields.account' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select
-      [zValue]="accountId()"
-      [zPlaceholder]="'transactions.dialog.add.placeholders.account' | translate"
-      (zSelectionChange)="onAccountIdChange($event)"
-    >
+    <z-select formControlName="accountId" [zPlaceholder]="'transactions.dialog.add.placeholders.account' | translate">
       @for (option of accountOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -50,13 +45,11 @@
       id="transaction-amount"
       z-input
       type="number"
+      formControlName="amount"
       step="0.01"
       aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
-      [value]="amount()"
       [attr.placeholder]="'transactions.dialog.add.placeholders.amount' | translate"
-      (blur)="onAmountBlur()"
-      (input)="onAmountInput($event)"
     />
     @if (visibleAmountErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
@@ -68,11 +61,7 @@
       {{ 'transactions.dialog.add.fields.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select
-      [zValue]="categoryId()"
-      [zPlaceholder]="'transactions.dialog.add.placeholders.category' | translate"
-      (zSelectionChange)="onCategoryIdChange($event)"
-    >
+    <z-select formControlName="categoryId" [zPlaceholder]="'transactions.dialog.add.placeholders.category' | translate">
       @for (option of categoryOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -86,17 +75,17 @@
     <label class="mb-1.5 block text-sm font-medium" for="transaction-description">
       {{ 'transactions.dialog.add.fields.description' | translate }}
     </label>
-    <input
+    <textarea
       id="transaction-description"
       z-input
-      type="text"
-      maxlength="160"
+      formControlName="description"
+      rows="3"
+      class="max-h-32 resize-y"
+      [attr.maxlength]="descriptionMaxLength"
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
-      [value]="description()"
       [attr.placeholder]="'transactions.dialog.add.placeholders.description' | translate"
-      (blur)="onDescriptionBlur()"
-      (input)="onDescriptionInput($event)"
-    />
+    ></textarea>
+    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
     @if (visibleDescriptionErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
@@ -105,4 +94,4 @@
   @if (errorKey(); as currentError) {
     <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
   }
-</div>
+</form>

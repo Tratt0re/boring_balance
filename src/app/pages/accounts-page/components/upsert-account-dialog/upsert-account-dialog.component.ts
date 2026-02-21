@@ -1,15 +1,31 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
-import type { AccountCreateDto, AccountUpdateDto } from '@/dtos';
+import type { AccountCreateDto, AccountType, AccountUpdateDto } from '@/dtos';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 
+const ACCOUNT_NAME_MIN_LENGTH = 2;
+const ACCOUNT_NAME_MAX_LENGTH = 64;
+const ACCOUNT_DESCRIPTION_MAX_LENGTH = 50;
+
+const ACCOUNT_TYPE_OPTIONS = [
+  { label: 'account.type.cash', value: 'cash' },
+  { label: 'account.type.bank', value: 'bank' },
+  { label: 'account.type.savings', value: 'savings' },
+  { label: 'account.type.brokerage', value: 'brokerage' },
+  { label: 'account.type.crypto', value: 'crypto' },
+  { label: 'account.type.credit', value: 'credit' },
+] as const;
+
 export interface AccountDialogInitialValue {
   readonly name: string;
+  readonly type: AccountType;
   readonly description: string | null;
   readonly colorKey: string | null;
   readonly icon: string | null;
@@ -21,7 +37,7 @@ export interface UpsertAccountDialogData {
 
 @Component({
   selector: 'app-upsert-account-dialog',
-  imports: [TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
+  imports: [ReactiveFormsModule, TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
   templateUrl: './upsert-account-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,30 +47,33 @@ export class UpsertAccountDialogComponent {
 
   protected readonly colorOptions = APP_COLOR_OPTIONS;
   protected readonly iconOptions = APP_ICON_OPTIONS;
+  protected readonly typeOptions = ACCOUNT_TYPE_OPTIONS;
+  protected readonly descriptionMaxLength = ACCOUNT_DESCRIPTION_MAX_LENGTH;
 
-  protected readonly name = signal(this.initialAccount?.name ?? '');
-  protected readonly description = signal(this.initialAccount?.description ?? '');
-  protected readonly colorKey = signal(this.initialAccount?.colorKey ?? '');
-  protected readonly icon = signal(this.initialAccount?.icon ?? '');
-  protected readonly nameTouched = signal(false);
-  protected readonly descriptionTouched = signal(false);
+  protected readonly form = new FormGroup({
+    name: new FormControl(this.initialAccount?.name ?? '', { nonNullable: true }),
+    type: new FormControl<AccountType | ''>(this.initialAccount?.type ?? '', { nonNullable: true }),
+    description: new FormControl(this.initialAccount?.description ?? '', { nonNullable: true }),
+    colorKey: new FormControl(this.initialAccount?.colorKey ?? '', { nonNullable: true }),
+    icon: new FormControl<string | null>(this.initialAccount?.icon ?? null),
+  });
+
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  protected readonly nameErrorKey = computed(() => this.getNameError(this.name()));
-  protected readonly descriptionErrorKey = computed(() => this.getDescriptionError(this.description()));
-  protected readonly visibleNameErrorKey = computed(() =>
-    this.submitAttempted() || this.nameTouched() ? this.nameErrorKey() : null,
-  );
-  protected readonly visibleDescriptionErrorKey = computed(() =>
-    this.submitAttempted() || this.descriptionTouched() ? this.descriptionErrorKey() : null,
-  );
-
-  constructor(private readonly translateService: TranslateService) {}
+  constructor(private readonly translateService: TranslateService) {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.clearSubmitError();
+    });
+  }
 
   public collectCreatePayload(): AccountCreateDto | null {
     const changes = this.collectNormalizedChanges('accounts.dialog.add.errors.fixValidation');
     if (!changes) {
+      return null;
+    }
+
+    if (!this.isAccountCreateDto(changes)) {
       return null;
     }
 
@@ -66,6 +85,7 @@ export class UpsertAccountDialogComponent {
 
     return {
       name,
+      type: changes.type,
       description: changes.description,
       color_key: changes.color_key,
       icon: changes.icon,
@@ -80,42 +100,35 @@ export class UpsertAccountDialogComponent {
     this.errorKey.set(errorKey);
   }
 
-  protected onNameInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.name.set(nextValue);
-    this.clearSubmitError();
-  }
-
-  protected onNameBlur(): void {
-    this.nameTouched.set(true);
-  }
-
-  protected onDescriptionInput(event: Event): void {
-    const nextValue = (event.target as HTMLInputElement | null)?.value ?? '';
-    this.description.set(nextValue);
-    this.clearSubmitError();
-  }
-
-  protected onDescriptionBlur(): void {
-    this.descriptionTouched.set(true);
-  }
-
-  protected onColorChange(value: string | string[]): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleNameErrorKey(): string | null {
+    const control = this.form.controls.name;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.colorKey.set(value);
-    this.clearSubmitError();
+    return this.getNameError(control.value);
   }
 
-  protected onIconChange(value: string | string[] | null): void {
-    if (Array.isArray(value)) {
-      return;
+  protected visibleTypeErrorKey(): string | null {
+    const control = this.form.controls.type;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
     }
 
-    this.icon.set(value ?? '');
-    this.clearSubmitError();
+    return this.getTypeError(control.value);
+  }
+
+  protected visibleDescriptionErrorKey(): string | null {
+    const control = this.form.controls.description;
+    if (!this.submitAttempted() && !control.touched) {
+      return null;
+    }
+
+    return this.getDescriptionError(control.value);
+  }
+
+  protected descriptionLength(): number {
+    return this.form.controls.description.value.length;
   }
 
   protected getIconComboboxOptions(): ZardComboboxOption[] {
@@ -128,31 +141,42 @@ export class UpsertAccountDialogComponent {
 
   private collectNormalizedChanges(invalidFormErrorKey: string): AccountUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
-    this.nameTouched.set(true);
-    this.descriptionTouched.set(true);
+    this.form.markAllAsTouched();
 
     if (this.hasValidationError()) {
       this.errorKey.set(invalidFormErrorKey);
       return null;
     }
 
-    const name = this.normalizeRequiredString(this.name());
+    const values = this.form.getRawValue();
+    const name = this.normalizeRequiredString(values.name);
     if (!name) {
       this.errorKey.set('accounts.dialog.add.errors.nameRequired');
+      return null;
+    }
+
+    const type = values.type;
+    if (!this.isAccountType(type)) {
+      this.errorKey.set('accounts.dialog.add.errors.typeRequired');
       return null;
     }
 
     this.errorKey.set(null);
     return {
       name,
-      description: this.normalizeNullableString(this.description()),
-      color_key: this.normalizeColor(this.colorKey()),
-      icon: this.normalizeIcon(this.icon()),
+      type,
+      description: this.normalizeNullableString(values.description),
+      color_key: this.normalizeColor(values.colorKey),
+      icon: this.normalizeIcon(values.icon),
     };
   }
 
   private hasValidationError(): boolean {
-    return this.nameErrorKey() !== null || this.descriptionErrorKey() !== null;
+    return (
+      this.getNameError(this.form.controls.name.value) !== null ||
+      this.getTypeError(this.form.controls.type.value) !== null ||
+      this.getDescriptionError(this.form.controls.description.value) !== null
+    );
   }
 
   private getNameError(value: string): string | null {
@@ -160,19 +184,31 @@ export class UpsertAccountDialogComponent {
     if (trimmed.length === 0) {
       return 'accounts.dialog.add.errors.nameRequired';
     }
-    if (trimmed.length < 2) {
+
+    if (trimmed.length < ACCOUNT_NAME_MIN_LENGTH) {
       return 'accounts.dialog.add.errors.nameMinLength';
     }
-    if (trimmed.length > 64) {
+
+    if (trimmed.length > ACCOUNT_NAME_MAX_LENGTH) {
       return 'accounts.dialog.add.errors.nameMaxLength';
     }
+
     return null;
   }
 
   private getDescriptionError(value: string): string | null {
-    if (value.trim().length > 160) {
+    if (value.length > ACCOUNT_DESCRIPTION_MAX_LENGTH) {
       return 'accounts.dialog.add.errors.descriptionMaxLength';
     }
+
+    return null;
+  }
+
+  private getTypeError(value: unknown): string | null {
+    if (!this.isAccountType(value)) {
+      return 'accounts.dialog.add.errors.typeRequired';
+    }
+
     return null;
   }
 
@@ -206,6 +242,21 @@ export class UpsertAccountDialogComponent {
     }
 
     return APP_ICON_KEY_SET.has(icon) ? icon : null;
+  }
+
+  private isAccountType(value: unknown): value is AccountType {
+    return (
+      value === 'cash' ||
+      value === 'bank' ||
+      value === 'savings' ||
+      value === 'brokerage' ||
+      value === 'crypto' ||
+      value === 'credit'
+    );
+  }
+
+  private isAccountCreateDto(changes: AccountUpdateDto['changes']): changes is AccountCreateDto {
+    return this.isAccountType(changes.type);
   }
 
   private clearSubmitError(): void {

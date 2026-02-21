@@ -67,6 +67,7 @@ interface TransferTableRow {
   readonly toAccountIcon: ZardIcon | null;
   readonly toAccountColorHex: string | null;
   readonly amount: number;
+  readonly description: string | null;
 }
 
 interface TransferTableFilters {
@@ -667,7 +668,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     this.loadError.set(null);
 
     try {
-      const [accounts, transferTransactions] = await Promise.all([
+      const [accounts, transferRows] = await Promise.all([
         this.accountsService.listAll({
           where: {
             archived: 0,
@@ -700,9 +701,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         })),
       );
 
-      this.page.set(transferTransactions.page);
-      this.total.set(transferTransactions.total);
-      this.transfers.set(TransferModel.fromTransactions(transferTransactions.rows));
+      this.page.set(transferRows.page);
+      this.total.set(transferRows.total);
+      this.transfers.set(transferRows.rows);
       this.persistTableState();
     } catch (error) {
       this.transfers.set([]);
@@ -726,7 +727,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
       this.page.set(transfers.page);
       this.total.set(transfers.total);
-      this.transfers.set(TransferModel.fromTransactions(transfers.rows));
+      this.transfers.set(transfers.rows);
       this.persistTableState();
     } catch (error) {
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transfers.');
@@ -875,6 +876,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
           fromAccountId: transfer.fromAccountId,
           toAccountId: transfer.toAccountId,
           amount: transfer.amount,
+          description: transfer.description,
         },
       },
       zWidth: 'min(96vw, 720px)',
@@ -972,6 +974,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       toAccountIcon: this.accountIconById().get(toAccountId) ?? null,
       toAccountColorHex: this.accountColorHexById().get(toAccountId) ?? null,
       amount: transfer.amount,
+      description: transfer.description,
     };
   }
 }

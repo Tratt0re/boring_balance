@@ -1,124 +1,114 @@
-const { deleteRows, getDatabase, selectRows } = require('../../database');
+const { countRows, deleteRows, getDatabase, selectRows } = require('../../database');
 const { randomUUID } = require('node:crypto');
 const { createBaseModel } = require('../base-model');
 const { TRANSFER_CATEGORY_ID } = require('./constants');
-const { EMPTY_TAGS_JSON, normalizeRowsTags, normalizeRowTags } = require('./tags');
+const { EMPTY_TAGS_JSON, normalizeRowTags } = require('./tags');
 
 const transactionsBaseModel = createBaseModel('transactions');
+const transfersBaseModel = createBaseModel('transfers');
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 
-function buildFilteredTransferWhereClause(filters = {}, tableAlias = 't') {
-  const conditions = [`${tableAlias}.category_id = ?`, `${tableAlias}.transfer_id IS NOT NULL`];
-  const params = [TRANSFER_CATEGORY_ID];
+function buildFilteredTransferWhereClause(filters = {}) {
+  const where = {};
+  const occurredAtFilter = {};
+  const amountCentsFilter = {};
 
   if (filters.date_from !== undefined) {
-    conditions.push(`${tableAlias}.occurred_at >= ?`);
-    params.push(filters.date_from);
+    occurredAtFilter.gte = filters.date_from;
   }
 
   if (filters.date_to !== undefined) {
-    conditions.push(`${tableAlias}.occurred_at <= ?`);
-    params.push(filters.date_to);
+    occurredAtFilter.lte = filters.date_to;
   }
 
   if (filters.amount_from !== undefined) {
-    conditions.push(`ABS(${tableAlias}.amount_cents) >= ?`);
-    params.push(filters.amount_from);
+    amountCentsFilter.gte = filters.amount_from;
   }
 
   if (filters.amount_to !== undefined) {
-    conditions.push(`ABS(${tableAlias}.amount_cents) <= ?`);
-    params.push(filters.amount_to);
+    amountCentsFilter.lte = filters.amount_to;
   }
 
-  if (Array.isArray(filters.accounts)) {
-    if (filters.accounts.length === 0) {
-      return {
-        whereSql: ' WHERE 1 = 0',
-        params: [],
-      };
-    }
-
-    const accountPlaceholders = filters.accounts.map(() => '?').join(', ');
-    conditions.push(`${tableAlias}.account_id IN (${accountPlaceholders})`);
-    params.push(...filters.accounts);
+  if (Object.keys(occurredAtFilter).length > 0) {
+    where.occurred_at = occurredAtFilter;
   }
 
-  return {
-    whereSql: ` WHERE ${conditions.join(' AND ')}`,
-    params,
-  };
+  if (Object.keys(amountCentsFilter).length > 0) {
+    where.amount_cents = amountCentsFilter;
+  }
+
+  return where;
+}
+
+function hasAccountsFilter(filters = {}) {
+  return Array.isArray(filters.accounts);
+}
+
+function toAccountsFilterSet(filters = {}) {
+  if (!hasAccountsFilter(filters)) {
+    return null;
+  }
+
+  return new Set(filters.accounts.map((accountId) => Number(accountId)));
+}
+
+function matchesAccountsFilter(row, accountsFilterSet) {
+  if (!accountsFilterSet) {
+    return true;
+  }
+
+  return (
+    accountsFilterSet.has(Number(row.from_account_id)) ||
+    accountsFilterSet.has(Number(row.to_account_id))
+  );
 }
 
 function countFilteredTransfers(database, filters = {}) {
-  const { whereSql, params } = buildFilteredTransferWhereClause(filters, 't');
-  const sql = `
-    WITH valid_transfer_ids AS (
-      SELECT transfer_id
-      FROM transactions
-      WHERE category_id = ?
-        AND transfer_id IS NOT NULL
-      GROUP BY transfer_id
-      HAVING SUM(CASE WHEN amount_cents < 0 THEN 1 ELSE 0 END) > 0
-        AND SUM(CASE WHEN amount_cents > 0 THEN 1 ELSE 0 END) > 0
-    ),
-    filtered_transfers AS (
-      SELECT t.transfer_id
-      FROM transactions t
-      INNER JOIN valid_transfer_ids v
-        ON v.transfer_id = t.transfer_id
-      ${whereSql}
-      GROUP BY t.transfer_id
-    )
-    SELECT COUNT(*) AS total
-    FROM filtered_transfers
-  `;
+  if (hasAccountsFilter(filters)) {
+    const accountsFilterSet = toAccountsFilterSet(filters);
+    if (!accountsFilterSet || accountsFilterSet.size === 0) {
+      return 0;
+    }
 
-  const row = database.prepare(sql).get(TRANSFER_CATEGORY_ID, ...params);
-  return Number(row?.total ?? 0);
+    const rows = selectRows(database, 'transfers', buildFilteredTransferWhereClause(filters), {
+      orderBy: [
+        { column: 'occurred_at', direction: 'DESC' },
+        { column: 'id', direction: 'DESC' },
+      ],
+    });
+
+    return rows.filter((row) => matchesAccountsFilter(row, accountsFilterSet)).length;
+  }
+
+  return countRows(database, 'transfers', buildFilteredTransferWhereClause(filters));
 }
 
 function listFilteredTransferRows(database, filters = {}, pagination = {}) {
-  const { whereSql, params } = buildFilteredTransferWhereClause(filters, 't');
-  const limit = pagination.page_size;
-  const offset = (pagination.page - 1) * limit;
-  const sql = `
-    WITH valid_transfer_ids AS (
-      SELECT transfer_id
-      FROM transactions
-      WHERE category_id = ?
-        AND transfer_id IS NOT NULL
-      GROUP BY transfer_id
-      HAVING SUM(CASE WHEN amount_cents < 0 THEN 1 ELSE 0 END) > 0
-        AND SUM(CASE WHEN amount_cents > 0 THEN 1 ELSE 0 END) > 0
-    ),
-    filtered_transfers AS (
-      SELECT
-        t.transfer_id,
-        MAX(t.occurred_at) AS occurred_at_sort,
-        MAX(t.id) AS id_sort
-      FROM transactions t
-      INNER JOIN valid_transfer_ids v
-        ON v.transfer_id = t.transfer_id
-      ${whereSql}
-      GROUP BY t.transfer_id
-    ),
-    paged_transfers AS (
-      SELECT transfer_id
-      FROM filtered_transfers
-      ORDER BY occurred_at_sort DESC, id_sort DESC
-      LIMIT ? OFFSET ?
-    )
-    SELECT t.*
-    FROM transactions t
-    INNER JOIN paged_transfers p
-      ON p.transfer_id = t.transfer_id
-    WHERE t.category_id = ?
-    ORDER BY t.occurred_at DESC, t.id DESC
-  `;
+  const where = buildFilteredTransferWhereClause(filters);
+  const orderBy = [
+    { column: 'occurred_at', direction: 'DESC' },
+    { column: 'id', direction: 'DESC' },
+  ];
 
-  return database.prepare(sql).all(TRANSFER_CATEGORY_ID, ...params, limit, offset, TRANSFER_CATEGORY_ID);
+  if (hasAccountsFilter(filters)) {
+    const accountsFilterSet = toAccountsFilterSet(filters);
+    if (!accountsFilterSet || accountsFilterSet.size === 0) {
+      return [];
+    }
+
+    const rows = selectRows(database, 'transfers', where, { orderBy });
+    const filteredRows = rows.filter((row) => matchesAccountsFilter(row, accountsFilterSet));
+    const offset = (pagination.page - 1) * pagination.page_size;
+
+    return filteredRows.slice(offset, offset + pagination.page_size);
+  }
+
+  return selectRows(database, 'transfers', where, {
+    orderBy,
+    limit: pagination.page_size,
+    offset: (pagination.page - 1) * pagination.page_size,
+  });
 }
 
 function normalizePagination(pagination = {}) {
@@ -158,7 +148,7 @@ function list(filters = {}, pagination = {}) {
   });
 
   return {
-    rows: normalizeRowsTags(rows),
+    rows,
     total: totalTransfers,
     page,
     page_size: normalizedPagination.page_size,
@@ -169,6 +159,16 @@ function create(payload) {
   const database = getDatabase();
   const createTransferTx = database.transaction((transferPayload) => {
     const transferId = randomUUID();
+    const transferRow = {
+      id: transferId,
+      from_account_id: transferPayload.from_account_id,
+      to_account_id: transferPayload.to_account_id,
+      occurred_at: transferPayload.occurred_at,
+      amount_cents: Math.abs(transferPayload.amount_cents),
+      description: transferPayload.description ?? null,
+      created_at: transferPayload.created_at,
+    };
+    transfersBaseModel.create(transferRow);
 
     const outgoingTransferRow = {
       account_id: transferPayload.from_account_id,
@@ -196,15 +196,17 @@ function create(payload) {
 
     const outgoingTransferId = Number(transactionsBaseModel.create(outgoingTransferRow));
     const incomingTransferId = Number(transactionsBaseModel.create(incomingTransferRow));
+    const createdTransfer = transfersBaseModel.getById(transferId);
     const outgoingTransfer = normalizeRowTags(transactionsBaseModel.getById(outgoingTransferId));
     const incomingTransfer = normalizeRowTags(transactionsBaseModel.getById(incomingTransferId));
 
-    if (!outgoingTransfer || !incomingTransfer) {
+    if (!createdTransfer || !outgoingTransfer || !incomingTransfer) {
       throw new Error('Failed to retrieve created transfer rows.');
     }
 
     return {
       transfer_id: transferId,
+      transfer: createdTransfer,
       transactions: [outgoingTransfer, incomingTransfer],
     };
   });
@@ -215,6 +217,11 @@ function create(payload) {
 function update(payload) {
   const database = getDatabase();
   const updateTransferTx = database.transaction((transferPayload) => {
+    const transferRecord = transfersBaseModel.getById(transferPayload.transfer_id);
+    if (!transferRecord) {
+      throw new Error(`Transfer not found for transfer_id "${transferPayload.transfer_id}".`);
+    }
+
     const transferRows = selectRows(
       database,
       'transactions',
@@ -228,8 +235,17 @@ function update(payload) {
     const outgoingTransfer = transferRows.find((row) => Number(row.amount_cents) < 0);
     const incomingTransfer = transferRows.find((row) => Number(row.amount_cents) > 0);
     if (!outgoingTransfer || !incomingTransfer) {
-      throw new Error(`Transfer not found for transfer_id "${transferPayload.transfer_id}".`);
+      throw new Error(`Transfer transactions not found for transfer_id "${transferPayload.transfer_id}".`);
     }
+
+    transfersBaseModel.updateById(transferPayload.transfer_id, {
+      from_account_id: transferPayload.from_account_id,
+      to_account_id: transferPayload.to_account_id,
+      occurred_at: transferPayload.occurred_at,
+      amount_cents: Math.abs(transferPayload.amount_cents),
+      description: transferPayload.description ?? null,
+      updated_at: transferPayload.updated_at,
+    });
 
     const outgoingChanges = {
       account_id: transferPayload.from_account_id,
@@ -256,18 +272,20 @@ function update(payload) {
     transactionsBaseModel.updateById(outgoingTransfer.id, outgoingChanges);
     transactionsBaseModel.updateById(incomingTransfer.id, incomingChanges);
 
+    const updatedTransfer = transfersBaseModel.getById(transferPayload.transfer_id);
     const updatedOutgoingTransfer = normalizeRowTags(
       transactionsBaseModel.getById(Number(outgoingTransfer.id)),
     );
     const updatedIncomingTransfer = normalizeRowTags(
       transactionsBaseModel.getById(Number(incomingTransfer.id)),
     );
-    if (!updatedOutgoingTransfer || !updatedIncomingTransfer) {
+    if (!updatedTransfer || !updatedOutgoingTransfer || !updatedIncomingTransfer) {
       throw new Error('Failed to retrieve updated transfer rows.');
     }
 
     return {
       transfer_id: transferPayload.transfer_id,
+      transfer: updatedTransfer,
       transactions: [updatedOutgoingTransfer, updatedIncomingTransfer],
     };
   });
@@ -278,12 +296,17 @@ function update(payload) {
 function remove(payload) {
   const database = getDatabase();
   const deleteTransferTx = database.transaction((transferPayload) => {
-    const changed = deleteRows(database, 'transactions', {
+    const transactionChanges = deleteRows(database, 'transactions', {
       transfer_id: transferPayload.transfer_id,
       category_id: TRANSFER_CATEGORY_ID,
     });
+    const transferChanges = deleteRows(database, 'transfers', {
+      id: transferPayload.transfer_id,
+    });
 
-    return { changed };
+    return {
+      changed: transferChanges > 0 ? transferChanges : transactionChanges,
+    };
   });
 
   return deleteTransferTx(payload);

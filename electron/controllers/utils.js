@@ -38,7 +38,7 @@ function ensureNonEmptyObject(value, label) {
  *
  * @param {unknown} value - Input value.
  * @param {string} label - Field label used in error messages.
- * @param {{ trim?: boolean, allowEmpty?: boolean }} [options={}] - String normalization options.
+ * @param {{ trim?: boolean, allowEmpty?: boolean, minLength?: number, maxLength?: number }} [options={}] - String normalization options.
  * @returns {string} Normalized string.
  * @throws {Error} If value is not a string or is empty when `allowEmpty` is false.
  */
@@ -52,6 +52,14 @@ function requireString(value, label, options = {}) {
     throw new Error(`${label} cannot be empty.`);
   }
 
+  if (options.minLength !== undefined && normalizedValue.length < options.minLength) {
+    throw new Error(`${label} must be at least ${options.minLength} characters.`);
+  }
+
+  if (options.maxLength !== undefined && normalizedValue.length > options.maxLength) {
+    throw new Error(`${label} must be at most ${options.maxLength} characters.`);
+  }
+
   return normalizedValue;
 }
 
@@ -60,7 +68,7 @@ function requireString(value, label, options = {}) {
  *
  * @param {unknown} value - Input value.
  * @param {string} label - Field label used in error messages.
- * @param {{ trim?: boolean, allowEmpty?: boolean, allowNull?: boolean }} [options={}] - String normalization options.
+ * @param {{ trim?: boolean, allowEmpty?: boolean, allowNull?: boolean, minLength?: number, maxLength?: number }} [options={}] - String normalization options.
  * @returns {string|null|undefined} Normalized value.
  * @throws {Error} If value type is invalid or null is disallowed.
  */

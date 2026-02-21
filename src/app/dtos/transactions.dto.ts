@@ -21,6 +21,17 @@ export interface TransactionDto {
   readonly updated_at: UnixTimestampMilliseconds | null;
 }
 
+export interface TransferDto {
+  readonly id: string;
+  readonly from_account_id: RowId;
+  readonly to_account_id: RowId;
+  readonly occurred_at: UnixTimestampMilliseconds;
+  readonly amount_cents: number;
+  readonly description: string | null;
+  readonly created_at: UnixTimestampMilliseconds;
+  readonly updated_at: UnixTimestampMilliseconds | null;
+}
+
 export interface TransactionCreateDto {
   readonly occurred_at: UnixTimestampMilliseconds;
   readonly account_id: RowId;
@@ -37,6 +48,7 @@ export interface TransactionCreateTransferDto {
   readonly from_account_id: RowId;
   readonly to_account_id: RowId;
   readonly amount: number;
+  readonly description?: string | null;
 }
 
 export interface TransactionUpdateTransferDto {
@@ -45,6 +57,7 @@ export interface TransactionUpdateTransferDto {
   readonly from_account_id: RowId;
   readonly to_account_id: RowId;
   readonly amount: number;
+  readonly description?: string | null;
 }
 
 export interface TransactionDeleteTransferDto {
@@ -53,6 +66,7 @@ export interface TransactionDeleteTransferDto {
 
 export interface TransactionCreateTransferResponseDto {
   readonly transfer_id: string;
+  readonly transfer: TransferDto;
   readonly transactions: readonly TransactionDto[];
 }
 
@@ -97,6 +111,13 @@ export interface TransactionListResponseDto {
   readonly page_size: number;
 }
 
+export interface TransferListResponseDto {
+  readonly rows: readonly TransferDto[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
+}
+
 export interface TransactionUpdateDto {
   readonly id: RowId;
   readonly changes: {
@@ -121,6 +142,6 @@ export type TransactionUpdateTransferResponse = TransactionCreateTransferRespons
 export type TransactionDeleteTransferResponse = RemoveResponseDto;
 export type TransactionGetResponse = TransactionDto | null;
 export type TransactionListTransactionsResponse = TransactionListResponseDto;
-export type TransactionListTransfersResponse = TransactionListResponseDto;
+export type TransactionListTransfersResponse = TransferListResponseDto;
 export type TransactionUpdateResponse = UpdateResponseDto<TransactionDto>;
 export type TransactionRemoveResponse = RemoveResponseDto;
