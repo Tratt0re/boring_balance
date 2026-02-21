@@ -21,6 +21,13 @@ const CHANNELS = Object.freeze({
     update: 'db:categories:update',
     remove: 'db:categories:remove',
   }),
+  analytics: Object.freeze({
+    expensesIncomesProfitByMonth: 'db:analytics:expenses-incomes-profit-by-month',
+    receivablesPayables: 'db:analytics:receivables-payables',
+    netWorthByAccount: 'db:analytics:net-worth-by-account',
+    expensesByCategoryByMonth: 'db:analytics:expenses-by-category-by-month',
+    incomesByCategoryByMonth: 'db:analytics:incomes-by-category-by-month',
+  }),
   transactions: Object.freeze({
     create: 'db:transactions:create',
     createTransfer: 'db:transactions:create-transfer',

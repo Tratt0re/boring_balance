@@ -7,6 +7,7 @@ export enum APIChannel {
   APP_META = 'appMeta',
   ACCOUNTS = 'accounts',
   CATEGORIES = 'categories',
+  ANALYTICS = 'analytics',
   TRANSACTIONS = 'transactions',
 }
 
@@ -32,6 +33,25 @@ export interface ElectronIpcClient {
     readonly list: OptionalIpcRequest<DTO.CategoryListDto, DTO.CategoryListResponse>;
     readonly update: IpcRequest<DTO.CategoryUpdateDto, DTO.CategoryUpdateResponse>;
     readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
+  };
+  readonly analytics: {
+    readonly expensesIncomesProfitByMonth: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsExpensesIncomesProfitByMonthResponse
+    >;
+    readonly receivablesPayables: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsReceivablesPayablesResponse
+    >;
+    readonly netWorthByAccount: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsNetWorthByAccountResponse>;
+    readonly expensesByCategoryByMonth: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsExpensesByCategoryByMonthResponse
+    >;
+    readonly incomesByCategoryByMonth: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsIncomesByCategoryByMonthResponse
+    >;
   };
   readonly transactions: {
     readonly create: IpcRequest<DTO.TransactionCreateDto, DTO.TransactionCreateResponse>;

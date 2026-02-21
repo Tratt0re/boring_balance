@@ -1,5 +1,6 @@
 import type { ZardComboboxGroup, ZardComboboxOption } from '@/shared/components/combobox';
 import type { ZardIcon } from '@/shared/components/icon';
+import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
 import type { ZardSelectSizeVariants } from '@/shared/components/select';
 
 export type AppSheetFieldType = 'date-picker' | 'combobox' | 'select' | 'checkbox' | 'input';
@@ -25,6 +26,10 @@ export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue exten
 export interface AppSheetDatePickerField extends AppSheetFieldBase<'date-picker', Date | string | null> {
   readonly zFormat?: string;
   readonly zIconPosition?: 'left' | 'right';
+  readonly zPopoverPlacement?: ZardPopoverPlacement;
+  readonly zPopoverAutoFlip?: boolean;
+  readonly zPopoverPush?: boolean;
+  readonly zPopoverViewportMargin?: number;
   readonly minDate?: Date | string | number | null;
   readonly maxDate?: Date | string | number | null;
 }

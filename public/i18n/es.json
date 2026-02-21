@@ -37,6 +37,7 @@
         "amountFrom": "Importe desde",
         "amountTo": "Importe hasta",
         "settled": "Estado de liquidacion",
+        "categoryType": "Tipo de categoria",
         "category": "Categoria",
         "account": "Cuenta"
       },
@@ -46,6 +47,7 @@
         "amountFrom": "Importe minimo",
         "amountTo": "Importe maximo",
         "settled": "Cualquier estado",
+        "categoryType": "Cualquier tipo",
         "category": "Selecciona una categoria",
         "account": "Selecciona una cuenta",
         "searchCategory": "Buscar categorias...",
@@ -56,6 +58,9 @@
           "any": "Cualquier estado",
           "yes": "Liquidado",
           "no": "No liquidado"
+        },
+        "categoryType": {
+          "any": "Cualquier tipo"
         }
       },
       "actions": {
@@ -264,6 +269,7 @@
         "add": "Agregar movimiento",
         "filter": "Filtrar movimientos",
         "edit": "Editar movimiento",
+        "duplicate": "Duplicar movimiento",
         "delete": "Eliminar movimiento"
       }
     },
@@ -290,7 +296,7 @@
           "amountRequired": "El importe es obligatorio.",
           "amountInvalid": "El importe debe ser un numero valido.",
           "categoryRequired": "La categoria es obligatoria.",
-          "descriptionMaxLength": "La descripcion debe tener como maximo 50 caracteres.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
           "createFailed": "No se pudo crear el movimiento."
         }
       },
@@ -313,6 +319,14 @@
       "actions": {
         "cancel": "Cancelar",
         "delete": "Eliminar"
+      }
+    },
+    "duplicateAlert": {
+      "title": "Duplicar movimiento?",
+      "description": "Estas seguro de que quieres duplicar este movimiento?",
+      "actions": {
+        "cancel": "Cancelar",
+        "duplicate": "Duplicar"
       }
     },
     "transfers": {
@@ -343,7 +357,7 @@
             "accountsMustDiffer": "La cuenta de origen y la de destino deben ser distintas.",
             "amountRequired": "El importe es obligatorio.",
             "amountInvalid": "El importe debe ser un numero positivo.",
-            "descriptionMaxLength": "La descripcion debe tener como maximo 50 caracteres.",
+            "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
             "createFailed": "No se pudo crear la transferencia."
           }
         },

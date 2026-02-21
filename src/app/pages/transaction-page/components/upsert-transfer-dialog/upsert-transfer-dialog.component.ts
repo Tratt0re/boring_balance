@@ -1,22 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateTransferDto, TransactionUpdateTransferDto } from '@/dtos';
+import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
-import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
 
-const TRANSFER_DESCRIPTION_MAX_LENGTH = 50;
-
-interface DialogSelectOption {
-  readonly value: string;
-  readonly label: string;
-}
+const TRANSFER_DESCRIPTION_MAX_LENGTH = 75;
 
 export interface TransferDialogInitialValue {
   readonly transferId: string;
@@ -38,19 +33,20 @@ export interface UpsertTransferDialogData {
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
+    ZardComboboxComponent,
     ZardDatePickerComponent,
     ZardInputDirective,
     ZardSwitchComponent,
-    ...ZardSelectImports,
   ],
   templateUrl: './upsert-transfer-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertTransferDialogComponent {
+  private readonly translateService = inject(TranslateService);
   private readonly data = inject<UpsertTransferDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransfer = this.data?.transfer;
 
-  protected readonly accountOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.accountOptions);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.accountOptions);
   protected readonly descriptionMaxLength = TRANSFER_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
@@ -58,12 +54,12 @@ export class UpsertTransferDialogComponent {
       this.initialTransfer ? new Date(this.initialTransfer.occurredAt) : new Date(),
     ),
     settled: new FormControl(this.initialTransfer?.settled ?? true, { nonNullable: true }),
-    fromAccountId: new FormControl(this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : '', {
-      nonNullable: true,
-    }),
-    toAccountId: new FormControl(this.initialTransfer ? `${this.initialTransfer.toAccountId}` : '', {
-      nonNullable: true,
-    }),
+    fromAccountId: new FormControl<string | null>(
+      this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : null,
+    ),
+    toAccountId: new FormControl<string | null>(
+      this.initialTransfer ? `${this.initialTransfer.toAccountId}` : null,
+    ),
     amount: new FormControl(this.initialTransfer ? `${this.initialTransfer.amount}` : '', { nonNullable: true }),
     description: new FormControl(this.initialTransfer?.description ?? '', { nonNullable: true }),
   });
@@ -172,14 +168,28 @@ export class UpsertTransferDialogComponent {
     return this.form.controls.settled.value;
   }
 
-  protected isFromAccountOptionDisabled(optionValue: string): boolean {
+  protected fromAccountComboboxOptions(): readonly ZardComboboxOption[] {
     const selectedToAccountId = this.form.controls.toAccountId.value;
-    return selectedToAccountId.length > 0 && selectedToAccountId === optionValue;
+    if (typeof selectedToAccountId !== 'string' || selectedToAccountId.length === 0) {
+      return this.accountOptions;
+    }
+
+    return this.accountOptions.map((option) => ({
+      ...option,
+      disabled: option.value === selectedToAccountId,
+    }));
   }
 
-  protected isToAccountOptionDisabled(optionValue: string): boolean {
+  protected toAccountComboboxOptions(): readonly ZardComboboxOption[] {
     const selectedFromAccountId = this.form.controls.fromAccountId.value;
-    return selectedFromAccountId.length > 0 && selectedFromAccountId === optionValue;
+    if (typeof selectedFromAccountId !== 'string' || selectedFromAccountId.length === 0) {
+      return this.accountOptions;
+    }
+
+    return this.accountOptions.map((option) => ({
+      ...option,
+      disabled: option.value === selectedFromAccountId,
+    }));
   }
 
   private collectNormalizedValues(invalidFormErrorKey: string): {
@@ -254,11 +264,11 @@ export class UpsertTransferDialogComponent {
     return this.toOccurredAt(value) === null ? 'transactions.transfers.dialog.add.errors.dateRequired' : null;
   }
 
-  private getFromAccountError(value: string): string | null {
+  private getFromAccountError(value: unknown): string | null {
     return this.toPositiveInteger(value) === null ? 'transactions.transfers.dialog.add.errors.fromAccountRequired' : null;
   }
 
-  private getToAccountError(value: string, fromAccountValue: string): string | null {
+  private getToAccountError(value: unknown, fromAccountValue: unknown): string | null {
     const toAccountId = this.toPositiveInteger(value);
     if (toAccountId === null) {
       return 'transactions.transfers.dialog.add.errors.toAccountRequired';
@@ -335,10 +345,11 @@ export class UpsertTransferDialogComponent {
     }
   }
 
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly DialogSelectOption[] {
+  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
     return (options ?? []).map((option) => ({
       value: `${option.value}`,
-      label: option.label,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
     }));
   }
 }

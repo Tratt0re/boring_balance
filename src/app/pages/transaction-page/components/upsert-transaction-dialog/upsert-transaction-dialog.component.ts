@@ -1,22 +1,17 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
+import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
-import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
 
-const TRANSACTION_DESCRIPTION_MAX_LENGTH = 50;
-
-interface DialogSelectOption {
-  readonly value: string;
-  readonly label: string;
-}
+const TRANSACTION_DESCRIPTION_MAX_LENGTH = 75;
 
 export interface TransactionDialogInitialValue {
   readonly occurredAt: number;
@@ -47,20 +42,21 @@ export interface UpsertTransactionDialogData {
   imports: [
     ReactiveFormsModule,
     TranslatePipe,
+    ZardComboboxComponent,
     ZardDatePickerComponent,
     ZardInputDirective,
     ZardSwitchComponent,
-    ...ZardSelectImports,
   ],
   templateUrl: './upsert-transaction-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertTransactionDialogComponent {
+  private readonly translateService = inject(TranslateService);
   private readonly data = inject<UpsertTransactionDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransaction = this.data?.transaction;
 
-  protected readonly accountOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.accountOptions);
-  protected readonly categoryOptions: readonly DialogSelectOption[] = this.toDialogOptions(this.data?.categoryOptions);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.accountOptions);
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.categoryOptions);
   protected readonly descriptionMaxLength = TRANSACTION_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
@@ -68,13 +64,13 @@ export class UpsertTransactionDialogComponent {
       this.initialTransaction ? new Date(this.initialTransaction.occurredAt) : new Date(),
     ),
     settled: new FormControl(this.initialTransaction?.settled ?? false, { nonNullable: true }),
-    accountId: new FormControl(this.initialTransaction ? `${this.initialTransaction.accountId}` : '', {
-      nonNullable: true,
-    }),
+    accountId: new FormControl<string | null>(
+      this.initialTransaction ? `${this.initialTransaction.accountId}` : null,
+    ),
     amount: new FormControl(this.initialTransaction ? `${this.initialTransaction.amount}` : '', { nonNullable: true }),
-    categoryId: new FormControl(this.initialTransaction ? `${this.initialTransaction.categoryId}` : '', {
-      nonNullable: true,
-    }),
+    categoryId: new FormControl<string | null>(
+      this.initialTransaction ? `${this.initialTransaction.categoryId}` : null,
+    ),
     description: new FormControl(this.initialTransaction?.description ?? '', { nonNullable: true }),
   });
 
@@ -236,7 +232,7 @@ export class UpsertTransactionDialogComponent {
     return this.toOccurredAt(value) === null ? 'transactions.dialog.add.errors.dateRequired' : null;
   }
 
-  private getAccountIdError(value: string): string | null {
+  private getAccountIdError(value: unknown): string | null {
     return this.toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.accountRequired' : null;
   }
 
@@ -248,7 +244,7 @@ export class UpsertTransactionDialogComponent {
     return this.toAmount(value) === null ? 'transactions.dialog.add.errors.amountInvalid' : null;
   }
 
-  private getCategoryIdError(value: string): string | null {
+  private getCategoryIdError(value: unknown): string | null {
     return this.toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.categoryRequired' : null;
   }
 
@@ -307,10 +303,11 @@ export class UpsertTransactionDialogComponent {
     }
   }
 
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly DialogSelectOption[] {
+  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
     return (options ?? []).map((option) => ({
       value: `${option.value}`,
-      label: option.label,
+      label: this.translateService.instant(option.label),
+      icon: option.icon,
     }));
   }
 }

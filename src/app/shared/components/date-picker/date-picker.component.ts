@@ -21,6 +21,7 @@ import type { ZardButtonSizeVariants, ZardButtonTypeVariants } from '@/shared/co
 import { ZardCalendarComponent } from '@/shared/components/calendar/calendar.component';
 import { ZardIconComponent } from '@/shared/components/icon/icon.component';
 import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover/popover.component';
+import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
 
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
@@ -46,6 +47,10 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
       #popoverDirective="zPopover"
       [zContent]="calendarTemplate"
       zTrigger="click"
+      [zPlacement]="zPopoverPlacement()"
+      [zAutoFlip]="zPopoverAutoFlip()"
+      [zPush]="zPopoverPush()"
+      [zViewportMargin]="zPopoverViewportMargin()"
       (zVisibleChange)="onPopoverVisibilityChange($event)"
       [attr.aria-expanded]="false"
       [attr.aria-haspopup]="true"
@@ -105,6 +110,10 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   readonly zBorderless = input(false, { transform });
   readonly zPaddingless = input(false, { transform });
   readonly zCalendarIconClass = input<ClassValue>('');
+  readonly zPopoverPlacement = input<ZardPopoverPlacement>('bottom');
+  readonly zPopoverAutoFlip = input(true, { transform });
+  readonly zPopoverPush = input(false, { transform });
+  readonly zPopoverViewportMargin = input(8);
   readonly value = model<Date | null>(null);
   readonly placeholder = input<string>('Pick a date');
   readonly zFormat = input<string>('MMMM d, yyyy');

@@ -31,14 +31,16 @@ const LIST_FILTER_FIELDS = new Set([
   'date_to',
   'amount_from',
   'amount_to',
+  'category_types',
   'categories',
   'accounts',
   'settled',
 ]);
+const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
-const DESCRIPTION_MAX_LENGTH = 50;
+const DESCRIPTION_MAX_LENGTH = 75;
 
 function normalizeOptionalTags(value, label) {
   if (value === undefined) {
@@ -115,6 +117,27 @@ function normalizeOptionalIdArray(value, label) {
   return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
 }
 
+function normalizeOptionalEnumArray(value, label, allowedValues) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error(`${label} must be an array.`);
+  }
+
+  const normalizedEntries = value.map((entry, index) => {
+    const normalizedValue = requireString(entry, `${label}[${index}]`, { allowEmpty: false });
+    if (!allowedValues.has(normalizedValue)) {
+      throw new Error(`${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`);
+    }
+
+    return normalizedValue;
+  });
+
+  return Array.from(new Set(normalizedEntries));
+}
+
 function normalizeOptionalAmountFilterToCents(value, label) {
   if (value === undefined) {
     return undefined;
@@ -169,6 +192,11 @@ function normalizeListFilters(payload) {
             : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
         amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, 'payload.filters.amount_from'),
         amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, 'payload.filters.amount_to'),
+        category_types: normalizeOptionalEnumArray(
+          filters.category_types,
+          'payload.filters.category_types',
+          ALLOWED_CATEGORY_TYPES,
+        ),
         categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
         accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
         settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),

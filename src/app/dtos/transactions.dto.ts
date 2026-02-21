@@ -6,6 +6,7 @@ import type {
   UnixTimestampMilliseconds,
   UpdateResponseDto,
 } from './common.dto';
+import type { CategoryType } from './categories.dto';
 
 export interface TransactionDto {
   readonly id: RowId;
@@ -82,6 +83,7 @@ export interface TransactionListTransactionsFiltersDto {
   readonly date_to?: UnixTimestampMilliseconds;
   readonly amount_from?: number;
   readonly amount_to?: number;
+  readonly category_types?: readonly CategoryType[];
   readonly categories?: readonly RowId[];
   readonly accounts?: readonly RowId[];
   readonly settled?: BooleanFlagInput;

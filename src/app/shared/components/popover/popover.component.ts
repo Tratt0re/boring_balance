@@ -25,7 +25,7 @@ import { filter, Subscription } from 'rxjs';
 
 import { popoverVariants } from './popover.variants';
 
-import { mergeClasses } from '@/shared/utils/merge-classes';
+import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
 export type ZardPopoverTrigger = 'click' | 'hover' | null;
 export type ZardPopoverPlacement = 'top' | 'bottom' | 'left' | 'right';
@@ -86,6 +86,9 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   readonly zTrigger = input<ZardPopoverTrigger>('click');
   readonly zContent = input.required<TemplateRef<unknown>>();
   readonly zPlacement = input<ZardPopoverPlacement>('bottom');
+  readonly zAutoFlip = input(true, { transform });
+  readonly zPush = input(false, { transform });
+  readonly zViewportMargin = input<number>(8);
   readonly zOrigin = input<ElementRef>();
   readonly zVisible = input<boolean>(false);
   readonly zOverlayClickable = input<boolean>(true);
@@ -172,9 +175,9 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       const positionStrategy = this.overlayPositionBuilder
         .flexibleConnectedTo(this.nativeElement)
         .withPositions(this.getPositions())
-        .withPush(false)
+        .withPush(this.zPush())
         .withFlexibleDimensions(false)
-        .withViewportMargin(8);
+        .withViewportMargin(this.resolveViewportMargin());
 
       this.overlayRef = this.overlay.create({
         positionStrategy,
@@ -234,6 +237,10 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       offsetX: primaryConfig.offsetX ?? 0,
       offsetY: primaryConfig.offsetY ?? 0,
     });
+
+    if (!this.zAutoFlip()) {
+      return positions;
+    }
 
     // Fallback positions for better positioning when primary doesn't fit
     switch (placement) {
@@ -356,6 +363,15 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
     }
 
     return positions;
+  }
+
+  private resolveViewportMargin(): number {
+    const margin = Number(this.zViewportMargin());
+    if (!Number.isFinite(margin) || margin < 0) {
+      return 0;
+    }
+
+    return Math.floor(margin);
   }
 }
 

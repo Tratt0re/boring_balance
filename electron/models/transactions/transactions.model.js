@@ -1,4 +1,5 @@
 const { createBaseModel } = require('../base-model');
+const { getDatabase, selectRows } = require('../../database');
 const { TRANSFER_CATEGORY_ID } = require('./constants');
 const { normalizeRowTags, normalizeRowsTags } = require('./tags');
 
@@ -34,6 +35,26 @@ function buildAmountCentsFilter(filters = {}) {
   return Object.keys(amountCentsFilter).length === 0 ? undefined : amountCentsFilter;
 }
 
+function resolveCategoryIdsFilter(filters = {}) {
+  const hasCategoryIdsFilter = Array.isArray(filters.categories);
+  const hasCategoryTypesFilter = Array.isArray(filters.category_types);
+
+  if (!hasCategoryTypesFilter) {
+    return hasCategoryIdsFilter ? filters.categories : undefined;
+  }
+
+  const categoriesWhere = {
+    type: { in: filters.category_types },
+  };
+
+  if (hasCategoryIdsFilter) {
+    categoriesWhere.id = { in: filters.categories };
+  }
+
+  const categories = selectRows(getDatabase(), 'categories', categoriesWhere);
+  return categories.map((category) => Number(category.id));
+}
+
 function buildListWhere(filters = {}) {
   const where = {
     category_id: { ne: TRANSFER_CATEGORY_ID },
@@ -44,10 +65,11 @@ function buildListWhere(filters = {}) {
     where.occurred_at = occurredAtFilter;
   }
 
-  if (Array.isArray(filters.categories)) {
+  const categoryIdsFilter = resolveCategoryIdsFilter(filters);
+  if (Array.isArray(categoryIdsFilter)) {
     where.category_id = {
       ...where.category_id,
-      in: filters.categories,
+      in: categoryIdsFilter,
     };
   }
 

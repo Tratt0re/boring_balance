@@ -37,6 +37,7 @@
         "amountFrom": "Amount from",
         "amountTo": "Amount to",
         "settled": "Settlement status",
+        "categoryType": "Category type",
         "category": "Category",
         "account": "Account"
       },
@@ -46,6 +47,7 @@
         "amountFrom": "Minimum amount",
         "amountTo": "Maximum amount",
         "settled": "Any status",
+        "categoryType": "Any type",
         "category": "Select a category",
         "account": "Select an account",
         "searchCategory": "Search categories...",
@@ -56,6 +58,9 @@
           "any": "Any status",
           "yes": "Settled",
           "no": "Not settled"
+        },
+        "categoryType": {
+          "any": "Any type"
         }
       },
       "actions": {
@@ -262,11 +267,11 @@
       "table": {
         "description": "Money moved between your accounts.",
         "emptyMessage": "No transfers found.",
-        "actions": {
-          "add": "Add transfer",
-          "filter": "Filter transfers",
-          "edit": "Edit transfer",
-          "delete": "Delete transfer"
+      "actions": {
+        "add": "Add transfer",
+        "filter": "Filter transfers",
+        "edit": "Edit transfer",
+        "delete": "Delete transfer"
         }
       },
       "dialog": {
@@ -285,7 +290,7 @@
             "accountsMustDiffer": "Source and destination accounts must be different.",
             "amountRequired": "Amount is required.",
             "amountInvalid": "Amount must be a positive number.",
-            "descriptionMaxLength": "Description must be at most 50 characters.",
+            "descriptionMaxLength": "Description must be at most 75 characters.",
             "createFailed": "Failed to create transfer."
           }
         },
@@ -325,6 +330,7 @@
         "add": "Add transaction",
         "filter": "Filter transactions",
         "edit": "Edit transaction",
+        "duplicate": "Duplicate transaction",
         "delete": "Delete transaction"
       }
     },
@@ -351,7 +357,7 @@
           "amountRequired": "Amount is required.",
           "amountInvalid": "Amount must be a valid number.",
           "categoryRequired": "Category is required.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
+          "descriptionMaxLength": "Description must be at most 75 characters.",
           "createFailed": "Failed to create transaction."
         }
       },
@@ -374,6 +380,14 @@
       "actions": {
         "cancel": "Cancel",
         "delete": "Delete"
+      }
+    },
+    "duplicateAlert": {
+      "title": "Duplicate transaction?",
+      "description": "Are you sure you want to duplicate this transaction?",
+      "actions": {
+        "cancel": "Cancel",
+        "duplicate": "Duplicate"
       }
     }
   },

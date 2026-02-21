@@ -2,6 +2,7 @@ const {
   appMetaController,
   accountsController,
   categoriesController,
+  analyticsController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -26,6 +27,12 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.categories.list]: categoriesController.list,
   [CHANNELS.categories.update]: categoriesController.update,
   [CHANNELS.categories.remove]: categoriesController.remove,
+
+  [CHANNELS.analytics.expensesIncomesProfitByMonth]: analyticsController.expensesIncomesProfitByMonth,
+  [CHANNELS.analytics.receivablesPayables]: analyticsController.receivablesPayables,
+  [CHANNELS.analytics.netWorthByAccount]: analyticsController.netWorthByAccount,
+  [CHANNELS.analytics.expensesByCategoryByMonth]: analyticsController.expensesByCategoryByMonth,
+  [CHANNELS.analytics.incomesByCategoryByMonth]: analyticsController.incomesByCategoryByMonth,
 
   [CHANNELS.transactions.create]: transactionsController.create,
   [CHANNELS.transactions.createTransfer]: transfersController.create,

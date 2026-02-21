@@ -47,6 +47,7 @@ const TRANSACTION_FILTER_FIELD = {
   amountFrom: 'amountFrom',
   amountTo: 'amountTo',
   settled: 'settled',
+  categoryType: 'categoryType',
   categoryId: 'categoryId',
   accountId: 'accountId',
 } as const;
@@ -88,6 +89,7 @@ interface TransactionTableFilters {
   readonly amountFrom: number | null;
   readonly amountTo: number | null;
   readonly settled: boolean | null;
+  readonly categoryType: CategoryType | null;
   readonly categoryIds: readonly number[];
   readonly accountIds: readonly number[];
 }
@@ -98,6 +100,7 @@ interface PersistedTransactionTableFilters {
   readonly amountFrom: number | null;
   readonly amountTo: number | null;
   readonly settled: boolean | null;
+  readonly categoryType: CategoryType | null;
   readonly categoryIds: readonly number[];
   readonly accountIds: readonly number[];
 }
@@ -114,6 +117,7 @@ const DEFAULT_TRANSACTION_TABLE_FILTERS: TransactionTableFilters = {
   amountFrom: null,
   amountTo: null,
   settled: null,
+  categoryType: null,
   categoryIds: [],
   accountIds: [],
 };
@@ -196,6 +200,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
 
 const createTransactionTableStructure = (
   onEditAction: (row: object) => void | Promise<void>,
+  onDuplicateAction: (row: object) => void | Promise<void>,
   onDeleteAction: (row: object) => void | Promise<void>,
 ): readonly TableDataItem[] =>
   [
@@ -211,6 +216,13 @@ const createTransactionTableStructure = (
           label: 'transactions.table.actions.edit',
           buttonType: 'ghost',
           action: onEditAction,
+        },
+        {
+          id: 'duplicate',
+          icon: 'copy',
+          label: 'transactions.table.actions.duplicate',
+          buttonType: 'ghost',
+          action: onDuplicateAction,
         },
         {
           id: 'delete',
@@ -253,6 +265,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly tableStructure = computed<readonly TableDataItem[]>(() =>
     createTransactionTableStructure(
       (row) => this.onEditTransaction(row),
+      (row) => this.onDuplicateTransaction(row),
       (row) => this.onDeleteTransaction(row),
     ),
   );
@@ -265,6 +278,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       filters.amountFrom !== null ||
       filters.amountTo !== null ||
       filters.settled !== null ||
+      filters.categoryType !== null ||
       filters.categoryIds.length > 0 ||
       filters.accountIds.length > 0
     );
@@ -332,6 +346,18 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         label: this.toActiveFilterLabel(
           'common.filters.fields.settled',
           this.translateService.instant(settledLabelKey),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.categoryType) {
+      items.push({
+        id: TRANSACTION_FILTER_FIELD.categoryType,
+        icon: 'tag',
+        label: this.toActiveFilterLabel(
+          'common.filters.fields.categoryType',
+          this.translateService.instant(`category.type.${filters.categoryType}`),
         ),
         translate: false,
       });
@@ -493,6 +519,11 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         ...currentFilters,
         settled: null,
       };
+    } else if (fieldId === TRANSACTION_FILTER_FIELD.categoryType && currentFilters.categoryType !== null) {
+      nextFilters = {
+        ...currentFilters,
+        categoryType: null,
+      };
     } else if (fieldId === TRANSACTION_FILTER_FIELD.categoryId) {
       const categoryId = this.toPositiveInteger(rawValue);
       if (!categoryId || !currentFilters.categoryIds.includes(categoryId)) {
@@ -645,6 +676,36 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         translate: true,
       },
       {
+        id: TRANSACTION_FILTER_FIELD.categoryType,
+        type: 'select',
+        width: '1/1',
+        label: 'common.filters.fields.categoryType',
+        placeholder: 'common.filters.placeholders.categoryType',
+        options: [
+          {
+            value: 'any',
+            label: 'common.filters.options.categoryType.any',
+            translate: true,
+          },
+          {
+            value: 'income',
+            label: 'category.type.income',
+            translate: true,
+          },
+          {
+            value: 'expense',
+            label: 'category.type.expense',
+            translate: true,
+          },
+          {
+            value: 'exclude',
+            label: 'category.type.exclude',
+            translate: true,
+          },
+        ],
+        translate: true,
+      },
+      {
         id: TRANSACTION_FILTER_FIELD.categoryId,
         type: 'combobox',
         width: '1/1',
@@ -693,6 +754,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         filters.amountTo === null ? null : `${filters.amountTo}`,
       [TRANSACTION_FILTER_FIELD.settled]:
         filters.settled === null ? null : `${filters.settled}`,
+      [TRANSACTION_FILTER_FIELD.categoryType]: filters.categoryType,
       [TRANSACTION_FILTER_FIELD.categoryId]: filters.categoryIds.map((id) => `${id}`),
       [TRANSACTION_FILTER_FIELD.accountId]: filters.accountIds.map((id) => `${id}`),
     };
@@ -705,6 +767,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       amountFrom: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountFrom]),
       amountTo: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountTo]),
       settled: this.toSettledFilterValue(values[TRANSACTION_FILTER_FIELD.settled]),
+      categoryType: this.toCategoryTypeFilterValue(values[TRANSACTION_FILTER_FIELD.categoryType]),
       categoryIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.categoryId]),
       accountIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
     };
@@ -725,6 +788,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
     const amountTo = filters.amountTo ?? undefined;
+    const categoryTypes = filters.categoryType ? [filters.categoryType] : undefined;
     const categories = filters.categoryIds.length > 0 ? [...filters.categoryIds] : undefined;
     const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
     const settled = filters.settled === null ? undefined : filters.settled;
@@ -733,6 +797,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       dateTo !== undefined ||
       amountFrom !== undefined ||
       amountTo !== undefined ||
+      categoryTypes !== undefined ||
       categories !== undefined ||
       accounts !== undefined ||
       settled !== undefined;
@@ -752,6 +817,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         ...(dateTo === undefined ? {} : { date_to: dateTo }),
         ...(amountFrom === undefined ? {} : { amount_from: amountFrom }),
         ...(amountTo === undefined ? {} : { amount_to: amountTo }),
+        ...(categoryTypes === undefined ? {} : { category_types: categoryTypes }),
         ...(categories === undefined ? {} : { categories }),
         ...(accounts === undefined ? {} : { accounts }),
         ...(settled === undefined ? {} : { settled }),
@@ -784,6 +850,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     if (value === false || value === 'false') {
       return false;
+    }
+
+    return null;
+  }
+
+  private toCategoryTypeFilterValue(value: unknown): CategoryType | null {
+    if (value === 'income' || value === 'expense' || value === 'exclude') {
+      return value;
     }
 
     return null;
@@ -866,6 +940,22 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       zClosable: true,
       zOnOk: () => {
         void this.deleteTransaction(transaction.id);
+      },
+    });
+  }
+
+  private onDuplicateTransaction(row: object): void {
+    const transaction = row as TransactionTableRow;
+
+    this.alertDialogService.confirm({
+      zTitle: this.translateService.instant('transactions.duplicateAlert.title'),
+      zDescription: this.translateService.instant('transactions.duplicateAlert.description'),
+      zOkText: this.translateService.instant('transactions.duplicateAlert.actions.duplicate'),
+      zCancelText: this.translateService.instant('transactions.duplicateAlert.actions.cancel'),
+      zMaskClosable: true,
+      zClosable: true,
+      zOnOk: () => {
+        void this.duplicateTransaction(transaction.id);
       },
     });
   }
@@ -1080,6 +1170,34 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async duplicateTransaction(id: number): Promise<void> {
+    try {
+      const sourceTransaction = await this.transactionsService.get({ id });
+      if (!sourceTransaction) {
+        return;
+      }
+
+      const createdTransaction = await this.transactionsService.create({
+        occurred_at: sourceTransaction.occurredAt,
+        account_id: sourceTransaction.accountId,
+        category_id: sourceTransaction.categoryId,
+        amount: sourceTransaction.amount,
+        description: sourceTransaction.description,
+        tags: sourceTransaction.tags,
+        settled: sourceTransaction.settled,
+      });
+
+      if (!createdTransaction) {
+        return;
+      }
+
+      await this.reloadTransactionsPage();
+    } catch (error) {
+      console.error('[transactions-table-section] Failed to duplicate transaction:', error);
+      await this.reloadTransactionsPage();
+    }
+  }
+
   private async deleteTransaction(id: number): Promise<void> {
     try {
       const result = await this.transactionsService.remove({ id });
@@ -1122,6 +1240,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         amountFrom: filters.amountFrom,
         amountTo: filters.amountTo,
         settled: filters.settled,
+        categoryType: filters.categoryType,
         categoryIds: [...filters.categoryIds],
         accountIds: [...filters.accountIds],
       },
@@ -1142,6 +1261,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       amountFrom: this.toAmountFilterValue(filters.amountFrom),
       amountTo: this.toAmountFilterValue(filters.amountTo),
       settled: this.toSettledFilterValue(filters.settled),
+      categoryType: this.toCategoryTypeFilterValue(filters.categoryType),
       categoryIds: this.toPositiveIntegerArray(filters.categoryIds),
       accountIds: this.toPositiveIntegerArray(filters.accountIds),
     };

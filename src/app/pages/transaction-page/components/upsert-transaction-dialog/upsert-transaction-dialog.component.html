@@ -26,11 +26,13 @@
       {{ 'common.labels.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select formControlName="categoryId" [zPlaceholder]="'common.placeholders.selectCategory' | translate">
-      @for (option of categoryOptions; track option.value) {
-        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
-      }
-    </z-select>
+    <z-combobox
+      zWidth="full"
+      formControlName="categoryId"
+      [placeholder]="'common.placeholders.selectCategory' | translate"
+      [searchPlaceholder]="'common.filters.placeholders.searchCategory' | translate"
+      [options]="$any(categoryOptions)"
+    />
     @if (visibleCategoryIdErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
@@ -41,11 +43,13 @@
       {{ 'common.labels.account' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select formControlName="accountId" [zPlaceholder]="'common.placeholders.selectAccount' | translate">
-      @for (option of accountOptions; track option.value) {
-        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
-      }
-    </z-select>
+    <z-combobox
+      zWidth="full"
+      formControlName="accountId"
+      [placeholder]="'common.placeholders.selectAccount' | translate"
+      [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate"
+      [options]="$any(accountOptions)"
+    />
     @if (visibleAccountIdErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }

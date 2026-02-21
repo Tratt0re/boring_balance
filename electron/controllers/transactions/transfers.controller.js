@@ -27,7 +27,7 @@ const UPDATE_FIELDS = new Set([
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
-const DESCRIPTION_MAX_LENGTH = 50;
+const DESCRIPTION_MAX_LENGTH = 75;
 
 function normalizeOptionalIdArray(value, label) {
   if (value === undefined) {
