@@ -3,10 +3,72 @@
     "actions": "Azioni",
     "yes": "Si",
     "no": "No",
+    "labels": {
+      "name": "Nome",
+      "type": "Tipo",
+      "description": "Descrizione",
+      "color": "Colore",
+      "icon": "Icona",
+      "date": "Data",
+      "settled": "Regolato",
+      "account": "Conto",
+      "category": "Categoria",
+      "amount": "Importo",
+      "from": "Da",
+      "to": "A",
+      "fromAccount": "Conto di origine",
+      "toAccount": "Conto di destinazione"
+    },
+    "placeholders": {
+      "selectType": "Seleziona tipo",
+      "selectColor": "Seleziona colore",
+      "selectIcon": "Seleziona icona",
+      "pickDate": "Seleziona una data",
+      "amountZero": "0,00",
+      "selectAccount": "Seleziona conto",
+      "selectCategory": "Seleziona categoria",
+      "optionalDescription": "Descrizione facoltativa",
+      "transactionDescription": "Descrizione movimento"
+    },
+    "filters": {
+      "fields": {
+        "dateFrom": "Data da",
+        "dateTo": "Data a",
+        "amountFrom": "Importo da",
+        "amountTo": "Importo a",
+        "settled": "Stato regolazione",
+        "category": "Categoria",
+        "account": "Conto"
+      },
+      "placeholders": {
+        "dateFrom": "Data da",
+        "dateTo": "Data a",
+        "amountFrom": "Importo minimo",
+        "amountTo": "Importo massimo",
+        "settled": "Qualsiasi stato",
+        "category": "Seleziona una categoria",
+        "account": "Seleziona un conto",
+        "searchCategory": "Cerca categorie...",
+        "searchAccount": "Cerca conti..."
+      },
+      "options": {
+        "settled": {
+          "any": "Qualsiasi stato",
+          "yes": "Regolati",
+          "no": "Non regolati"
+        }
+      },
+      "actions": {
+        "apply": "Applica filtri",
+        "reset": "Reimposta filtri",
+        "cancel": "Annulla"
+      }
+    },
     "pagination": {
       "previous": "Precedente",
       "next": "Successivo",
       "counter": "{{current}} di {{total}} pagine",
+      "rowsPerPage": "Righe per pagina",
       "tooltips": {
         "firstPage": "Vai alla prima pagina",
         "previousPage": "Vai alla pagina precedente",
@@ -67,11 +129,6 @@
       "brokerage": "Investimenti",
       "crypto": "Cripto",
       "credit": "Credito"
-    },
-    "display_mode": {
-      "cashflow": "Flusso cassa",
-      "allocation": "Allocazione",
-      "valuation": "Valutazione"
     }
   },
   "accounts": {
@@ -85,10 +142,6 @@
         "locked": "Conto bloccato"
       },
       "columns": {
-        "name": "Nome",
-        "type": "Tipo",
-        "displayMode": "Modalita vista",
-        "description": "Descrizione",
         "color": "Colore",
         "icon": "Icona"
       }
@@ -97,21 +150,9 @@
       "add": {
         "title": "Aggiungi conto",
         "description": "Crea un nuovo conto con impostazioni visive.",
-        "fields": {
-          "name": "Nome",
-          "type": "Tipo",
-          "displayMode": "Modalita vista",
-          "description": "Descrizione",
-          "color": "Colore",
-          "icon": "Icona"
-        },
         "placeholders": {
           "name": "Nome conto",
-          "type": "Seleziona tipo",
-          "displayMode": "Seleziona modalita vista",
-          "description": "Descrizione conto",
-          "color": "Seleziona colore",
-          "icon": "Seleziona icona"
+          "description": "Descrizione conto"
         },
         "actions": {
           "cancel": "Annulla",
@@ -123,7 +164,6 @@
           "nameMinLength": "Il nome deve contenere almeno 2 caratteri.",
           "nameMaxLength": "Il nome deve contenere al massimo 64 caratteri.",
           "typeRequired": "Il tipo conto e obbligatorio.",
-          "displayModeRequired": "La modalita vista e obbligatoria.",
           "descriptionMaxLength": "La descrizione deve contenere al massimo 50 caratteri.",
           "createFailed": "Creazione del conto non riuscita."
         }
@@ -161,30 +201,17 @@
         "locked": "Categoria bloccata"
       },
       "columns": {
-        "name": "Nome",
-        "description": "Descrizione",
         "color": "Colore",
-        "icon": "Icona",
-        "type": "Tipo"
+        "icon": "Icona"
       }
     },
     "dialog": {
       "add": {
         "title": "Aggiungi categoria",
         "description": "Crea una nuova categoria con impostazioni visive e tipo.",
-        "fields": {
-          "name": "Nome",
-          "description": "Descrizione",
-          "type": "Tipo",
-          "color": "Colore",
-          "icon": "Icona"
-        },
         "placeholders": {
           "name": "Nome categoria",
-          "description": "Descrizione categoria",
-          "type": "Seleziona tipo",
-          "color": "Seleziona colore",
-          "icon": "Seleziona icona"
+          "description": "Descrizione categoria"
         },
         "actions": {
           "cancel": "Annulla",
@@ -228,8 +255,7 @@
       "transfers": "Trasferimenti"
     },
     "pagination": {
-      "summary": "{{start}}-{{end}} di {{total}}",
-      "rowsPerPage": "Righe per pagina"
+      "summary": "{{start}}-{{end}} di {{total}}"
     },
     "table": {
       "description": "Cronologia movimenti",
@@ -239,75 +265,20 @@
         "filter": "Filtra movimenti",
         "edit": "Modifica movimento",
         "delete": "Elimina movimento"
-      },
-      "columns": {
-        "occurredAt": "Data",
-        "settled": "Regolato",
-        "account": "Conto",
-        "amount": "Importo",
-        "category": "Categoria",
-        "description": "Descrizione"
       }
     },
     "filters": {
       "title": "Filtra movimenti",
       "description": "Applica uno o piu filtri opzionali per restringere l'elenco dei movimenti.",
-      "fields": {
-        "dateFrom": "Data da",
-        "dateTo": "Data a",
-        "amountFrom": "Importo da",
-        "amountTo": "Importo a",
-        "settled": "Stato regolazione",
-        "category": "Categoria",
-        "account": "Conto"
-      },
-      "placeholders": {
-        "dateFrom": "Data da",
-        "dateTo": "Data a",
-        "amountFrom": "Importo minimo",
-        "amountTo": "Importo massimo",
-        "settled": "Qualsiasi stato",
-        "category": "Seleziona una categoria",
-        "account": "Seleziona un conto",
-        "searchCategory": "Cerca categorie...",
-        "searchAccount": "Cerca conti..."
-      },
-      "options": {
-        "settled": {
-          "any": "Qualsiasi stato",
-          "yes": "Regolati",
-          "no": "Non regolati"
-        }
-      },
       "empty": {
         "category": "Nessuna categoria trovata.",
         "account": "Nessun conto trovato."
-      },
-      "actions": {
-        "apply": "Applica filtri",
-        "reset": "Reimposta filtri",
-        "cancel": "Annulla"
       }
     },
     "dialog": {
       "add": {
         "title": "Aggiungi movimento",
         "description": "Crea un nuovo movimento.",
-        "fields": {
-          "occurredAt": "Data",
-          "settled": "Regolato",
-          "account": "Conto",
-          "amount": "Importo",
-          "category": "Categoria",
-          "description": "Descrizione"
-        },
-        "placeholders": {
-          "occurredAt": "Seleziona una data",
-          "account": "Seleziona conto",
-          "amount": "0.00",
-          "category": "Seleziona categoria",
-          "description": "Descrizione movimento"
-        },
         "actions": {
           "cancel": "Annulla",
           "create": "Crea movimento"
@@ -354,32 +325,12 @@
           "filter": "Filtra trasferimenti",
           "edit": "Modifica trasferimento",
           "delete": "Elimina trasferimento"
-        },
-        "columns": {
-          "occurredAt": "Data",
-          "fromAccount": "Da",
-          "toAccount": "A",
-          "amount": "Importo"
         }
       },
       "dialog": {
         "add": {
           "title": "Aggiungi trasferimento",
           "description": "Sposta denaro tra due conti.",
-          "fields": {
-            "occurredAt": "Data",
-            "fromAccount": "Conto di origine",
-            "toAccount": "Conto di destinazione",
-            "amount": "Importo",
-            "description": "Descrizione"
-          },
-          "placeholders": {
-            "occurredAt": "Seleziona una data",
-            "fromAccount": "Seleziona conto di origine",
-            "toAccount": "Seleziona conto di destinazione",
-            "amount": "0.00",
-            "description": "Descrizione facoltativa"
-          },
           "actions": {
             "cancel": "Annulla",
             "create": "Crea trasferimento"
@@ -420,28 +371,8 @@
       "filters": {
         "title": "Filtra trasferimenti",
         "description": "Applica uno o piu filtri opzionali per restringere l'elenco dei trasferimenti.",
-        "fields": {
-          "dateFrom": "Data da",
-          "dateTo": "Data a",
-          "amountFrom": "Importo da",
-          "amountTo": "Importo a",
-          "account": "Conto"
-        },
-        "placeholders": {
-          "dateFrom": "Data da",
-          "dateTo": "Data a",
-          "amountFrom": "Importo minimo",
-          "amountTo": "Importo massimo",
-          "account": "Seleziona un conto",
-          "searchAccount": "Cerca conti..."
-        },
         "empty": {
           "account": "Nessun conto trovato."
-        },
-        "actions": {
-          "apply": "Applica filtri",
-          "reset": "Reimposta filtri",
-          "cancel": "Annulla"
         }
       }
     }

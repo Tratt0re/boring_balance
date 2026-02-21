@@ -45,7 +45,7 @@ const ACCOUNT_COLUMN_WIDTH = {
 
 const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
-    columnName: 'accounts.table.columns.name',
+    columnName: 'common.labels.name',
     columnKey: 'name',
     type: 'string',
     sortable: true,
@@ -59,7 +59,7 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'accounts.table.columns.type',
+    columnName: 'common.labels.type',
     columnKey: 'typeLabel',
     type: 'badge',
     sortable: true,
@@ -71,7 +71,7 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'accounts.table.columns.description',
+    columnName: 'common.labels.description',
     columnKey: 'description',
     type: 'string',
     sortable: true,

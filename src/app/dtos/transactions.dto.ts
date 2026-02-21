@@ -28,6 +28,7 @@ export interface TransferDto {
   readonly occurred_at: UnixTimestampMilliseconds;
   readonly amount_cents: number;
   readonly description: string | null;
+  readonly settled: SqliteBoolean;
   readonly created_at: UnixTimestampMilliseconds;
   readonly updated_at: UnixTimestampMilliseconds | null;
 }
@@ -49,6 +50,7 @@ export interface TransactionCreateTransferDto {
   readonly to_account_id: RowId;
   readonly amount: number;
   readonly description?: string | null;
+  readonly settled?: BooleanFlagInput;
 }
 
 export interface TransactionUpdateTransferDto {
@@ -58,6 +60,7 @@ export interface TransactionUpdateTransferDto {
   readonly to_account_id: RowId;
   readonly amount: number;
   readonly description?: string | null;
+  readonly settled?: BooleanFlagInput;
 }
 
 export interface TransactionDeleteTransferDto {
@@ -96,6 +99,7 @@ export interface TransactionListTransfersFiltersDto {
   readonly amount_from?: number;
   readonly amount_to?: number;
   readonly accounts?: readonly RowId[];
+  readonly settled?: BooleanFlagInput;
 }
 
 export interface TransactionListTransfersDto {

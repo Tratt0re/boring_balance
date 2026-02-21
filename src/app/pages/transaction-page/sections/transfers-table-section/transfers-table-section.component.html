@@ -28,11 +28,12 @@
     [pageSize]="pageSize()"
     [pageSizeOptions]="pageSizeOptions"
     [maxVisiblePages]="5"
-    [pageSizeLabel]="'transactions.pagination.rowsPerPage' | translate"
+    [pageSizeLabel]="'common.pagination.rowsPerPage' | translate"
     [showPageSizeSelector]="true"
     [showTopPagination]="true"
     (pageChange)="onPageChange($event)"
     (pageSizeChange)="onPageSizeChange($event)"
+    (editableValueChange)="onEditableValueChange($event)"
     (activeFilterRemove)="onActiveFilterRemove($event)"
   ></app-data-table>
 }

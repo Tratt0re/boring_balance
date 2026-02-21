@@ -3,10 +3,72 @@
     "actions": "Actions",
     "yes": "Yes",
     "no": "No",
+    "labels": {
+      "name": "Name",
+      "type": "Type",
+      "description": "Description",
+      "color": "Color",
+      "icon": "Icon",
+      "date": "Date",
+      "settled": "Settled",
+      "account": "Account",
+      "category": "Category",
+      "amount": "Amount",
+      "from": "From",
+      "to": "To",
+      "fromAccount": "From account",
+      "toAccount": "To account"
+    },
+    "placeholders": {
+      "selectType": "Select type",
+      "selectColor": "Select color",
+      "selectIcon": "Select icon",
+      "pickDate": "Pick a date",
+      "amountZero": "0,00",
+      "selectAccount": "Select account",
+      "selectCategory": "Select category",
+      "optionalDescription": "Optional description",
+      "transactionDescription": "Transaction description"
+    },
+    "filters": {
+      "fields": {
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "amountFrom": "Amount from",
+        "amountTo": "Amount to",
+        "settled": "Settlement status",
+        "category": "Category",
+        "account": "Account"
+      },
+      "placeholders": {
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "amountFrom": "Minimum amount",
+        "amountTo": "Maximum amount",
+        "settled": "Any status",
+        "category": "Select a category",
+        "account": "Select an account",
+        "searchCategory": "Search categories...",
+        "searchAccount": "Search accounts..."
+      },
+      "options": {
+        "settled": {
+          "any": "Any status",
+          "yes": "Settled",
+          "no": "Not settled"
+        }
+      },
+      "actions": {
+        "apply": "Apply filters",
+        "reset": "Reset filters",
+        "cancel": "Cancel"
+      }
+    },
     "pagination": {
       "previous": "Previous",
       "next": "Next",
       "counter": "{{current}} of {{total}} pages",
+      "rowsPerPage": "Rows per page",
       "tooltips": {
         "firstPage": "Go to first page",
         "previousPage": "Go to previous page",
@@ -67,11 +129,6 @@
       "brokerage": "Brokerage",
       "crypto": "Crypto",
       "credit": "Credit"
-    },
-    "display_mode": {
-      "cashflow": "Cashflow",
-      "allocation": "Allocation",
-      "valuation": "Valuation"
     }
   },
   "accounts": {
@@ -85,10 +142,6 @@
         "locked": "Locked account"
       },
       "columns": {
-        "name": "Name",
-        "type": "Type",
-        "displayMode": "Display mode",
-        "description": "Description",
         "color": "Color",
         "icon": "Icon"
       }
@@ -97,21 +150,9 @@
       "add": {
         "title": "Add account",
         "description": "Create a new account with visual settings.",
-        "fields": {
-          "name": "Name",
-          "type": "Type",
-          "displayMode": "Display mode",
-          "description": "Description",
-          "color": "Color",
-          "icon": "Icon"
-        },
         "placeholders": {
           "name": "Account name",
-          "type": "Select type",
-          "displayMode": "Select display mode",
-          "description": "Account description",
-          "color": "Select color",
-          "icon": "Select icon"
+          "description": "Account description"
         },
         "actions": {
           "cancel": "Cancel",
@@ -123,7 +164,6 @@
           "nameMinLength": "Name must be at least 2 characters.",
           "nameMaxLength": "Name must be at most 64 characters.",
           "typeRequired": "Account type is required.",
-          "displayModeRequired": "Display mode is required.",
           "descriptionMaxLength": "Description must be at most 50 characters.",
           "createFailed": "Failed to create account."
         }
@@ -161,30 +201,17 @@
         "locked": "Locked category"
       },
       "columns": {
-        "name": "Name",
-        "description": "Description",
         "color": "Color",
-        "icon": "Icon",
-        "type": "Type"
+        "icon": "Icon"
       }
     },
     "dialog": {
       "add": {
         "title": "Add category",
         "description": "Create a new category with visual settings and type.",
-        "fields": {
-          "name": "Name",
-          "description": "Description",
-          "type": "Type",
-          "color": "Color",
-          "icon": "Icon"
-        },
         "placeholders": {
           "name": "Category name",
-          "description": "Category description",
-          "type": "Select type",
-          "color": "Select color",
-          "icon": "Select icon"
+          "description": "Category description"
         },
         "actions": {
           "cancel": "Cancel",
@@ -228,8 +255,7 @@
       "transfers": "Transfers"
     },
     "pagination": {
-      "summary": "{{start}}-{{end}} of {{total}}",
-      "rowsPerPage": "Rows per page"
+      "summary": "{{start}}-{{end}} of {{total}}"
     },
     "transfers": {
       "title": "Transfers",
@@ -241,32 +267,12 @@
           "filter": "Filter transfers",
           "edit": "Edit transfer",
           "delete": "Delete transfer"
-        },
-        "columns": {
-          "occurredAt": "Date",
-          "fromAccount": "From",
-          "toAccount": "To",
-          "amount": "Amount"
         }
       },
       "dialog": {
         "add": {
           "title": "Add transfer",
           "description": "Move money between two accounts.",
-          "fields": {
-            "occurredAt": "Date",
-            "fromAccount": "From account",
-            "toAccount": "To account",
-            "amount": "Amount",
-            "description": "Description"
-          },
-          "placeholders": {
-            "occurredAt": "Pick a date",
-            "fromAccount": "Select source account",
-            "toAccount": "Select destination account",
-            "amount": "0.00",
-            "description": "Optional description"
-          },
           "actions": {
             "cancel": "Cancel",
             "create": "Create transfer"
@@ -307,28 +313,8 @@
       "filters": {
         "title": "Filter transfers",
         "description": "Apply one or more optional filters to narrow the transfer list.",
-        "fields": {
-          "dateFrom": "From date",
-          "dateTo": "To date",
-          "amountFrom": "Amount from",
-          "amountTo": "Amount to",
-          "account": "Account"
-        },
-        "placeholders": {
-          "dateFrom": "From date",
-          "dateTo": "To date",
-          "amountFrom": "Minimum amount",
-          "amountTo": "Maximum amount",
-          "account": "Select an account",
-          "searchAccount": "Search accounts..."
-        },
         "empty": {
           "account": "No accounts found."
-        },
-        "actions": {
-          "apply": "Apply filters",
-          "reset": "Reset filters",
-          "cancel": "Cancel"
         }
       }
     },
@@ -340,75 +326,20 @@
         "filter": "Filter transactions",
         "edit": "Edit transaction",
         "delete": "Delete transaction"
-      },
-      "columns": {
-        "occurredAt": "Date",
-        "settled": "Settled",
-        "account": "Account",
-        "amount": "Amount",
-        "category": "Category",
-        "description": "Description"
       }
     },
     "filters": {
       "title": "Filter transactions",
       "description": "Apply one or more optional filters to narrow the transaction list.",
-      "fields": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Amount from",
-        "amountTo": "Amount to",
-        "settled": "Settlement status",
-        "category": "Category",
-        "account": "Account"
-      },
-      "placeholders": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Minimum amount",
-        "amountTo": "Maximum amount",
-        "settled": "Any status",
-        "category": "Select a category",
-        "account": "Select an account",
-        "searchCategory": "Search categories...",
-        "searchAccount": "Search accounts..."
-      },
-      "options": {
-        "settled": {
-          "any": "Any status",
-          "yes": "Settled",
-          "no": "Not settled"
-        }
-      },
       "empty": {
         "category": "No categories found.",
         "account": "No accounts found."
-      },
-      "actions": {
-        "apply": "Apply filters",
-        "reset": "Reset filters",
-        "cancel": "Cancel"
       }
     },
     "dialog": {
       "add": {
         "title": "Add transaction",
         "description": "Create a new transaction entry.",
-        "fields": {
-          "occurredAt": "Date",
-          "settled": "Settled",
-          "account": "Account",
-          "amount": "Amount",
-          "category": "Category",
-          "description": "Description"
-        },
-        "placeholders": {
-          "occurredAt": "Pick a date",
-          "account": "Select account",
-          "amount": "0.00",
-          "category": "Select category",
-          "description": "Transaction description"
-        },
         "actions": {
           "cancel": "Cancel",
           "create": "Create transaction"

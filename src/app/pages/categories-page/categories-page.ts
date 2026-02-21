@@ -45,7 +45,7 @@ const CATEGORY_COLUMN_WIDTH = {
 
 const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
-    columnName: 'categories.table.columns.name',
+    columnName: 'common.labels.name',
     columnKey: 'name',
     type: 'badge',
     sortable: true,
@@ -60,7 +60,7 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'categories.table.columns.type',
+    columnName: 'common.labels.type',
     columnKey: 'typeLabel',
     type: 'badge',
     sortable: true,
@@ -72,7 +72,7 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'categories.table.columns.description',
+    columnName: 'common.labels.description',
     columnKey: 'description',
     type: 'string',
     sortable: true,
