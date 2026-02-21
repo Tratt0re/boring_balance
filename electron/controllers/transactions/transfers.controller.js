@@ -4,6 +4,7 @@ const {
   ensurePlainObject,
   extractString,
   normalizeAmountToCents,
+  normalizeOptionalBooleanFlag,
   normalizeOptionalString,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
@@ -12,9 +13,17 @@ const {
 } = require('../utils');
 
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
-const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'amount_from', 'amount_to', 'accounts']);
-const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description']);
-const UPDATE_FIELDS = new Set(['transfer_id', 'occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description']);
+const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'amount_from', 'amount_to', 'accounts', 'settled']);
+const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description', 'settled']);
+const UPDATE_FIELDS = new Set([
+  'transfer_id',
+  'occurred_at',
+  'from_account_id',
+  'to_account_id',
+  'amount',
+  'description',
+  'settled',
+]);
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
@@ -86,6 +95,7 @@ function normalizeListFilters(payload) {
       amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, 'payload.filters.amount_from'),
       amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, 'payload.filters.amount_to'),
       accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+      settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
     }),
     pagination: {
       page,
@@ -105,6 +115,7 @@ function normalizeCreatePayload(payload) {
   const description = normalizeOptionalString(body.description, 'payload.description', {
     maxLength: DESCRIPTION_MAX_LENGTH,
   });
+  const settled = normalizeOptionalBooleanFlag(body.settled, 'payload.settled');
 
   if (amountCents <= 0) {
     throw new Error('payload.amount must be a positive number.');
@@ -120,6 +131,7 @@ function normalizeCreatePayload(payload) {
     to_account_id: toAccountId,
     amount_cents: amountCents,
     description: description ?? null,
+    settled: settled ?? 1,
     created_at: nowUnixTimestampMilliseconds(),
   };
 }
@@ -136,6 +148,7 @@ function normalizeUpdatePayload(payload) {
   const description = normalizeOptionalString(body.description, 'payload.description', {
     maxLength: DESCRIPTION_MAX_LENGTH,
   });
+  const settled = normalizeOptionalBooleanFlag(body.settled, 'payload.settled');
 
   if (amountCents <= 0) {
     throw new Error('payload.amount must be a positive number.');
@@ -152,6 +165,7 @@ function normalizeUpdatePayload(payload) {
     to_account_id: toAccountId,
     amount_cents: amountCents,
     description: description ?? null,
+    ...(settled === undefined ? {} : { settled }),
     updated_at: nowUnixTimestampMilliseconds(),
   };
 }

@@ -5,6 +5,7 @@ import {
   type ActionItem,
   AppDataTableComponent,
   type EditableOptionItem,
+  type EditableValueChangeEvent,
   type TableActiveFilterItem,
   type TableDataItem,
   type TableHeaderActionItem,
@@ -47,9 +48,19 @@ const TRANSFER_FILTER_FIELD = {
   dateTo: 'dateTo',
   amountFrom: 'amountFrom',
   amountTo: 'amountTo',
+  settled: 'settled',
   accountId: 'accountId',
 } as const;
 const ACTIVE_FILTER_ID_SEPARATOR = ':';
+const TRANSFER_COLUMN_WIDTH = {
+  settled: 'w-1/14',
+  occurredAt: 'w-1/8',
+  amount: 'w-1/10',
+  transferFrom: 'w-1/13',
+  transferTo: 'w-1/13',
+  description: 'w-5/28',
+  action: 'w-1/14',
+} as const;
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
 const DEFAULT_TABLE_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'circle') as ZardIcon;
@@ -58,6 +69,7 @@ const DEFAULT_TABLE_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_
 interface TransferTableRow {
   readonly transferId: string;
   readonly occurredAt: number;
+  readonly settled: boolean;
   readonly fromAccountId: number;
   readonly fromAccount: string;
   readonly fromAccountIcon: ZardIcon | null;
@@ -75,6 +87,7 @@ interface TransferTableFilters {
   readonly dateTo: Date | null;
   readonly amountFrom: number | null;
   readonly amountTo: number | null;
+  readonly settled: boolean | null;
   readonly accountIds: readonly number[];
 }
 
@@ -83,6 +96,7 @@ interface PersistedTransferTableFilters {
   readonly dateTo: number | null;
   readonly amountFrom: number | null;
   readonly amountTo: number | null;
+  readonly settled: boolean | null;
   readonly accountIds: readonly number[];
 }
 
@@ -97,6 +111,7 @@ const DEFAULT_TRANSFER_TABLE_FILTERS: TransferTableFilters = {
   dateTo: null,
   amountFrom: null,
   amountTo: null,
+  settled: null,
   accountIds: [],
 };
 
@@ -118,13 +133,22 @@ const resolveColorHexByValue = (value: string | null): string | null => {
 
 const TRANSFER_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
-    columnName: 'transactions.transfers.table.columns.occurredAt',
+    columnName: 'common.labels.settled',
+    columnKey: 'settled',
+    type: 'boolean',
+    sortable: true,
+    editableType: 'checkbox',
+    maxWidth: TRANSFER_COLUMN_WIDTH.settled,
+  },
+  {
+    columnName: 'common.labels.date',
     columnKey: 'occurredAt',
     type: 'date',
     sortable: true,
+    maxWidth: TRANSFER_COLUMN_WIDTH.occurredAt,
   },
   {
-    columnName: 'transactions.transfers.table.columns.fromAccount',
+    columnName: 'common.labels.from',
     columnKey: 'fromAccount',
     type: 'string',
     sortable: true,
@@ -132,9 +156,10 @@ const TRANSFER_TABLE_COLUMNS: readonly TableDataItem[] = [
       iconColumnKey: 'fromAccountIcon',
       colorHexColumnKey: 'fromAccountColorHex',
     },
+    maxWidth: TRANSFER_COLUMN_WIDTH.transferFrom,
   },
   {
-    columnName: 'transactions.transfers.table.columns.toAccount',
+    columnName: 'common.labels.to',
     columnKey: 'toAccount',
     type: 'string',
     sortable: true,
@@ -142,15 +167,24 @@ const TRANSFER_TABLE_COLUMNS: readonly TableDataItem[] = [
       iconColumnKey: 'toAccountIcon',
       colorHexColumnKey: 'toAccountColorHex',
     },
+    maxWidth: TRANSFER_COLUMN_WIDTH.transferTo,
   },
   {
-    columnName: 'transactions.transfers.table.columns.amount',
+    columnName: 'common.labels.amount',
     columnKey: 'amount',
     type: 'currency',
     sortable: true,
     currency: {
       modality: 'transfer',
     },
+    maxWidth: TRANSFER_COLUMN_WIDTH.amount,
+  },
+  {
+    columnName: 'common.labels.description',
+    columnKey: 'description',
+    type: 'string',
+    sortable: true,
+    maxWidth: TRANSFER_COLUMN_WIDTH.description
   },
 ] as const;
 
@@ -179,6 +213,7 @@ const createTransferTableStructure = (
     ...TRANSFER_TABLE_COLUMNS,
     {
       actionItems: transferActions,
+      maxWidth: TRANSFER_COLUMN_WIDTH.action,
     },
   ] as const;
 };
@@ -221,6 +256,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       filters.dateTo !== null ||
       filters.amountFrom !== null ||
       filters.amountTo !== null ||
+      filters.settled !== null ||
       filters.accountIds.length > 0
     );
   });
@@ -233,7 +269,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSFER_FILTER_FIELD.dateFrom,
         icon: 'calendar',
         label: this.toActiveFilterLabel(
-          'transactions.transfers.filters.fields.dateFrom',
+          'common.filters.fields.dateFrom',
           this.formatActiveFilterDate(filters.dateFrom),
         ),
         translate: false,
@@ -245,7 +281,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSFER_FILTER_FIELD.dateTo,
         icon: 'calendar',
         label: this.toActiveFilterLabel(
-          'transactions.transfers.filters.fields.dateTo',
+          'common.filters.fields.dateTo',
           this.formatActiveFilterDate(filters.dateTo),
         ),
         translate: false,
@@ -257,7 +293,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSFER_FILTER_FIELD.amountFrom,
         icon: 'dollar-sign',
         label: this.toActiveFilterLabel(
-          'transactions.transfers.filters.fields.amountFrom',
+          'common.filters.fields.amountFrom',
           this.formatActiveFilterAmount(filters.amountFrom),
         ),
         translate: false,
@@ -269,8 +305,24 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSFER_FILTER_FIELD.amountTo,
         icon: 'dollar-sign',
         label: this.toActiveFilterLabel(
-          'transactions.transfers.filters.fields.amountTo',
+          'common.filters.fields.amountTo',
           this.formatActiveFilterAmount(filters.amountTo),
+        ),
+        translate: false,
+      });
+    }
+
+    if (filters.settled !== null) {
+      const settledLabelKey = filters.settled
+        ? 'common.filters.options.settled.yes'
+        : 'common.filters.options.settled.no';
+
+      items.push({
+        id: TRANSFER_FILTER_FIELD.settled,
+        icon: filters.settled ? 'circle-check' : 'circle-x',
+        label: this.toActiveFilterLabel(
+          'common.filters.fields.settled',
+          this.translateService.instant(settledLabelKey),
         ),
         translate: false,
       });
@@ -281,7 +333,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         id: `${TRANSFER_FILTER_FIELD.accountId}${ACTIVE_FILTER_ID_SEPARATOR}${accountId}`,
         icon: this.accountIconById().get(accountId) ?? 'wallet',
         label: this.toActiveFilterLabel(
-          'transactions.transfers.filters.fields.account',
+          'common.filters.fields.account',
           this.accountNameById().get(accountId) ?? `${accountId}`,
         ),
         translate: false,
@@ -306,7 +358,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       actions.push({
         id: 'transfer-filters-reset',
         icon: 'funnel-x',
-        label: 'transactions.transfers.filters.actions.reset',
+        label: 'common.filters.actions.reset',
         showLabel: false,
         buttonType: 'secondary',
         action: () => this.onResetFiltersAction(),
@@ -373,6 +425,24 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     void this.reloadTransfersPage();
   }
 
+  protected onEditableValueChange(event: EditableValueChangeEvent): void {
+    if (!event.valid || event.columnKey !== 'settled') {
+      return;
+    }
+
+    const settled = this.toBooleanValue(event.value);
+    if (settled === null) {
+      return;
+    }
+
+    const transfer = event.row as TransferTableRow;
+    if (transfer.settled === settled) {
+      return;
+    }
+
+    void this.updateTransferSettled(transfer, settled);
+  }
+
   protected onActiveFilterRemove(activeFilter: TableActiveFilterItem): void {
     const [fieldId, rawValue] = activeFilter.id.split(ACTIVE_FILTER_ID_SEPARATOR);
     const currentFilters = this.filters();
@@ -398,6 +468,11 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       nextFilters = {
         ...currentFilters,
         amountTo: null,
+      };
+    } else if (fieldId === TRANSFER_FILTER_FIELD.settled && currentFilters.settled !== null) {
+      nextFilters = {
+        ...currentFilters,
+        settled: null,
       };
     } else if (fieldId === TRANSFER_FILTER_FIELD.accountId) {
       const accountId = this.toPositiveInteger(rawValue);
@@ -433,10 +508,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('transactions.transfers.filters.description'),
       zSide: 'right',
       zWidth: 'min(96vw, 420px)',
-      zOkText: this.translateService.instant('transactions.transfers.filters.actions.apply'),
-      zMiddleText: this.translateService.instant('transactions.transfers.filters.actions.reset'),
+      zOkText: this.translateService.instant('common.filters.actions.apply'),
+      zMiddleText: this.translateService.instant('common.filters.actions.reset'),
       zMiddleType: 'secondary',
-      zCancelText: this.translateService.instant('transactions.transfers.filters.actions.cancel'),
+      zCancelText: this.translateService.instant('common.filters.actions.cancel'),
       zOkIcon: 'check',
       zMiddleIcon: 'filter',
       zCancelIcon: 'x',
@@ -463,22 +538,38 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     this.applyFiltersAndReload(DEFAULT_TRANSFER_TABLE_FILTERS);
   }
 
+  private toBooleanValue(value: unknown): boolean | null {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+
+    if (value === 1 || value === '1' || value === 'true') {
+      return true;
+    }
+
+    if (value === 0 || value === '0' || value === 'false') {
+      return false;
+    }
+
+    return null;
+  }
+
   private buildFilterFields(): readonly AppSheetField[] {
     return [
       {
         id: TRANSFER_FILTER_FIELD.dateFrom,
         type: 'date-picker',
         width: '1/2',
-        label: 'transactions.transfers.filters.fields.dateFrom',
-        placeholder: 'transactions.transfers.filters.placeholders.dateFrom',
+        label: 'common.filters.fields.dateFrom',
+        placeholder: 'common.filters.placeholders.dateFrom',
         translate: true,
       },
       {
         id: TRANSFER_FILTER_FIELD.dateTo,
         type: 'date-picker',
         width: '1/2',
-        label: 'transactions.transfers.filters.fields.dateTo',
-        placeholder: 'transactions.transfers.filters.placeholders.dateTo',
+        label: 'common.filters.fields.dateTo',
+        placeholder: 'common.filters.placeholders.dateTo',
         translate: true,
       },
       {
@@ -486,8 +577,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         type: 'input',
         inputType: 'number',
         width: '1/2',
-        label: 'transactions.transfers.filters.fields.amountFrom',
-        placeholder: 'transactions.transfers.filters.placeholders.amountFrom',
+        label: 'common.filters.fields.amountFrom',
+        placeholder: 'common.filters.placeholders.amountFrom',
         translate: true,
       },
       {
@@ -495,8 +586,33 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         type: 'input',
         inputType: 'number',
         width: '1/2',
-        label: 'transactions.transfers.filters.fields.amountTo',
-        placeholder: 'transactions.transfers.filters.placeholders.amountTo',
+        label: 'common.filters.fields.amountTo',
+        placeholder: 'common.filters.placeholders.amountTo',
+        translate: true,
+      },
+      {
+        id: TRANSFER_FILTER_FIELD.settled,
+        type: 'select',
+        width: '1/1',
+        label: 'common.filters.fields.settled',
+        placeholder: 'common.filters.placeholders.settled',
+        options: [
+          {
+            value: 'any',
+            label: 'common.filters.options.settled.any',
+            translate: true,
+          },
+          {
+            value: 'true',
+            label: 'common.filters.options.settled.yes',
+            translate: true,
+          },
+          {
+            value: 'false',
+            label: 'common.filters.options.settled.no',
+            translate: true,
+          },
+        ],
         translate: true,
       },
       {
@@ -505,9 +621,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         width: '1/1',
         multiple: true,
         maxLabelCount: 7,
-        label: 'transactions.transfers.filters.fields.account',
-        placeholder: 'transactions.transfers.filters.placeholders.account',
-        searchPlaceholder: 'transactions.transfers.filters.placeholders.searchAccount',
+        label: 'common.filters.fields.account',
+        placeholder: 'common.filters.placeholders.account',
+        searchPlaceholder: 'common.filters.placeholders.searchAccount',
         emptyText: 'transactions.transfers.filters.empty.account',
         translate: true,
         options: this.accountOptions().map((option) => ({
@@ -528,6 +644,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         filters.amountFrom === null ? null : `${filters.amountFrom}`,
       [TRANSFER_FILTER_FIELD.amountTo]:
         filters.amountTo === null ? null : `${filters.amountTo}`,
+      [TRANSFER_FILTER_FIELD.settled]:
+        filters.settled === null ? null : `${filters.settled}`,
       [TRANSFER_FILTER_FIELD.accountId]: filters.accountIds.map((id) => `${id}`),
     };
   }
@@ -538,6 +656,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       dateTo: this.toDateValue(values[TRANSFER_FILTER_FIELD.dateTo]),
       amountFrom: this.toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountFrom]),
       amountTo: this.toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountTo]),
+      settled: this.toSettledFilterValue(values[TRANSFER_FILTER_FIELD.settled]),
       accountIds: this.toPositiveIntegerArray(values[TRANSFER_FILTER_FIELD.accountId]),
     };
 
@@ -557,12 +676,14 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
     const amountTo = filters.amountTo ?? undefined;
+    const settled = filters.settled === null ? undefined : filters.settled;
     const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
     const hasFilters =
       dateFrom !== undefined ||
       dateTo !== undefined ||
       amountFrom !== undefined ||
       amountTo !== undefined ||
+      settled !== undefined ||
       accounts !== undefined;
 
     if (!hasFilters) {
@@ -580,6 +701,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         ...(dateTo === undefined ? {} : { date_to: dateTo }),
         ...(amountFrom === undefined ? {} : { amount_from: amountFrom }),
         ...(amountTo === undefined ? {} : { amount_to: amountTo }),
+        ...(settled === undefined ? {} : { settled }),
         ...(accounts === undefined ? {} : { accounts }),
       },
     };
@@ -651,6 +773,18 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     if (typeof value === 'string' && value.trim().length > 0) {
       const parsedValue = Number(value);
       return Number.isFinite(parsedValue) ? parsedValue : null;
+    }
+
+    return null;
+  }
+
+  private toSettledFilterValue(value: unknown): boolean | null {
+    if (value === true || value === 'true') {
+      return true;
+    }
+
+    if (value === false || value === 'false') {
+      return false;
     }
 
     return null;
@@ -735,6 +869,27 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async updateTransferSettled(transfer: TransferTableRow, settled: boolean): Promise<void> {
+    try {
+      const result = await this.transactionsService.updateTransfer({
+        transfer_id: transfer.transferId,
+        occurred_at: transfer.occurredAt,
+        from_account_id: transfer.fromAccountId,
+        to_account_id: transfer.toAccountId,
+        amount: transfer.amount,
+        description: transfer.description,
+        settled,
+      });
+
+      this.transfers.update((rows) =>
+        rows.map((row) => (row.transferId === transfer.transferId ? result.transfer : row)),
+      );
+    } catch (error) {
+      console.error('[transfers-table-section] Failed to update transfer settled:', error);
+      await this.reloadTransfersPage();
+    }
+  }
+
   private async createTransfer(
     payload: TransactionCreateTransferDto,
     dialogContent: UpsertTransferDialogComponent,
@@ -808,6 +963,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         dateTo: filters.dateTo?.getTime() ?? null,
         amountFrom: filters.amountFrom,
         amountTo: filters.amountTo,
+        settled: filters.settled,
         accountIds: [...filters.accountIds],
       },
     };
@@ -826,6 +982,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       dateTo: this.toDateValue(filters.dateTo),
       amountFrom: this.toAmountFilterValue(filters.amountFrom),
       amountTo: this.toAmountFilterValue(filters.amountTo),
+      settled: this.toSettledFilterValue(filters.settled),
       accountIds: this.toPositiveIntegerArray(filters.accountIds),
     };
   }
@@ -873,6 +1030,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         transfer: {
           transferId: transfer.transferId,
           occurredAt: transfer.occurredAt,
+          settled: transfer.settled,
           fromAccountId: transfer.fromAccountId,
           toAccountId: transfer.toAccountId,
           amount: transfer.amount,
@@ -965,6 +1123,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     return {
       transferId: transfer.transferId,
       occurredAt: transfer.occurredAt,
+      settled: transfer.settled,
       fromAccountId,
       fromAccount: this.accountNameById().get(fromAccountId) ?? `${fromAccountId}`,
       fromAccountIcon: this.accountIconById().get(fromAccountId) ?? null,

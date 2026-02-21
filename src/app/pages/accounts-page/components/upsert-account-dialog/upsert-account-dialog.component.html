@@ -1,7 +1,7 @@
 <form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="account-name">
-      {{ 'accounts.dialog.add.fields.name' | translate }}
+      {{ 'common.labels.name' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <input
@@ -21,7 +21,7 @@
 
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="account-description">
-      {{ 'accounts.dialog.add.fields.description' | translate }}
+      {{ 'common.labels.description' | translate }}
     </label>
     <textarea
       id="account-description"
@@ -41,10 +41,10 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'accounts.dialog.add.fields.type' | translate }}
+      {{ 'common.labels.type' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select formControlName="type" [zPlaceholder]="'accounts.dialog.add.placeholders.type' | translate">
+    <z-select formControlName="type" [zPlaceholder]="'common.placeholders.selectType' | translate">
       @for (option of typeOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -55,8 +55,8 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'accounts.dialog.add.fields.color' | translate }}</label>
-    <z-select formControlName="colorKey" [zPlaceholder]="'accounts.dialog.add.placeholders.color' | translate">
+    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.color' | translate }}</label>
+    <z-select formControlName="colorKey" [zPlaceholder]="'common.placeholders.selectColor' | translate">
       @for (option of colorOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zColorHex]="option.colorHex ?? null" />
       }
@@ -64,11 +64,11 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'accounts.dialog.add.fields.icon' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.icon' | translate }}</label>
     <z-combobox
       zWidth="full"
       formControlName="icon"
-      [placeholder]="'accounts.dialog.add.placeholders.icon' | translate"
+      [placeholder]="'common.placeholders.selectIcon' | translate"
       [options]="getIconComboboxOptions()"
     />
   </div>

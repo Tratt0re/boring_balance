@@ -54,7 +54,7 @@ const ACTIVE_FILTER_ID_SEPARATOR = ':';
 const TRANSACTION_COLUMN_WIDTH = {
   occurredAt: 'w-1/14',
   settled: 'w-1/14',
-  account: 'w-2/28',
+  account: 'w-1/14',
   amount: 'w-1/14',
   category: 'w-3/28',
   description: 'w-5/28',
@@ -136,7 +136,7 @@ const resolveColorHexByValue = (value: string | null): string | null => {
 
 const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
-    columnName: 'transactions.table.columns.settled',
+    columnName: 'common.labels.settled',
     columnKey: 'settled',
     type: 'boolean',
     sortable: true,
@@ -144,14 +144,14 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
     maxWidth: TRANSACTION_COLUMN_WIDTH.settled,
   },
   {
-    columnName: 'transactions.table.columns.occurredAt',
+    columnName: 'common.labels.date',
     columnKey: 'occurredAt',
     type: 'date',
     sortable: true,
     maxWidth: TRANSACTION_COLUMN_WIDTH.occurredAt,
   },
   {
-    columnName: 'transactions.table.columns.amount',
+    columnName: 'common.labels.amount',
     columnKey: 'amount',
     type: 'currency',
     sortable: true,
@@ -161,7 +161,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
     maxWidth: TRANSACTION_COLUMN_WIDTH.amount,
   },
   {
-    columnName: 'transactions.table.columns.category',
+    columnName: 'common.labels.category',
     columnKey: 'category',
     type: 'badge',
     sortable: true,
@@ -175,7 +175,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'transactions.table.columns.account',
+    columnName: 'common.labels.account',
     columnKey: 'account',
     type: 'string',
     sortable: true,
@@ -186,7 +186,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
     },
   },
   {
-    columnName: 'transactions.table.columns.description',
+    columnName: 'common.labels.description',
     columnKey: 'description',
     type: 'string',
     sortable: true,
@@ -278,7 +278,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSACTION_FILTER_FIELD.dateFrom,
         icon: 'calendar',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.dateFrom',
+          'common.filters.fields.dateFrom',
           this.formatActiveFilterDate(filters.dateFrom),
         ),
         translate: false,
@@ -290,7 +290,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSACTION_FILTER_FIELD.dateTo,
         icon: 'calendar',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.dateTo',
+          'common.filters.fields.dateTo',
           this.formatActiveFilterDate(filters.dateTo),
         ),
         translate: false,
@@ -302,7 +302,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSACTION_FILTER_FIELD.amountFrom,
         icon: 'dollar-sign',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.amountFrom',
+          'common.filters.fields.amountFrom',
           this.formatActiveFilterAmount(filters.amountFrom),
         ),
         translate: false,
@@ -314,7 +314,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSACTION_FILTER_FIELD.amountTo,
         icon: 'dollar-sign',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.amountTo',
+          'common.filters.fields.amountTo',
           this.formatActiveFilterAmount(filters.amountTo),
         ),
         translate: false,
@@ -323,14 +323,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     if (filters.settled !== null) {
       const settledLabelKey = filters.settled
-        ? 'transactions.filters.options.settled.yes'
-        : 'transactions.filters.options.settled.no';
+        ? 'common.filters.options.settled.yes'
+        : 'common.filters.options.settled.no';
 
       items.push({
         id: TRANSACTION_FILTER_FIELD.settled,
         icon: filters.settled ? 'circle-check' : 'circle-x',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.settled',
+          'common.filters.fields.settled',
           this.translateService.instant(settledLabelKey),
         ),
         translate: false,
@@ -343,7 +343,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: `${TRANSACTION_FILTER_FIELD.categoryId}${ACTIVE_FILTER_ID_SEPARATOR}${categoryId}`,
         icon: this.categoryIconById().get(categoryId) ?? 'tag',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.category',
+          'common.filters.fields.category',
           this.translateService.instant(categoryName),
         ),
         translate: false,
@@ -355,7 +355,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: `${TRANSACTION_FILTER_FIELD.accountId}${ACTIVE_FILTER_ID_SEPARATOR}${accountId}`,
         icon: this.accountIconById().get(accountId) ?? 'wallet',
         label: this.toActiveFilterLabel(
-          'transactions.filters.fields.account',
+          'common.filters.fields.account',
           this.accountNameById().get(accountId) ?? `${accountId}`,
         ),
         translate: false,
@@ -380,7 +380,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       actions.push({
         id: 'transaction-filters-reset',
         icon: 'funnel-x',
-        label: 'transactions.filters.actions.reset',
+        label: 'common.filters.actions.reset',
         showLabel: false,
         buttonType: 'secondary',
         action: () => this.onResetFiltersAction(),
@@ -528,10 +528,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('transactions.filters.description'),
       zSide: 'right',
       zWidth: 'min(96vw, 420px)',
-      zOkText: this.translateService.instant('transactions.filters.actions.apply'),
-      zMiddleText: this.translateService.instant('transactions.filters.actions.reset'),
+      zOkText: this.translateService.instant('common.filters.actions.apply'),
+      zMiddleText: this.translateService.instant('common.filters.actions.reset'),
       zMiddleType: 'secondary',
-      zCancelText: this.translateService.instant('transactions.filters.actions.cancel'),
+      zCancelText: this.translateService.instant('common.filters.actions.cancel'),
       zOkIcon: 'check',
       zMiddleIcon: 'filter',
       zCancelIcon: 'x',
@@ -589,16 +589,16 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         id: TRANSACTION_FILTER_FIELD.dateFrom,
         type: 'date-picker',
         width: '1/2',
-        label: 'transactions.filters.fields.dateFrom',
-        placeholder: 'transactions.filters.placeholders.dateFrom',
+        label: 'common.filters.fields.dateFrom',
+        placeholder: 'common.filters.placeholders.dateFrom',
         translate: true,
       },
       {
         id: TRANSACTION_FILTER_FIELD.dateTo,
         type: 'date-picker',
         width: '1/2',
-        label: 'transactions.filters.fields.dateTo',
-        placeholder: 'transactions.filters.placeholders.dateTo',
+        label: 'common.filters.fields.dateTo',
+        placeholder: 'common.filters.placeholders.dateTo',
         translate: true,
       },
       {
@@ -606,8 +606,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         type: 'input',
         inputType: 'number',
         width: '1/2',
-        label: 'transactions.filters.fields.amountFrom',
-        placeholder: 'transactions.filters.placeholders.amountFrom',
+        label: 'common.filters.fields.amountFrom',
+        placeholder: 'common.filters.placeholders.amountFrom',
         translate: true,
       },
       {
@@ -615,30 +615,30 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         type: 'input',
         inputType: 'number',
         width: '1/2',
-        label: 'transactions.filters.fields.amountTo',
-        placeholder: 'transactions.filters.placeholders.amountTo',
+        label: 'common.filters.fields.amountTo',
+        placeholder: 'common.filters.placeholders.amountTo',
         translate: true,
       },
       {
         id: TRANSACTION_FILTER_FIELD.settled,
         type: 'select',
         width: '1/1',
-        label: 'transactions.filters.fields.settled',
-        placeholder: 'transactions.filters.placeholders.settled',
+        label: 'common.filters.fields.settled',
+        placeholder: 'common.filters.placeholders.settled',
         options: [
           {
             value: 'any',
-            label: 'transactions.filters.options.settled.any',
+            label: 'common.filters.options.settled.any',
             translate: true,
           },
           {
             value: 'true',
-            label: 'transactions.filters.options.settled.yes',
+            label: 'common.filters.options.settled.yes',
             translate: true,
           },
           {
             value: 'false',
-            label: 'transactions.filters.options.settled.no',
+            label: 'common.filters.options.settled.no',
             translate: true,
           },
         ],
@@ -650,9 +650,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         width: '1/1',
         multiple: true,
         maxLabelCount: 7,
-        label: 'transactions.filters.fields.category',
-        placeholder: 'transactions.filters.placeholders.category',
-        searchPlaceholder: 'transactions.filters.placeholders.searchCategory',
+        label: 'common.filters.fields.category',
+        placeholder: 'common.filters.placeholders.category',
+        searchPlaceholder: 'common.filters.placeholders.searchCategory',
         emptyText: 'transactions.filters.empty.category',
         translate: true,
         options: this.categoryOptions().map((option) => ({
@@ -668,9 +668,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         width: '1/1',
         multiple: true,
         maxLabelCount: 7,
-        label: 'transactions.filters.fields.account',
-        placeholder: 'transactions.filters.placeholders.account',
-        searchPlaceholder: 'transactions.filters.placeholders.searchAccount',
+        label: 'common.filters.fields.account',
+        placeholder: 'common.filters.placeholders.account',
+        searchPlaceholder: 'common.filters.placeholders.searchAccount',
         emptyText: 'transactions.filters.empty.account',
         translate: true,
         options: this.accountOptions().map((option) => ({

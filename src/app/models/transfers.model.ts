@@ -1,6 +1,7 @@
 import type { TransferDto } from '@/dtos';
 
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
+import { toBooleanFlag, toSqliteBooleanFlag } from './common.model';
 
 const AMOUNT_CENTS_DIVISOR = 100;
 
@@ -12,6 +13,7 @@ export class TransferModel {
     public readonly toAccountId: RowId,
     public readonly amount: number,
     public readonly description: string | null,
+    public readonly settled: boolean,
     public readonly createdAt: UnixTimestampMilliseconds,
     public readonly updatedAt: UnixTimestampMilliseconds | null,
   ) {}
@@ -24,6 +26,7 @@ export class TransferModel {
       dto.to_account_id,
       dto.amount_cents / AMOUNT_CENTS_DIVISOR,
       dto.description,
+      toBooleanFlag(dto.settled),
       dto.created_at,
       dto.updated_at,
     );
@@ -37,6 +40,7 @@ export class TransferModel {
       to_account_id: this.toAccountId,
       amount_cents: Math.round(this.amount * AMOUNT_CENTS_DIVISOR),
       description: this.description,
+      settled: toSqliteBooleanFlag(this.settled),
       created_at: this.createdAt,
       updated_at: this.updatedAt,
     };

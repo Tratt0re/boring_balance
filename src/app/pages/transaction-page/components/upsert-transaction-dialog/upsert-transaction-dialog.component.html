@@ -1,13 +1,13 @@
 <form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'transactions.dialog.add.fields.occurredAt' | translate }}
+      {{ 'common.labels.date' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-date-picker
       zIconPosition="right"
       formControlName="occurredAt"
-      [placeholder]="'transactions.dialog.add.placeholders.occurredAt' | translate"
+      [placeholder]="'common.placeholders.pickDate' | translate"
     />
     @if (visibleOccurredAtErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
@@ -15,7 +15,7 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'transactions.dialog.add.fields.settled' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.settled' | translate }}</label>
     <z-switch formControlName="settled">
       {{ settledValue() ? ('common.yes' | translate) : ('common.no' | translate) }}
     </z-switch>
@@ -23,10 +23,25 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">
-      {{ 'transactions.dialog.add.fields.account' | translate }}
+      {{ 'common.labels.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select formControlName="accountId" [zPlaceholder]="'transactions.dialog.add.placeholders.account' | translate">
+    <z-select formControlName="categoryId" [zPlaceholder]="'common.placeholders.selectCategory' | translate">
+      @for (option of categoryOptions; track option.value) {
+        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+      }
+    </z-select>
+    @if (visibleCategoryIdErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'common.labels.account' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-select formControlName="accountId" [zPlaceholder]="'common.placeholders.selectAccount' | translate">
       @for (option of accountOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -38,7 +53,7 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium" for="transaction-amount">
-      {{ 'transactions.dialog.add.fields.amount' | translate }}
+      {{ 'common.labels.amount' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <input
@@ -49,31 +64,16 @@
       step="0.01"
       aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
-      [attr.placeholder]="'transactions.dialog.add.placeholders.amount' | translate"
+      [attr.placeholder]="'common.placeholders.amountZero' | translate"
     />
     @if (visibleAmountErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
-  <div>
-    <label class="mb-1.5 block text-sm font-medium">
-      {{ 'transactions.dialog.add.fields.category' | translate }}
-      <span class="text-destructive">*</span>
-    </label>
-    <z-select formControlName="categoryId" [zPlaceholder]="'transactions.dialog.add.placeholders.category' | translate">
-      @for (option of categoryOptions; track option.value) {
-        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
-      }
-    </z-select>
-    @if (visibleCategoryIdErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
-    }
-  </div>
-
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="transaction-description">
-      {{ 'transactions.dialog.add.fields.description' | translate }}
+      {{ 'common.labels.description' | translate }}
     </label>
     <textarea
       id="transaction-description"
@@ -83,7 +83,7 @@
       class="max-h-32 resize-y"
       [attr.maxlength]="descriptionMaxLength"
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
-      [attr.placeholder]="'transactions.dialog.add.placeholders.description' | translate"
+      [attr.placeholder]="'common.placeholders.transactionDescription' | translate"
     ></textarea>
     <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
     @if (visibleDescriptionErrorKey(); as currentError) {

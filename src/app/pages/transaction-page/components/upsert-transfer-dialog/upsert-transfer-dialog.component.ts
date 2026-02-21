@@ -9,6 +9,7 @@ import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
+import { ZardSwitchComponent } from '@/shared/components/switch';
 
 const TRANSFER_DESCRIPTION_MAX_LENGTH = 50;
 
@@ -20,6 +21,7 @@ interface DialogSelectOption {
 export interface TransferDialogInitialValue {
   readonly transferId: string;
   readonly occurredAt: number;
+  readonly settled: boolean;
   readonly fromAccountId: number;
   readonly toAccountId: number;
   readonly amount: number;
@@ -33,7 +35,14 @@ export interface UpsertTransferDialogData {
 
 @Component({
   selector: 'app-upsert-transfer-dialog',
-  imports: [ReactiveFormsModule, TranslatePipe, ZardDatePickerComponent, ZardInputDirective, ...ZardSelectImports],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ZardDatePickerComponent,
+    ZardInputDirective,
+    ZardSwitchComponent,
+    ...ZardSelectImports,
+  ],
   templateUrl: './upsert-transfer-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -48,6 +57,7 @@ export class UpsertTransferDialogComponent {
     occurredAt: new FormControl<Date | null>(
       this.initialTransfer ? new Date(this.initialTransfer.occurredAt) : new Date(),
     ),
+    settled: new FormControl(this.initialTransfer?.settled ?? true, { nonNullable: true }),
     fromAccountId: new FormControl(this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : '', {
       nonNullable: true,
     }),
@@ -79,6 +89,7 @@ export class UpsertTransferDialogComponent {
       to_account_id: values.toAccountId,
       amount: values.amount,
       description: values.description,
+      settled: values.settled,
     };
   }
 
@@ -100,6 +111,7 @@ export class UpsertTransferDialogComponent {
       to_account_id: values.toAccountId,
       amount: values.amount,
       description: values.description,
+      settled: values.settled,
     };
   }
 
@@ -156,6 +168,10 @@ export class UpsertTransferDialogComponent {
     return this.form.controls.description.value.length;
   }
 
+  protected settledValue(): boolean {
+    return this.form.controls.settled.value;
+  }
+
   protected isFromAccountOptionDisabled(optionValue: string): boolean {
     const selectedToAccountId = this.form.controls.toAccountId.value;
     return selectedToAccountId.length > 0 && selectedToAccountId === optionValue;
@@ -168,6 +184,7 @@ export class UpsertTransferDialogComponent {
 
   private collectNormalizedValues(invalidFormErrorKey: string): {
     occurredAt: number;
+    settled: boolean;
     fromAccountId: number;
     toAccountId: number;
     amount: number;
@@ -215,6 +232,7 @@ export class UpsertTransferDialogComponent {
     this.errorKey.set(null);
     return {
       occurredAt,
+      settled: values.settled,
       fromAccountId,
       toAccountId,
       amount,

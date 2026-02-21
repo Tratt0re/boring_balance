@@ -38,6 +38,10 @@ function buildFilteredTransferWhereClause(filters = {}) {
     where.amount_cents = amountCentsFilter;
   }
 
+  if (filters.settled !== undefined) {
+    where.settled = filters.settled;
+  }
+
   return where;
 }
 
@@ -159,6 +163,7 @@ function create(payload) {
   const database = getDatabase();
   const createTransferTx = database.transaction((transferPayload) => {
     const transferId = randomUUID();
+    const settled = transferPayload.settled === undefined ? 1 : Number(transferPayload.settled);
     const transferRow = {
       id: transferId,
       from_account_id: transferPayload.from_account_id,
@@ -166,6 +171,7 @@ function create(payload) {
       occurred_at: transferPayload.occurred_at,
       amount_cents: Math.abs(transferPayload.amount_cents),
       description: transferPayload.description ?? null,
+      settled,
       created_at: transferPayload.created_at,
     };
     transfersBaseModel.create(transferRow);
@@ -178,7 +184,7 @@ function create(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       transfer_id: transferId,
-      settled: 1,
+      settled,
       created_at: transferPayload.created_at,
     };
 
@@ -190,7 +196,7 @@ function create(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       transfer_id: transferId,
-      settled: 1,
+      settled,
       created_at: transferPayload.created_at,
     };
 
@@ -238,12 +244,18 @@ function update(payload) {
       throw new Error(`Transfer transactions not found for transfer_id "${transferPayload.transfer_id}".`);
     }
 
+    const settled =
+      transferPayload.settled === undefined
+        ? Number(transferRecord.settled ?? 1)
+        : Number(transferPayload.settled);
+
     transfersBaseModel.updateById(transferPayload.transfer_id, {
       from_account_id: transferPayload.from_account_id,
       to_account_id: transferPayload.to_account_id,
       occurred_at: transferPayload.occurred_at,
       amount_cents: Math.abs(transferPayload.amount_cents),
       description: transferPayload.description ?? null,
+      settled,
       updated_at: transferPayload.updated_at,
     });
 
@@ -254,7 +266,7 @@ function update(payload) {
       amount_cents: -Math.abs(transferPayload.amount_cents),
       description: null,
       tags: EMPTY_TAGS_JSON,
-      settled: 1,
+      settled,
       updated_at: transferPayload.updated_at,
     };
 
@@ -265,7 +277,7 @@ function update(payload) {
       amount_cents: Math.abs(transferPayload.amount_cents),
       description: null,
       tags: EMPTY_TAGS_JSON,
-      settled: 1,
+      settled,
       updated_at: transferPayload.updated_at,
     };
 
