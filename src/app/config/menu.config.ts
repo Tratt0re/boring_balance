@@ -30,6 +30,7 @@ export class MenuConfiguration {
       items: [
         { label: 'nav.items.accounts', icon: 'landmark', path: '/accounts' },
         { label: 'nav.items.categories', icon: 'tags', path: '/categories' },
+        { label: 'nav.items.recurringEvents', icon: 'calendar-plus', path: '/recurring-events' },
       ]
     },
     {

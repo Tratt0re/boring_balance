@@ -99,8 +99,82 @@
       "budget": "Budget",
       "accounts": "Conti",
       "categories": "Categorie",
+      "recurringEvents": "Eventi ricorrenti",
       "dataBackups": "Dati e backup",
       "about": "Info app"
+    }
+  },
+  "overview": {
+    "toolbar": {
+      "reload": "Ricarica"
+    },
+    "errors": {
+      "summaryLoad": "Impossibile caricare i dati di riepilogo."
+    },
+    "pie": {
+      "others": "Altri"
+    },
+    "cards": {
+      "netWorth": {
+        "title": "Patrimonio netto totale",
+        "descriptionDailyAverage": "Variazione media giornaliera (mese corrente): {{value}}/giorno",
+        "total": "Totale",
+        "deltaVsPreviousMonth": "vs mese precedente",
+        "receivables": "Crediti",
+        "payables": "Debiti",
+        "totalAfterRP": "Dopo C&D",
+        "emptyDistribution": "Nessun dato di distribuzione dei conti."
+      },
+      "monthlyTotals": {
+        "title": "Entrate, spese e flusso di cassa netto",
+        "descriptionCurrentYear": "Anno corrente: {{year}}",
+        "loading": "Caricamento analisi...",
+        "loadFailedWithError": "Caricamento analisi non riuscito: {{error}}",
+        "empty": "Nessun dato analitico disponibile per i filtri selezionati.",
+        "series": {
+          "incomes": "Entrate",
+          "expenses": "Spese",
+          "netCashflow": "Flusso di cassa netto"
+        }
+      },
+      "recentTransactions": {
+        "title": "Ultimi movimenti",
+        "description": "Ultimi {{count}} movimenti",
+        "loadFailed": "Impossibile caricare i movimenti.",
+        "empty": "Nessun movimento recente.",
+        "toggleSettled": "Cambia stato regolato",
+        "tooltips": {
+          "settled": "Regolato",
+          "settle": "Regola",
+          "unsettled": "Non regolato"
+        },
+        "actions": {
+          "goToTransactionsPage": "Tutti i movimenti"
+        },
+        "unknownAccount": "Conto sconosciuto",
+        "unknownCategory": "Categoria sconosciuta"
+      },
+      "moneyFlowSankey": {
+        "title": "Flusso di denaro",
+        "description": "Flusso di {{month}}",
+        "loading": "Caricamento flusso di denaro...",
+        "loadFailedWithError": "Caricamento flusso di denaro non riuscito: {{error}}",
+        "empty": "Nessun dato di flusso di denaro disponibile per questo mese.",
+        "tooltips": {
+          "actualNetCashflow": "Flusso di cassa netto reale"
+        },
+        "nodes": {
+          "incomes": "Entrate",
+          "expenses": "Spese",
+          "savings": "Risparmio",
+          "investments": "Investimenti",
+          "crypto": "Cripto",
+          "netCashflow": "Flusso di cassa netto",
+          "priorBalances": "Saldi pregressi",
+          "unused": "Non utilizzato",
+          "otherExpenses": "Altre spese"
+        }
+      }
     }
   },
   "category": {

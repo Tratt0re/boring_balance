@@ -21,6 +21,7 @@ import {
 
 export type AppBarChartAxisPointerType = 'shadow' | 'line' | 'cross' | 'none';
 export type AppBarChartOrientation = 'vertical' | 'horizontal';
+export type AppBarChartTooltipTrigger = 'axis' | 'item';
 
 export interface AppBarChartSeries {
   readonly data: readonly number[];
@@ -31,6 +32,10 @@ export interface AppBarChartSeries {
   readonly borderRadius?: number | readonly [number, number, number, number];
   readonly themeColor?: AppChartThemeColor;
   readonly color?: string;
+  readonly tooltipValueText?: string;
+  readonly tooltipDetails?: readonly string[];
+  readonly tooltipDetailsOnly?: boolean;
+  readonly tooltipHideValue?: boolean;
 }
 
 @Component({
@@ -58,6 +63,8 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   readonly dimOthersOnFocus = input(false, { transform: booleanAttribute });
   readonly blurOpacity = input(0.2);
   readonly axisPointerType = input<AppBarChartAxisPointerType>('shadow');
+  readonly valueAxisPercent = input(false, { transform: booleanAttribute });
+  readonly tooltipTrigger = input<AppBarChartTooltipTrigger>('axis');
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -70,6 +77,11 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const normalizedDefaultCornerRadius = Math.max(0, this.cornerRadius());
+    const usePercentValueAxis = this.valueAxisPercent();
+    const tooltipTrigger = this.tooltipTrigger();
+    const valueAxisLabelFormatter = usePercentValueAxis
+      ? (value: number | string) => `${Number.isFinite(Number(value)) ? Number(value) : value}%`
+      : undefined;
     const axisPointerType = this.axisPointerType();
     const axisPointer =
       axisPointerType === 'shadow'
@@ -150,7 +162,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
         fontFamily,
       },
       tooltip: {
-        trigger: 'axis',
+        trigger: tooltipTrigger,
         backgroundColor: tooltipBackground,
         borderColor: border,
         borderWidth: 1,
@@ -158,7 +170,12 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
           color: tooltipForeground,
           fontFamily,
         },
-        axisPointer,
+        ...(tooltipTrigger === 'axis' ? { axisPointer } : {}),
+        ...(tooltipTrigger === 'item'
+          ? {
+              formatter: (params: unknown) => this.formatItemTooltip(params, usePercentValueAxis),
+            }
+          : {}),
       },
       legend: {
         show: this.showLegend() && barSeries.length > 0,
@@ -182,6 +199,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
             axisLabel: {
               color: foreground,
               fontFamily,
+              ...(valueAxisLabelFormatter ? { formatter: valueAxisLabelFormatter } : {}),
             },
             splitLine: { lineStyle: { color: border } },
           }
@@ -209,6 +227,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
             axisLabel: {
               color: foreground,
               fontFamily,
+              ...(valueAxisLabelFormatter ? { formatter: valueAxisLabelFormatter } : {}),
             },
             splitLine: { lineStyle: { color: border } },
           },
@@ -225,5 +244,84 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.themeObserver?.disconnect();
     this.themeObserver = null;
+  }
+
+  private formatItemTooltip(params: unknown, usePercentValueAxis: boolean): string {
+    const tooltipParams = params as {
+      seriesIndex?: number;
+      seriesName?: string;
+      value?: number | string | readonly unknown[];
+    };
+    const seriesIndex = Number.isInteger(tooltipParams?.seriesIndex) ? Number(tooltipParams.seriesIndex) : -1;
+    const series = this.series()[seriesIndex];
+    const seriesName = typeof series?.name === 'string' ? series.name : (tooltipParams?.seriesName ?? '').toString();
+    const rawValueCandidate = Array.isArray(tooltipParams?.value) ? tooltipParams.value[0] : tooltipParams?.value;
+    const rawValue =
+      rawValueCandidate && typeof rawValueCandidate === 'object' && 'value' in rawValueCandidate
+        ? (rawValueCandidate as { value?: unknown }).value
+        : rawValueCandidate;
+    const numericValue = Number(rawValue);
+    const percentText =
+      usePercentValueAxis && Number.isFinite(numericValue) ? `${numericValue.toFixed(2)}%` : null;
+    const labelStyle = 'font-weight: 300; opacity: 0.78;';
+    const valueStyle = 'font-weight: 700;';
+    const percentStyle = 'font-weight: 400;';
+    const formatLabelValue = (label: string, value: string) =>
+      `<span style="${labelStyle}">${this.escapeHtml(label)}</span> <strong style="${valueStyle}">${this.escapeHtml(value)}</strong>`;
+    const formatDetailLine = (line: string) => {
+      const separatorIndex = line.indexOf(':');
+      if (separatorIndex < 0) {
+        return `<span style="${labelStyle}">${this.escapeHtml(line)}</span>`;
+      }
+
+      const detailLabel = line.slice(0, separatorIndex + 1);
+      const detailValue = line.slice(separatorIndex + 1).trim();
+      return formatLabelValue(detailLabel, detailValue);
+    };
+    const shouldHideValue = series?.tooltipHideValue === true;
+    const valueText = shouldHideValue
+      ? null
+      : typeof series?.tooltipValueText === 'string' && series.tooltipValueText.trim().length > 0
+        ? series.tooltipValueText
+        : Number.isFinite(numericValue)
+          ? String(numericValue)
+          : null;
+    const details = (series?.tooltipDetails ?? [])
+      .map((line) => formatDetailLine(line))
+      .filter((line) => line.length > 0);
+
+    if (series?.tooltipDetailsOnly && details.length > 0) {
+      return details.join('<br/>');
+    }
+
+    const lines: string[] = [];
+    if (seriesName.length > 0 || valueText || percentText) {
+      let baseLine = seriesName;
+      if (valueText) {
+        baseLine = formatLabelValue(seriesName, valueText);
+      } else if (seriesName.length > 0) {
+        baseLine = `<span style="${labelStyle}">${seriesName}</span>`;
+      }
+
+      if (percentText) {
+        baseLine = `${baseLine} <span style="${percentStyle}">(${this.escapeHtml(percentText)})</span>`;
+      }
+
+      if (baseLine.length > 0) {
+        lines.push(baseLine);
+      }
+    }
+    lines.push(...details);
+
+    return lines.join('<br/>');
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
   }
 }

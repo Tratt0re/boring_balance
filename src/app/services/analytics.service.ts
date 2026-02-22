@@ -13,10 +13,10 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
     super(APIChannel.ANALYTICS);
   }
 
-  expensesIncomesProfitByMonth(
+  expensesIncomesNetCashflowByMonth(
     payload?: DTO.AnalyticsFilterPayload,
-  ): Promise<DTO.AnalyticsExpensesIncomesProfitByMonthResponse> {
-    return this.ipcClient.expensesIncomesProfitByMonth(payload);
+  ): Promise<DTO.AnalyticsExpensesIncomesNetCashflowByMonthResponse> {
+    return this.ipcClient.expensesIncomesNetCashflowByMonth(payload);
   }
 
   receivablesPayables(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsReceivablesPayablesResponse> {
@@ -37,5 +37,9 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
     payload?: DTO.AnalyticsFilterPayload,
   ): Promise<DTO.AnalyticsIncomesByCategoryByMonthResponse> {
     return this.ipcClient.incomesByCategoryByMonth(payload);
+  }
+
+  moneyFlowSankeyByMonth(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsMoneyFlowSankeyByMonthResponse> {
+    return this.ipcClient.moneyFlowSankeyByMonth(payload);
   }
 }

@@ -22,11 +22,12 @@ const CHANNELS = Object.freeze({
     remove: 'db:categories:remove',
   }),
   analytics: Object.freeze({
-    expensesIncomesProfitByMonth: 'db:analytics:expenses-incomes-profit-by-month',
+    expensesIncomesNetCashflowByMonth: 'db:analytics:expenses-incomes-net-cashflow-by-month',
     receivablesPayables: 'db:analytics:receivables-payables',
     netWorthByAccount: 'db:analytics:net-worth-by-account',
     expensesByCategoryByMonth: 'db:analytics:expenses-by-category-by-month',
     incomesByCategoryByMonth: 'db:analytics:incomes-by-category-by-month',
+    moneyFlowSankeyByMonth: 'db:analytics:money-flow-sankey-by-month',
   }),
   transactions: Object.freeze({
     create: 'db:transactions:create',

@@ -3,13 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnDestroy,
   OnInit,
   signal,
 } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
+import { Subscription } from 'rxjs';
 
 import {
   observeChartThemeChanges,
@@ -42,8 +45,10 @@ const CALENDAR_THEME_COLOR_DEFAULT: AppChartThemeColor = 'chart-1';
   },
 })
 export class AppCalendarChartComponent implements OnInit, OnDestroy {
+  private readonly translateService = inject(TranslateService);
   private readonly themeVersion = signal(0);
   private themeObserver: MutationObserver | null = null;
+  private languageChangeSubscription: Subscription | null = null;
 
   readonly data = input.required<readonly AppCalendarChartItem[]>();
   readonly height = input('16rem');
@@ -84,6 +89,9 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
     const variant = this.variant();
     const normalizedPointScale = Math.max(0.2, this.pointScale());
     const normalizedWavePointScale = Math.max(0.2, this.wavePointScale());
+    const locale = this.resolveLocale();
+    const localizedWeekdayNameMap = this.resolveWeekdayNameMap(locale);
+    const localizedMonthNameMap = this.resolveMonthNameMap(locale);
 
     const calendarRange = this.range() ?? this.resolveRangeFromData(points);
     const displayedYear = this.resolveDisplayedYear(calendarRange);
@@ -164,7 +172,7 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
         formatter: (params: { data?: readonly [string, number] }) => {
           const date = params.data?.[0] ?? '';
           const value = params.data?.[1] ?? 0;
-          const safeDate = this.escapeHtml(String(date));
+          const safeDate = this.escapeHtml(this.formatCalendarTooltipDate(String(date), locale));
           return (
             `<span style="font-family:${tooltipFontFamily};color:${mutedForeground};font-weight:400;">${safeDate}</span>: ` +
             `<strong style="font-family:${tooltipFontFamily};color:${tooltipForeground};font-weight:700;">${value}</strong>`
@@ -205,13 +213,16 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
         dayLabel: {
           color: foreground,
           firstDay: 1,
-          nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+          nameMap: localizedWeekdayNameMap,
+          formatter: (value: unknown) => this.formatCalendarWeekdayLabel(value, locale, localizedWeekdayNameMap),
           margin: 10,
           fontFamily,
         },
         monthLabel: {
           color: foreground,
           position: isVertical ? 'start' : undefined,
+          nameMap: localizedMonthNameMap,
+          formatter: (value: unknown) => this.formatCalendarMonthLabel(value, locale, localizedMonthNameMap),
           margin: 12,
           fontFamily,
         },
@@ -296,11 +307,16 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
     this.themeObserver = observeChartThemeChanges(() => {
       this.themeVersion.update((currentVersion) => currentVersion + 1);
     });
+    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.themeVersion.update((currentVersion) => currentVersion + 1);
+    });
   }
 
   ngOnDestroy(): void {
     this.themeObserver?.disconnect();
     this.themeObserver = null;
+    this.languageChangeSubscription?.unsubscribe();
+    this.languageChangeSubscription = null;
   }
 
   private resolveRangeFromData(points: readonly AppCalendarChartItem[]): AppCalendarChartRange {
@@ -354,6 +370,154 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#39;');
+  }
+
+  private resolveLocale(): string | undefined {
+    const currentLanguage = this.translateService.getCurrentLang();
+    return typeof currentLanguage === 'string' && currentLanguage.trim().length > 0
+      ? currentLanguage
+      : undefined;
+  }
+
+  private resolveWeekdayNameMap(locale?: string): readonly string[] {
+    try {
+      const formatter = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+      return Array.from({ length: 7 }, (_value, index) => formatter.format(new Date(2023, 0, 1 + index, 12)));
+    } catch {
+      return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    }
+  }
+
+  private resolveMonthNameMap(locale?: string): readonly string[] {
+    try {
+      const formatter = new Intl.DateTimeFormat(locale, { month: 'short' });
+      return Array.from({ length: 12 }, (_value, index) => formatter.format(new Date(2023, index, 1, 12)));
+    } catch {
+      return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    }
+  }
+
+  private formatCalendarTooltipDate(rawDate: string, locale?: string): string {
+    if (!rawDate) {
+      return rawDate;
+    }
+
+    try {
+      const dateMatch = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      const parsedDate = dateMatch
+        ? new Date(Number(dateMatch[1]), Number(dateMatch[2]) - 1, Number(dateMatch[3]), 12)
+        : new Date(rawDate);
+      if (Number.isNaN(parsedDate.getTime())) {
+        return rawDate;
+      }
+
+      return new Intl.DateTimeFormat(locale, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }).format(parsedDate);
+    } catch {
+      return rawDate;
+    }
+  }
+
+  private formatCalendarWeekdayLabel(
+    rawValue: unknown,
+    locale: string | undefined,
+    localizedSundayFirst: readonly string[],
+  ): string {
+    if (typeof rawValue === 'number' && Number.isFinite(rawValue)) {
+      const index = ((Math.round(rawValue) % 7) + 7) % 7;
+      return localizedSundayFirst[index] ?? `${rawValue}`;
+    }
+
+    const text = `${rawValue ?? ''}`.trim();
+    if (!text) {
+      return text;
+    }
+
+    const directEnglishMatch = this.resolveEnglishWeekdayIndex(text);
+    if (directEnglishMatch !== null) {
+      return localizedSundayFirst[directEnglishMatch] ?? text;
+    }
+
+    // If ECharts already applied `nameMap`, keep the provided localized value.
+    return text;
+  }
+
+  private formatCalendarMonthLabel(
+    rawValue: unknown,
+    _locale: string | undefined,
+    localizedMonths: readonly string[],
+  ): string {
+    if (typeof rawValue === 'number' && Number.isFinite(rawValue)) {
+      const index = ((Math.round(rawValue) % 12) + 12) % 12;
+      return localizedMonths[index] ?? `${rawValue}`;
+    }
+
+    const text = `${rawValue ?? ''}`.trim();
+    if (!text) {
+      return text;
+    }
+
+    const directEnglishMatch = this.resolveEnglishMonthIndex(text);
+    if (directEnglishMatch !== null) {
+      return localizedMonths[directEnglishMatch] ?? text;
+    }
+
+    return text;
+  }
+
+  private resolveEnglishWeekdayIndex(value: string): number | null {
+    const normalized = value.toLowerCase();
+    const englishLong = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const englishShort = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    const englishNarrow = ['s', 'm', 't', 'w', 't', 'f', 's'];
+
+    const longIndex = englishLong.indexOf(normalized);
+    if (longIndex >= 0) {
+      return longIndex;
+    }
+
+    const shortIndex = englishShort.indexOf(normalized);
+    if (shortIndex >= 0) {
+      return shortIndex;
+    }
+
+    if (normalized.length === 1) {
+      // Ambiguous for Tuesday/Thursday and Sunday/Saturday, so avoid guessing.
+      return null;
+    }
+
+    const narrowIndex = englishNarrow.indexOf(normalized);
+    return narrowIndex >= 0 ? narrowIndex : null;
+  }
+
+  private resolveEnglishMonthIndex(value: string): number | null {
+    const normalized = value.toLowerCase().replace(/\./g, '');
+    const englishLong = [
+      'january',
+      'february',
+      'march',
+      'april',
+      'may',
+      'june',
+      'july',
+      'august',
+      'september',
+      'october',
+      'november',
+      'december',
+    ];
+    const englishShort = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+    const longIndex = englishLong.indexOf(normalized);
+    if (longIndex >= 0) {
+      return longIndex;
+    }
+
+    const shortIndex = englishShort.indexOf(normalized);
+    return shortIndex >= 0 ? shortIndex : null;
   }
 
   private mixRgbColors(colorA: string, colorB: string, colorBRatio: number): string {

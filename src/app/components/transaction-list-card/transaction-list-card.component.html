@@ -1,0 +1,99 @@
+<ng-template #cardTitle>
+  <div class="flex w-full items-center justify-between gap-2">
+    <span class="truncate">{{ zTitleKey() | translate }}</span>
+    <a
+      z-button
+      zType="secondary"
+      zSize="sm"
+      [routerLink]="['/transactions']"
+      class="shrink-0"
+    >
+      {{ 'overview.cards.recentTransactions.actions.goToTransactionsPage' | translate }}
+    </a>
+  </div>
+</ng-template>
+
+<app-base-card
+  [zTitle]="cardTitle"
+  [zDescription]="'overview.cards.recentTransactions.description' | translate: { count: limit() }"
+  [zBodyFill]="!!height()"
+  [style.height]="height() || null"
+>
+  @if (isLoading()) {
+    <div class="flex h-56 items-center justify-center">
+      <z-loader zSize="default" />
+    </div>
+  } @else if (loadError()) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+      {{ 'overview.cards.recentTransactions.loadFailed' | translate }}
+    </div>
+  } @else if (rows().length === 0) {
+    <div class="flex h-40 items-center justify-center rounded-md border border-border/50 bg-muted/20">
+      <p class="text-sm text-muted-foreground">{{ 'overview.cards.recentTransactions.empty' | translate }}</p>
+    </div>
+  } @else {
+    <div
+      class="space-y-2"
+      [class.h-full]="!!height()"
+      [class.min-h-0]="!!height()"
+      [class.overflow-y-auto]="!!height()"
+      [class.pr-1]="!!height()"
+    >
+      @for (row of rows(); track row.id) {
+        <div
+          class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 rounded-md border border-border/60 bg-background/70 p-2.5 transition-opacity"
+          [class.opacity-60]="isSettledUpdatePending(row.id)"
+        >
+          <z-switch
+            class="justify-self-start self-center"
+            [zChecked]="row.settled"
+            [zDisabled]="isSettledUpdatePending(row.id)"
+            [zTooltip]="settledStatusTooltip(row.settled)"
+            (zCheckedChange)="onSettledChange(row.id, $event)"
+          >
+            <span class="sr-only">{{ settledToggleActionLabel(row.settled) }}</span>
+          </z-switch>
+
+          <div class="min-w-0 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1">
+            <div class="min-w-0">
+              <z-badge zType="secondary" zShape="pill" class="max-w-full gap-1.5 align-top">
+                <z-icon
+                  [zType]="row.categoryIcon"
+                  class="size-3.5 shrink-0 text-(--app-transaction-list-category-icon-color)"
+                  [style.--app-transaction-list-category-icon-color]="row.categoryColorHex"
+                />
+                <span class="truncate">{{ row.categoryName | translate }}</span>
+              </z-badge>
+            </div>
+
+            <p class="text-right text-xs text-muted-foreground">
+              {{ formatTransactionDate(row.occurredAt) }}
+            </p>
+
+            <span class="inline-flex min-w-0 items-center gap-1.5 text-left">
+              @if (amountTrendIcon(row.amount); as amountIcon) {
+                <z-icon
+                  [zType]="amountIcon"
+                  class="size-3.5 shrink-0 text-(--app-data-table-currency-trend-color)"
+                  [style.--app-data-table-currency-trend-color]="amountTrendIconColor(row.amount)"
+                />
+              }
+              <span class="truncate text-sm font-semibold">
+                {{ formatAmount(row.amount) }}
+              </span>
+            </span>
+
+            <p class="inline-flex min-w-0 items-center justify-end gap-1.5 text-right text-xs text-muted-foreground">
+              <z-icon
+                [zType]="row.accountIcon"
+                class="size-3.5 shrink-0 text-(--app-transaction-list-account-icon-color) opacity-90"
+                [style.--app-transaction-list-account-icon-color]="row.accountColorHex"
+              />
+              <span class="truncate">{{ row.accountName }}</span>
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</app-base-card>

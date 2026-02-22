@@ -27,6 +27,7 @@ export interface AppSankeyChartNode {
   readonly value?: number;
   readonly color?: string;
   readonly themeColor?: AppChartThemeColor;
+  readonly tooltipDetails?: readonly string[];
 }
 
 export interface AppSankeyChartLink {
@@ -72,10 +73,32 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
     const normalizedLineOpacity = Math.min(Math.max(this.lineOpacity(), 0), 1);
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
+    const labelStyle = 'font-weight: 300; opacity: 0.78;';
+    const valueStyle = 'font-weight: 700;';
+    const escapeHtml = (value: unknown): string =>
+      `${value ?? ''}`
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    const formatTooltipLabelValue = (label: string, value: string) =>
+      `<span style="${labelStyle}">${escapeHtml(label)}</span> <strong style="${valueStyle}">${escapeHtml(value)}</strong>`;
+    const formatTooltipNumber = (value: unknown): string => {
+      const numericValue = Number(value ?? 0);
+      if (!Number.isFinite(numericValue)) {
+        return `${value ?? ''}`;
+      }
+
+      return new Intl.NumberFormat(undefined, {
+        maximumFractionDigits: 2,
+      }).format(numericValue);
+    };
 
     const sankeyNodes = this.nodes().map((node, index) => ({
       name: node.name,
       value: node.value,
+      tooltipDetails: node.tooltipDetails,
       itemStyle: {
         color: resolveChartSeriesColor({
           index,
@@ -107,6 +130,40 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         textStyle: {
           color: tooltipForeground,
           fontFamily,
+        },
+        formatter: (params: {
+          marker?: string;
+          name?: string;
+          value?: unknown;
+          dataType?: 'node' | 'edge';
+          data?: {
+            source?: string;
+            target?: string;
+            value?: unknown;
+            tooltipDetails?: readonly string[];
+          };
+        }) => {
+          const marker = params?.marker ?? '';
+          const details = Array.isArray(params?.data?.tooltipDetails) ? params.data.tooltipDetails : [];
+
+          if (params?.dataType === 'edge') {
+            const source = params?.data?.source ?? '';
+            const target = params?.data?.target ?? '';
+            const valueText = formatTooltipNumber(params?.data?.value ?? params?.value);
+            return `${marker}${formatTooltipLabelValue(`${source} → ${target}:`, valueText)}`;
+          }
+
+          const name = params?.name ?? '';
+          const valueText = formatTooltipNumber(params?.value);
+          const base = `${marker}${formatTooltipLabelValue(`${name}:`, valueText)}`;
+          if (details.length === 0) {
+            return base;
+          }
+
+          const detailsHtml = details
+            .map((line) => `<span style="${labelStyle}">${escapeHtml(line)}</span>`)
+            .join('<br/>');
+          return `${base}<br/>${detailsHtml}`;
         },
       },
       series: [
