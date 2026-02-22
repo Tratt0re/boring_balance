@@ -45,6 +45,7 @@ export class AppBaseCardComponent {
   readonly class = input<ClassValue>('');
   readonly zFooterBorder = input(false, { transform: booleanAttribute });
   readonly zHeaderBorder = input(false, { transform: booleanAttribute });
+  readonly zBodyFill = input(false, { transform: booleanAttribute });
   readonly zDescription = input<string | TemplateRef<void>>();
   readonly zTitle = input<string | TemplateRef<void>>();
 
@@ -59,7 +60,9 @@ export class AppBaseCardComponent {
   });
 
   protected readonly classes = computed(() => mergeClasses(baseCardVariants(), this.class()));
-  protected readonly bodyClasses = computed(() => mergeClasses(baseCardBodyVariants()));
+  protected readonly bodyClasses = computed(() =>
+    mergeClasses(baseCardBodyVariants(), this.zBodyFill() ? 'flex-1 min-h-0' : ''),
+  );
   protected readonly footerClasses = computed(() =>
     mergeClasses(baseCardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
   );

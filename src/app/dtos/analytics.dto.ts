@@ -25,7 +25,7 @@ export interface AnalyticsMonthlySummaryRowDto {
   readonly month: string;
   readonly expenses_cents: number;
   readonly incomes_cents: number;
-  readonly profit_cents: number;
+  readonly net_cashflow_cents: number;
 }
 
 export interface AnalyticsMonthlySummaryResponseDto {
@@ -52,6 +52,11 @@ export interface AnalyticsNetWorthByAccountRowDto {
 
 export interface AnalyticsNetWorthByAccountResponseDto {
   readonly rows: readonly AnalyticsNetWorthByAccountRowDto[];
+  readonly totals?: {
+    readonly current_total_cents: number;
+    readonly previous_month_total_cents: number;
+    readonly previous_month_delta_cents: number;
+  };
 }
 
 export interface AnalyticsCategoryByMonthRowDto {
@@ -66,8 +71,30 @@ export interface AnalyticsCategoryByMonthResponseDto {
   readonly rows: readonly AnalyticsCategoryByMonthRowDto[];
 }
 
-export type AnalyticsExpensesIncomesProfitByMonthResponse = AnalyticsMonthlySummaryResponseDto;
+export interface AnalyticsMoneyFlowSankeyTotalsDto {
+  readonly incomes_cents: number;
+  readonly expenses_cents: number;
+  readonly savings_cents: number;
+  readonly investments_cents: number;
+  readonly crypto_cents: number;
+  readonly net_cashflow_cents: number;
+}
+
+export interface AnalyticsMoneyFlowSankeyExpenseCategoryRowDto {
+  readonly category_id: RowId | null;
+  readonly category_name: string;
+  readonly total_cents: number;
+}
+
+export interface AnalyticsMoneyFlowSankeyByMonthResponseDto {
+  readonly totals: AnalyticsMoneyFlowSankeyTotalsDto;
+  readonly expense_by_category: readonly AnalyticsMoneyFlowSankeyExpenseCategoryRowDto[];
+  readonly expense_categories?: readonly AnalyticsMoneyFlowSankeyExpenseCategoryRowDto[];
+}
+
+export type AnalyticsExpensesIncomesNetCashflowByMonthResponse = AnalyticsMonthlySummaryResponseDto;
 export type AnalyticsReceivablesPayablesResponse = AnalyticsReceivablesPayablesResponseDto;
 export type AnalyticsNetWorthByAccountResponse = AnalyticsNetWorthByAccountResponseDto;
 export type AnalyticsExpensesByCategoryByMonthResponse = AnalyticsCategoryByMonthResponseDto;
 export type AnalyticsIncomesByCategoryByMonthResponse = AnalyticsCategoryByMonthResponseDto;
+export type AnalyticsMoneyFlowSankeyByMonthResponse = AnalyticsMoneyFlowSankeyByMonthResponseDto;

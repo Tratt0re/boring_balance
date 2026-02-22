@@ -118,9 +118,9 @@ function normalizePayloadFilters(payload) {
   });
 }
 
-function expensesIncomesProfitByMonth(payload) {
+function expensesIncomesNetCashflowByMonth(payload) {
   const filters = normalizePayloadFilters(payload);
-  return analyticsModel.expensesIncomesProfitByMonth(filters);
+  return analyticsModel.expensesIncomesNetCashflowByMonth(filters);
 }
 
 function receivablesPayables(payload) {
@@ -143,10 +143,16 @@ function incomesByCategoryByMonth(payload) {
   return analyticsModel.incomesByCategoryByMonth(filters);
 }
 
+function moneyFlowSankeyByMonth(payload) {
+  const filters = normalizePayloadFilters(payload);
+  return analyticsModel.moneyFlowSankeyByMonth(filters);
+}
+
 module.exports = {
-  expensesIncomesProfitByMonth,
+  expensesIncomesNetCashflowByMonth,
   receivablesPayables,
   netWorthByAccount,
   expensesByCategoryByMonth,
   incomesByCategoryByMonth,
+  moneyFlowSankeyByMonth,
 };

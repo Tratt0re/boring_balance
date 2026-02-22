@@ -99,8 +99,82 @@
       "budget": "Budget",
       "accounts": "Accounts",
       "categories": "Categories",
+      "recurringEvents": "Recurring events",
       "dataBackups": "Data & Backups",
       "about": "About"
+    }
+  },
+  "overview": {
+    "toolbar": {
+      "reload": "Reload"
+    },
+    "errors": {
+      "summaryLoad": "Unable to load summary data."
+    },
+    "pie": {
+      "others": "Others"
+    },
+    "cards": {
+      "netWorth": {
+        "title": "Total net worth",
+        "descriptionDailyAverage": "Average daily change (month to date): {{value}}/day",
+        "total": "Total",
+        "deltaVsPreviousMonth": "vs previous month",
+        "receivables": "Receivables",
+        "payables": "Payables",
+        "totalAfterRP": "After R&P",
+        "emptyDistribution": "No account distribution data."
+      },
+      "monthlyTotals": {
+        "title": "Income, expenses and net cashflow",
+        "descriptionCurrentYear": "Current year: {{year}}",
+        "loading": "Loading analytics...",
+        "loadFailedWithError": "Failed to load analytics: {{error}}",
+        "empty": "No analytics data available for the selected filters.",
+        "series": {
+          "incomes": "Incomes",
+          "expenses": "Expenses",
+          "netCashflow": "Net Cashflow"
+        }
+      },
+      "recentTransactions": {
+        "title": "Last transactions",
+        "description": "Latest {{count}} transactions",
+        "loadFailed": "Unable to load transactions.",
+        "empty": "No recent transactions.",
+        "toggleSettled": "Toggle settled",
+        "tooltips": {
+          "settled": "Settled",
+          "settle": "Settle",
+          "unsettled": "Unsettled"
+        },
+        "actions": {
+          "goToTransactionsPage": "All transactions"
+        },
+        "unknownAccount": "Unknown account",
+        "unknownCategory": "Unknown category"
+      },
+      "moneyFlowSankey": {
+        "title": "Money flow",
+        "description": "Flow for {{month}}",
+        "loading": "Loading money flow...",
+        "loadFailedWithError": "Failed to load money flow: {{error}}",
+        "empty": "No money flow data available for this month.",
+        "tooltips": {
+          "actualNetCashflow": "Actual net cashflow"
+        },
+        "nodes": {
+          "incomes": "Incomes",
+          "expenses": "Expenses",
+          "savings": "Savings",
+          "investments": "Investments",
+          "crypto": "Crypto",
+          "netCashflow": "Net Cashflow",
+          "priorBalances": "Prior balances",
+          "unused": "Unused",
+          "otherExpenses": "Other expenses"
+        }
+      }
     }
   },
   "category": {

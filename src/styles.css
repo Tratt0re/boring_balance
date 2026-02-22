@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -53,8 +52,12 @@
   --system-app-color-9: oklch(0.68 0.2 302);
   --system-app-color-10: oklch(0.72 0.2 342);
   --system-app-color-11: oklch(0.72 0 0);
-  --positive-transaction-color: oklch(0.72 0.18 154);
-  --negative-transaction-color: oklch(0.68 0.2 24);
+  --positive-transaction-color: oklch(0.72 0.18 260);
+  --negative-transaction-color: oklch(0.72 0.18 25);
+  --chart-income: var(--positive-transaction-color);
+  --chart-expense: var(--negative-transaction-color);
+  --chart-net-cashflow: oklch(0.72 0.18 305);
+  --chart-prior-balance: oklch(0.72 0.18 85);
 }
 
 .dark {
@@ -105,10 +108,13 @@
   --system-app-color-9: oklch(0.74 0.18 302);
   --system-app-color-10: oklch(0.77 0.18 342);
   --system-app-color-11: oklch(0.62 0 0);
-  --positive-transaction-color: oklch(0.78 0.14 154);
-  --negative-transaction-color: oklch(0.73 0.18 24);
+  --positive-transaction-color: oklch(0.78 0.16 260);
+  --negative-transaction-color: oklch(0.78 0.16 25);
+  --chart-income: var(--positive-transaction-color);
+  --chart-expense: var(--negative-transaction-color);
+  --chart-net-cashflow: oklch(0.78 0.16 305);
+  --chart-prior-balance: oklch(0.78 0.16 85);
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -138,6 +144,10 @@
   --color-chart-6: var(--chart-6);
   --color-chart-7: var(--chart-7);
   --color-chart-8: var(--chart-8);
+  --color-chart-prior-balance: var(--chart-prior-balance);
+  --color-chart-income: var(--chart-income);
+  --color-chart-expense: var(--chart-expense);
+  --color-chart-net-cashflow: var(--chart-net-cashflow);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -167,7 +177,6 @@
   --color-negative-transaction: var(--negative-transaction-color);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -175,7 +184,8 @@
   html.theme-transition *,
   html.theme-transition *::before,
   html.theme-transition *::after {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow;
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow;
     transition-duration: 280ms;
     transition-timing-function: ease;
   }
@@ -191,31 +201,47 @@
     background: rgb(255 255 255 / 0.1) !important;
   }
 
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-  input[type="number"] {
+  input[type='number'] {
     -moz-appearance: textfield;
     appearance: textfield; /* Added for general compatibility */
   }
 
   .transaction-row-positive {
-    background-color: color-mix(in oklch, var(--positive-transaction-color) 15%, transparent) !important;
+    background-color: color-mix(
+      in oklch,
+      var(--positive-transaction-color) 15%,
+      transparent
+    ) !important;
   }
 
   .transaction-row-positive:hover {
-    background-color: color-mix(in oklch, var(--positive-transaction-color) 21%, transparent) !important;
+    background-color: color-mix(
+      in oklch,
+      var(--positive-transaction-color) 21%,
+      transparent
+    ) !important;
   }
 
   .transaction-row-negative {
-    background-color: color-mix(in oklch, var(--negative-transaction-color) 15%, transparent) !important;
+    background-color: color-mix(
+      in oklch,
+      var(--negative-transaction-color) 15%,
+      transparent
+    ) !important;
   }
 
   .transaction-row-negative:hover {
-    background-color: color-mix(in oklch, var(--negative-transaction-color) 21%, transparent) !important;
+    background-color: color-mix(
+      in oklch,
+      var(--negative-transaction-color) 21%,
+      transparent
+    ) !important;
   }
 }
 

@@ -1,4 +1,4 @@
-export const APP_CHART_THEME_COLOR_TOKENS = [
+export const APP_CHART_PALETTE_COLOR_TOKENS = [
   'chart-1',
   'chart-2',
   'chart-3',
@@ -7,6 +7,18 @@ export const APP_CHART_THEME_COLOR_TOKENS = [
   'chart-6',
   'chart-7',
   'chart-8',
+] as const;
+
+export const APP_CHART_SEMANTIC_COLOR_TOKENS = [
+  'chart-income',
+  'chart-expense',
+  'chart-net-cashflow',
+  'chart-prior-balance',
+] as const;
+
+export const APP_CHART_THEME_COLOR_TOKENS = [
+  ...APP_CHART_PALETTE_COLOR_TOKENS,
+  ...APP_CHART_SEMANTIC_COLOR_TOKENS,
 ] as const;
 
 export type AppChartThemeColor = (typeof APP_CHART_THEME_COLOR_TOKENS)[number];
@@ -20,6 +32,10 @@ const APP_CHART_FALLBACK_COLORS: Record<AppChartThemeColor, string> = {
   'chart-6': '#d946ef',
   'chart-7': '#06b6d4',
   'chart-8': '#84cc16',
+  'chart-income': '#22c55e',
+  'chart-expense': '#ef4444',
+  'chart-net-cashflow': '#2563eb',
+  'chart-prior-balance': '#d4a017',
 } as const;
 
 const DEFAULT_MUTED_FOREGROUND = '#6b7280';
@@ -76,7 +92,7 @@ export interface ResolveChartSeriesColorOptions {
 }
 
 export function resolveChartSeriesColor(options: ResolveChartSeriesColorOptions): string {
-  const fallbackToken = APP_CHART_THEME_COLOR_TOKENS[options.index % APP_CHART_THEME_COLOR_TOKENS.length];
+  const fallbackToken = APP_CHART_PALETTE_COLOR_TOKENS[options.index % APP_CHART_PALETTE_COLOR_TOKENS.length];
   const fallbackColor = APP_CHART_FALLBACK_COLORS[fallbackToken];
 
   if (options.color) {
@@ -143,9 +159,11 @@ function normalizeChartColor(color: string, fallback: string): string {
     return fallback;
   }
 
-  const normalizedFallback = toEchartsColor(context, fallback);
-  const normalizedColor = toEchartsColor(context, color);
-  return normalizedColor ?? normalizedFallback ?? fallback;
+  const resolvedFallback = resolveChartColorReference(fallback, fallback);
+  const resolvedColor = resolveChartColorReference(color, resolvedFallback);
+  const normalizedFallback = toEchartsColor(context, resolvedFallback);
+  const normalizedColor = toEchartsColor(context, resolvedColor);
+  return normalizedColor ?? normalizedFallback ?? resolvedFallback ?? fallback;
 }
 
 function toEchartsColor(context: CanvasRenderingContext2D, color: string): string | null {
@@ -193,4 +211,17 @@ function getChartColorContext(): CanvasRenderingContext2D | null {
   const canvas = document.createElement('canvas');
   chartColorContext = canvas.getContext('2d', { willReadFrequently: true }) ?? canvas.getContext('2d');
   return chartColorContext;
+}
+
+function resolveChartColorReference(color: string, fallback: string): string {
+  const trimmedColor = color.trim();
+  const variableReferenceMatch = trimmedColor.match(/^var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,\s*(.+))?\)$/);
+  if (!variableReferenceMatch) {
+    return trimmedColor;
+  }
+
+  const variableName = variableReferenceMatch[1];
+  const fallbackExpression = variableReferenceMatch[2]?.trim();
+  const resolvedFallback = fallbackExpression ? resolveChartColorReference(fallbackExpression, fallback) : fallback;
+  return readChartCssVariable(variableName, resolvedFallback);
 }

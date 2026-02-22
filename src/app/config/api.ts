@@ -35,9 +35,9 @@ export interface ElectronIpcClient {
     readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
   };
   readonly analytics: {
-    readonly expensesIncomesProfitByMonth: OptionalIpcRequest<
+    readonly expensesIncomesNetCashflowByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
-      DTO.AnalyticsExpensesIncomesProfitByMonthResponse
+      DTO.AnalyticsExpensesIncomesNetCashflowByMonthResponse
     >;
     readonly receivablesPayables: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
@@ -51,6 +51,10 @@ export interface ElectronIpcClient {
     readonly incomesByCategoryByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsIncomesByCategoryByMonthResponse
+    >;
+    readonly moneyFlowSankeyByMonth: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsMoneyFlowSankeyByMonthResponse
     >;
   };
   readonly transactions: {
