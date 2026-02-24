@@ -73,6 +73,7 @@
       },
       "actions": {
         "apply": "Aplicar filtros",
+        "currentMonth": "Mes actual",
         "reset": "Restablecer filtros",
         "cancel": "Cancelar"
       }
@@ -168,7 +169,7 @@
       },
       "recentTransactions": {
         "title": "Ultimos movimientos",
-        "description": "Ultimos {{count}} movimientos",
+        "description": "Ultimos {{count}} movimientos de este mes",
         "loadFailed": "No se pudieron cargar los movimientos.",
         "empty": "No hay movimientos recientes.",
         "toggleSettled": "Cambiar liquidado",

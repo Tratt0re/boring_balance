@@ -138,6 +138,16 @@ const resolveColorHexByValue = (value: string | null): string | null => {
   return APP_COLOR_HEX_BY_VALUE.get(value) ?? DEFAULT_TABLE_COLOR_HEX;
 };
 
+const toCurrentMonthDateRange = (referenceDate: Date = new Date()): { dateFrom: Date; dateTo: Date } => {
+  const year = referenceDate.getFullYear();
+  const monthIndex = referenceDate.getMonth();
+
+  return {
+    dateFrom: new Date(year, monthIndex, 1, 0, 0, 0, 0),
+    dateTo: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999),
+  };
+};
+
 const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
   {
     columnName: 'common.labels.settled',
@@ -393,6 +403,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => {
     const actions: TableHeaderActionItem[] = [
       {
+        id: 'transaction-filters-current-month',
+        icon: 'calendar',
+        label: 'common.filters.actions.currentMonth',
+        showLabel: false,
+        buttonType: 'secondary',
+        action: () => this.onApplyCurrentMonthFilterAction(),
+      },
+      {
         id: 'transaction-filters',
         icon: 'filter',
         label: 'transactions.table.actions.filter',
@@ -587,6 +605,15 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     this.applyFiltersAndReload(DEFAULT_TRANSACTION_TABLE_FILTERS);
+  }
+
+  private onApplyCurrentMonthFilterAction(): void {
+    const { dateFrom, dateTo } = toCurrentMonthDateRange();
+    this.applyFiltersAndReload({
+      ...this.filters(),
+      dateFrom,
+      dateTo,
+    });
   }
 
   private activateToolbarActions(): void {

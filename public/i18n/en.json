@@ -73,6 +73,7 @@
       },
       "actions": {
         "apply": "Apply filters",
+        "currentMonth": "Current month",
         "reset": "Reset filters",
         "cancel": "Cancel"
       }
@@ -168,7 +169,7 @@
       },
       "recentTransactions": {
         "title": "Last transactions",
-        "description": "Latest {{count}} transactions",
+        "description": "Latest {{count}} transactions this month",
         "loadFailed": "Unable to load transactions.",
         "empty": "No recent transactions.",
         "toggleSettled": "Toggle settled",
