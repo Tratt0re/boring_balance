@@ -1,9 +1,7 @@
 import type { TransferDto } from '@/dtos';
 
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
-import { toBooleanFlag, toSqliteBooleanFlag } from './common.model';
-
-const AMOUNT_CENTS_DIVISOR = 100;
+import { amountToCents, centsToAmount, toBooleanFlag, toSqliteBooleanFlag } from './common.model';
 
 export class TransferModel {
   constructor(
@@ -24,7 +22,7 @@ export class TransferModel {
       dto.occurred_at,
       dto.from_account_id,
       dto.to_account_id,
-      dto.amount_cents / AMOUNT_CENTS_DIVISOR,
+      centsToAmount(dto.amount_cents),
       dto.description,
       toBooleanFlag(dto.settled),
       dto.created_at,
@@ -38,7 +36,7 @@ export class TransferModel {
       occurred_at: this.occurredAt,
       from_account_id: this.fromAccountId,
       to_account_id: this.toAccountId,
-      amount_cents: Math.round(this.amount * AMOUNT_CENTS_DIVISOR),
+      amount_cents: amountToCents(this.amount),
       description: this.description,
       settled: toSqliteBooleanFlag(this.settled),
       created_at: this.createdAt,

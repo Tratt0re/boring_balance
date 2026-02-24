@@ -1,7 +1,10 @@
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import localeEn from '@angular/common/locales/en';
+import localeEs from '@angular/common/locales/es';
+import localeIt from '@angular/common/locales/it';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 
@@ -9,6 +12,13 @@ export const SUPPORTED_LANGUAGES = ['en', 'es', 'it'] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 const DEFAULT_LANGUAGE: AppLanguage = 'en';
+const REGISTERED_ANGULAR_LOCALES = new Set<AppLanguage>();
+
+const ANGULAR_LOCALE_DATA_BY_LANGUAGE: Record<AppLanguage, unknown> = {
+  en: localeEn,
+  es: localeEs,
+  it: localeIt,
+};
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +42,7 @@ export class I18nService {
 
   async use(language: string): Promise<void> {
     const normalizedLanguage = this.normalizeLanguage(language);
+    this.ensureAngularLocaleDataRegistered(normalizedLanguage);
 
     try {
       await firstValueFrom(this.translate.use(normalizedLanguage));
@@ -76,5 +87,14 @@ export class I18nService {
     }
 
     return this.normalizeLanguage(this.translate.getBrowserCultureLang() ?? this.translate.getBrowserLang());
+  }
+
+  private ensureAngularLocaleDataRegistered(language: AppLanguage): void {
+    if (REGISTERED_ANGULAR_LOCALES.has(language)) {
+      return;
+    }
+
+    registerLocaleData(ANGULAR_LOCALE_DATA_BY_LANGUAGE[language]);
+    REGISTERED_ANGULAR_LOCALES.add(language);
   }
 }

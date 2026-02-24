@@ -17,7 +17,15 @@
       "from": "Da",
       "to": "A",
       "fromAccount": "Conto di origine",
-      "toAccount": "Conto di destinazione"
+      "toAccount": "Conto di destinazione",
+      "title": "Titolo",
+      "startDate": "Data di inizio",
+      "plan": "Piano",
+      "schedule": "Pianificazione",
+      "template": "Modello",
+      "occurrences": "Occorrenze",
+      "frequencyUnit": "Unita di frequenza",
+      "monthPolicy": "Se il giorno non esiste nel mese"
     },
     "placeholders": {
       "selectType": "Seleziona tipo",
@@ -81,6 +89,22 @@
         "lastPage": "Vai all'ultima pagina",
         "toPage": "Vai alla pagina",
         "toLastPage": "Vai all'ultima pagina, pagina"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Mese precedente",
+        "nextMonth": "Mese successivo"
+      },
+      "aria": {
+        "chooseDate": "Scegli data",
+        "today": "Oggi",
+        "selected": "Selezionato",
+        "rangeStart": "Inizio intervallo",
+        "rangeEnd": "Fine intervallo",
+        "inRange": "Nell'intervallo",
+        "outsideMonth": "Fuori dal mese",
+        "disabled": "Disabilitato"
       }
     }
   },
@@ -590,5 +614,173 @@
   },
   "breadcrumb": {
     "ariaLabel": "Percorso pagina"
+  },
+  "recurringEvents": {
+    "table": {
+      "description": "Gestisci piani ricorrenti che generano future transazioni e trasferimenti.",
+      "emptyMessage": "Nessun evento ricorrente trovato.",
+      "columns": {
+        "title": "Titolo",
+        "startDate": "Data di inizio",
+        "schedule": "Pianificazione",
+        "template": "Modello"
+      },
+      "actions": {
+        "add": "Aggiungi evento ricorrente",
+        "edit": "Modifica evento ricorrente",
+        "run": "Esegui evento ricorrente",
+        "delete": "Elimina evento ricorrente"
+      },
+      "schedule": {
+        "summary": "Si ripete {{count}} volte, {{interval}} ogni {{unit}}",
+        "every": "{{interval}} ogni {{unit}}",
+        "occurrences": "{{count}} occorrenze",
+        "monthPolicy": "Se il giorno non esiste nel mese: {{policy}}"
+      },
+      "template": {
+        "unknown": "Modello sconosciuto",
+        "unknownAccount": "Conto sconosciuto",
+        "unknownCategory": "Categoria sconosciuta"
+      }
+    },
+    "type": {
+      "transaction": "Transazione",
+      "transfer": "Trasferimento"
+    },
+    "frequency": {
+      "unit": {
+        "day": "giorno/i",
+        "week": "settimana/e",
+        "month": "mese/i",
+        "year": "anno/i"
+      }
+    },
+    "monthPolicy": {
+      "none": "Predefinito",
+      "clip": "Usa l'ultimo giorno valido del mese",
+      "skip": "Salta",
+      "last_day": "Ultimo giorno",
+      "first_day": "Primo giorno"
+    },
+    "dialog": {
+      "add": {
+        "title": "Aggiungi evento ricorrente",
+        "description": "Crea un piano ricorrente per una transazione o un trasferimento. Quando confermi, gli elementi pianificati verranno creati subito.",
+        "actions": {
+          "cancel": "Annulla",
+          "create": "Crea evento ricorrente"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di creare l'evento ricorrente.",
+          "titleRequired": "Il titolo e obbligatorio.",
+          "titleMinLength": "Il titolo deve contenere almeno 2 caratteri.",
+          "titleMaxLength": "Il titolo deve contenere al massimo 80 caratteri.",
+          "typeRequired": "Il tipo e obbligatorio.",
+          "startDateRequired": "La data di inizio e obbligatoria.",
+          "countRequired": "Il numero di occorrenze e obbligatorio.",
+          "countInvalid": "Il numero di occorrenze deve essere un intero positivo.",
+          "frequencyIntervalRequired": "L'intervallo di frequenza e obbligatorio.",
+          "frequencyIntervalInvalid": "L'intervallo di frequenza deve essere un intero positivo.",
+          "frequencyUnitRequired": "L'unita di frequenza e obbligatoria.",
+          "accountRequired": "Il conto e obbligatorio.",
+          "categoryRequired": "La categoria e obbligatoria.",
+          "fromAccountRequired": "Il conto di origine e obbligatorio.",
+          "toAccountRequired": "Il conto di destinazione e obbligatorio.",
+          "accountsMustDiffer": "Il conto di origine e quello di destinazione devono essere diversi.",
+          "amountRequired": "L'importo e obbligatorio.",
+          "amountInvalid": "L'importo deve essere un numero positivo.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 75 caratteri.",
+          "createFailed": "Impossibile creare l'evento ricorrente."
+        }
+      },
+      "edit": {
+        "title": "Modifica evento ricorrente",
+        "description": "Aggiorna le impostazioni del piano ricorrente. Le modifiche del modello vengono applicate anche agli elementi gia creati da questo piano.",
+        "actions": {
+          "cancel": "Annulla",
+          "save": "Salva modifiche"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di salvare l'evento ricorrente.",
+          "updateFailed": "Impossibile aggiornare l'evento ricorrente."
+        }
+      },
+      "form": {
+        "labels": {
+          "title": "Titolo",
+          "startDate": "Data di inizio",
+          "occurrences": "Occorrenze",
+          "frequencyInterval": "Ogni",
+          "frequencyUnit": "Unita di frequenza",
+          "monthPolicy": "Se il giorno non esiste nel mese"
+        },
+        "placeholders": {
+          "title": "Titolo evento ricorrente",
+          "occurrences": "12",
+          "frequencyInterval": "1"
+        },
+        "tooltips": {
+          "scheduleLockedAfterCreate": "Dopo la creazione dell'evento ricorrente, le impostazioni di pianificazione non possono essere modificate."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminare evento ricorrente?",
+      "description": "Sei sicuro di voler eliminare \"{{title}}\"?",
+      "options": {
+        "deleteLinkedItems": "Elimina anche gli elementi collegati gia creati da questo piano",
+        "deleteLinkedItemsHint": "Questa azione rimuove transazioni/trasferimenti generati collegati a questo evento ricorrente."
+      },
+      "actions": {
+        "cancel": "Annulla",
+        "delete": "Elimina"
+      }
+    },
+    "runConfirm": {
+      "title": "Eseguire evento ricorrente?",
+      "description": "Conferma per generare ora gli elementi pianificati mancanti per \"{{title}}\".",
+      "actions": {
+        "cancel": "Annulla",
+        "run": "Esegui ora"
+      }
+    },
+    "createResult": {
+      "title": "Evento ricorrente creato"
+    },
+    "updateResult": {
+      "title": "Evento ricorrente aggiornato",
+      "description": "\"{{title}}\" e stato aggiornato correttamente. Gli elementi collegati gia generati sono stati aggiornati quando applicabile.",
+      "actions": {
+        "ok": "OK"
+      }
+    },
+    "runResult": {
+      "title": "Eventi ricorrenti creati",
+      "description": "\"{{title}}\" ha elaborato {{total}} occorrenze. Create: {{created}}. Saltate per esistenti: {{skipped}}.",
+      "labels": {
+        "plan": "Piano ricorrente",
+        "created": "Creati ora",
+        "skipped": "Gia esistenti",
+        "total": "Date pianificate"
+      },
+      "hints": {
+        "noNewItems": "Nessun nuovo elemento e stato creato perche tutte le date pianificate avevano gia elementi collegati."
+      },
+      "actions": {
+        "ok": "OK"
+      }
+    },
+    "runError": {
+      "title": "Impossibile eseguire l'evento ricorrente",
+      "description": "Impossibile eseguire l'evento ricorrente: {{error}}",
+      "actions": {
+        "ok": "OK"
+      },
+      "fallbackError": "Errore imprevisto"
+    },
+    "errors": {
+      "loadFailedWithError": "Impossibile caricare gli eventi ricorrenti: {{error}}",
+      "loadUnexpected": "Errore imprevisto durante il caricamento degli eventi ricorrenti."
+    }
   }
 }

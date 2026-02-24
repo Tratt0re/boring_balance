@@ -1,6 +1,10 @@
 import type {
   BooleanFlagInput,
+  IdDto,
   ListQueryDto,
+  NullableResponseDto,
+  PageRequestWithAllDto,
+  PaginatedResponseDto,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -34,9 +38,7 @@ export interface AccountCreateDto {
   readonly archived?: BooleanFlagInput;
 }
 
-export interface AccountGetDto {
-  readonly id: number;
-}
+export interface AccountGetDto extends IdDto<RowId> {}
 
 export interface AccountListDto
   extends ListQueryDto<
@@ -44,21 +46,12 @@ export interface AccountListDto
       AccountDto,
       'id' | 'name' | 'type' | 'description' | 'color_key' | 'icon' | 'locked' | 'archived' | 'created_at' | 'updated_at'
     >
-  > {
-  readonly page?: number;
-  readonly page_size?: number;
-  readonly all?: BooleanFlagInput;
-}
+  >,
+    PageRequestWithAllDto {}
 
-export interface AccountListResponseDto {
-  readonly rows: readonly AccountDto[];
-  readonly total: number;
-  readonly page: number;
-  readonly page_size: number;
-}
+export interface AccountListResponseDto extends PaginatedResponseDto<AccountDto> {}
 
-export interface AccountUpdateDto {
-  readonly id: number;
+export interface AccountUpdateDto extends IdDto<RowId> {
   readonly changes: {
     readonly name?: string;
     readonly type?: AccountType;
@@ -70,12 +63,10 @@ export interface AccountUpdateDto {
   };
 }
 
-export interface AccountRemoveDto {
-  readonly id: number;
-}
+export interface AccountRemoveDto extends IdDto<RowId> {}
 
-export type AccountCreateResponse = AccountDto | null;
-export type AccountGetResponse = AccountDto | null;
+export type AccountCreateResponse = NullableResponseDto<AccountDto>;
+export type AccountGetResponse = NullableResponseDto<AccountDto>;
 export type AccountListResponse = AccountListResponseDto;
 export type AccountUpdateResponse = UpdateResponseDto<AccountDto>;
 export type AccountRemoveResponse = RemoveResponseDto;

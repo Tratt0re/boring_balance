@@ -3,17 +3,21 @@ import {
   Component,
   computed,
   type ElementRef,
+  inject,
   input,
   output,
   signal,
   viewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
+import { map, startWith } from 'rxjs';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type { CalendarDay } from './calendar.types';
-import { calendarWeekdays, getDayAriaLabel, getDayId } from './calendar.utils';
+import { getCalendarWeekdayLabels, getDayAriaLabel, getDayId, resolveCalendarLocale } from './calendar.utils';
 import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants } from './calendar.variants';
 
 @Component({
@@ -22,7 +26,7 @@ import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants
     <div #gridContainer>
       <!-- Weekdays Header -->
       <div class="grid w-fit grid-cols-7 text-center" role="row">
-        @for (weekday of weekdays; track weekday) {
+        @for (weekday of weekdays(); track $index) {
           <div [class]="weekdayClasses()" role="columnheader">
             {{ weekday }}
           </div>
@@ -62,6 +66,14 @@ import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants
   exportAs: 'zCalendarGrid',
 })
 export class ZardCalendarGridComponent {
+  private readonly translateService = inject(TranslateService);
+  private readonly currentLocale = toSignal(
+    this.translateService.onLangChange.pipe(
+      map((event) => event.lang),
+      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+    ),
+    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+  );
   private readonly gridContainer = viewChild.required<ElementRef<HTMLElement>>('gridContainer');
 
   // Inputs
@@ -74,10 +86,11 @@ export class ZardCalendarGridComponent {
   readonly nextMonth = output<{ position: string; dayOfWeek: number }>();
   readonly navigateYear = output<number>();
 
-  readonly weekdays = calendarWeekdays;
-
   private readonly focusedDayIndex = signal<number>(-1);
 
+  protected readonly weekdays = computed(() =>
+    getCalendarWeekdayLabels(resolveCalendarLocale(this.currentLocale())),
+  );
   protected readonly weekdayClasses = computed(() => mergeClasses(calendarWeekdayVariants()));
 
   protected readonly dayContainerClasses = computed(() => mergeClasses(calendarDayVariants()));
@@ -109,7 +122,17 @@ export class ZardCalendarGridComponent {
   }
 
   protected getDayAriaLabel(day: CalendarDay): string {
-    return getDayAriaLabel(day);
+    const locale = resolveCalendarLocale(this.currentLocale());
+
+    return getDayAriaLabel(day, locale, {
+      today: this.translateService.instant('common.calendar.aria.today'),
+      selected: this.translateService.instant('common.calendar.aria.selected'),
+      rangeStart: this.translateService.instant('common.calendar.aria.rangeStart'),
+      rangeEnd: this.translateService.instant('common.calendar.aria.rangeEnd'),
+      inRange: this.translateService.instant('common.calendar.aria.inRange'),
+      outsideMonth: this.translateService.instant('common.calendar.aria.outsideMonth'),
+      disabled: this.translateService.instant('common.calendar.aria.disabled'),
+    });
   }
 
   protected getFocusedDayIndex(): number {

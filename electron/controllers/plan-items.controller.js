@@ -26,7 +26,7 @@ const PLAN_CREATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json
 const PLAN_UPDATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json']);
 const PLAN_LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const PLAN_LIST_FILTER_FIELDS = new Set(['type']);
-const PLAN_RUN_FIELDS = new Set(['id', 'dry_run']);
+const PLAN_RUN_FIELDS = new Set(['id']);
 const PLAN_REMOVE_FIELDS = new Set(['id', 'delete_planned_items']);
 
 const RULE_JSON_FIELDS = new Set(['start_date', 'count', 'frequency', 'month_policy']);
@@ -151,10 +151,11 @@ function normalizeTransactionTemplateJson(value, label) {
     amount_cents: normalizeInteger(template.amount_cents, `${label}.amount_cents`),
     account_id: normalizePositiveInteger(template.account_id, `${label}.account_id`),
     category_id: normalizePositiveInteger(template.category_id, `${label}.category_id`),
-    description: requireString(template.description, `${label}.description`, {
-      allowEmpty: false,
-      maxLength: DESCRIPTION_MAX_LENGTH,
-    }),
+    description:
+      normalizeOptionalString(template.description, `${label}.description`, {
+        allowEmpty: true,
+        maxLength: DESCRIPTION_MAX_LENGTH,
+      }) ?? '',
   };
 
   const settled = normalizeOptionalBooleanFlag(template.settled, `${label}.settled`);
@@ -180,10 +181,11 @@ function normalizeTransferTemplateJson(value, label) {
     amount_cents: amountCents,
     from_account_id: fromAccountId,
     to_account_id: toAccountId,
-    description: requireString(template.description, `${label}.description`, {
-      allowEmpty: false,
-      maxLength: DESCRIPTION_MAX_LENGTH,
-    }),
+    description:
+      normalizeOptionalString(template.description, `${label}.description`, {
+        allowEmpty: true,
+        maxLength: DESCRIPTION_MAX_LENGTH,
+      }) ?? '',
   };
 
   const settled = normalizeOptionalBooleanFlag(template.settled, `${label}.settled`);
@@ -249,7 +251,6 @@ function create(payload) {
   return {
     row: createdRow,
     run: planItemsModel.run(insertedId, {
-      dry_run: false,
       ...buildPlanRunExecutors(),
     }),
   };
@@ -294,14 +295,19 @@ function update(payload) {
   const changesInput = ensureNonEmptyObject(body.changes, 'payload.changes');
   assertAllowedKeys(changesInput, PLAN_UPDATE_FIELDS, 'payload.changes');
 
-  const type = changesInput.type === undefined ? undefined : normalizePlanType(changesInput.type, 'payload.changes.type');
-  const nextType = type ?? existingRow.type;
+  let type;
+  if (changesInput.type !== undefined) {
+    const normalizedType = normalizePlanType(changesInput.type, 'payload.changes.type');
+    if (normalizedType !== existingRow.type) {
+      throw new Error('payload.changes.type cannot be updated.');
+    }
+  }
+
+  const nextType = existingRow.type;
 
   let templateJson;
   if (changesInput.template_json !== undefined) {
     templateJson = normalizeTemplateJsonForType(changesInput.template_json, nextType, 'payload.changes.template_json');
-  } else if (type !== undefined) {
-    normalizeTemplateJsonForType(existingRow.template_json, nextType, 'existing.template_json');
   }
 
   let ruleJson;
@@ -354,7 +360,6 @@ function remove(payload) {
 function run(payload) {
   if (typeof payload === 'number' || typeof payload === 'string') {
     return planItemsModel.run(extractId(payload), {
-      dry_run: false,
       ...buildPlanRunExecutors(),
     });
   }
@@ -363,10 +368,7 @@ function run(payload) {
   assertAllowedKeys(body, PLAN_RUN_FIELDS, 'payload');
 
   const id = extractId({ id: body.id });
-  const dryRun = normalizeOptionalBooleanFlag(body.dry_run, 'payload.dry_run') === 1;
-
   return planItemsModel.run(id, {
-    dry_run: dryRun,
     ...buildPlanRunExecutors(),
   });
 }

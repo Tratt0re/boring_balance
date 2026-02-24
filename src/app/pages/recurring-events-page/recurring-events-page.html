@@ -1,8 +1,35 @@
 <section class="flex flex-col gap-4">
-  <div class="rounded-lg border border-border bg-card p-6">
-    <h2 class="text-lg font-semibold">Recurring events</h2>
-    <p class="mt-2 text-sm text-muted-foreground">
-      Placeholder page. We can build the recurring events workflow here next.
-    </p>
-  </div>
+  @if (isLoading()) {
+    <z-skeleton class="h-12 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+  } @else if (loadError(); as loadError) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ 'recurringEvents.errors.loadFailedWithError' | translate: { error: loadError } }}
+    </div>
+  } @else {
+    <app-data-table
+      [data]="rows()"
+      [structure]="recurringEventTableStructure"
+      [title]="'nav.items.recurringEvents'"
+      description="recurringEvents.table.description"
+      emptyMessage="recurringEvents.table.emptyMessage"
+      [showEmpty]="true"
+      [bordered]="true"
+      [striped]="false"
+      [hoverable]="true"
+      [selectable]="false"
+      [hasActionColumn]="false"
+      [showPagination]="true"
+      [currentPage]="page()"
+      [totalPages]="pageCount()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions"
+      [maxVisiblePages]="5"
+      [pageSizeLabel]="'common.pagination.rowsPerPage' | translate"
+      [showPageSizeSelector]="true"
+      [showTopPagination]="true"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-data-table>
+  }
 </section>

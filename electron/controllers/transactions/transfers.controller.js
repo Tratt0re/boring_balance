@@ -70,6 +70,7 @@ function normalizeCreatePayload(payload, options = {}) {
   const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
   const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
   const description = normalizeOptionalString(body.description, 'payload.description', {
+    allowEmpty: true,
     maxLength: DESCRIPTION_MAX_LENGTH,
   });
   const settled = normalizeOptionalBooleanFlag(body.settled, 'payload.settled');
@@ -106,6 +107,7 @@ function normalizeUpdatePayload(payload, options = {}) {
   const toAccountId = normalizePositiveInteger(body.to_account_id, 'payload.to_account_id');
   const amountCents = normalizeAmountToCents(body.amount, 'payload.amount');
   const description = normalizeOptionalString(body.description, 'payload.description', {
+    allowEmpty: true,
     maxLength: DESCRIPTION_MAX_LENGTH,
   });
   const settled = normalizeOptionalBooleanFlag(body.settled, 'payload.settled');

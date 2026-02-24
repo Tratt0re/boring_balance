@@ -1,4 +1,4 @@
-import type { ListQueryDto, RemoveResponseDto, UpdateResponseDto } from './common.dto';
+import type { ListQueryDto, NullableResponseDto, RemoveResponseDto, UpdateResponseDto } from './common.dto';
 
 export interface AppMetaDto {
   readonly key: string;
@@ -23,14 +23,11 @@ export interface AppMetaUpdateDto {
   };
 }
 
-export interface AppMetaUpsertDto {
-  readonly key: string;
-  readonly value: string;
-}
+export type AppMetaUpsertDto = AppMetaCreateDto;
 
-export type AppMetaCreateResponse = AppMetaDto | null;
-export type AppMetaGetResponse = AppMetaDto | null;
+export type AppMetaCreateResponse = NullableResponseDto<AppMetaDto>;
+export type AppMetaGetResponse = NullableResponseDto<AppMetaDto>;
 export type AppMetaListResponse = AppMetaDto[];
 export type AppMetaUpdateResponse = UpdateResponseDto<AppMetaDto>;
 export type AppMetaRemoveResponse = RemoveResponseDto;
-export type AppMetaUpsertResponse = AppMetaDto | null;
+export type AppMetaUpsertResponse = NullableResponseDto<AppMetaDto>;
