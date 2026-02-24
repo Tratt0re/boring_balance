@@ -17,6 +17,66 @@ export const calendarMonths = [
 
 export const calendarWeekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'] as const;
 
+interface CalendarDayAriaLabels {
+  readonly today: string;
+  readonly selected: string;
+  readonly rangeStart: string;
+  readonly rangeEnd: string;
+  readonly inRange: string;
+  readonly outsideMonth: string;
+  readonly disabled: string;
+}
+
+const DEFAULT_DAY_ARIA_LABELS: CalendarDayAriaLabels = {
+  today: 'Today',
+  selected: 'Selected',
+  rangeStart: 'Range start',
+  rangeEnd: 'Range end',
+  inRange: 'In range',
+  outsideMonth: 'Outside month',
+  disabled: 'Disabled',
+} as const;
+
+function normalizeIntlLabel(value: string): string {
+  return value.replace(/\.$/, '').trim();
+}
+
+export function resolveCalendarLocale(locale?: string | null): string {
+  const normalized = locale?.trim();
+  if (!normalized) {
+    return 'en';
+  }
+
+  return normalized;
+}
+
+export function getCalendarMonthLabels(locale?: string | null): readonly string[] {
+  const resolvedLocale = resolveCalendarLocale(locale);
+
+  try {
+    const formatter = new Intl.DateTimeFormat(resolvedLocale, { month: 'short', timeZone: 'UTC' });
+    return Array.from({ length: 12 }, (_, monthIndex) =>
+      normalizeIntlLabel(formatter.format(new Date(Date.UTC(2024, monthIndex, 1)))),
+    );
+  } catch {
+    return [...calendarMonths];
+  }
+}
+
+export function getCalendarWeekdayLabels(locale?: string | null): readonly string[] {
+  const resolvedLocale = resolveCalendarLocale(locale);
+
+  try {
+    const formatter = new Intl.DateTimeFormat(resolvedLocale, { weekday: 'short', timeZone: 'UTC' });
+    // 2024-01-07 is a Sunday; keep Sunday-first order to match the grid implementation.
+    return Array.from({ length: 7 }, (_, dayOffset) =>
+      normalizeIntlLabel(formatter.format(new Date(Date.UTC(2024, 0, 7 + dayOffset)))),
+    );
+  } catch {
+    return [...calendarWeekdays];
+  }
+}
+
 /**
  * Checks if two dates represent the same day (ignoring time)
  */
@@ -150,26 +210,43 @@ export function getDayId(index: number): string {
 /**
  * Generates an accessible ARIA label for a calendar day
  */
-export function getDayAriaLabel(day: CalendarDay): string {
-  const dateStr = day.date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+export function getDayAriaLabel(
+  day: CalendarDay,
+  locale?: string | null,
+  labels?: Partial<CalendarDayAriaLabels>,
+): string {
+  const resolvedLocale = resolveCalendarLocale(locale);
+  const ariaLabels = { ...DEFAULT_DAY_ARIA_LABELS, ...labels };
 
-  const labels = [
+  let dateStr: string;
+  try {
+    dateStr = new Intl.DateTimeFormat(resolvedLocale, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(day.date);
+  } catch {
+    dateStr = day.date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  }
+
+  const parts = [
     dateStr,
-    day.isToday && 'Today',
-    day.isSelected && 'Selected',
-    day.isRangeStart && 'Range start',
-    day.isRangeEnd && 'Range end',
-    day.isInRange && 'In range',
-    !day.isCurrentMonth && 'Outside month',
-    day.isDisabled && 'Disabled',
+    day.isToday && ariaLabels.today,
+    day.isSelected && ariaLabels.selected,
+    day.isRangeStart && ariaLabels.rangeStart,
+    day.isRangeEnd && ariaLabels.rangeEnd,
+    day.isInRange && ariaLabels.inRange,
+    !day.isCurrentMonth && ariaLabels.outsideMonth,
+    day.isDisabled && ariaLabels.disabled,
   ].filter(Boolean);
 
-  return labels.join(', ');
+  return parts.join(', ');
 }
 
 /**

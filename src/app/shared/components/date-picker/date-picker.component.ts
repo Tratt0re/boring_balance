@@ -12,7 +12,10 @@ import {
   ViewEncapsulation,
   type TemplateRef,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { map, startWith } from 'rxjs';
 
 import type { ClassValue } from 'clsx';
 
@@ -41,6 +44,7 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
       type="button"
       [zType]="zType()"
       [zSize]="zSize()"
+      [zDisabled]="disabled()"
       [disabled]="disabled()"
       [class]="buttonClasses()"
       zPopover
@@ -54,7 +58,7 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
       (zVisibleChange)="onPopoverVisibilityChange($event)"
       [attr.aria-expanded]="false"
       [attr.aria-haspopup]="true"
-      aria-label="Choose date"
+      [attr.aria-label]="chooseDateAriaLabel()"
     >
       @if (zIconPosition() === 'left') {
         <z-icon zType="calendar" [class]="zCalendarIconClass()" />
@@ -98,6 +102,14 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
 })
 export class ZardDatePickerComponent implements ControlValueAccessor {
   private readonly datePipe = inject(DatePipe);
+  private readonly translateService = inject(TranslateService);
+  private readonly currentLocale = toSignal(
+    this.translateService.onLangChange.pipe(
+      map((event) => event.lang),
+      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+    ),
+    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+  );
 
   readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTemplate');
   readonly popoverDirective = viewChild.required<ZardPopoverDirective>('popoverDirective');
@@ -151,13 +163,17 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   });
 
   protected readonly popoverClasses = computed(() => mergeClasses('w-auto p-0'));
+  protected readonly chooseDateAriaLabel = computed(() =>
+    this.translateService.instant('common.calendar.aria.chooseDate'),
+  );
 
   protected readonly displayText = computed(() => {
+    const locale = this.currentLocale();
     const date = this.value();
     if (!date) {
       return this.placeholder();
     }
-    return this.formatDate(date, this.zFormat());
+    return this.formatDate(date, this.zFormat(), locale);
   });
 
   protected onDateChange(date: Date | Date[]): void {
@@ -181,8 +197,8 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
     }
   }
 
-  private formatDate(date: Date, format: string): string {
-    return this.datePipe.transform(date, format) ?? '';
+  private formatDate(date: Date, format: string, locale?: string): string {
+    return this.datePipe.transform(date, format, undefined, locale) ?? '';
   }
 
   writeValue(value: Date | null): void {

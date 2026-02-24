@@ -718,7 +718,7 @@ export class AppDataTableComponent {
       return null;
     }
 
-    const iconMode = this.currencyIconMode(column);
+    const iconMode = this.currencyIconMode(row, column);
     if (iconMode === 'none') {
       return null;
     }
@@ -1110,12 +1110,24 @@ export class AppDataTableComponent {
     return 'columnName' in item && 'columnKey' in item;
   }
 
-  private currencyIconMode(column: ColumnDataItem): TableCurrencyIconMode {
+  private currencyIconMode(row: TableRow, column: ColumnDataItem): TableCurrencyIconMode {
     if (column.type !== 'currency') {
       return 'none';
     }
 
-    return column.currency?.modality ?? column.currency?.iconMode ?? 'none';
+    const iconModeColumnKey = column.currency?.iconModeColumnKey;
+    if (iconModeColumnKey) {
+      const rowIconMode = this.toCurrencyIconMode(this.getRawValue(row, iconModeColumnKey));
+      if (rowIconMode) {
+        return rowIconMode;
+      }
+    }
+
+    return this.toCurrencyIconMode(column.currency?.modality ?? column.currency?.iconMode) ?? 'none';
+  }
+
+  private toCurrencyIconMode(value: unknown): TableCurrencyIconMode | null {
+    return value === 'currency-trend' || value === 'transfer' || value === 'none' ? value : null;
   }
 
   private formatColumnValue(value: unknown, column: ColumnDataItem): string {
@@ -1343,6 +1355,10 @@ export class AppDataTableComponent {
 
   private translateIfString(value: unknown): unknown {
     if (typeof value !== 'string') {
+      return value;
+    }
+
+    if (value.trim().length === 0) {
       return value;
     }
 

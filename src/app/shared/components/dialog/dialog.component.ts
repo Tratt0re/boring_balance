@@ -67,7 +67,7 @@ export class ZardDialogOptions<T, U> {
         z-button
         zType="ghost"
         zSize="sm"
-        class="absolute top-1 right-1"
+        class="absolute top-1 right-1 z-10"
         (click)="onCloseClick()"
       >
         <z-icon zType="x" />
@@ -75,7 +75,7 @@ export class ZardDialogOptions<T, U> {
     }
 
     @if (config.zTitle || config.zDescription) {
-      <header class="flex flex-col space-y-1.5 text-center sm:text-left">
+      <header class="flex shrink-0 flex-col space-y-1.5 pr-10 text-center sm:text-left">
         @if (config.zTitle) {
           <h4 data-testid="z-title" class="text-lg leading-none font-semibold tracking-tight">{{ config.zTitle }}</h4>
 
@@ -86,7 +86,7 @@ export class ZardDialogOptions<T, U> {
       </header>
     }
 
-    <main class="flex flex-col space-y-4">
+    <main class="flex min-h-0 flex-1 flex-col space-y-4 overflow-y-auto pr-1">
       <ng-template cdkPortalOutlet />
 
       @if (isStringContent) {

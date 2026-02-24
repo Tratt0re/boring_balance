@@ -17,7 +17,15 @@
       "from": "Desde",
       "to": "Hacia",
       "fromAccount": "Cuenta de origen",
-      "toAccount": "Cuenta de destino"
+      "toAccount": "Cuenta de destino",
+      "title": "Titulo",
+      "startDate": "Fecha de inicio",
+      "plan": "Plan",
+      "schedule": "Programacion",
+      "template": "Plantilla",
+      "occurrences": "Ocurrencias",
+      "frequencyUnit": "Unidad de frecuencia",
+      "monthPolicy": "Si el dia no existe en el mes"
     },
     "placeholders": {
       "selectType": "Selecciona tipo",
@@ -81,6 +89,22 @@
         "lastPage": "Ir a la ultima pagina",
         "toPage": "Ir a la pagina",
         "toLastPage": "Ir a la ultima pagina, pagina"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Mes anterior",
+        "nextMonth": "Mes siguiente"
+      },
+      "aria": {
+        "chooseDate": "Elegir fecha",
+        "today": "Hoy",
+        "selected": "Seleccionado",
+        "rangeStart": "Inicio del rango",
+        "rangeEnd": "Fin del rango",
+        "inRange": "Dentro del rango",
+        "outsideMonth": "Fuera del mes",
+        "disabled": "Deshabilitado"
       }
     }
   },
@@ -590,5 +614,173 @@
   },
   "breadcrumb": {
     "ariaLabel": "Ruta actual"
+  },
+  "recurringEvents": {
+    "table": {
+      "description": "Gestiona planes recurrentes que generan futuros movimientos y transferencias.",
+      "emptyMessage": "No se encontraron eventos recurrentes.",
+      "columns": {
+        "title": "Titulo",
+        "startDate": "Fecha de inicio",
+        "schedule": "Programacion",
+        "template": "Plantilla"
+      },
+      "actions": {
+        "add": "Agregar evento recurrente",
+        "edit": "Editar evento recurrente",
+        "run": "Ejecutar evento recurrente",
+        "delete": "Eliminar evento recurrente"
+      },
+      "schedule": {
+        "summary": "Ocurre {{count}} veces, {{interval}} cada {{unit}}",
+        "every": "{{interval}} cada  {{unit}}",
+        "occurrences": "{{count}} ocurrencias",
+        "monthPolicy": "Si el dia no existe en el mes: {{policy}}"
+      },
+      "template": {
+        "unknown": "Plantilla desconocida",
+        "unknownAccount": "Cuenta desconocida",
+        "unknownCategory": "Categoria desconocida"
+      }
+    },
+    "type": {
+      "transaction": "Transaccion",
+      "transfer": "Transferencia"
+    },
+    "frequency": {
+      "unit": {
+        "day": "dia(s)",
+        "week": "semana(s)",
+        "month": "mes(es)",
+        "year": "ano(s)"
+      }
+    },
+    "monthPolicy": {
+      "none": "Predeterminado",
+      "clip": "Usar el ultimo dia valido del mes",
+      "skip": "Omitir",
+      "last_day": "Ultimo dia",
+      "first_day": "Primer dia"
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar evento recurrente",
+        "description": "Crea un plan recurrente para un movimiento o una transferencia. Al confirmar, se crearan de inmediato los elementos programados.",
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear evento recurrente"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear el evento recurrente.",
+          "titleRequired": "El titulo es obligatorio.",
+          "titleMinLength": "El titulo debe tener al menos 2 caracteres.",
+          "titleMaxLength": "El titulo debe tener como maximo 80 caracteres.",
+          "typeRequired": "El tipo es obligatorio.",
+          "startDateRequired": "La fecha de inicio es obligatoria.",
+          "countRequired": "La cantidad de ocurrencias es obligatoria.",
+          "countInvalid": "La cantidad de ocurrencias debe ser un entero positivo.",
+          "frequencyIntervalRequired": "El intervalo de frecuencia es obligatorio.",
+          "frequencyIntervalInvalid": "El intervalo de frecuencia debe ser un entero positivo.",
+          "frequencyUnitRequired": "La unidad de frecuencia es obligatoria.",
+          "accountRequired": "La cuenta es obligatoria.",
+          "categoryRequired": "La categoria es obligatoria.",
+          "fromAccountRequired": "La cuenta de origen es obligatoria.",
+          "toAccountRequired": "La cuenta de destino es obligatoria.",
+          "accountsMustDiffer": "La cuenta de origen y la de destino deben ser diferentes.",
+          "amountRequired": "El importe es obligatorio.",
+          "amountInvalid": "El importe debe ser un numero positivo.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
+          "createFailed": "No se pudo crear el evento recurrente."
+        }
+      },
+      "edit": {
+        "title": "Editar evento recurrente",
+        "description": "Actualiza la configuracion del plan recurrente. Los cambios de plantilla tambien se aplican a los elementos ya creados por este plan.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar el evento recurrente.",
+          "updateFailed": "No se pudo actualizar el evento recurrente."
+        }
+      },
+      "form": {
+        "labels": {
+          "title": "Titulo",
+          "startDate": "Fecha de inicio",
+          "occurrences": "Ocurrencias",
+          "frequencyInterval": "Cada",
+          "frequencyUnit": "Unidad de frecuencia",
+          "monthPolicy": "Si el dia no existe en el mes"
+        },
+        "placeholders": {
+          "title": "Titulo del evento recurrente",
+          "occurrences": "12",
+          "frequencyInterval": "1"
+        },
+        "tooltips": {
+          "scheduleLockedAfterCreate": "Despues de crear el evento recurrente, la configuracion de programacion no se puede cambiar."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminar evento recurrente?",
+      "description": "Seguro que quieres eliminar \"{{title}}\"?",
+      "options": {
+        "deleteLinkedItems": "Eliminar tambien los elementos vinculados ya creados por este plan",
+        "deleteLinkedItemsHint": "Esto elimina movimientos/transferencias generados conectados a este evento recurrente."
+      },
+      "actions": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "runConfirm": {
+      "title": "Ejecutar evento recurrente?",
+      "description": "Confirma para generar ahora los elementos programados faltantes de \"{{title}}\".",
+      "actions": {
+        "cancel": "Cancelar",
+        "run": "Ejecutar ahora"
+      }
+    },
+    "createResult": {
+      "title": "Evento recurrente creado"
+    },
+    "updateResult": {
+      "title": "Evento recurrente actualizado",
+      "description": "\"{{title}}\" se actualizo correctamente. Los elementos vinculados generados se actualizaron cuando correspondia.",
+      "actions": {
+        "ok": "Aceptar"
+      }
+    },
+    "runResult": {
+      "title": "Eventos recurrentes creados",
+      "description": "\"{{title}}\" proceso {{total}} ocurrencias. Creadas: {{created}}. Omitidas por existentes: {{skipped}}.",
+      "labels": {
+        "plan": "Plan recurrente",
+        "created": "Creados ahora",
+        "skipped": "Ya existian",
+        "total": "Fechas programadas"
+      },
+      "hints": {
+        "noNewItems": "No se crearon elementos nuevos porque todas las fechas programadas ya tenian elementos vinculados."
+      },
+      "actions": {
+        "ok": "Aceptar"
+      }
+    },
+    "runError": {
+      "title": "No se pudo ejecutar el evento recurrente",
+      "description": "No se pudo ejecutar el evento recurrente: {{error}}",
+      "actions": {
+        "ok": "Aceptar"
+      },
+      "fallbackError": "Error inesperado"
+    },
+    "errors": {
+      "loadFailedWithError": "No se pudieron cargar los eventos recurrentes: {{error}}",
+      "loadUnexpected": "Error inesperado al cargar los eventos recurrentes."
+    }
   }
 }

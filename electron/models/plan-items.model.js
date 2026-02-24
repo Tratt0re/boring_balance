@@ -1,5 +1,5 @@
 const { createBaseModel } = require('./base-model');
-const { deleteRows, getDatabase, selectRows } = require('../database');
+const { deleteRows, getDatabase, selectRows, updateRows } = require('../database');
 const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 
 const planItemsBaseModel = createBaseModel('plan_items');
@@ -55,10 +55,6 @@ function getDaysInUtcMonth(year, monthIndex) {
 }
 
 function buildMonthOrYearOccurrence(rule, candidateIndex) {
-  if (candidateIndex === 0) {
-    return Number(rule.start_date);
-  }
-
   const startDate = new Date(Number(rule.start_date));
   const startYear = startDate.getUTCFullYear();
   const startMonth = startDate.getUTCMonth();
@@ -177,17 +173,6 @@ function buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow
   };
 }
 
-function buildRunPreviewEntry(planItem, occurredAt) {
-  return {
-    occurred_at: occurredAt,
-    status: 'would_create',
-    preview: {
-      type: planItem.type,
-      ...planItem.template_json,
-    },
-  };
-}
-
 function run(planItemId, options = {}) {
   const planItem = getById(planItemId);
   if (!planItem) {
@@ -197,36 +182,26 @@ function run(planItemId, options = {}) {
   const database = getDatabase();
   const occurrenceTimestamps = generatePlanOccurrenceTimestamps(planItem.rule_json);
   const existingOccurrencesMap = buildExistingOccurrencesMapForPlan(database, planItem);
-  const dryRun = options.dry_run === true;
   const injectedCreateTransaction = typeof options.createTransaction === 'function' ? options.createTransaction : null;
   const injectedCreateTransfer = typeof options.createTransfer === 'function' ? options.createTransfer : null;
 
-  if (!dryRun) {
-    if (planItem.type === 'transaction' && !injectedCreateTransaction) {
-      throw new Error('Plan run requires options.createTransaction for transaction plans.');
-    }
+  if (planItem.type === 'transaction' && !injectedCreateTransaction) {
+    throw new Error('Plan run requires options.createTransaction for transaction plans.');
+  }
 
-    if (planItem.type === 'transfer' && !injectedCreateTransfer) {
-      throw new Error('Plan run requires options.createTransfer for transfer plans.');
-    }
+  if (planItem.type === 'transfer' && !injectedCreateTransfer) {
+    throw new Error('Plan run requires options.createTransfer for transfer plans.');
   }
 
   const results = [];
   let skippedExisting = 0;
   let created = 0;
-  let wouldCreate = 0;
 
   for (const occurredAt of occurrenceTimestamps) {
     const existingRow = existingOccurrencesMap.get(Number(occurredAt));
     if (existingRow) {
       skippedExisting += 1;
       results.push(buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow));
-      continue;
-    }
-
-    if (dryRun) {
-      wouldCreate += 1;
-      results.push(buildRunPreviewEntry(planItem, occurredAt));
       continue;
     }
 
@@ -260,15 +235,130 @@ function run(planItemId, options = {}) {
 
   return {
     plan_item: planItem,
-    dry_run: dryRun,
+    dry_run: false,
     summary: {
       total_occurrences: occurrenceTimestamps.length,
       skipped_existing: skippedExisting,
-      would_create: dryRun ? wouldCreate : 0,
-      created: dryRun ? 0 : created,
+      would_create: 0,
+      created,
     },
     results,
   };
+}
+
+function buildLinkedTransactionChangesFromPlanTemplate(templateJson, updatedAt) {
+  const changes = {
+    account_id: Number(templateJson.account_id),
+    category_id: Number(templateJson.category_id),
+    amount_cents: Number(templateJson.amount_cents),
+    description: templateJson.description ?? null,
+    updated_at: updatedAt,
+  };
+
+  if (templateJson.settled !== undefined) {
+    changes.settled = Number(templateJson.settled);
+  }
+
+  return changes;
+}
+
+function buildLinkedTransferChangesFromPlanTemplate(templateJson, updatedAt) {
+  const amountCents = Math.abs(Number(templateJson.amount_cents));
+  const baseTransferChanges = {
+    from_account_id: Number(templateJson.from_account_id),
+    to_account_id: Number(templateJson.to_account_id),
+    amount_cents: amountCents,
+    description: templateJson.description ?? null,
+    updated_at: updatedAt,
+  };
+
+  if (templateJson.settled !== undefined) {
+    baseTransferChanges.settled = Number(templateJson.settled);
+  }
+
+  return {
+    transfer: baseTransferChanges,
+    outgoingTransaction: {
+      account_id: Number(templateJson.from_account_id),
+      category_id: TRANSFER_CATEGORY_ID,
+      amount_cents: -amountCents,
+      description: null,
+      updated_at: updatedAt,
+      ...(templateJson.settled !== undefined ? { settled: Number(templateJson.settled) } : {}),
+    },
+    incomingTransaction: {
+      account_id: Number(templateJson.to_account_id),
+      category_id: TRANSFER_CATEGORY_ID,
+      amount_cents: amountCents,
+      description: null,
+      updated_at: updatedAt,
+      ...(templateJson.settled !== undefined ? { settled: Number(templateJson.settled) } : {}),
+    },
+  };
+}
+
+function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt) {
+  if (!planItem?.template_json) {
+    return;
+  }
+
+  if (planItem.type === 'transaction') {
+    updateRows(
+      database,
+      'transactions',
+      buildLinkedTransactionChangesFromPlanTemplate(planItem.template_json, updatedAt),
+      {
+        plan_item_id: Number(planItem.id),
+        transfer_id: { isNull: true },
+      },
+    );
+    return;
+  }
+
+  if (planItem.type === 'transfer') {
+    const transferTemplateChanges = buildLinkedTransferChangesFromPlanTemplate(planItem.template_json, updatedAt);
+
+    updateRows(database, 'transfers', transferTemplateChanges.transfer, {
+      plan_item_id: Number(planItem.id),
+    });
+
+    updateRows(database, 'transactions', transferTemplateChanges.outgoingTransaction, {
+      plan_item_id: Number(planItem.id),
+      transfer_id: { isNull: false },
+      category_id: TRANSFER_CATEGORY_ID,
+      amount_cents: { lt: 0 },
+    });
+
+    updateRows(database, 'transactions', transferTemplateChanges.incomingTransaction, {
+      plan_item_id: Number(planItem.id),
+      transfer_id: { isNull: false },
+      category_id: TRANSFER_CATEGORY_ID,
+      amount_cents: { gt: 0 },
+    });
+    return;
+  }
+
+  throw new Error(`Unsupported plan item type "${planItem.type}".`);
+}
+
+function updateById(planItemId, changes) {
+  const database = getDatabase();
+  const updatePlanItemTx = database.transaction((payload) => {
+    const changed = planItemsBaseModel.updateById(planItemId, payload);
+    if (changed <= 0) {
+      return changed;
+    }
+
+    if (payload.template_json !== undefined) {
+      const updatedPlanItem = getById(planItemId);
+      const updatedAt = Number(payload.updated_at ?? Date.now());
+      applyTemplateChangesToLinkedPlannedItems(database, updatedPlanItem, updatedAt);
+    }
+
+    return changed;
+  });
+
+  return updatePlanItemTx(changes);
 }
 
 function deletePlannedItemsInternal(database, planItemId) {
@@ -334,6 +424,7 @@ module.exports = {
   ...planItemsBaseModel,
   getById,
   list,
+  updateById,
   run,
   deletePlannedItems,
   removePlanItem,

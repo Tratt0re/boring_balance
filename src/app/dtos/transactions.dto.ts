@@ -1,5 +1,9 @@
 import type {
   BooleanFlagInput,
+  IdDto,
+  NullableResponseDto,
+  PageRequestDto,
+  PaginatedResponseDto,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -74,9 +78,7 @@ export interface TransactionCreateTransferResponseDto {
   readonly transactions: readonly TransactionDto[];
 }
 
-export interface TransactionGetDto {
-  readonly id: RowId;
-}
+export interface TransactionGetDto extends IdDto<RowId> {}
 
 export interface TransactionListTransactionsFiltersDto {
   readonly date_from?: UnixTimestampMilliseconds;
@@ -89,10 +91,8 @@ export interface TransactionListTransactionsFiltersDto {
   readonly settled?: BooleanFlagInput;
 }
 
-export interface TransactionListTransactionsDto {
+export interface TransactionListTransactionsDto extends PageRequestDto {
   readonly filters?: TransactionListTransactionsFiltersDto;
-  readonly page?: number;
-  readonly page_size?: number;
 }
 
 export interface TransactionListTransfersFiltersDto {
@@ -104,28 +104,15 @@ export interface TransactionListTransfersFiltersDto {
   readonly settled?: BooleanFlagInput;
 }
 
-export interface TransactionListTransfersDto {
+export interface TransactionListTransfersDto extends PageRequestDto {
   readonly filters?: TransactionListTransfersFiltersDto;
-  readonly page?: number;
-  readonly page_size?: number;
 }
 
-export interface TransactionListResponseDto {
-  readonly rows: readonly TransactionDto[];
-  readonly total: number;
-  readonly page: number;
-  readonly page_size: number;
-}
+export interface TransactionListResponseDto extends PaginatedResponseDto<TransactionDto> {}
 
-export interface TransferListResponseDto {
-  readonly rows: readonly TransferDto[];
-  readonly total: number;
-  readonly page: number;
-  readonly page_size: number;
-}
+export interface TransferListResponseDto extends PaginatedResponseDto<TransferDto> {}
 
-export interface TransactionUpdateDto {
-  readonly id: RowId;
+export interface TransactionUpdateDto extends IdDto<RowId> {
   readonly changes: {
     readonly occurred_at?: UnixTimestampMilliseconds;
     readonly account_id?: RowId;
@@ -138,15 +125,13 @@ export interface TransactionUpdateDto {
   };
 }
 
-export interface TransactionRemoveDto {
-  readonly id: RowId;
-}
+export interface TransactionRemoveDto extends IdDto<RowId> {}
 
-export type TransactionCreateResponse = TransactionDto | null;
+export type TransactionCreateResponse = NullableResponseDto<TransactionDto>;
 export type TransactionCreateTransferResponse = TransactionCreateTransferResponseDto;
 export type TransactionUpdateTransferResponse = TransactionCreateTransferResponseDto;
 export type TransactionDeleteTransferResponse = RemoveResponseDto;
-export type TransactionGetResponse = TransactionDto | null;
+export type TransactionGetResponse = NullableResponseDto<TransactionDto>;
 export type TransactionListTransactionsResponse = TransactionListResponseDto;
 export type TransactionListTransfersResponse = TransferListResponseDto;
 export type TransactionUpdateResponse = UpdateResponseDto<TransactionDto>;

@@ -3,6 +3,11 @@ export type UnixTimestampMilliseconds = number;
 export type RowId = number;
 export type BooleanFlagInput = boolean | SqliteBoolean;
 export type SortDirection = 'ASC' | 'DESC';
+export type NullableResponseDto<T> = T | null;
+
+export interface IdDto<TId = RowId> {
+  readonly id: TId;
+}
 
 export interface ListQueryOptions {
   readonly orderBy?: string;
@@ -14,6 +19,22 @@ export interface ListQueryOptions {
 export interface ListQueryDto<TWhere extends Record<string, unknown>> {
   readonly where?: Partial<TWhere>;
   readonly options?: ListQueryOptions;
+}
+
+export interface PageRequestDto {
+  readonly page?: number;
+  readonly page_size?: number;
+}
+
+export interface PageRequestWithAllDto extends PageRequestDto {
+  readonly all?: BooleanFlagInput;
+}
+
+export interface PaginatedResponseDto<TRow> {
+  readonly rows: readonly TRow[];
+  readonly total: number;
+  readonly page: number;
+  readonly page_size: number;
 }
 
 export interface UpdateResponseDto<TDto> {

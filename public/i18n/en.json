@@ -17,7 +17,15 @@
       "from": "From",
       "to": "To",
       "fromAccount": "From account",
-      "toAccount": "To account"
+      "toAccount": "To account",
+      "title": "Title",
+      "startDate": "Start date",
+      "plan": "Plan",
+      "schedule": "Schedule",
+      "template": "Template",
+      "occurrences": "Occurrences",
+      "frequencyUnit": "Frequency unit",
+      "monthPolicy": "If the day is not in the month"
     },
     "placeholders": {
       "selectType": "Select type",
@@ -81,6 +89,22 @@
         "lastPage": "Go to last page",
         "toPage": "To page",
         "toLastPage": "To last page, page"
+      }
+    },
+    "calendar": {
+      "actions": {
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month"
+      },
+      "aria": {
+        "chooseDate": "Choose date",
+        "today": "Today",
+        "selected": "Selected",
+        "rangeStart": "Range start",
+        "rangeEnd": "Range end",
+        "inRange": "In range",
+        "outsideMonth": "Outside month",
+        "disabled": "Disabled"
       }
     }
   },
@@ -346,11 +370,11 @@
       "table": {
         "description": "Money moved between your accounts.",
         "emptyMessage": "No transfers found.",
-      "actions": {
-        "add": "Add transfer",
-        "filter": "Filter transfers",
-        "edit": "Edit transfer",
-        "delete": "Delete transfer"
+        "actions": {
+          "add": "Add transfer",
+          "filter": "Filter transfers",
+          "edit": "Edit transfer",
+          "delete": "Delete transfer"
         }
       },
       "dialog": {
@@ -590,5 +614,173 @@
   },
   "breadcrumb": {
     "ariaLabel": "Breadcrumb"
+  },
+  "recurringEvents": {
+    "table": {
+      "description": "Manage recurring plans that generate future transactions and transfers.",
+      "emptyMessage": "No recurring events found.",
+      "columns": {
+        "title": "Title",
+        "startDate": "Start date",
+        "schedule": "Schedule",
+        "template": "Template"
+      },
+      "actions": {
+        "add": "Add recurring event",
+        "edit": "Edit recurring event",
+        "run": "Run recurring event",
+        "delete": "Delete recurring event"
+      },
+      "schedule": {
+        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}",
+        "every": "{{interval}} every {{unit}}",
+        "occurrences": "{{count}} occurrences",
+        "monthPolicy": "If the day is not in the month: {{policy}}"
+      },
+      "template": {
+        "unknown": "Unknown template",
+        "unknownAccount": "Unknown account",
+        "unknownCategory": "Unknown category"
+      }
+    },
+    "type": {
+      "transaction": "Transaction",
+      "transfer": "Transfer"
+    },
+    "frequency": {
+      "unit": {
+        "day": "day(s)",
+        "week": "week(s)",
+        "month": "month(s)",
+        "year": "year(s)"
+      }
+    },
+    "monthPolicy": {
+      "none": "Default",
+      "clip": "Use the last valid day of the month",
+      "skip": "Skip",
+      "last_day": "Last day",
+      "first_day": "First day"
+    },
+    "dialog": {
+      "add": {
+        "title": "Add recurring event",
+        "description": "Create a recurring plan for a transaction or transfer. When you confirm, the scheduled items will be created immediately.",
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create recurring event"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before creating the recurring event.",
+          "titleRequired": "Title is required.",
+          "titleMinLength": "Title must be at least 2 characters.",
+          "titleMaxLength": "Title must be at most 80 characters.",
+          "typeRequired": "Type is required.",
+          "startDateRequired": "Start date is required.",
+          "countRequired": "Occurrences count is required.",
+          "countInvalid": "Occurrences count must be a positive integer.",
+          "frequencyIntervalRequired": "Frequency interval is required.",
+          "frequencyIntervalInvalid": "Frequency interval must be a positive integer.",
+          "frequencyUnitRequired": "Frequency unit is required.",
+          "accountRequired": "Account is required.",
+          "categoryRequired": "Category is required.",
+          "fromAccountRequired": "Source account is required.",
+          "toAccountRequired": "Destination account is required.",
+          "accountsMustDiffer": "Source and destination accounts must be different.",
+          "amountRequired": "Amount is required.",
+          "amountInvalid": "Amount must be a positive number.",
+          "descriptionMaxLength": "Description must be at most 75 characters.",
+          "createFailed": "Failed to create recurring event."
+        }
+      },
+      "edit": {
+        "title": "Edit recurring event",
+        "description": "Update recurring plan settings. Template changes are also applied to items already created from this plan.",
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save changes"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before saving the recurring event.",
+          "updateFailed": "Failed to update recurring event."
+        }
+      },
+      "form": {
+        "labels": {
+          "title": "Title",
+          "startDate": "Start date",
+          "occurrences": "Occurrences",
+          "frequencyInterval": "Every",
+          "frequencyUnit": "Frequency unit",
+          "monthPolicy": "If the day is not in the month"
+        },
+        "placeholders": {
+          "title": "Recurring event title",
+          "occurrences": "12",
+          "frequencyInterval": "1"
+        },
+        "tooltips": {
+          "scheduleLockedAfterCreate": "After the recurring event is created, schedule settings cannot be changed."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Delete recurring event?",
+      "description": "Are you sure you want to delete \"{{title}}\"?",
+      "options": {
+        "deleteLinkedItems": "Also delete linked items already created by this plan",
+        "deleteLinkedItemsHint": "This removes generated transactions/transfers connected to this recurring event."
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
+    "runConfirm": {
+      "title": "Run recurring event?",
+      "description": "Confirm to generate the missing scheduled items for \"{{title}}\" now.",
+      "actions": {
+        "cancel": "Cancel",
+        "run": "Run now"
+      }
+    },
+    "createResult": {
+      "title": "Recurring event created"
+    },
+    "updateResult": {
+      "title": "Recurring event updated",
+      "description": "\"{{title}}\" was updated successfully. Linked generated items were updated where applicable.",
+      "actions": {
+        "ok": "OK"
+      }
+    },
+    "runResult": {
+      "title": "Recurring events created",
+      "description": "\"{{title}}\" processed {{total}} occurrences. Created: {{created}}. Skipped existing: {{skipped}}.",
+      "labels": {
+        "plan": "Recurring plan",
+        "created": "Created now",
+        "skipped": "Already existed",
+        "total": "Scheduled dates"
+      },
+      "hints": {
+        "noNewItems": "No new items were created because all scheduled dates already had linked items."
+      },
+      "actions": {
+        "ok": "OK"
+      }
+    },
+    "runError": {
+      "title": "Failed to run recurring event",
+      "description": "The recurring event could not be executed: {{error}}",
+      "actions": {
+        "ok": "OK"
+      },
+      "fallbackError": "Unexpected error"
+    },
+    "errors": {
+      "loadFailedWithError": "Failed to load recurring events: {{error}}",
+      "loadUnexpected": "Unexpected error while loading recurring events."
+    }
   }
 }

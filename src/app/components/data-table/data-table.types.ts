@@ -35,6 +35,7 @@ export interface TableCellIconConfig {
 export interface TableCurrencyConfig {
   readonly modality?: TableCurrencyIconMode;
   readonly iconMode?: TableCurrencyIconMode;
+  readonly iconModeColumnKey?: string;
 }
 
 export interface ColumnDataItem extends TableDataStructureItem {

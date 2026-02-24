@@ -1,6 +1,10 @@
 import type {
   BooleanFlagInput,
+  IdDto,
   ListQueryDto,
+  NullableResponseDto,
+  PageRequestWithAllDto,
+  PaginatedResponseDto,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -35,9 +39,7 @@ export interface CategoryCreateDto {
   readonly archived?: BooleanFlagInput;
 }
 
-export interface CategoryGetDto {
-  readonly id: number;
-}
+export interface CategoryGetDto extends IdDto<RowId> {}
 
 export interface CategoryListDto
   extends ListQueryDto<
@@ -45,21 +47,12 @@ export interface CategoryListDto
       CategoryDto,
       'id' | 'name' | 'parent_id' | 'description' | 'color_key' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
     >
-  > {
-  readonly page?: number;
-  readonly page_size?: number;
-  readonly all?: BooleanFlagInput;
-}
+  >,
+    PageRequestWithAllDto {}
 
-export interface CategoryListResponseDto {
-  readonly rows: readonly CategoryDto[];
-  readonly total: number;
-  readonly page: number;
-  readonly page_size: number;
-}
+export interface CategoryListResponseDto extends PaginatedResponseDto<CategoryDto> {}
 
-export interface CategoryUpdateDto {
-  readonly id: number;
+export interface CategoryUpdateDto extends IdDto<RowId> {
   readonly changes: {
     readonly name?: string;
     readonly parent_id?: number | null;
@@ -72,12 +65,10 @@ export interface CategoryUpdateDto {
   };
 }
 
-export interface CategoryRemoveDto {
-  readonly id: number;
-}
+export interface CategoryRemoveDto extends IdDto<RowId> {}
 
-export type CategoryCreateResponse = CategoryDto | null;
-export type CategoryGetResponse = CategoryDto | null;
+export type CategoryCreateResponse = NullableResponseDto<CategoryDto>;
+export type CategoryGetResponse = NullableResponseDto<CategoryDto>;
 export type CategoryListResponse = CategoryListResponseDto;
 export type CategoryUpdateResponse = UpdateResponseDto<CategoryDto>;
 export type CategoryRemoveResponse = RemoveResponseDto;

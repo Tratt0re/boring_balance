@@ -84,6 +84,7 @@ function normalizeTransactionChanges(value, label, options = {}) {
         ? undefined
         : normalizeAmountToCents(changesInput.amount, `${label}.amount`),
     description: normalizeOptionalString(changesInput.description, `${label}.description`, {
+      allowEmpty: true,
       maxLength: DESCRIPTION_MAX_LENGTH,
     }),
     tags: normalizedTags === undefined ? undefined : JSON.stringify(normalizedTags),

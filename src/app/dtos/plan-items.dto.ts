@@ -1,5 +1,9 @@
 import type {
   BooleanFlagInput,
+  IdDto,
+  NullableResponseDto,
+  PageRequestDto,
+  PaginatedResponseDto,
   RemoveResponseDto,
   RowId,
   SqliteBoolean,
@@ -76,18 +80,11 @@ export interface PlanItemListFiltersDto {
   readonly type?: PlanItemType;
 }
 
-export interface PlanItemListDto {
+export interface PlanItemListDto extends PageRequestDto {
   readonly filters?: PlanItemListFiltersDto;
-  readonly page?: number;
-  readonly page_size?: number;
 }
 
-export interface PlanItemListResponseDto {
-  readonly rows: readonly PlanItemDto[];
-  readonly total: number;
-  readonly page: number;
-  readonly page_size: number;
-}
+export interface PlanItemListResponseDto extends PaginatedResponseDto<PlanItemDto> {}
 
 export interface PlanItemCreateBaseDto {
   readonly title: string;
@@ -107,12 +104,9 @@ export interface PlanItemCreateTransferDto extends PlanItemCreateBaseDto {
 
 export type PlanItemCreateDto = PlanItemCreateTransactionDto | PlanItemCreateTransferDto;
 
-export interface PlanItemGetDto {
-  readonly id: RowId;
-}
+export interface PlanItemGetDto extends IdDto<RowId> {}
 
-export interface PlanItemUpdateDto {
-  readonly id: RowId;
+export interface PlanItemUpdateDto extends IdDto<RowId> {
   readonly changes: {
     readonly title?: string | null;
     readonly type?: PlanItemType;
@@ -121,19 +115,14 @@ export interface PlanItemUpdateDto {
   };
 }
 
-export interface PlanItemRemoveDto {
-  readonly id: RowId;
+export interface PlanItemRemoveDto extends IdDto<RowId> {
   readonly delete_planned_items?: BooleanFlagInput;
 }
 
-export interface PlanItemRunDto {
-  readonly id: RowId;
-  readonly dry_run?: BooleanFlagInput;
+export interface PlanItemRunDto extends IdDto<RowId> {
 }
 
-export interface PlanItemDeletePlannedItemsDto {
-  readonly id: RowId;
-}
+export interface PlanItemDeletePlannedItemsDto extends IdDto<RowId> {}
 
 export interface PlanItemDeletePlannedItemsResponseDto {
   readonly plan_item_id: RowId;
@@ -219,7 +208,7 @@ export interface PlanItemRemoveResponseDto extends RemoveResponseDto {
 }
 
 export type PlanItemCreateResponse = PlanItemDto | PlanItemCreateAndRunResponseDto;
-export type PlanItemGetResponse = PlanItemDto | null;
+export type PlanItemGetResponse = NullableResponseDto<PlanItemDto>;
 export type PlanItemUpdateResponse = UpdateResponseDto<PlanItemDto>;
 export type PlanItemRemoveResponse = PlanItemRemoveResponseDto;
 export type PlanItemRunResponse = PlanItemRunResponseDto;

@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input, output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, ViewEncapsulation } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
+import { map, startWith } from 'rxjs';
 
-import { calendarMonths } from '@/shared/components/calendar/calendar.utils';
+import { getCalendarMonthLabels, resolveCalendarLocale } from '@/shared/components/calendar/calendar.utils';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import { calendarNavVariants } from './calendar.variants';
@@ -21,7 +24,7 @@ import { ZardSelectComponent } from '@/shared/components/select/select.component
         zSize="sm"
         (click)="onPreviousClick()"
         [disabled]="isPreviousDisabled()"
-        aria-label="Previous month"
+        [attr.aria-label]="previousMonthAriaLabel()"
         class="h-7 w-7 p-0"
       >
         <z-icon zType="chevron-left" />
@@ -31,7 +34,7 @@ import { ZardSelectComponent } from '@/shared/components/select/select.component
       <div class="flex items-center space-x-2">
         <!-- Month Select -->
         <z-select [zValue]="currentMonth()" [zLabel]="currentMonthName()" (zSelectionChange)="onMonthChange($event)">
-          @for (month of months; track month) {
+          @for (month of months(); track $index) {
             <z-select-item [zValue]="$index.toString()">{{ month }}</z-select-item>
           }
         </z-select>
@@ -51,7 +54,7 @@ import { ZardSelectComponent } from '@/shared/components/select/select.component
         zSize="sm"
         (click)="onNextClick()"
         [disabled]="isNextDisabled()"
-        aria-label="Next month"
+        [attr.aria-label]="nextMonthAriaLabel()"
         class="h-7 w-7 p-0"
       >
         <z-icon zType="chevron-right" />
@@ -63,6 +66,15 @@ import { ZardSelectComponent } from '@/shared/components/select/select.component
   exportAs: 'zCalendarNavigation',
 })
 export class ZardCalendarNavigationComponent {
+  private readonly translateService = inject(TranslateService);
+  private readonly currentLocale = toSignal(
+    this.translateService.onLangChange.pipe(
+      map((event) => event.lang),
+      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+    ),
+    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+  );
+
   // Inputs
   readonly currentMonth = input.required<string>();
   readonly currentYear = input.required<string>();
@@ -75,9 +87,15 @@ export class ZardCalendarNavigationComponent {
   readonly yearChange = output<string>();
   readonly previousMonth = output<void>();
   readonly nextMonth = output<void>();
-  readonly months = calendarMonths;
 
   protected readonly navClasses = computed(() => mergeClasses(calendarNavVariants()));
+  protected readonly months = computed(() => getCalendarMonthLabels(resolveCalendarLocale(this.currentLocale())));
+  protected readonly previousMonthAriaLabel = computed(() =>
+    this.translateService.instant('common.calendar.actions.previousMonth'),
+  );
+  protected readonly nextMonthAriaLabel = computed(() =>
+    this.translateService.instant('common.calendar.actions.nextMonth'),
+  );
 
   protected readonly availableYears = computed(() => {
     const minYear = this.minDate()?.getFullYear() ?? new Date().getFullYear() - 10;
@@ -91,10 +109,12 @@ export class ZardCalendarNavigationComponent {
 
   protected readonly currentMonthName = computed(() => {
     const selectedMonth = Number.parseInt(this.currentMonth());
-    if (!Number.isNaN(selectedMonth) && this.months[selectedMonth]) {
-      return this.months[selectedMonth];
+    const months = this.months();
+
+    if (!Number.isNaN(selectedMonth) && months[selectedMonth]) {
+      return months[selectedMonth];
     }
-    return this.months[new Date().getMonth()];
+    return months[new Date().getMonth()];
   });
 
   protected readonly isPreviousDisabled = computed(() => {

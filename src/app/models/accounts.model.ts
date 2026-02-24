@@ -1,32 +1,15 @@
 import type { AccountDisplayMode, AccountDto, AccountType } from '@/dtos';
-import {
-  APP_COLOR_KEY_SET,
-  APP_ICON_KEY_SET,
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
 
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
-import { toBooleanFlag, toSqliteBooleanFlag } from './common.model';
+import {
+  normalizeVisualColorKey,
+  normalizeVisualIconKey,
+  toBooleanFlag,
+  toSqliteBooleanFlag,
+} from './common.model';
 
 const DEFAULT_ACCOUNT_TYPE: AccountType = 'bank';
 const DEFAULT_ACCOUNT_DISPLAY_MODE: AccountDisplayMode = 'cashflow';
-
-function normalizeAccountColorKey(value: string | null): string {
-  if (value && APP_COLOR_KEY_SET.has(value)) {
-    return value;
-  }
-
-  return DEFAULT_VISUAL_COLOR_KEY;
-}
-
-function normalizeAccountIcon(value: string | null): string {
-  if (value && APP_ICON_KEY_SET.has(value)) {
-    return value;
-  }
-
-  return DEFAULT_VISUAL_ICON_KEY;
-}
 
 function normalizeAccountType(value: string): AccountType {
   if (
@@ -75,8 +58,8 @@ export class AccountModel {
       dto.name,
       normalizeAccountType(dto.type),
       dto.description,
-      normalizeAccountColorKey(dto.color_key),
-      normalizeAccountIcon(dto.icon),
+      normalizeVisualColorKey(dto.color_key),
+      normalizeVisualIconKey(dto.icon),
       toBooleanFlag(dto.locked),
       toBooleanFlag(dto.archived),
       dto.created_at,
