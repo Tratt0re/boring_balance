@@ -56,13 +56,14 @@ function getDaysInUtcMonth(year, monthIndex) {
 
 function buildMonthOrYearOccurrence(rule, candidateIndex) {
   const startDate = new Date(Number(rule.start_date));
-  const startYear = startDate.getUTCFullYear();
-  const startMonth = startDate.getUTCMonth();
-  const startDay = startDate.getUTCDate();
-  const startHour = startDate.getUTCHours();
-  const startMinute = startDate.getUTCMinutes();
-  const startSecond = startDate.getUTCSeconds();
-  const startMillisecond = startDate.getUTCMilliseconds();
+  // Use local calendar parts so a local "1st of month" doesn't anchor as the previous UTC month-end.
+  const startYear = startDate.getFullYear();
+  const startMonth = startDate.getMonth();
+  const startDay = startDate.getDate();
+  const startHour = startDate.getHours();
+  const startMinute = startDate.getMinutes();
+  const startSecond = startDate.getSeconds();
+  const startMillisecond = startDate.getMilliseconds();
 
   const frequency = rule.frequency ?? {};
   const interval = Number(frequency.interval);
@@ -87,7 +88,7 @@ function buildMonthOrYearOccurrence(rule, candidateIndex) {
     dayOfMonth = targetMonthDays;
   }
 
-  return Date.UTC(
+  return new Date(
     targetYear,
     targetMonth,
     dayOfMonth,
@@ -95,7 +96,7 @@ function buildMonthOrYearOccurrence(rule, candidateIndex) {
     startMinute,
     startSecond,
     startMillisecond,
-  );
+  ).getTime();
 }
 
 function generatePlanOccurrenceTimestamps(rule) {
