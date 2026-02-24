@@ -421,9 +421,15 @@ export class OverviewPage implements OnInit, OnDestroy, AfterViewInit {
     this.summaryCardsLoadError.set(null);
 
     try {
+      const { from, to } = toMonthRangeTimestamps(this.currentCalendarYear, this.currentCalendarMonthIndex);
       const [netWorthResponse, receivablesPayablesResponse, accounts] = await Promise.all([
         this.analyticsService.netWorthByAccount(),
-        this.analyticsService.receivablesPayables(),
+        this.analyticsService.receivablesPayables({
+          filters: {
+            from,
+            to,
+          },
+        }),
         this.accountsService.listAll().catch((error) => {
           console.warn('[overview-page] Failed to load account colors for net worth chart:', error);
           return [];

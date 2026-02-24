@@ -25,6 +25,14 @@ const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option
 const DEFAULT_CATEGORY_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'tag') as ZardIcon;
 const DEFAULT_CATEGORY_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
+function toCurrentMonthRangeTimestamps(referenceDate: Date = new Date()): { from: number; to: number } {
+  const year = referenceDate.getFullYear();
+  const monthIndex = referenceDate.getMonth();
+  const from = new Date(year, monthIndex, 1, 0, 0, 0, 0).getTime();
+  const to = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999).getTime();
+  return { from, to };
+}
+
 interface TransactionListCardRow {
   readonly id: number;
   readonly occurredAt: number;
@@ -181,8 +189,16 @@ export class AppTransactionListCardComponent implements OnInit {
 
     try {
       const safeLimit = this.normalizeLimit(this.limit());
+      const { from, to } = toCurrentMonthRangeTimestamps();
       const [transactions, accounts, categories] = await Promise.all([
-        this.transactionsService.listTransactions({ page: 1, page_size: safeLimit }),
+        this.transactionsService.listTransactions({
+          page: 1,
+          page_size: safeLimit,
+          filters: {
+            date_from: from,
+            date_to: to,
+          },
+        }),
         this.accountsService.listAll(),
         this.categoriesService.listAll(),
       ]);
