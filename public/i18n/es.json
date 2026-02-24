@@ -117,7 +117,12 @@
     "cards": {
       "netWorth": {
         "title": "Patrimonio neto total",
-        "descriptionDailyAverage": "Cambio medio diario (mes en curso): {{value}}/dia",
+        "descriptionDailyAverage": "Prom. patrimonio neto/dia (MTD): {{value}}/dia",
+        "tooltips": {
+          "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
+          "averageDailyChangeNegative": "Tu patrimonio neto total esta disminuyendo en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
+          "averageDailyChangeNeutral": "Tu patrimonio neto total no presenta cambios promedio por dia este mes (vs el cierre del mes anterior)."
+        },
         "total": "Total",
         "deltaVsPreviousMonth": "vs mes anterior",
         "receivables": "Por cobrar",

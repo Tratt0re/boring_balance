@@ -6,6 +6,7 @@ const {
   initSchema,
   isFirstStart,
   markFirstStartCompleted,
+  runMigrations,
 } = require('./database');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
@@ -22,11 +23,17 @@ app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME))
 app.whenReady()
   .then(() => {
     const database = createDatabase();
+    const firstStart = isFirstStart();
 
-    if (!isFirstStart()) {
+    if (!firstStart) {
       console.log('[electron] Schema initialization skipped - app already initialized');
     } else {
       initSchema(database);
+    }
+
+    runMigrations(database);
+
+    if (firstStart) {
       markFirstStartCompleted();
     }
 

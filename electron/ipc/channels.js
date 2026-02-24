@@ -29,6 +29,15 @@ const CHANNELS = Object.freeze({
     incomesByCategoryByMonth: 'db:analytics:incomes-by-category-by-month',
     moneyFlowSankeyByMonth: 'db:analytics:money-flow-sankey-by-month',
   }),
+  planItems: Object.freeze({
+    create: 'db:plan-items:create',
+    get: 'db:plan-items:get',
+    list: 'db:plan-items:list',
+    update: 'db:plan-items:update',
+    remove: 'db:plan-items:remove',
+    run: 'db:plan-items:run',
+    deletePlannedItems: 'db:plan-items:delete-planned-items',
+  }),
   transactions: Object.freeze({
     create: 'db:transactions:create',
     createTransfer: 'db:transactions:create-transfer',

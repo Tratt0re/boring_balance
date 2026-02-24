@@ -3,6 +3,7 @@ const {
   accountsController,
   categoriesController,
   analyticsController,
+  planItemsController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -34,6 +35,14 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.analytics.expensesByCategoryByMonth]: analyticsController.expensesByCategoryByMonth,
   [CHANNELS.analytics.incomesByCategoryByMonth]: analyticsController.incomesByCategoryByMonth,
   [CHANNELS.analytics.moneyFlowSankeyByMonth]: analyticsController.moneyFlowSankeyByMonth,
+
+  [CHANNELS.planItems.create]: planItemsController.create,
+  [CHANNELS.planItems.get]: planItemsController.get,
+  [CHANNELS.planItems.list]: planItemsController.list,
+  [CHANNELS.planItems.update]: planItemsController.update,
+  [CHANNELS.planItems.remove]: planItemsController.remove,
+  [CHANNELS.planItems.run]: planItemsController.run,
+  [CHANNELS.planItems.deletePlannedItems]: planItemsController.deletePlannedItems,
 
   [CHANNELS.transactions.create]: transactionsController.create,
   [CHANNELS.transactions.createTransfer]: transfersController.create,

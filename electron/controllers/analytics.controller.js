@@ -3,9 +3,9 @@ const {
   assertAllowedKeys,
   ensurePlainObject,
   normalizeOptionalBooleanFlag,
-  normalizePositiveInteger,
+  normalizeOptionalEnumArray,
+  normalizeOptionalIdArray,
   normalizeUnixTimestampMilliseconds,
-  requireString,
   pickDefined,
 } = require('./utils');
 
@@ -22,43 +22,6 @@ const FILTER_FIELDS = new Set([
 ]);
 const ALLOWED_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings', 'brokerage', 'crypto', 'credit']);
 const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
-
-function normalizeOptionalIdArray(value, label) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (!Array.isArray(value)) {
-    throw new Error(`${label} must be an array.`);
-  }
-
-  return Array.from(
-    new Set(value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`))),
-  );
-}
-
-function normalizeOptionalEnumArray(value, label, allowedValues) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (!Array.isArray(value)) {
-    throw new Error(`${label} must be an array.`);
-  }
-
-  const normalizedEntries = value.map((entry, index) => {
-    const normalizedValue = requireString(entry, `${label}[${index}]`, { allowEmpty: false });
-    if (!allowedValues.has(normalizedValue)) {
-      throw new Error(
-        `${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`,
-      );
-    }
-
-    return normalizedValue;
-  });
-
-  return Array.from(new Set(normalizedEntries));
-}
 
 function normalizeDateRangeValue(filters, shortKey, legacyKey, labelPrefix) {
   const shortValue = filters[shortKey];
@@ -102,13 +65,13 @@ function normalizePayloadFilters(payload) {
   return pickDefined({
     date_from: dateFrom,
     date_to: dateTo,
-    account_ids: normalizeOptionalIdArray(filtersInput.account_ids, `${filtersLabel}.account_ids`),
+    account_ids: normalizeOptionalIdArray(filtersInput.account_ids, `${filtersLabel}.account_ids`, { dedupe: true }),
     account_types: normalizeOptionalEnumArray(
       filtersInput.account_types,
       `${filtersLabel}.account_types`,
       ALLOWED_ACCOUNT_TYPES,
     ),
-    category_ids: normalizeOptionalIdArray(filtersInput.category_ids, `${filtersLabel}.category_ids`),
+    category_ids: normalizeOptionalIdArray(filtersInput.category_ids, `${filtersLabel}.category_ids`, { dedupe: true }),
     category_types: normalizeOptionalEnumArray(
       filtersInput.category_types,
       `${filtersLabel}.category_types`,

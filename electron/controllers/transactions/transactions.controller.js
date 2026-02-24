@@ -6,9 +6,14 @@ const {
   ensurePlainObject,
   extractId,
   normalizeAmountToCents,
+  normalizeFiltersListPayload,
+  normalizeInternalPlanItemId,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
+  normalizeOptionalAmountFilterToCents,
   normalizeOptionalBooleanFlag,
+  normalizeOptionalEnumArray,
+  normalizeOptionalIdArray,
   normalizeOptionalString,
   normalizePositiveInteger,
   pickDefined,
@@ -105,79 +110,14 @@ function normalizeTransactionChanges(value, label, options = {}) {
   return changes;
 }
 
-function normalizeOptionalIdArray(value, label) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (!Array.isArray(value)) {
-    throw new Error(`${label} must be an array.`);
-  }
-
-  return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
-}
-
-function normalizeOptionalEnumArray(value, label, allowedValues) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (!Array.isArray(value)) {
-    throw new Error(`${label} must be an array.`);
-  }
-
-  const normalizedEntries = value.map((entry, index) => {
-    const normalizedValue = requireString(entry, `${label}[${index}]`, { allowEmpty: false });
-    if (!allowedValues.has(normalizedValue)) {
-      throw new Error(`${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`);
-    }
-
-    return normalizedValue;
-  });
-
-  return Array.from(new Set(normalizedEntries));
-}
-
-function normalizeOptionalAmountFilterToCents(value, label) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  let normalizedValue = value;
-  if (typeof normalizedValue === 'string') {
-    const trimmedValue = normalizedValue.trim();
-    if (trimmedValue.length === 0) {
-      throw new Error(`${label} cannot be empty.`);
-    }
-
-    normalizedValue = Number(trimmedValue);
-  }
-
-  return Math.abs(normalizeAmountToCents(normalizedValue, label));
-}
-
 function normalizeListFilters(payload) {
-  if (payload === undefined || payload === null) {
-    return {
-      filters: {},
-      pagination: {
-        page: DEFAULT_PAGE,
-        page_size: DEFAULT_PAGE_SIZE,
-      },
-    };
-  }
-
-  const body = ensurePlainObject(payload, 'payload');
-  assertAllowedKeys(body, LIST_PAYLOAD_FIELDS, 'payload');
-  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
-  assertAllowedKeys(filters, LIST_FILTER_FIELDS, 'payload.filters');
-
-  const page = body.page === undefined ? DEFAULT_PAGE : normalizePositiveInteger(body.page, 'payload.page');
-  const pageSize =
-    body.page_size === undefined ? DEFAULT_PAGE_SIZE : normalizePositiveInteger(body.page_size, 'payload.page_size');
-  if (pageSize > MAX_PAGE_SIZE) {
-    throw new Error(`payload.page_size cannot be greater than ${MAX_PAGE_SIZE}.`);
-  }
+  const { filters, pagination } = normalizeFiltersListPayload(payload, {
+    allowedPayloadFields: LIST_PAYLOAD_FIELDS,
+    allowedFilterFields: LIST_FILTER_FIELDS,
+    defaultPage: DEFAULT_PAGE,
+    defaultPageSize: DEFAULT_PAGE_SIZE,
+    maxPageSize: MAX_PAGE_SIZE,
+  });
 
   return {
     filters: (() => {
@@ -204,17 +144,16 @@ function normalizeListFilters(payload) {
 
       return normalizedFilters;
     })(),
-    pagination: {
-      page,
-      page_size: pageSize,
-    },
+    pagination,
   };
 }
 
-function create(payload) {
+function create(payload, options = {}) {
+  const planItemId = normalizeInternalPlanItemId(options);
   const row = {
     ...normalizeTransactionChanges(payload, 'payload'),
     created_at: nowUnixTimestampMilliseconds(),
+    ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
   };
   const insertedId = transactionsModel.create(row);
 
@@ -231,14 +170,16 @@ function list(payload) {
   return transactionsModel.list(filters, pagination);
 }
 
-function update(payload) {
+function update(payload, options = {}) {
   const body = ensurePlainObject(payload, 'payload');
   const id = extractId({ id: body.id });
   const changes = normalizeTransactionChanges(body.changes, 'changes', { partial: true });
+  const planItemId = normalizeInternalPlanItemId(options);
 
   const changed = transactionsModel.updateById(id, {
     ...changes,
     updated_at: nowUnixTimestampMilliseconds(),
+    ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
   });
 
   return {

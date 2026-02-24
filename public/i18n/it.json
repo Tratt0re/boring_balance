@@ -117,7 +117,12 @@
     "cards": {
       "netWorth": {
         "title": "Patrimonio netto totale",
-        "descriptionDailyAverage": "Variazione media giornaliera (mese corrente): {{value}}/giorno",
+        "descriptionDailyAverage": "Media patrimonio netto/giorno (MTD): {{value}}/giorno",
+        "tooltips": {
+          "averageDailyChangePositive": "Il tuo patrimonio netto totale sta aumentando in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
+          "averageDailyChangeNegative": "Il tuo patrimonio netto totale sta diminuendo in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
+          "averageDailyChangeNeutral": "Il tuo patrimonio netto totale non varia in media al giorno questo mese (rispetto alla fine del mese scorso)."
+        },
         "total": "Totale",
         "deltaVsPreviousMonth": "vs mese precedente",
         "receivables": "Crediti",

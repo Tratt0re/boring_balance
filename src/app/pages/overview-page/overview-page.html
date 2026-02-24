@@ -1,10 +1,27 @@
+<ng-template #netWorthDescription>
+  <span class="inline-flex items-center gap-1.5">
+    <span>
+      {{
+        'overview.cards.netWorth.descriptionDailyAverage'
+          | translate : { value: formatSignedCurrencyFromCents(totalNetWorthAverageDailyMonthToDateDeltaCents()) }
+      }}
+    </span>
+    <span
+      class="inline-flex cursor-help items-center"
+      tabindex="0"
+      [zTooltip]="netWorthAverageDailyChangeTooltipText()"
+      [attr.aria-label]="netWorthAverageDailyChangeTooltipText()"
+    >
+      <z-icon zType="info" class="size-3.5 opacity-70" />
+    </span>
+  </span>
+</ng-template>
+
 <section class="grid grid-cols-1 gap-5 lg:grid-cols-12">
   <app-base-card
     class="lg:col-span-5"
     [zTitle]="'overview.cards.netWorth.title' | translate"
-    [zDescription]="
-      'overview.cards.netWorth.descriptionDailyAverage' | translate : { value: formatSignedCurrencyFromCents(totalNetWorthAverageDailyMonthToDateDeltaCents()) }
-    "
+    [zDescription]="netWorthDescription"
   >
     @if (isSummaryCardsLoading()) {
       <div class="flex h-52 items-center justify-center">

@@ -1,13 +1,25 @@
 const { countRows, deleteRows, getDatabase, selectRows } = require('../../database');
 const { randomUUID } = require('node:crypto');
 const { createBaseModel } = require('../base-model');
+const { DEFAULT_PAGE, resolvePaginationWindow } = require('../pagination');
 const { TRANSFER_CATEGORY_ID } = require('./constants');
 const { EMPTY_TAGS_JSON, normalizeRowTags } = require('./tags');
 
 const transactionsBaseModel = createBaseModel('transactions');
 const transfersBaseModel = createBaseModel('transfers');
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
+
+function normalizeTransferRow(row) {
+  if (!row) {
+    return null;
+  }
+
+  const { plan_item_id: _ignoredPlanItemId, ...publicRow } = row;
+  return publicRow;
+}
+
+function normalizeTransferRows(rows) {
+  return rows.map((row) => normalizeTransferRow(row));
+}
 
 function buildFilteredTransferWhereClause(filters = {}) {
   const where = {};
@@ -115,47 +127,29 @@ function listFilteredTransferRows(database, filters = {}, pagination = {}) {
   });
 }
 
-function normalizePagination(pagination = {}) {
-  const page = Number.isInteger(pagination.page) && pagination.page > 0 ? pagination.page : DEFAULT_PAGE;
-  const pageSize =
-    Number.isInteger(pagination.page_size) && pagination.page_size > 0
-      ? pagination.page_size
-      : DEFAULT_PAGE_SIZE;
-
-  return {
-    page,
-    page_size: pageSize,
-  };
-}
-
 function list(filters = {}, pagination = {}) {
-  const normalizedPagination = normalizePagination(pagination);
   const database = getDatabase();
   const totalTransfers = countFilteredTransfers(database, filters);
-  const totalPages =
-    totalTransfers === 0
-      ? DEFAULT_PAGE
-      : Math.max(DEFAULT_PAGE, Math.ceil(totalTransfers / normalizedPagination.page_size));
-  const page = Math.min(normalizedPagination.page, totalPages);
+  const paginationWindow = resolvePaginationWindow(totalTransfers, pagination, { defaultPage: DEFAULT_PAGE });
   if (totalTransfers === 0) {
     return {
       rows: [],
       total: totalTransfers,
-      page,
-      page_size: normalizedPagination.page_size,
+      page: paginationWindow.page,
+      page_size: paginationWindow.page_size,
     };
   }
 
   const rows = listFilteredTransferRows(database, filters, {
-    page,
-    page_size: normalizedPagination.page_size,
+    page: paginationWindow.page,
+    page_size: paginationWindow.page_size,
   });
 
   return {
-    rows,
+    rows: normalizeTransferRows(rows),
     total: totalTransfers,
-    page,
-    page_size: normalizedPagination.page_size,
+    page: paginationWindow.page,
+    page_size: paginationWindow.page_size,
   };
 }
 
@@ -173,6 +167,7 @@ function create(payload) {
       description: transferPayload.description ?? null,
       settled,
       created_at: transferPayload.created_at,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
     };
     transfersBaseModel.create(transferRow);
 
@@ -186,6 +181,7 @@ function create(payload) {
       transfer_id: transferId,
       settled,
       created_at: transferPayload.created_at,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
     };
 
     const incomingTransferRow = {
@@ -198,11 +194,12 @@ function create(payload) {
       transfer_id: transferId,
       settled,
       created_at: transferPayload.created_at,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
     };
 
     const outgoingTransferId = Number(transactionsBaseModel.create(outgoingTransferRow));
     const incomingTransferId = Number(transactionsBaseModel.create(incomingTransferRow));
-    const createdTransfer = transfersBaseModel.getById(transferId);
+    const createdTransfer = normalizeTransferRow(transfersBaseModel.getById(transferId));
     const outgoingTransfer = normalizeRowTags(transactionsBaseModel.getById(outgoingTransferId));
     const incomingTransfer = normalizeRowTags(transactionsBaseModel.getById(incomingTransferId));
 
@@ -256,6 +253,7 @@ function update(payload) {
       amount_cents: Math.abs(transferPayload.amount_cents),
       description: transferPayload.description ?? null,
       settled,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     });
 
@@ -267,6 +265,7 @@ function update(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       settled,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     };
 
@@ -278,13 +277,14 @@ function update(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       settled,
+      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     };
 
     transactionsBaseModel.updateById(outgoingTransfer.id, outgoingChanges);
     transactionsBaseModel.updateById(incomingTransfer.id, incomingChanges);
 
-    const updatedTransfer = transfersBaseModel.getById(transferPayload.transfer_id);
+    const updatedTransfer = normalizeTransferRow(transfersBaseModel.getById(transferPayload.transfer_id));
     const updatedOutgoingTransfer = normalizeRowTags(
       transactionsBaseModel.getById(Number(outgoingTransfer.id)),
     );

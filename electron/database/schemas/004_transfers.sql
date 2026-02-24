@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS transfers (
 
   settled    INTEGER NOT NULL DEFAULT 1 CHECK (settled IN (0,1)),
 
+  plan_item_id  INTEGER, -- NULL for normal tx, will be valorized if created through a plan item
+
   FOREIGN KEY (from_account_id) REFERENCES accounts(id),
   FOREIGN KEY (to_account_id)   REFERENCES accounts(id),
 
@@ -20,3 +22,4 @@ CREATE INDEX IF NOT EXISTS idx_transfers_occurred_at ON transfers(occurred_at);
 CREATE INDEX IF NOT EXISTS idx_transfers_from_account_id ON transfers(from_account_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_to_account_id ON transfers(to_account_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_settled ON transfers(settled);
+CREATE INDEX IF NOT EXISTS idx_transfers_plan_item_id ON transfers(plan_item_id);

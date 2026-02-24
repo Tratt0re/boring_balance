@@ -20,6 +20,7 @@ import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
 const AMOUNT_CENTS_DIVISOR = 100;
@@ -212,6 +213,7 @@ interface NetWorthDistributionEntry {
     TranslatePipe,
     ZardIconComponent,
     ZardLoaderComponent,
+    ...ZardTooltipImports,
   ],
   templateUrl: './overview-page.html',
 })
@@ -587,6 +589,27 @@ export class OverviewPage implements OnInit, OnDestroy, AfterViewInit {
 
     const sign = normalizedAmountCents > 0 ? '+' : '-';
     return `${sign}${this.formatCurrencyFromCents(Math.abs(normalizedAmountCents))}`;
+  }
+
+  protected netWorthAverageDailyChangeTooltipText(): string {
+    const averageDailyDeltaCents = Number(this.totalNetWorthAverageDailyMonthToDateDeltaCents());
+    if (!Number.isFinite(averageDailyDeltaCents)) {
+      return this.translate('overview.cards.netWorth.tooltips.averageDailyChangeNeutral');
+    }
+
+    if (averageDailyDeltaCents > 0) {
+      return this.translate('overview.cards.netWorth.tooltips.averageDailyChangePositive', {
+        value: this.formatCurrencyFromCents(Math.abs(averageDailyDeltaCents)),
+      });
+    }
+
+    if (averageDailyDeltaCents < 0) {
+      return this.translate('overview.cards.netWorth.tooltips.averageDailyChangeNegative', {
+        value: this.formatCurrencyFromCents(Math.abs(averageDailyDeltaCents)),
+      });
+    }
+
+    return this.translate('overview.cards.netWorth.tooltips.averageDailyChangeNeutral');
   }
 
   protected moneyFlowSankeyMonthLabel(): string {

@@ -6,14 +6,14 @@ const {
   ensureNonEmptyObject,
   ensurePlainObject,
   extractId,
-  normalizeBooleanFlag,
   nowUnixTimestampMilliseconds,
   normalizeOptionalBooleanFlag,
-  normalizePositiveInteger,
   normalizeOptionalInteger,
   normalizeOptionalString,
+  normalizeWhereOptionsListPayload,
   pickDefined,
   requireString,
+  resolvePaginationWindow,
 } = require('./utils');
 
 const ALLOWED_TYPES = new Set(['income', 'expense', 'exclude']);
@@ -124,61 +124,13 @@ function get(payload) {
   return categoriesModel.getById(id);
 }
 
-function normalizeListPayload(payload) {
-  if (payload === undefined || payload === null) {
-    return {
-      where: {},
-      options: {},
-      pagination: {
-        page: DEFAULT_PAGE,
-        page_size: DEFAULT_PAGE_SIZE,
-      },
-      all: false,
-    };
-  }
-
-  const body = ensurePlainObject(payload, 'payload');
-  assertAllowedKeys(body, LIST_PAYLOAD_FIELDS, 'payload');
-
-  const where = body.where ?? {};
-  const options = body.options ?? {};
-  ensurePlainObject(where, 'payload.where');
-  ensurePlainObject(options, 'payload.options');
-
-  const all = body.all === undefined ? false : normalizeBooleanFlag(body.all, 'payload.all') === 1;
-  if (all) {
-    return {
-      where,
-      options,
-      pagination: {
-        page: DEFAULT_PAGE,
-        page_size: DEFAULT_PAGE_SIZE,
-      },
-      all: true,
-    };
-  }
-
-  const page = body.page === undefined ? DEFAULT_PAGE : normalizePositiveInteger(body.page, 'payload.page');
-  const pageSize =
-    body.page_size === undefined ? DEFAULT_PAGE_SIZE : normalizePositiveInteger(body.page_size, 'payload.page_size');
-
-  if (pageSize > MAX_PAGE_SIZE) {
-    throw new Error(`payload.page_size cannot be greater than ${MAX_PAGE_SIZE}.`);
-  }
-
-  return {
-    where,
-    options,
-    pagination: {
-      page,
-      page_size: pageSize,
-    },
-    all: false,
-  };
-}
-
 function list(payload) {
-  const { where, options, pagination, all } = normalizeListPayload(payload);
+  const { where, options, pagination, all } = normalizeWhereOptionsListPayload(payload, {
+    allowedPayloadFields: LIST_PAYLOAD_FIELDS,
+    defaultPage: DEFAULT_PAGE,
+    defaultPageSize: DEFAULT_PAGE_SIZE,
+    maxPageSize: MAX_PAGE_SIZE,
+  });
   const effectiveWhere = mergeSystemCategoryFilter(where);
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
   const total = categoriesModel.count(effectiveWhere);
@@ -195,10 +147,7 @@ function list(payload) {
     };
   }
 
-  const totalPages =
-    total === 0 ? DEFAULT_PAGE : Math.max(DEFAULT_PAGE, Math.ceil(total / pagination.page_size));
-  const page = Math.min(pagination.page, totalPages);
-  const offset = (page - 1) * pagination.page_size;
+  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
   const rows = categoriesModel.list(effectiveWhere, {
     ...listOptions,
     limit: pagination.page_size,

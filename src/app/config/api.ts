@@ -8,6 +8,7 @@ export enum APIChannel {
   ACCOUNTS = 'accounts',
   CATEGORIES = 'categories',
   ANALYTICS = 'analytics',
+  PLAN_ITEMS = 'planItems',
   TRANSACTIONS = 'transactions',
 }
 
@@ -55,6 +56,18 @@ export interface ElectronIpcClient {
     readonly moneyFlowSankeyByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsMoneyFlowSankeyByMonthResponse
+    >;
+  };
+  readonly planItems: {
+    readonly create: IpcRequest<DTO.PlanItemCreateDto, DTO.PlanItemCreateResponse>;
+    readonly get: IpcRequest<DTO.PlanItemGetDto, DTO.PlanItemGetResponse>;
+    readonly list: OptionalIpcRequest<DTO.PlanItemListDto, DTO.PlanItemListResponse>;
+    readonly update: IpcRequest<DTO.PlanItemUpdateDto, DTO.PlanItemUpdateResponse>;
+    readonly remove: IpcRequest<DTO.PlanItemRemoveDto, DTO.PlanItemRemoveResponse>;
+    readonly run: IpcRequest<DTO.PlanItemRunDto, DTO.PlanItemRunResponse>;
+    readonly deletePlannedItems: IpcRequest<
+      DTO.PlanItemDeletePlannedItemsDto,
+      DTO.PlanItemDeletePlannedItemsResponse
     >;
   };
   readonly transactions: {

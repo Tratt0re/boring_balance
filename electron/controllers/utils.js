@@ -196,6 +196,252 @@ function normalizeAmountToCents(value, label) {
 }
 
 /**
+ * Validates an optional array of positive integers.
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @param {{ dedupe?: boolean }} [options={}] - Optional behavior flags.
+ * @returns {number[]|undefined} Normalized ids array.
+ */
+function normalizeOptionalIdArray(value, label, options = {}) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error(`${label} must be an array.`);
+  }
+
+  const normalizedEntries = value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
+  return options.dedupe ? Array.from(new Set(normalizedEntries)) : normalizedEntries;
+}
+
+/**
+ * Validates an optional array of enum values.
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @param {Set<string>} allowedValues - Allowed values.
+ * @param {{ dedupe?: boolean }} [options={}] - Optional behavior flags.
+ * @returns {string[]|undefined} Normalized enum array.
+ */
+function normalizeOptionalEnumArray(value, label, allowedValues, options = {}) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error(`${label} must be an array.`);
+  }
+
+  const normalizedEntries = value.map((entry, index) => {
+    const normalizedValue = requireString(entry, `${label}[${index}]`, { allowEmpty: false });
+    if (!allowedValues.has(normalizedValue)) {
+      throw new Error(`${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`);
+    }
+
+    return normalizedValue;
+  });
+
+  return options.dedupe === false ? normalizedEntries : Array.from(new Set(normalizedEntries));
+}
+
+/**
+ * Normalizes an optional amount filter into absolute cents.
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @returns {number|undefined} Absolute amount in cents.
+ */
+function normalizeOptionalAmountFilterToCents(value, label) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  let normalizedValue = value;
+  if (typeof normalizedValue === 'string') {
+    const trimmedValue = normalizedValue.trim();
+    if (trimmedValue.length === 0) {
+      throw new Error(`${label} cannot be empty.`);
+    }
+
+    normalizedValue = Number(trimmedValue);
+  }
+
+  return Math.abs(normalizeAmountToCents(normalizedValue, label));
+}
+
+/**
+ * Reads an internal-only `plan_item_id` from an options object.
+ *
+ * @param {unknown} options - Internal options object.
+ * @returns {number|undefined} Positive integer plan item id.
+ */
+function normalizeInternalPlanItemId(options = {}) {
+  if (!options || typeof options !== 'object' || Array.isArray(options)) {
+    return undefined;
+  }
+
+  if (options.plan_item_id === undefined) {
+    return undefined;
+  }
+
+  return normalizePositiveInteger(options.plan_item_id, 'options.plan_item_id');
+}
+
+function normalizePaginationFromBody(body, options = {}) {
+  const defaultPage = options.defaultPage ?? 1;
+  const defaultPageSize = options.defaultPageSize ?? 10;
+  const maxPageSize = options.maxPageSize ?? 250;
+  const payloadLabel = options.payloadLabel ?? 'payload';
+
+  const page =
+    body.page === undefined ? defaultPage : normalizePositiveInteger(body.page, `${payloadLabel}.page`);
+  const pageSize =
+    body.page_size === undefined
+      ? defaultPageSize
+      : normalizePositiveInteger(body.page_size, `${payloadLabel}.page_size`);
+
+  if (pageSize > maxPageSize) {
+    throw new Error(`${payloadLabel}.page_size cannot be greater than ${maxPageSize}.`);
+  }
+
+  return {
+    page,
+    page_size: pageSize,
+  };
+}
+
+/**
+ * Parses a standard `{ where, options, page, page_size, all }` list payload.
+ *
+ * @param {unknown} payload - Incoming payload.
+ * @param {{
+ *   allowedPayloadFields: Set<string>,
+ *   defaultPage?: number,
+ *   defaultPageSize?: number,
+ *   maxPageSize?: number
+ * }} config - Parser config.
+ * @returns {{ where: Record<string, unknown>, options: Record<string, unknown>, pagination: { page: number, page_size: number }, all: boolean }}
+ */
+function normalizeWhereOptionsListPayload(payload, config) {
+  const defaultPage = config.defaultPage ?? 1;
+  const defaultPageSize = config.defaultPageSize ?? 10;
+
+  if (payload === undefined || payload === null) {
+    return {
+      where: {},
+      options: {},
+      pagination: {
+        page: defaultPage,
+        page_size: defaultPageSize,
+      },
+      all: false,
+    };
+  }
+
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, config.allowedPayloadFields, 'payload');
+
+  const where = body.where ?? {};
+  const options = body.options ?? {};
+  ensurePlainObject(where, 'payload.where');
+  ensurePlainObject(options, 'payload.options');
+
+  const all = body.all === undefined ? false : normalizeBooleanFlag(body.all, 'payload.all') === 1;
+  if (all) {
+    return {
+      where,
+      options,
+      pagination: {
+        page: defaultPage,
+        page_size: defaultPageSize,
+      },
+      all: true,
+    };
+  }
+
+  return {
+    where,
+    options,
+    pagination: normalizePaginationFromBody(body, {
+      defaultPage,
+      defaultPageSize,
+      maxPageSize: config.maxPageSize ?? 250,
+      payloadLabel: 'payload',
+    }),
+    all: false,
+  };
+}
+
+/**
+ * Parses a standard `{ filters, page, page_size }` list payload.
+ *
+ * @param {unknown} payload - Incoming payload.
+ * @param {{
+ *   allowedPayloadFields: Set<string>,
+ *   allowedFilterFields: Set<string>,
+ *   defaultPage?: number,
+ *   defaultPageSize?: number,
+ *   maxPageSize?: number
+ * }} config - Parser config.
+ * @returns {{ filters: Record<string, unknown>, pagination: { page: number, page_size: number } }}
+ */
+function normalizeFiltersListPayload(payload, config) {
+  const defaultPage = config.defaultPage ?? 1;
+  const defaultPageSize = config.defaultPageSize ?? 10;
+
+  if (payload === undefined || payload === null) {
+    return {
+      filters: {},
+      pagination: {
+        page: defaultPage,
+        page_size: defaultPageSize,
+      },
+    };
+  }
+
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, config.allowedPayloadFields, 'payload');
+  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
+  assertAllowedKeys(filters, config.allowedFilterFields, 'payload.filters');
+
+  return {
+    filters,
+    pagination: normalizePaginationFromBody(body, {
+      defaultPage,
+      defaultPageSize,
+      maxPageSize: config.maxPageSize ?? 250,
+      payloadLabel: 'payload',
+    }),
+  };
+}
+
+/**
+ * Resolves page and offset from a total count and requested pagination.
+ *
+ * @param {number} total - Total rows count.
+ * @param {{ page: number, page_size: number }} pagination - Pagination input.
+ * @param {{ defaultPage?: number }} [options={}] - Pagination defaults.
+ * @returns {{ page: number, page_size: number, offset: number, total_pages: number }}
+ */
+function resolvePaginationWindow(total, pagination, options = {}) {
+  const defaultPage = options.defaultPage ?? 1;
+  const pageSize = Number.isInteger(pagination?.page_size) && pagination.page_size > 0 ? pagination.page_size : 10;
+  const requestedPage =
+    Number.isInteger(pagination?.page) && pagination.page > 0 ? pagination.page : defaultPage;
+  const totalPages = total === 0 ? defaultPage : Math.max(defaultPage, Math.ceil(total / pageSize));
+  const page = Math.min(requestedPage, totalPages);
+
+  return {
+    page,
+    page_size: pageSize,
+    offset: (page - 1) * pageSize,
+    total_pages: totalPages,
+  };
+}
+
+/**
  * Extracts and validates an id from either a primitive or payload object.
  *
  * @param {number|string|Record<string, unknown>} payload - Primitive id or object containing id field.
@@ -344,13 +590,20 @@ module.exports = {
   extractString,
   normalizeAmountToCents,
   normalizeBooleanFlag,
+  normalizeFiltersListPayload,
+  normalizeInternalPlanItemId,
   normalizeInteger,
+  normalizeOptionalAmountFilterToCents,
   normalizeOptionalBooleanFlag,
+  normalizeOptionalEnumArray,
+  normalizeOptionalIdArray,
   normalizeOptionalInteger,
   normalizeOptionalString,
   normalizePositiveInteger,
+  normalizeWhereOptionsListPayload,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
   pickDefined,
+  resolvePaginationWindow,
   requireString,
 };

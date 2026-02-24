@@ -22,8 +22,10 @@ function normalizeRowTags(row) {
     return null;
   }
 
+  const { plan_item_id: _ignoredPlanItemId, ...publicRow } = row;
+
   return {
-    ...row,
+    ...publicRow,
     tags: decodeTags(row.tags),
   };
 }

@@ -117,7 +117,12 @@
     "cards": {
       "netWorth": {
         "title": "Total net worth",
-        "descriptionDailyAverage": "Average daily change (month to date): {{value}}/day",
+        "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
+        "tooltips": {
+          "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
+          "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
+          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month)."
+        },
         "total": "Total",
         "deltaVsPreviousMonth": "vs previous month",
         "receivables": "Receivables",

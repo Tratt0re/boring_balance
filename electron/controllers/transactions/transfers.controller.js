@@ -4,7 +4,11 @@ const {
   ensurePlainObject,
   extractString,
   normalizeAmountToCents,
+  normalizeFiltersListPayload,
+  normalizeInternalPlanItemId,
+  normalizeOptionalAmountFilterToCents,
   normalizeOptionalBooleanFlag,
+  normalizeOptionalIdArray,
   normalizeOptionalString,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
@@ -29,58 +33,14 @@ const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
 const DESCRIPTION_MAX_LENGTH = 75;
 
-function normalizeOptionalIdArray(value, label) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (!Array.isArray(value)) {
-    throw new Error(`${label} must be an array.`);
-  }
-
-  return value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
-}
-
-function normalizeOptionalAmountFilterToCents(value, label) {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  let normalizedValue = value;
-  if (typeof normalizedValue === 'string') {
-    const trimmedValue = normalizedValue.trim();
-    if (trimmedValue.length === 0) {
-      throw new Error(`${label} cannot be empty.`);
-    }
-
-    normalizedValue = Number(trimmedValue);
-  }
-
-  return Math.abs(normalizeAmountToCents(normalizedValue, label));
-}
-
 function normalizeListFilters(payload) {
-  if (payload === undefined || payload === null) {
-    return {
-      filters: {},
-      pagination: {
-        page: DEFAULT_PAGE,
-        page_size: DEFAULT_PAGE_SIZE,
-      },
-    };
-  }
-
-  const body = ensurePlainObject(payload, 'payload');
-  assertAllowedKeys(body, LIST_PAYLOAD_FIELDS, 'payload');
-  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
-  assertAllowedKeys(filters, LIST_FILTER_FIELDS, 'payload.filters');
-
-  const page = body.page === undefined ? DEFAULT_PAGE : normalizePositiveInteger(body.page, 'payload.page');
-  const pageSize =
-    body.page_size === undefined ? DEFAULT_PAGE_SIZE : normalizePositiveInteger(body.page_size, 'payload.page_size');
-  if (pageSize > MAX_PAGE_SIZE) {
-    throw new Error(`payload.page_size cannot be greater than ${MAX_PAGE_SIZE}.`);
-  }
+  const { filters, pagination } = normalizeFiltersListPayload(payload, {
+    allowedPayloadFields: LIST_PAYLOAD_FIELDS,
+    allowedFilterFields: LIST_FILTER_FIELDS,
+    defaultPage: DEFAULT_PAGE,
+    defaultPageSize: DEFAULT_PAGE_SIZE,
+    maxPageSize: MAX_PAGE_SIZE,
+  });
 
   return {
     filters: pickDefined({
@@ -97,14 +57,11 @@ function normalizeListFilters(payload) {
       accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
       settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
     }),
-    pagination: {
-      page,
-      page_size: pageSize,
-    },
+    pagination,
   };
 }
 
-function normalizeCreatePayload(payload) {
+function normalizeCreatePayload(payload, options = {}) {
   const body = ensurePlainObject(payload, 'payload');
   assertAllowedKeys(body, CREATE_FIELDS, 'payload');
 
@@ -125,6 +82,8 @@ function normalizeCreatePayload(payload) {
     throw new Error('payload.from_account_id and payload.to_account_id must be different.');
   }
 
+  const planItemId = normalizeInternalPlanItemId(options);
+
   return {
     occurred_at: occurredAt,
     from_account_id: fromAccountId,
@@ -133,10 +92,11 @@ function normalizeCreatePayload(payload) {
     description: description ?? null,
     settled: settled ?? 1,
     created_at: nowUnixTimestampMilliseconds(),
+    ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
   };
 }
 
-function normalizeUpdatePayload(payload) {
+function normalizeUpdatePayload(payload, options = {}) {
   const body = ensurePlainObject(payload, 'payload');
   assertAllowedKeys(body, UPDATE_FIELDS, 'payload');
 
@@ -158,6 +118,8 @@ function normalizeUpdatePayload(payload) {
     throw new Error('payload.from_account_id and payload.to_account_id must be different.');
   }
 
+  const planItemId = normalizeInternalPlanItemId(options);
+
   return {
     transfer_id: transferId,
     occurred_at: occurredAt,
@@ -166,6 +128,7 @@ function normalizeUpdatePayload(payload) {
     amount_cents: amountCents,
     description: description ?? null,
     ...(settled === undefined ? {} : { settled }),
+    ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
     updated_at: nowUnixTimestampMilliseconds(),
   };
 }
@@ -175,13 +138,13 @@ function list(payload) {
   return transfersModel.list(filters, pagination);
 }
 
-function create(payload) {
-  const transferPayload = normalizeCreatePayload(payload);
+function create(payload, options = {}) {
+  const transferPayload = normalizeCreatePayload(payload, options);
   return transfersModel.create(transferPayload);
 }
 
-function update(payload) {
-  const transferPayload = normalizeUpdatePayload(payload);
+function update(payload, options = {}) {
+  const transferPayload = normalizeUpdatePayload(payload, options);
   return transfersModel.update(transferPayload);
 }
 
