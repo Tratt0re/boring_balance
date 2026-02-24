@@ -1,4 +1,4 @@
-const SMALL_SCREEN_BREAKPOINT_PX = 955;
+const SMALL_SCREEN_BREAKPOINT_PX = 1300;
 
 function isSmallScreenViewportWidth(width: number): boolean {
   return width < SMALL_SCREEN_BREAKPOINT_PX;
