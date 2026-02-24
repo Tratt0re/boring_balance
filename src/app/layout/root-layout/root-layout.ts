@@ -29,6 +29,7 @@ export class RootLayout {
   protected readonly showSidebarOverlay = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
   protected readonly toolbarTitle = this.toolbarContextService.title;
   protected readonly toolbarActions = this.toolbarContextService.actions;
+  protected readonly toolbarItems = this.toolbarContextService.items;
 
   constructor() {
     if (this.isSmallScreen()) {

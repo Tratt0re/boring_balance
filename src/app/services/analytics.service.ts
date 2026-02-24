@@ -42,4 +42,14 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
   moneyFlowSankeyByMonth(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsMoneyFlowSankeyByMonthResponse> {
     return this.ipcClient.moneyFlowSankeyByMonth(payload);
   }
+
+  async availableYears(payload?: DTO.AnalyticsFilterPayload): Promise<readonly number[]> {
+    const response = await this.ipcClient.availableYears(payload);
+    const years = Array.isArray(response?.years) ? response.years : [];
+
+    return years
+      .map((year) => Number(year))
+      .filter((year) => Number.isInteger(year))
+      .sort((left, right) => right - left);
+  }
 }

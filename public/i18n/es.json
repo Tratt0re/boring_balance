@@ -207,6 +207,44 @@
       }
     }
   },
+  "breakdown": {
+    "toolbar": {
+      "selectYear": "Seleccionar año"
+    },
+    "view": {
+      "all": "Todos"
+    },
+    "averageMode": {
+      "label": "Usar meses transcurridos para promedios",
+      "hint": "Por defecto los promedios se calculan sobre 12 meses. Si está activado, se usan solo de enero al mes actual (incluido) y solo los importes de esos meses."
+    },
+    "sectionYear": "Año {{year}}",
+    "moneyFlowOptions": {
+      "showAllocationTargets": {
+        "label": "Mostrar flujos de ahorros, inversión y cripto",
+        "hint": "Oculta estos destinos para enfocarte solo en ingresos y gastos."
+      }
+    },
+    "metrics": {
+      "yearTotal": "Total anual",
+      "avgPerMonth": "Prom./mes"
+    },
+    "cards": {
+      "moneyFlow": {
+        "titleYear": "Flujo de dinero del año: {{year}}",
+        "empty": "No hay datos de flujo de dinero disponibles para el año seleccionado."
+      },
+      "monthlyTrend": {
+        "title": "{{label}} por mes",
+        "description": "Total de {{label}} por mes"
+      },
+      "monthlyByCategory": {
+        "title": "{{label}} por categoría",
+        "description": "{{label}} mensuales divididos por categoría",
+        "summaryTitle": "Totales y promedios por categoría"
+      }
+    }
+  },
   "category": {
     "exclude": {
       "name": "Sin impacto",

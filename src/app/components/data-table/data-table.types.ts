@@ -3,6 +3,7 @@ import type { ZardButtonTypeVariants } from '@/shared/components/button';
 import type { ZardIcon } from '@/shared/components/icon';
 
 export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
+export type TableCellAlign = 'left' | 'center' | 'right';
 export type TableActionColumnPosition = 'start' | 'end';
 export type TableSortDirection = 'asc' | 'desc';
 export type EditableCellType = 'input' | 'checkbox' | 'select' | 'combobox' | 'switch' | 'date';
@@ -42,6 +43,7 @@ export interface ColumnDataItem extends TableDataStructureItem {
   readonly columnName: string;
   readonly columnKey: string;
   readonly type?: TableCellType;
+  readonly align?: TableCellAlign;
   readonly sortable?: boolean;
   readonly translate?: boolean;
   readonly currency?: TableCurrencyConfig;

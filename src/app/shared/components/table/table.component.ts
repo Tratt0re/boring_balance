@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 
@@ -30,6 +30,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 export class ZardTableComponent {
   readonly zType = input<ZardTableTypeVariants>('default');
   readonly zSize = input<ZardTableSizeVariants>('default');
+  readonly zRowDividers = input(true, { transform: booleanAttribute });
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
@@ -38,6 +39,7 @@ export class ZardTableComponent {
         zType: this.zType(),
         zSize: this.zSize(),
       }),
+      this.zRowDividers() ? '' : '[&_tbody_tr]:border-b-0 [&_tbody_tr:last-child]:border-b-0',
       this.class(),
     ),
   );
@@ -92,9 +94,16 @@ export class ZardTableBodyComponent {
   exportAs: 'zTableRow',
 })
 export class ZardTableRowComponent {
+  private readonly parentTable = inject(ZardTableComponent, { optional: true });
   readonly class = input<ClassValue>('');
 
-  protected readonly classes = computed(() => mergeClasses(tableRowVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(
+      tableRowVariants(),
+      this.parentTable?.zRowDividers() === false ? 'border-b-0' : '',
+      this.class(),
+    ),
+  );
 }
 
 @Component({

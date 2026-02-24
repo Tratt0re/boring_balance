@@ -326,6 +326,36 @@ function countRows(database, tableName, where = {}) {
 }
 
 /**
+ * Selects distinct calendar years extracted from a Unix timestamp (milliseconds) column.
+ *
+ * @param {import('better-sqlite3').Database} database - Open SQLite connection.
+ * @param {string} tableName - Source table name.
+ * @param {string} timestampColumn - Column storing Unix timestamp in milliseconds.
+ * @param {Record<string, unknown>} [where={}] - Column/value filters.
+ * @returns {number[]} Distinct years sorted in descending order.
+ */
+function selectDistinctYearsFromUnixTimestampColumn(database, tableName, timestampColumn, where = {}) {
+  ensureObject(where, 'where');
+  assertIdentifier(tableName, 'table name');
+  assertIdentifier(timestampColumn, 'timestamp column');
+
+  const quotedTableName = quoteIdentifier(tableName);
+  const quotedTimestampColumn = quoteIdentifier(timestampColumn);
+  const { clause, params } = buildWhereClause(where);
+  const whereSql = clause.length > 0
+    ? `${clause} AND ${quotedTimestampColumn} IS NOT NULL`
+    : ` WHERE ${quotedTimestampColumn} IS NOT NULL`;
+  const sql = `SELECT DISTINCT CAST(strftime('%Y', ${quotedTimestampColumn} / 1000, 'unixepoch') AS INTEGER) AS "year"`
+    + ` FROM ${quotedTableName}${whereSql}`
+    + ' ORDER BY "year" DESC';
+  const rows = database.prepare(sql).all(params);
+
+  return rows
+    .map((row) => Number(row?.year))
+    .filter((year) => Number.isInteger(year));
+}
+
+/**
  * Selects the first row that matches the given filter.
  *
  * @param {import('better-sqlite3').Database} database - Open SQLite connection.
@@ -386,6 +416,7 @@ module.exports = {
   countRows,
   deleteRows,
   insertRow,
+  selectDistinctYearsFromUnixTimestampColumn,
   selectOne,
   selectRows,
   updateRows,

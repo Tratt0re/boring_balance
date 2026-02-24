@@ -1,4 +1,4 @@
-const { getDatabase, selectRows } = require('../database');
+const { getDatabase, selectDistinctYearsFromUnixTimestampColumn, selectRows } = require('../database');
 const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 const { normalizeRowsTags } = require('./transactions/tags');
 
@@ -292,6 +292,15 @@ function expensesIncomesNetCashflowByMonth(filters = {}) {
     .sort((left, right) => left.month.localeCompare(right.month));
 
   return { rows: aggregatedRows };
+}
+
+function availableYears(filters = {}) {
+  const database = getDatabase();
+  const filterContext = resolveFilterContext(database, filters);
+  const where = buildTransactionsWhere(filters, filterContext, { excludeTransfers: true });
+  const years = selectDistinctYearsFromUnixTimestampColumn(database, 'transactions', 'occurred_at', where);
+
+  return { years };
 }
 
 function receivablesPayables(filters = {}) {
@@ -589,6 +598,7 @@ function moneyFlowSankeyByMonth(filters = {}) {
 }
 
 module.exports = {
+  availableYears,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,
   netWorthByAccount,

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
@@ -35,7 +35,7 @@ import {
 import { AccountsService } from '@/services/accounts.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { TransactionsService } from '@/services/transactions.service';
-import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
+import { ToolbarContextService, type ToolbarAction, type ToolbarItem } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -235,6 +235,8 @@ const createTransferTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransfersTableSectionComponent implements OnInit, OnDestroy {
+  readonly toolbarItems = input<readonly ToolbarItem[]>([]);
+
   protected readonly transfers = signal<readonly TransferModel[]>([]);
   protected readonly total = signal(0);
   protected readonly page = signal(1);
@@ -516,6 +518,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.transactions',
+      items: this.toolbarItems(),
       actions: [this.addTransferToolbarAction],
     });
   }

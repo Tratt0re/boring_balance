@@ -32,6 +32,10 @@ export interface AnalyticsMonthlySummaryResponseDto {
   readonly rows: readonly AnalyticsMonthlySummaryRowDto[];
 }
 
+export interface AnalyticsAvailableYearsResponseDto {
+  readonly years: readonly number[];
+}
+
 export interface AnalyticsReceivablesPayablesTotalsDto {
   readonly receivables_cents: number;
   readonly payables_cents: number;
@@ -93,6 +97,7 @@ export interface AnalyticsMoneyFlowSankeyByMonthResponseDto {
 }
 
 export type AnalyticsExpensesIncomesNetCashflowByMonthResponse = AnalyticsMonthlySummaryResponseDto;
+export type AnalyticsAvailableYearsResponse = AnalyticsAvailableYearsResponseDto;
 export type AnalyticsReceivablesPayablesResponse = AnalyticsReceivablesPayablesResponseDto;
 export type AnalyticsNetWorthByAccountResponse = AnalyticsNetWorthByAccountResponseDto;
 export type AnalyticsExpensesByCategoryByMonthResponse = AnalyticsCategoryByMonthResponseDto;

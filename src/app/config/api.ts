@@ -36,6 +36,7 @@ export interface ElectronIpcClient {
     readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
   };
   readonly analytics: {
+    readonly availableYears: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsAvailableYearsResponse>;
     readonly expensesIncomesNetCashflowByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsExpensesIncomesNetCashflowByMonthResponse

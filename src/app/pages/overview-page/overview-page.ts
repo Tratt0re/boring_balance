@@ -574,6 +574,10 @@ export class OverviewPage implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  protected currentCurrencyCode(): string {
+    return this.localPreferencesService.getCurrency().toUpperCase();
+  }
+
   protected formatPercent(value: number): string {
     const normalizedValue = Number.isFinite(value) ? Math.abs(value) : 0;
 

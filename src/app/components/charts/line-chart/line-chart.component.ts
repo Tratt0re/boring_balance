@@ -77,6 +77,7 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
   readonly stackGroup = input('total');
   readonly dimOthersOnFocus = input(false, { transform: booleanAttribute });
   readonly blurOpacity = input(0.2);
+  readonly valueAxisCurrencyCode = input<string | null>(null);
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -93,6 +94,10 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
     const normalizedDefaultPointOpacity = Math.min(Math.max(this.pointOpacity(), 0), 1);
     const normalizedDefaultAreaOpacity = Math.min(Math.max(this.areaOpacity(), 0), 1);
     const isStacked = this.stacked();
+    const normalizedCurrencyCode = this.normalizeCurrencyCode(this.valueAxisCurrencyCode());
+    const currencyFormatter = normalizedCurrencyCode
+      ? (value: unknown) => this.formatCurrencyValue(value, normalizedCurrencyCode)
+      : null;
 
     const lineSeries = this.series().map((seriesItem, index) => {
       const name = seriesItem.name;
@@ -206,8 +211,21 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
             borderWidth: 1,
             color: tooltipForeground,
             fontFamily,
+            ...(currencyFormatter
+              ? {
+                  formatter: (params: { axisDimension?: string; value?: unknown }) =>
+                    params?.axisDimension === 'y'
+                      ? currencyFormatter(params.value)
+                      : `${params?.value ?? ''}`,
+                }
+              : {}),
           },
         },
+        ...(currencyFormatter
+          ? {
+              valueFormatter: (value: unknown) => currencyFormatter(value),
+            }
+          : {}),
       },
       legend: {
         show: this.showLegend() && lineSeries.length > 0,
@@ -240,6 +258,11 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
         axisLabel: {
           color: foreground,
           fontFamily,
+          ...(currencyFormatter
+            ? {
+                formatter: (value: number | string) => currencyFormatter(value),
+              }
+            : {}),
         },
         splitLine: { lineStyle: { color: border } },
       },
@@ -256,5 +279,31 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.themeObserver?.disconnect();
     this.themeObserver = null;
+  }
+
+  private normalizeCurrencyCode(value: string | null | undefined): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalizedValue = value.trim().toUpperCase();
+    return normalizedValue.length > 0 ? normalizedValue : null;
+  }
+
+  private formatCurrencyValue(value: unknown, currencyCode: string): string {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+      return `${value ?? ''}`;
+    }
+
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode,
+        maximumFractionDigits: 2,
+      }).format(numericValue);
+    } catch {
+      return `${numericValue.toFixed(2)} ${currencyCode}`;
+    }
   }
 }

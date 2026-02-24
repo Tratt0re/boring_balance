@@ -86,6 +86,11 @@ function expensesIncomesNetCashflowByMonth(payload) {
   return analyticsModel.expensesIncomesNetCashflowByMonth(filters);
 }
 
+function availableYears(payload) {
+  const filters = normalizePayloadFilters(payload);
+  return analyticsModel.availableYears(filters);
+}
+
 function receivablesPayables(payload) {
   const filters = normalizePayloadFilters(payload);
   return analyticsModel.receivablesPayables(filters);
@@ -112,6 +117,7 @@ function moneyFlowSankeyByMonth(payload) {
 }
 
 module.exports = {
+  availableYears,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,
   netWorthByAccount,

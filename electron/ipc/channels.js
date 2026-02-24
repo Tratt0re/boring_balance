@@ -22,6 +22,7 @@ const CHANNELS = Object.freeze({
     remove: 'db:categories:remove',
   }),
   analytics: Object.freeze({
+    availableYears: 'db:analytics:available-years',
     expensesIncomesNetCashflowByMonth: 'db:analytics:expenses-incomes-net-cashflow-by-month',
     receivablesPayables: 'db:analytics:receivables-payables',
     netWorthByAccount: 'db:analytics:net-worth-by-account',

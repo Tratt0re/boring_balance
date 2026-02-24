@@ -1,0 +1,49 @@
+<section class="flex min-h-0 flex-1 flex-col space-y-4">
+  <div>
+    <h2 class="text-xl font-semibold tracking-tight">
+      {{ 'overview.cards.moneyFlowSankey.title' | translate }}
+    </h2>
+  </div>
+
+  <app-base-card
+    class="flex min-h-0 flex-1 flex-col"
+    [zBodyFill]="true"
+    [zTitle]="'breakdown.cards.moneyFlow.titleYear' | translate : { year: year() }"
+  >
+    @if (isLoading()) {
+      <div class="mt-2 flex h-64 items-center justify-center">
+        <div class="flex flex-col items-center gap-3 text-muted-foreground">
+          <z-loader zSize="lg" />
+          <p class="text-sm">{{ 'overview.cards.moneyFlowSankey.loading' | translate }}</p>
+        </div>
+      </div>
+    } @else if (loadError(); as loadErrorMessage) {
+      <div class="mt-2 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+        {{ 'overview.cards.moneyFlowSankey.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+      </div>
+    } @else if (!hasData()) {
+      <div class="mt-2 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+        {{ 'breakdown.cards.moneyFlow.empty' | translate }}
+      </div>
+    } @else {
+      <div class="mt-2 min-h-[20rem] flex-1">
+        <app-sankey-chart
+          class="h-full"
+          [nodes]="sankeyNodes()"
+          [links]="sankeyLinks()"
+          [showLabels]="true"
+          [dimOthersOnFocus]="true"
+          [blurOpacity]="0.16"
+          [lineOpacity]="0.34"
+          [curveness]="0.42"
+          [nodeWidth]="12"
+          [nodeGap]="8"
+          [layoutIterations]="48"
+          [height]="sankeyChartHeight()"
+          [tooltipCurrencyCode]="currentCurrencyCode()"
+          [tooltipShowPercent]="true"
+        ></app-sankey-chart>
+      </div>
+    }
+  </app-base-card>
+</section>

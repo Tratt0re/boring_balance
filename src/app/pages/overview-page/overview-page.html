@@ -130,6 +130,7 @@
         [axisPointerType]="'shadow'"
         [orientation]="'vertical'"
         [cornerRadius]="2.5"
+        [valueAxisCurrencyCode]="currentCurrencyCode()"
       ></app-bar-chart>
     }
   </app-base-card>
@@ -174,6 +175,8 @@
         [nodeGap]="8"
         [layoutIterations]="48"
         [height]="moneyFlowSankeyChartHeight()"
+        [tooltipCurrencyCode]="currentCurrencyCode()"
+        [tooltipShowPercent]="true"
       ></app-sankey-chart>
     }
   </app-base-card>

@@ -207,6 +207,44 @@
       }
     }
   },
+  "breakdown": {
+    "toolbar": {
+      "selectYear": "Select year"
+    },
+    "view": {
+      "all": "All"
+    },
+    "averageMode": {
+      "label": "Use elapsed months for averages",
+      "hint": "Default averages are calculated over 12 months. When enabled, averages use only January through the current month (included), and only amounts from those months."
+    },
+    "sectionYear": "Year {{year}}",
+    "moneyFlowOptions": {
+      "showAllocationTargets": {
+        "label": "Show savings, brokerage and crypto flows",
+        "hint": "Hide these targets to focus only on incomes and expenses."
+      }
+    },
+    "metrics": {
+      "yearTotal": "Year total",
+      "avgPerMonth": "Avg/month"
+    },
+    "cards": {
+      "moneyFlow": {
+        "titleYear": "Money flow of the year: {{year}}",
+        "empty": "No money flow data available for the selected year."
+      },
+      "monthlyTrend": {
+        "title": "{{label}} by month",
+        "description": "Total {{label}} by month"
+      },
+      "monthlyByCategory": {
+        "title": "{{label}} by category",
+        "description": "Monthly {{label}} split by category",
+        "summaryTitle": "Category totals and averages"
+      }
+    }
+  },
   "category": {
     "exclude": {
       "name": "Exclude",

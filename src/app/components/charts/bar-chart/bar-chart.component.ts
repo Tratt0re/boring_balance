@@ -33,6 +33,7 @@ export interface AppBarChartSeries {
   readonly themeColor?: AppChartThemeColor;
   readonly color?: string;
   readonly tooltipValueText?: string;
+  readonly tooltipValueTextByIndex?: readonly string[];
   readonly tooltipDetails?: readonly string[];
   readonly tooltipDetailsOnly?: boolean;
   readonly tooltipHideValue?: boolean;
@@ -64,6 +65,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   readonly blurOpacity = input(0.2);
   readonly axisPointerType = input<AppBarChartAxisPointerType>('shadow');
   readonly valueAxisPercent = input(false, { transform: booleanAttribute });
+  readonly valueAxisCurrencyCode = input<string | null>(null);
   readonly tooltipTrigger = input<AppBarChartTooltipTrigger>('axis');
 
   protected readonly options = computed<EChartsCoreOption>(() => {
@@ -78,9 +80,15 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const normalizedDefaultCornerRadius = Math.max(0, this.cornerRadius());
     const usePercentValueAxis = this.valueAxisPercent();
+    const normalizedCurrencyCode = this.normalizeCurrencyCode(this.valueAxisCurrencyCode());
+    const currencyFormatter = normalizedCurrencyCode
+      ? (value: unknown) => this.formatCurrencyValue(value, normalizedCurrencyCode)
+      : null;
     const tooltipTrigger = this.tooltipTrigger();
     const valueAxisLabelFormatter = usePercentValueAxis
       ? (value: number | string) => `${Number.isFinite(Number(value)) ? Number(value) : value}%`
+      : currencyFormatter
+        ? (value: number | string) => currencyFormatter(value)
       : undefined;
     const axisPointerType = this.axisPointerType();
     const axisPointer =
@@ -97,6 +105,14 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
               borderWidth: 1,
               color: tooltipForeground,
               fontFamily,
+              ...(!usePercentValueAxis && currencyFormatter
+                ? {
+                    formatter: (params: { axisDimension?: string; value?: unknown }) =>
+                      params?.axisDimension === 'x' || params?.axisDimension === 'y'
+                        ? currencyFormatter(params?.value)
+                        : `${params?.value ?? ''}`,
+                  }
+                : {}),
             },
           }
         : {
@@ -107,6 +123,14 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
               borderWidth: 1,
               color: tooltipForeground,
               fontFamily,
+              ...(!usePercentValueAxis && currencyFormatter
+                ? {
+                    formatter: (params: { axisDimension?: string; value?: unknown }) =>
+                      params?.axisDimension === 'x' || params?.axisDimension === 'y'
+                        ? currencyFormatter(params?.value)
+                        : `${params?.value ?? ''}`,
+                  }
+                : {}),
             },
           };
 
@@ -171,9 +195,14 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
           fontFamily,
         },
         ...(tooltipTrigger === 'axis' ? { axisPointer } : {}),
+        ...(!usePercentValueAxis && currencyFormatter
+          ? {
+              valueFormatter: (value: unknown) => currencyFormatter(value),
+            }
+          : {}),
         ...(tooltipTrigger === 'item'
           ? {
-              formatter: (params: unknown) => this.formatItemTooltip(params, usePercentValueAxis),
+              formatter: (params: unknown) => this.formatItemTooltip(params, usePercentValueAxis, currencyFormatter),
             }
           : {}),
       },
@@ -246,15 +275,23 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     this.themeObserver = null;
   }
 
-  private formatItemTooltip(params: unknown, usePercentValueAxis: boolean): string {
+  private formatItemTooltip(
+    params: unknown,
+    usePercentValueAxis: boolean,
+    currencyFormatter: ((value: unknown) => string) | null,
+  ): string {
     const tooltipParams = params as {
       seriesIndex?: number;
+      dataIndex?: number;
       seriesName?: string;
+      marker?: string;
       value?: number | string | readonly unknown[];
     };
     const seriesIndex = Number.isInteger(tooltipParams?.seriesIndex) ? Number(tooltipParams.seriesIndex) : -1;
+    const dataIndex = Number.isInteger(tooltipParams?.dataIndex) ? Number(tooltipParams.dataIndex) : -1;
     const series = this.series()[seriesIndex];
     const seriesName = typeof series?.name === 'string' ? series.name : (tooltipParams?.seriesName ?? '').toString();
+    const marker = typeof tooltipParams?.marker === 'string' ? tooltipParams.marker : '';
     const rawValueCandidate = Array.isArray(tooltipParams?.value) ? tooltipParams.value[0] : tooltipParams?.value;
     const rawValue =
       rawValueCandidate && typeof rawValueCandidate === 'object' && 'value' in rawValueCandidate
@@ -279,12 +316,20 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       return formatLabelValue(detailLabel, detailValue);
     };
     const shouldHideValue = series?.tooltipHideValue === true;
+    const indexedTooltipValueText =
+      dataIndex >= 0 && Array.isArray(series?.tooltipValueTextByIndex)
+        ? (series.tooltipValueTextByIndex[dataIndex] ?? null)
+        : null;
     const valueText = shouldHideValue
       ? null
-      : typeof series?.tooltipValueText === 'string' && series.tooltipValueText.trim().length > 0
+      : typeof indexedTooltipValueText === 'string' && indexedTooltipValueText.trim().length > 0
+        ? indexedTooltipValueText
+        : typeof series?.tooltipValueText === 'string' && series.tooltipValueText.trim().length > 0
         ? series.tooltipValueText
         : Number.isFinite(numericValue)
-          ? String(numericValue)
+          ? currencyFormatter
+            ? currencyFormatter(numericValue)
+            : String(numericValue)
           : null;
     const details = (series?.tooltipDetails ?? [])
       .map((line) => formatDetailLine(line))
@@ -308,7 +353,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       }
 
       if (baseLine.length > 0) {
-        lines.push(baseLine);
+        lines.push(marker.length > 0 ? `${marker} ${baseLine}` : baseLine);
       }
     }
     lines.push(...details);
@@ -323,5 +368,31 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#39;');
+  }
+
+  private normalizeCurrencyCode(value: string | null | undefined): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalizedValue = value.trim().toUpperCase();
+    return normalizedValue.length > 0 ? normalizedValue : null;
+  }
+
+  private formatCurrencyValue(value: unknown, currencyCode: string): string {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+      return `${value ?? ''}`;
+    }
+
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode,
+        maximumFractionDigits: 2,
+      }).format(numericValue);
+    } catch {
+      return `${numericValue.toFixed(2)} ${currencyCode}`;
+    }
   }
 }

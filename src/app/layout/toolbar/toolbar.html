@@ -8,7 +8,36 @@
     }
   </div>
 
-  <div class="flex items-center gap-2">
+  <div class="flex flex-wrap items-center justify-end gap-2">
+    @for (item of nonSegmentedItems(); track item.id) {
+      @if (isSelectItem(item)) {
+        <div class="inline-flex items-center gap-2">
+          @if (item.label) {
+            <span class="whitespace-nowrap text-xs font-medium text-muted-foreground">
+              {{ item.label | translate }}
+            </span>
+          }
+          <z-select
+            [class]="item.class ?? 'w-24'"
+            [zValue]="resolveSelectItemValue(item)"
+            [zSize]="item.size ?? 'sm'"
+            [zPlaceholder]="item.placeholder ?? ''"
+            [zDisabled]="isToolbarItemDisabled(item)"
+            [attr.title]="item.ariaLabel ?? null"
+            (zSelectionChange)="onSelectItemChange(item, $event)"
+          >
+            @for (option of item.options; track option.value) {
+              <z-select-item
+                [zValue]="option.value"
+                [zLabel]="option.label"
+                [zDisabled]="option.disabled ?? false"
+              />
+            }
+          </z-select>
+        </div>
+      }
+    }
+
     @for (action of actions(); track action.id) {
       <button
         z-button
@@ -24,6 +53,23 @@
         }
         <span>{{ action.label | translate }}</span>
       </button>
+    }
+
+    @for (item of segmentedItems(); track item.id) {
+      <z-segmented
+        [zDefaultValue]="item.defaultValue ?? ''"
+        [zSize]="item.size ?? 'sm'"
+        [zAriaLabel]="item.ariaLabel ?? 'Toolbar segmented control'"
+        (zChange)="onSegmentedItemChange(item, $event)"
+      >
+        @for (option of item.options; track option.value) {
+          <z-segmented-item
+            [value]="option.value"
+            [label]="option.label | translate"
+            [disabled]="option.disabled ?? false"
+          />
+        }
+      </z-segmented>
     }
   </div>
 </z-header>

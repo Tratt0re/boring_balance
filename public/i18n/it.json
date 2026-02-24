@@ -119,7 +119,7 @@
     "items": {
       "overview": "Panoramica",
       "transactions": "Movimenti",
-      "breakdown": "Distribuzione",
+      "breakdown": "Analisi",
       "compare": "Confronti",
       "budget": "Budget",
       "accounts": "Conti",
@@ -204,6 +204,44 @@
           "unused": "Non utilizzato",
           "otherExpenses": "Altre spese"
         }
+      }
+    }
+  },
+  "breakdown": {
+    "toolbar": {
+      "selectYear": "Seleziona anno"
+    },
+    "view": {
+      "all": "Tutte"
+    },
+    "averageMode": {
+      "label": "Usa i mesi trascorsi per le medie",
+      "hint": "Per impostazione predefinita le medie sono calcolate su 12 mesi. Se attivo, si usano solo i mesi da gennaio al mese corrente (incluso) e solo gli importi di quei mesi."
+    },
+    "sectionYear": "Anno {{year}}",
+    "moneyFlowOptions": {
+      "showAllocationTargets": {
+        "label": "Mostra flussi di risparmio, investimenti e cripto",
+        "hint": "Nascondi questi obiettivi per concentrarti solo su entrate e spese."
+      }
+    },
+    "metrics": {
+      "yearTotal": "Totale annuo",
+      "avgPerMonth": "Media/mese"
+    },
+    "cards": {
+      "moneyFlow": {
+        "titleYear": "Flusso di denaro dell'anno: {{year}}",
+        "empty": "Nessun dato di flusso di cassa disponibile per l'anno selezionato."
+      },
+      "monthlyTrend": {
+        "title": "{{label}} per mese",
+        "description": "Totale {{label}} per mese"
+      },
+      "monthlyByCategory": {
+        "title": "{{label}} per categoria",
+        "description": "{{label}} mensili suddivise per categoria",
+        "summaryTitle": "Totali e medie per categoria"
       }
     }
   },

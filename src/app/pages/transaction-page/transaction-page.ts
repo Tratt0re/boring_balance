@@ -1,7 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { Component, computed, signal } from '@angular/core';
 
-import { ZardSegmentedComponent, ZardSegmentedItemComponent } from '@/shared/components/segmented';
+import type { ToolbarItem } from '@/services/toolbar-context.service';
 import { TransfersTableSectionComponent } from './sections/transfers-table-section/transfers-table-section.component';
 import { TransactionsTableSectionComponent } from './sections/transactions-table-section/transactions-table-section.component';
 
@@ -10,9 +9,6 @@ type TransactionsPageView = 'common' | 'transfers';
 @Component({
   selector: 'app-transaction-page',
   imports: [
-    TranslatePipe,
-    ZardSegmentedComponent,
-    ZardSegmentedItemComponent,
     TransactionsTableSectionComponent,
     TransfersTableSectionComponent,
   ],
@@ -20,6 +16,20 @@ type TransactionsPageView = 'common' | 'transfers';
 })
 export class TransactionPage {
   protected readonly activeView = signal<TransactionsPageView>('common');
+  protected readonly toolbarItems = computed<readonly ToolbarItem[]>(() => [
+    {
+      id: 'transactions-page-view',
+      type: 'segmented',
+      ariaLabel: 'Transaction sections',
+      size: 'sm',
+      defaultValue: this.activeView(),
+      options: [
+        { value: 'common', label: 'transactions.view.commonTransactions' },
+        { value: 'transfers', label: 'transactions.view.transfers' },
+      ],
+      change: (value) => this.onViewChange(value),
+    },
+  ]);
 
   protected onViewChange(value: string): void {
     const nextView: TransactionsPageView = value === 'transfers' ? 'transfers' : 'common';

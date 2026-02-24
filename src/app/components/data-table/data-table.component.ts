@@ -27,7 +27,7 @@ import { ZardIconComponent, ZARD_ICONS, type ZardIcon } from '@/shared/component
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
-import { ZardTableImports } from '@/shared/components/table';
+import { ZardTableImports, type ZardTableTypeVariants } from '@/shared/components/table';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
@@ -42,6 +42,7 @@ import type {
   TableActiveFilterItem,
   TableHeaderActionItem,
   TableActionColumnPosition,
+  TableCellAlign,
   TableCellType,
   TableDataItem,
   TableCurrencyIconMode,
@@ -107,9 +108,9 @@ export class AppDataTableComponent {
 
   readonly minHeight = input<TableWidthValue | null>(null);
   readonly maxHeight = input<TableWidthValue | null>(null);
+  readonly appearance = input<ZardTableTypeVariants>('default');
+  readonly zRowDividers = input(true, { transform: booleanAttribute });
   readonly showEmpty = input(true, { transform: booleanAttribute });
-  readonly bordered = input(false, { transform: booleanAttribute });
-  readonly striped = input(false, { transform: booleanAttribute });
   readonly hoverable = input(true, { transform: booleanAttribute });
   readonly selectable = input(false, { transform: booleanAttribute });
   readonly stickyHeader = input(false, { transform: booleanAttribute });
@@ -235,7 +236,7 @@ export class AppDataTableComponent {
       'rounded-md bg-background',
       'min-h-[var(--app-data-table-min-h)] max-h-[var(--app-data-table-max-h)]',
       this.stickyHeader() ? 'overflow-visible' : 'overflow-x-auto',
-      this.bordered() ? 'ring-1 ring-border' : '',
+      this.appearance() === 'bordered' ? 'ring-1 ring-border' : '',
     ),
   );
 
@@ -245,7 +246,10 @@ export class AppDataTableComponent {
       this.hasColumnWidthConstraints() ? 'table-fixed' : 'table-auto',
       this.stickyHeader() ? 'border-separate border-spacing-0' : '',
       this.highContrastHeader() ? '[&_th]:text-high-contrast-table-header-foreground' : '',
-      this.striped() ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
+      this.appearance() === 'striped' ? '[&_tbody_tr:nth-child(odd)]:bg-muted/50' : '',
+      this.stickyHeader() && this.zRowDividers()
+        ? '[&_tbody_tr]:border-b-0 [&_tbody_tr_td]:border-b [&_tbody_tr_td]:border-border/60 [&_tbody_tr:last-child_td]:border-b-0'
+        : '',
       this.hoverable() ? '' : '[&_tbody_tr:hover]:!bg-transparent',
     ),
   );
@@ -263,14 +267,15 @@ export class AppDataTableComponent {
         ? 'border-b-border'
         : '',
   );
-  protected readonly sortableHeaderButtonClasses = computed(() =>
-    mergeClasses(
-      'h-auto px-0 py-0 text-left hover:bg-transparent',
+  protected sortableHeaderButtonClasses(column: TableColumn): ClassValue {
+    return mergeClasses(
+      'h-auto w-full px-0 py-0 hover:bg-transparent',
+      this.columnHeaderButtonAlignmentClasses(column),
       this.highContrastHeader()
         ? 'text-high-contrast-table-header-foreground hover:text-high-contrast-table-header-foreground'
         : 'hover:text-foreground',
-    ),
-  );
+    );
+  }
   protected readonly stickyHeaderCellClasses = computed(() =>
     mergeClasses(
       this.stickyHeader()
@@ -422,6 +427,14 @@ export class AppDataTableComponent {
 
   protected rowClassName(row: TableRow): ClassValue {
     return this.rowClass()?.(row) ?? '';
+  }
+
+  protected columnHeaderCellClasses(column: TableColumn): ClassValue {
+    return mergeClasses(this.stickyHeaderCellClasses(), this.columnAlignmentClasses(column));
+  }
+
+  protected columnBodyCellClasses(column: TableColumn): ClassValue {
+    return this.columnAlignmentClasses(column);
   }
 
   protected onToggleRowChange(checked: boolean, row: TableRow): void {
@@ -806,6 +819,30 @@ export class AppDataTableComponent {
     return this.hasActionColumnWidthConstraints() ? '' : 'w-24';
   }
 
+  private columnAlignmentClasses(column: TableColumn): string {
+    switch (this.normalizeColumnAlignment(column.align)) {
+      case 'right':
+        return 'text-right';
+      case 'center':
+        return 'text-center';
+      case 'left':
+      default:
+        return '';
+    }
+  }
+
+  private columnHeaderButtonAlignmentClasses(column: TableColumn): string {
+    switch (this.normalizeColumnAlignment(column.align)) {
+      case 'right':
+        return 'justify-end text-right';
+      case 'center':
+        return 'justify-center text-center';
+      case 'left':
+      default:
+        return 'justify-start text-left';
+    }
+  }
+
   protected showColumnLabel(column: TableColumn): boolean {
     return column.showLabel ?? true;
   }
@@ -1108,6 +1145,10 @@ export class AppDataTableComponent {
 
   private isColumnDataItem(item: TableDataItem): item is ColumnDataItem {
     return 'columnName' in item && 'columnKey' in item;
+  }
+
+  private normalizeColumnAlignment(value: unknown): TableCellAlign | null {
+    return value === 'left' || value === 'center' || value === 'right' ? value : null;
   }
 
   private currencyIconMode(row: TableRow, column: ColumnDataItem): TableCurrencyIconMode {

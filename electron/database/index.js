@@ -1,5 +1,13 @@
 const { closeDatabase, createDatabase, getDatabase } = require('./db');
-const { countRows, deleteRows, insertRow, selectOne, selectRows, updateRows } = require('./core_op');
+const {
+  countRows,
+  deleteRows,
+  insertRow,
+  selectDistinctYearsFromUnixTimestampColumn,
+  selectOne,
+  selectRows,
+  updateRows,
+} = require('./core_op');
 const { getMigrationFilePaths, runMigrations } = require('./migrations');
 const { getSchemaFilePaths, initSchema } = require('./schema');
 const { isFirstStart, markFirstStartCompleted } = require('./system');
@@ -17,6 +25,7 @@ module.exports = {
   insertRow,
   markFirstStartCompleted,
   runMigrations,
+  selectDistinctYearsFromUnixTimestampColumn,
   selectOne,
   selectRows,
   updateRows,

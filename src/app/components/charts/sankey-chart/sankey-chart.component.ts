@@ -64,6 +64,8 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
   readonly layoutIterations = input(32);
   readonly dimOthersOnFocus = input(false, { transform: booleanAttribute });
   readonly blurOpacity = input(0.2);
+  readonly tooltipCurrencyCode = input<string | null>(null);
+  readonly tooltipShowPercent = input(false, { transform: booleanAttribute });
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -75,6 +77,8 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
     const labelStyle = 'font-weight: 300; opacity: 0.78;';
     const valueStyle = 'font-weight: 700;';
+    const normalizedCurrencyCode = this.normalizeCurrencyCode(this.tooltipCurrencyCode());
+    const shouldShowTooltipPercent = this.tooltipShowPercent();
     const escapeHtml = (value: unknown): string =>
       `${value ?? ''}`
         .replaceAll('&', '&amp;')
@@ -90,9 +94,37 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         return `${value ?? ''}`;
       }
 
+      if (normalizedCurrencyCode) {
+        return this.formatCurrencyValue(numericValue, normalizedCurrencyCode);
+      }
+
       return new Intl.NumberFormat(undefined, {
         maximumFractionDigits: 2,
       }).format(numericValue);
+    };
+    const formatTooltipPercent = (value: unknown, total: number): string | null => {
+      if (!shouldShowTooltipPercent || !Number.isFinite(total) || total <= 0) {
+        return null;
+      }
+
+      const numericValue = Number(value);
+      if (!Number.isFinite(numericValue) || numericValue < 0) {
+        return null;
+      }
+
+      const percent = (numericValue / total) * 100;
+      if (!Number.isFinite(percent)) {
+        return null;
+      }
+
+      try {
+        return `${new Intl.NumberFormat(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }).format(percent)}%`;
+      } catch {
+        return `${percent.toFixed(2)}%`;
+      }
     };
 
     const sankeyNodes = this.nodes().map((node, index) => ({
@@ -117,6 +149,33 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         opacity: Math.min(Math.max(link.opacity ?? normalizedLineOpacity, 0), 1),
       },
     }));
+    const incomingTotalsByNodeName = new Map<string, number>();
+    for (const link of sankeyLinks) {
+      const target = typeof link.target === 'string' ? link.target : '';
+      if (target.length === 0) {
+        continue;
+      }
+
+      const value = Number(link.value);
+      if (!Number.isFinite(value) || value <= 0) {
+        continue;
+      }
+
+      incomingTotalsByNodeName.set(target, (incomingTotalsByNodeName.get(target) ?? 0) + value);
+    }
+    const rootTotal = sankeyNodes.reduce((total, node) => {
+      const incomingTotal = incomingTotalsByNodeName.get(node.name) ?? 0;
+      if (incomingTotal > 0) {
+        return total;
+      }
+
+      const nodeValue = Number(node.value);
+      if (!Number.isFinite(nodeValue) || nodeValue <= 0) {
+        return total;
+      }
+
+      return total + nodeValue;
+    }, 0);
 
     return {
       textStyle: {
@@ -149,13 +208,19 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
           if (params?.dataType === 'edge') {
             const source = params?.data?.source ?? '';
             const target = params?.data?.target ?? '';
-            const valueText = formatTooltipNumber(params?.data?.value ?? params?.value);
-            return `${marker}${formatTooltipLabelValue(`${source} → ${target}:`, valueText)}`;
+            const edgeValue = params?.data?.value ?? params?.value;
+            const valueText = formatTooltipNumber(edgeValue);
+            const percentText = formatTooltipPercent(edgeValue, rootTotal);
+            const formattedValueText = percentText ? `${valueText} (${percentText})` : valueText;
+            return `${marker}${formatTooltipLabelValue(`${source} → ${target}:`, formattedValueText)}`;
           }
 
           const name = params?.name ?? '';
-          const valueText = formatTooltipNumber(params?.value);
-          const base = `${marker}${formatTooltipLabelValue(`${name}:`, valueText)}`;
+          const nodeValue = params?.value ?? params?.data?.value;
+          const valueText = formatTooltipNumber(nodeValue);
+          const percentText = formatTooltipPercent(nodeValue, rootTotal);
+          const formattedValueText = percentText ? `${valueText} (${percentText})` : valueText;
+          const base = `${marker}${formatTooltipLabelValue(`${name}:`, formattedValueText)}`;
           if (details.length === 0) {
             return base;
           }
@@ -227,5 +292,26 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.themeObserver?.disconnect();
     this.themeObserver = null;
+  }
+
+  private normalizeCurrencyCode(value: string | null | undefined): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalizedValue = value.trim().toUpperCase();
+    return normalizedValue.length > 0 ? normalizedValue : null;
+  }
+
+  private formatCurrencyValue(value: number, currencyCode: string): string {
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode,
+        maximumFractionDigits: 2,
+      }).format(value);
+    } catch {
+      return `${value.toFixed(2)} ${currencyCode}`;
+    }
   }
 }

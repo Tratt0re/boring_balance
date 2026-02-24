@@ -29,6 +29,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.categories.update]: categoriesController.update,
   [CHANNELS.categories.remove]: categoriesController.remove,
 
+  [CHANNELS.analytics.availableYears]: analyticsController.availableYears,
   [CHANNELS.analytics.expensesIncomesNetCashflowByMonth]: analyticsController.expensesIncomesNetCashflowByMonth,
   [CHANNELS.analytics.receivablesPayables]: analyticsController.receivablesPayables,
   [CHANNELS.analytics.netWorthByAccount]: analyticsController.netWorthByAccount,
