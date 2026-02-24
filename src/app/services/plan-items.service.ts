@@ -3,21 +3,19 @@ import { Injectable } from '@angular/core';
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { PlanItemModel, TransactionModel, TransferModel } from '@/models';
-
 import { BaseIpcService } from './base-ipc.service';
+import {
+  mapNullableRow,
+  mapPaginatedResult,
+  mapTransferBundleResult,
+  mapUpdateResult,
+  type PaginatedResult,
+  type TransferBundleResult,
+  type UpdateResult,
+} from './service-utils';
 
-export interface PlanItemUpdateResult {
-  readonly changed: number;
-  readonly row: PlanItemModel | null;
-}
-
-export interface PlanItemListResult {
-  readonly rows: readonly PlanItemModel[];
-  readonly total: number;
-  readonly page: number;
-  readonly pageSize: number;
-  readonly totalPages: number;
-}
+export type PlanItemUpdateResult = UpdateResult<PlanItemModel>;
+export type PlanItemListResult = PaginatedResult<PlanItemModel>;
 
 export interface PlanItemDeletePlannedItemsResult {
   readonly planItemId: number;
@@ -66,11 +64,8 @@ export interface PlanItemRunCreatedTransactionPayloadResult {
   readonly row: TransactionModel;
 }
 
-export interface PlanItemRunCreatedTransferPayloadResult {
+export interface PlanItemRunCreatedTransferPayloadResult extends TransferBundleResult<TransferModel, TransactionModel> {
   readonly type: 'transfer';
-  readonly transferId: string;
-  readonly transfer: TransferModel;
-  readonly transactions: readonly TransactionModel[];
 }
 
 export interface PlanItemRunCreatedEntryResult {
@@ -182,9 +177,11 @@ export class PlanItemsService extends BaseIpcService<APIChannel.PLAN_ITEMS> {
       status: 'created',
       created: {
         type: 'transfer',
-        transferId: entry.created.transfer_id,
-        transfer: TransferModel.fromDTO(entry.created.transfer),
-        transactions: entry.created.transactions.map((row) => TransactionModel.fromDTO(row)),
+        ...mapTransferBundleResult(
+          entry.created,
+          (row) => TransferModel.fromDTO(row),
+          (row) => TransactionModel.fromDTO(row),
+        ),
       },
     };
   }
@@ -213,29 +210,17 @@ export class PlanItemsService extends BaseIpcService<APIChannel.PLAN_ITEMS> {
 
   async get(payload: DTO.PlanItemGetDto): Promise<PlanItemModel | null> {
     const row = await this.ipcClient.get(payload);
-    return row ? PlanItemModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => PlanItemModel.fromDTO(value));
   }
 
   async list(payload?: DTO.PlanItemListDto): Promise<PlanItemListResult> {
     const response = await this.ipcClient.list(payload);
-    const pageSize = response.page_size;
-
-    return {
-      rows: response.rows.map((row) => PlanItemModel.fromDTO(row)),
-      total: response.total,
-      page: response.page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
-    };
+    return mapPaginatedResult(response, (row) => PlanItemModel.fromDTO(row));
   }
 
   async update(payload: DTO.PlanItemUpdateDto): Promise<PlanItemUpdateResult> {
     const result = await this.ipcClient.update(payload);
-
-    return {
-      changed: result.changed,
-      row: result.row ? PlanItemModel.fromDTO(result.row) : null,
-    };
+    return mapUpdateResult(result, (row) => PlanItemModel.fromDTO(row));
   }
 
   async remove(payload: DTO.PlanItemRemoveDto): Promise<PlanItemRemoveResult> {

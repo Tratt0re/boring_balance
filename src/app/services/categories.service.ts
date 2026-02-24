@@ -4,19 +4,16 @@ import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { CategoryModel } from '@/models';
 import { BaseIpcService } from './base-ipc.service';
+import {
+  mapNullableRow,
+  mapPaginatedResult,
+  mapUpdateResult,
+  type PaginatedResult,
+  type UpdateResult,
+} from './service-utils';
 
-export interface CategoryUpdateResult {
-  readonly changed: number;
-  readonly row: CategoryModel | null;
-}
-
-export interface CategoryListResult {
-  readonly rows: readonly CategoryModel[];
-  readonly total: number;
-  readonly page: number;
-  readonly pageSize: number;
-  readonly totalPages: number;
-}
+export type CategoryUpdateResult = UpdateResult<CategoryModel>;
+export type CategoryListResult = PaginatedResult<CategoryModel>;
 
 @Injectable({
   providedIn: 'root',
@@ -28,25 +25,17 @@ export class CategoriesService extends BaseIpcService<APIChannel.CATEGORIES> {
 
   async create(payload: DTO.CategoryCreateDto): Promise<CategoryModel | null> {
     const row = await this.ipcClient.create(payload);
-    return row ? CategoryModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => CategoryModel.fromDTO(value));
   }
 
   async get(payload: DTO.CategoryGetDto): Promise<CategoryModel | null> {
     const row = await this.ipcClient.get(payload);
-    return row ? CategoryModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => CategoryModel.fromDTO(value));
   }
 
   async list(payload?: DTO.CategoryListDto): Promise<CategoryListResult> {
     const response = await this.ipcClient.list(payload);
-    const pageSize = response.page_size;
-
-    return {
-      rows: response.rows.map((row) => CategoryModel.fromDTO(row)),
-      total: response.total,
-      page: response.page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
-    };
+    return mapPaginatedResult(response, (row) => CategoryModel.fromDTO(row));
   }
 
   async listAll(
@@ -62,10 +51,7 @@ export class CategoriesService extends BaseIpcService<APIChannel.CATEGORIES> {
 
   async update(payload: DTO.CategoryUpdateDto): Promise<CategoryUpdateResult> {
     const result = await this.ipcClient.update(payload);
-    return {
-      changed: result.changed,
-      row: result.row ? CategoryModel.fromDTO(result.row) : null,
-    };
+    return mapUpdateResult(result, (row) => CategoryModel.fromDTO(row));
   }
 
   remove(payload: DTO.CategoryRemoveDto): Promise<DTO.CategoryRemoveResponse> {

@@ -4,11 +4,9 @@ import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { AppMetaModel } from '@/models';
 import { BaseIpcService } from './base-ipc.service';
+import { mapNullableRow, mapUpdateResult, type UpdateResult } from './service-utils';
 
-export interface AppMetaUpdateResult {
-  readonly changed: number;
-  readonly row: AppMetaModel | null;
-}
+export type AppMetaUpdateResult = UpdateResult<AppMetaModel>;
 
 @Injectable({
   providedIn: 'root',
@@ -20,12 +18,12 @@ export class AppMetaService extends BaseIpcService<APIChannel.APP_META> {
 
   async create(payload: DTO.AppMetaCreateDto): Promise<AppMetaModel | null> {
     const row = await this.ipcClient.create(payload);
-    return row ? AppMetaModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => AppMetaModel.fromDTO(value));
   }
 
   async get(payload: DTO.AppMetaGetDto): Promise<AppMetaModel | null> {
     const row = await this.ipcClient.get(payload);
-    return row ? AppMetaModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => AppMetaModel.fromDTO(value));
   }
 
   async list(payload?: DTO.AppMetaListDto): Promise<AppMetaModel[]> {
@@ -35,10 +33,7 @@ export class AppMetaService extends BaseIpcService<APIChannel.APP_META> {
 
   async update(payload: DTO.AppMetaUpdateDto): Promise<AppMetaUpdateResult> {
     const result = await this.ipcClient.update(payload);
-    return {
-      changed: result.changed,
-      row: result.row ? AppMetaModel.fromDTO(result.row) : null,
-    };
+    return mapUpdateResult(result, (row) => AppMetaModel.fromDTO(row));
   }
 
   remove(payload: DTO.AppMetaGetDto): Promise<DTO.AppMetaRemoveResponse> {
@@ -47,6 +42,6 @@ export class AppMetaService extends BaseIpcService<APIChannel.APP_META> {
 
   async upsert(payload: DTO.AppMetaUpsertDto): Promise<AppMetaModel | null> {
     const row = await this.ipcClient.upsert(payload);
-    return row ? AppMetaModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => AppMetaModel.fromDTO(value));
   }
 }

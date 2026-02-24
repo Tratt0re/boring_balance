@@ -4,33 +4,20 @@ import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { TransactionModel, TransferModel } from '@/models';
 import { BaseIpcService } from './base-ipc.service';
+import {
+  mapNullableRow,
+  mapPaginatedResult,
+  mapTransferBundleResult,
+  mapUpdateResult,
+  type PaginatedResult,
+  type TransferBundleResult,
+  type UpdateResult,
+} from './service-utils';
 
-export interface TransactionTransferResult {
-  readonly transferId: string;
-  readonly transfer: TransferModel;
-  readonly transactions: readonly TransactionModel[];
-}
-
-export interface TransactionUpdateResult {
-  readonly changed: number;
-  readonly row: TransactionModel | null;
-}
-
-export interface TransactionListResult {
-  readonly rows: readonly TransactionModel[];
-  readonly total: number;
-  readonly page: number;
-  readonly pageSize: number;
-  readonly totalPages: number;
-}
-
-export interface TransferListResult {
-  readonly rows: readonly TransferModel[];
-  readonly total: number;
-  readonly page: number;
-  readonly pageSize: number;
-  readonly totalPages: number;
-}
+export type TransactionTransferResult = TransferBundleResult<TransferModel, TransactionModel>;
+export type TransactionUpdateResult = UpdateResult<TransactionModel>;
+export type TransactionListResult = PaginatedResult<TransactionModel>;
+export type TransferListResult = PaginatedResult<TransferModel>;
 
 @Injectable({
   providedIn: 'root',
@@ -42,25 +29,25 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
 
   async create(payload: DTO.TransactionCreateDto): Promise<TransactionModel | null> {
     const row = await this.ipcClient.create(payload);
-    return row ? TransactionModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => TransactionModel.fromDTO(value));
   }
 
   async createTransfer(payload: DTO.TransactionCreateTransferDto): Promise<TransactionTransferResult> {
     const transfer = await this.ipcClient.createTransfer(payload);
-    return {
-      transferId: transfer.transfer_id,
-      transfer: TransferModel.fromDTO(transfer.transfer),
-      transactions: transfer.transactions.map((row) => TransactionModel.fromDTO(row)),
-    };
+    return mapTransferBundleResult(
+      transfer,
+      (row) => TransferModel.fromDTO(row),
+      (row) => TransactionModel.fromDTO(row),
+    );
   }
 
   async updateTransfer(payload: DTO.TransactionUpdateTransferDto): Promise<TransactionTransferResult> {
     const transfer = await this.ipcClient.updateTransfer(payload);
-    return {
-      transferId: transfer.transfer_id,
-      transfer: TransferModel.fromDTO(transfer.transfer),
-      transactions: transfer.transactions.map((row) => TransactionModel.fromDTO(row)),
-    };
+    return mapTransferBundleResult(
+      transfer,
+      (row) => TransferModel.fromDTO(row),
+      (row) => TransactionModel.fromDTO(row),
+    );
   }
 
   deleteTransfer(payload: DTO.TransactionDeleteTransferDto): Promise<DTO.TransactionDeleteTransferResponse> {
@@ -69,41 +56,22 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
 
   async get(payload: DTO.TransactionGetDto): Promise<TransactionModel | null> {
     const row = await this.ipcClient.get(payload);
-    return row ? TransactionModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => TransactionModel.fromDTO(value));
   }
 
   async listTransactions(payload?: DTO.TransactionListTransactionsDto): Promise<TransactionListResult> {
     const response = await this.ipcClient.listTransactions(payload);
-    const pageSize = response.page_size;
-
-    return {
-      rows: response.rows.map((row) => TransactionModel.fromDTO(row)),
-      total: response.total,
-      page: response.page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
-    };
+    return mapPaginatedResult(response, (row) => TransactionModel.fromDTO(row));
   }
 
   async listTransfers(payload?: DTO.TransactionListTransfersDto): Promise<TransferListResult> {
     const response = await this.ipcClient.listTransfers(payload);
-    const pageSize = response.page_size;
-
-    return {
-      rows: response.rows.map((row) => TransferModel.fromDTO(row)),
-      total: response.total,
-      page: response.page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
-    };
+    return mapPaginatedResult(response, (row) => TransferModel.fromDTO(row));
   }
 
   async update(payload: DTO.TransactionUpdateDto): Promise<TransactionUpdateResult> {
     const result = await this.ipcClient.update(payload);
-    return {
-      changed: result.changed,
-      row: result.row ? TransactionModel.fromDTO(result.row) : null,
-    };
+    return mapUpdateResult(result, (row) => TransactionModel.fromDTO(row));
   }
 
   remove(payload: DTO.TransactionRemoveDto): Promise<DTO.TransactionRemoveResponse> {

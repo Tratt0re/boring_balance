@@ -1,4 +1,5 @@
 export * from './base-ipc.service';
+export * from './service-utils';
 export * from './analytics.service';
 export * from './app-meta.service';
 export * from './local-preferences.service';

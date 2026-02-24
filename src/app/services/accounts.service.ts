@@ -4,19 +4,16 @@ import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { AccountModel } from '@/models';
 import { BaseIpcService } from './base-ipc.service';
+import {
+  mapNullableRow,
+  mapPaginatedResult,
+  mapUpdateResult,
+  type PaginatedResult,
+  type UpdateResult,
+} from './service-utils';
 
-export interface AccountUpdateResult {
-  readonly changed: number;
-  readonly row: AccountModel | null;
-}
-
-export interface AccountListResult {
-  readonly rows: readonly AccountModel[];
-  readonly total: number;
-  readonly page: number;
-  readonly pageSize: number;
-  readonly totalPages: number;
-}
+export type AccountUpdateResult = UpdateResult<AccountModel>;
+export type AccountListResult = PaginatedResult<AccountModel>;
 
 @Injectable({
   providedIn: 'root',
@@ -28,25 +25,17 @@ export class AccountsService extends BaseIpcService<APIChannel.ACCOUNTS> {
 
   async create(payload: DTO.AccountCreateDto): Promise<AccountModel | null> {
     const row = await this.ipcClient.create(payload);
-    return row ? AccountModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => AccountModel.fromDTO(value));
   }
 
   async get(payload: DTO.AccountGetDto): Promise<AccountModel | null> {
     const row = await this.ipcClient.get(payload);
-    return row ? AccountModel.fromDTO(row) : null;
+    return mapNullableRow(row, (value) => AccountModel.fromDTO(value));
   }
 
   async list(payload?: DTO.AccountListDto): Promise<AccountListResult> {
     const response = await this.ipcClient.list(payload);
-    const pageSize = response.page_size;
-
-    return {
-      rows: response.rows.map((row) => AccountModel.fromDTO(row)),
-      total: response.total,
-      page: response.page,
-      pageSize,
-      totalPages: Math.max(1, Math.ceil(response.total / pageSize)),
-    };
+    return mapPaginatedResult(response, (row) => AccountModel.fromDTO(row));
   }
 
   async listAll(payload?: Omit<DTO.AccountListDto, 'page' | 'page_size' | 'all'>): Promise<readonly AccountModel[]> {
@@ -60,10 +49,7 @@ export class AccountsService extends BaseIpcService<APIChannel.ACCOUNTS> {
 
   async update(payload: DTO.AccountUpdateDto): Promise<AccountUpdateResult> {
     const result = await this.ipcClient.update(payload);
-    return {
-      changed: result.changed,
-      row: result.row ? AccountModel.fromDTO(result.row) : null,
-    };
+    return mapUpdateResult(result, (row) => AccountModel.fromDTO(row));
   }
 
   remove(payload: DTO.AccountRemoveDto): Promise<DTO.AccountRemoveResponse> {
