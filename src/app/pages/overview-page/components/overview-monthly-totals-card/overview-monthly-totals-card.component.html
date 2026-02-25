@@ -1,0 +1,35 @@
+<app-base-card
+  [style.height.%]="100"
+  [zTitle]="'overview.cards.monthlyTotals.title' | translate"
+  [zDescription]="'overview.cards.monthlyTotals.descriptionCurrentYear' | translate: { year: year() }"
+>
+  @if (isLoading()) {
+    <div class="mt-3 flex h-80 items-center justify-center">
+      <div class="flex flex-col items-center gap-3 text-muted-foreground">
+        <z-loader zSize="lg" />
+        <p class="text-sm">{{ 'overview.cards.monthlyTotals.loading' | translate }}</p>
+      </div>
+    </div>
+  } @else if (loadError(); as loadError) {
+    <div class="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ 'overview.cards.monthlyTotals.loadFailedWithError' | translate: { error: loadError } }}
+    </div>
+  } @else if (labels().length === 0) {
+    <div class="mt-3 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+      {{ 'overview.cards.monthlyTotals.empty' | translate }}
+    </div>
+  } @else {
+    <app-bar-chart
+      class="mt-3"
+      [labels]="labels()"
+      [series]="series()"
+      [dimOthersOnFocus]="true"
+      [blurOpacity]="0.25"
+      [height]="chartHeight()"
+      [axisPointerType]="'shadow'"
+      [orientation]="'vertical'"
+      [cornerRadius]="2.5"
+      [valueAxisCurrencyCode]="currencyCode()"
+    ></app-bar-chart>
+  }
+</app-base-card>

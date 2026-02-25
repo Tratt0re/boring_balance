@@ -18,6 +18,7 @@
   [zDescription]="'overview.cards.recentTransactions.description' | translate: { count: limit() }"
   [zBodyFill]="!!height()"
   [style.height]="height() || null"
+  [style.minHeight.%]="100"
 >
   @if (isLoading()) {
     <div class="flex h-56 items-center justify-center">

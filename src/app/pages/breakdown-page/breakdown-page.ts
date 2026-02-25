@@ -27,7 +27,7 @@ export class BreakdownPage implements OnInit, OnDestroy {
   private readonly currentYearReference = new Date().getFullYear();
   protected readonly isSmallScreen = signal(false);
   protected readonly currentCalendarYear = signal(this.currentYearReference);
-  protected readonly activeSectionView = signal<BreakdownSectionView>('money-flow');
+  protected readonly activeSectionView = signal<BreakdownSectionView>('expense');
   protected readonly useElapsedMonthsAverage = signal(false);
   protected readonly showMoneyFlowAllocationTargets = signal(true);
   protected readonly canUseElapsedMonthsAverage = computed(
@@ -112,9 +112,9 @@ export class BreakdownPage implements OnInit, OnDestroy {
           size: 'sm',
           defaultValue: this.activeSectionView(),
           options: [
-            { value: 'money-flow', label: 'overview.cards.moneyFlowSankey.title' },
             { value: 'expense', label: 'overview.cards.monthlyTotals.series.expenses' },
             { value: 'income', label: 'overview.cards.monthlyTotals.series.incomes' },
+            { value: 'money-flow', label: 'overview.cards.moneyFlowSankey.title' },
           ],
           change: (value) => this.onSectionViewChange(value),
         },

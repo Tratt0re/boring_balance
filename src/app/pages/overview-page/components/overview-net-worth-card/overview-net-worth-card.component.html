@@ -1,0 +1,99 @@
+<ng-template #netWorthDescription>
+  <span class="inline-flex items-center gap-1.5">
+    <span>
+      {{
+        'overview.cards.netWorth.descriptionDailyAverage'
+          | translate : { value: formatSignedCurrencyFromCents(totalNetWorthAverageDailyMonthToDateDeltaCents()) }
+      }}
+    </span>
+    <span
+      class="inline-flex cursor-help items-center"
+      tabindex="0"
+      [zTooltip]="netWorthAverageDailyChangeTooltipText()"
+      [attr.aria-label]="netWorthAverageDailyChangeTooltipText()"
+    >
+      <z-icon zType="info" class="size-3.5 opacity-70" />
+    </span>
+  </span>
+</ng-template>
+
+<app-base-card
+  [style.height.%]="100"
+  [zTitle]="'overview.cards.netWorth.title' | translate"
+  [zDescription]="netWorthDescription"
+>
+  @if (isLoading()) {
+    <div class="flex h-52 items-center justify-center">
+      <z-loader zSize="default" />
+    </div>
+  } @else if (loadError()) {
+    <p class="text-sm text-destructive">{{ 'overview.errors.summaryLoad' | translate }}</p>
+  } @else {
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start">
+      <div class="space-y-3">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'overview.cards.netWorth.total' | translate }}
+          </p>
+          <p class="text-2xl font-semibold tracking-tight">
+            {{ formatCurrencyFromCents(totalNetWorthCents()) }}
+          </p>
+          <p class="mt-1 text-xs text-muted-foreground">
+            {{ 'overview.cards.netWorth.deltaVsPreviousMonth' | translate }}
+            <span class="ml-1 inline-flex items-center gap-1 font-medium" [style.color]="totalNetWorthPreviousMonthDeltaColor()">
+              <span>{{ formatPercent(totalNetWorthPreviousMonthDeltaPercent()) }}</span>
+              <z-icon
+                [zType]="totalNetWorthPreviousMonthDeltaTrendIcon()"
+                class="size-3.5 shrink-0"
+              />
+            </span>
+          </p>
+        </div>
+
+        <div class="space-y-2 rounded-md border border-border/50 bg-muted/20 p-3">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-muted-foreground">{{ 'overview.cards.netWorth.receivables' | translate }}</span>
+            <span class="font-medium">{{ formatCurrencyFromCents(totalReceivablesCents()) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-muted-foreground">{{ 'overview.cards.netWorth.payables' | translate }}</span>
+            <span class="font-medium">{{ formatCurrencyFromCents(totalPayablesCents()) }}</span>
+          </div>
+        </div>
+
+        <div class="rounded-md border border-border/60 p-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-muted-foreground">{{ 'overview.cards.netWorth.totalAfterRP' | translate }}</span>
+            <span class="text-base font-semibold">
+              {{ formatCurrencyFromCents(totalAfterReceivablesPayablesCents()) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        @if (distributionBarSeries().length === 0) {
+          <div class="flex h-40 items-center justify-center rounded-md border border-border/50 bg-muted/30">
+            <p class="text-xs text-muted-foreground">{{ 'overview.cards.netWorth.emptyDistribution' | translate }}</p>
+          </div>
+        } @else {
+          <app-bar-chart
+            class="mt-1"
+            [labels]="distributionBarLabels"
+            [series]="distributionBarSeries()"
+            [orientation]="'vertical'"
+            [stacked]="true"
+            [showLegend]="true"
+            [dimOthersOnFocus]="true"
+            [blurOpacity]="0.2"
+            [axisPointerType]="'shadow'"
+            [valueAxisPercent]="true"
+            [tooltipTrigger]="'item'"
+            [cornerRadius]="0"
+            [height]="netWorthDistributionBarHeight()"
+          ></app-bar-chart>
+        }
+      </div>
+    </div>
+  }
+</app-base-card>
