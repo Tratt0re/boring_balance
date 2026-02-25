@@ -1,0 +1,39 @@
+<app-base-card
+  [style.height.%]="100"
+  [zTitle]="'overview.cards.moneyFlowSankey.title' | translate"
+  [zDescription]="'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }"
+>
+  @if (isLoading()) {
+    <div class="mt-2 flex h-64 items-center justify-center">
+      <div class="flex flex-col items-center gap-3 text-muted-foreground">
+        <z-loader zSize="lg" />
+        <p class="text-sm">{{ 'overview.cards.moneyFlowSankey.loading' | translate }}</p>
+      </div>
+    </div>
+  } @else if (loadError(); as loadError) {
+    <div class="mt-2 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ 'overview.cards.moneyFlowSankey.loadFailedWithError' | translate: { error: loadError } }}
+    </div>
+  } @else if (links().length === 0) {
+    <div class="mt-2 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+      {{ 'overview.cards.moneyFlowSankey.empty' | translate }}
+    </div>
+  } @else {
+    <app-sankey-chart
+      class="mt-2"
+      [nodes]="nodes()"
+      [links]="links()"
+      [showLabels]="true"
+      [dimOthersOnFocus]="true"
+      [blurOpacity]="0.16"
+      [lineOpacity]="0.34"
+      [curveness]="0.42"
+      [nodeWidth]="12"
+      [nodeGap]="8"
+      [layoutIterations]="48"
+      [height]="chartHeight()"
+      [tooltipCurrencyCode]="currencyCode()"
+      [tooltipShowPercent]="true"
+    ></app-sankey-chart>
+  }
+</app-base-card>

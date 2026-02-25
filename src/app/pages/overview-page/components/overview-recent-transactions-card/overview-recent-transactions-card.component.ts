@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit, input, signal } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import {
@@ -19,21 +28,14 @@ import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import { ZardSwitchComponent } from '@/shared/components/switch';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { toMonthRangeTimestamps } from '../overview-cards.utils';
 
 const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
 const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
 const DEFAULT_CATEGORY_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'tag') as ZardIcon;
 const DEFAULT_CATEGORY_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
-function toCurrentMonthRangeTimestamps(referenceDate: Date = new Date()): { from: number; to: number } {
-  const year = referenceDate.getFullYear();
-  const monthIndex = referenceDate.getMonth();
-  const from = new Date(year, monthIndex, 1, 0, 0, 0, 0).getTime();
-  const to = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999).getTime();
-  return { from, to };
-}
-
-interface TransactionListCardRow {
+interface OverviewRecentTransactionsCardRow {
   readonly id: number;
   readonly occurredAt: number;
   readonly amount: number;
@@ -48,7 +50,7 @@ interface TransactionListCardRow {
 }
 
 @Component({
-  selector: 'app-transaction-list-card',
+  selector: 'app-overview-recent-transactions-card',
   imports: [
     AppBaseCardComponent,
     RouterLink,
@@ -60,20 +62,23 @@ interface TransactionListCardRow {
     ZardSwitchComponent,
     ...ZardTooltipImports,
   ],
-  templateUrl: './transaction-list-card.component.html',
+  templateUrl: './overview-recent-transactions-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'block',
   },
 })
-export class AppTransactionListCardComponent implements OnInit {
+export class OverviewRecentTransactionsCardComponent implements OnInit, OnChanges {
   readonly zTitleKey = input('overview.cards.recentTransactions.title');
   readonly limit = input(5);
   readonly height = input<string | null>(null);
+  readonly year = input(new Date().getFullYear());
+  readonly monthIndex = input(new Date().getMonth());
+  readonly transactionStateChanged = output<void>();
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly rows = signal<readonly TransactionListCardRow[]>([]);
+  protected readonly rows = signal<readonly OverviewRecentTransactionsCardRow[]>([]);
   protected readonly pendingSettledIds = signal<ReadonlySet<number>>(new Set<number>());
 
   constructor(
@@ -86,6 +91,19 @@ export class AppTransactionListCardComponent implements OnInit {
 
   ngOnInit(): void {
     void this.loadTransactions();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const yearChange = changes['year'];
+    const monthIndexChange = changes['monthIndex'];
+    const limitChange = changes['limit'];
+    if (
+      (yearChange && !yearChange.firstChange) ||
+      (monthIndexChange && !monthIndexChange.firstChange) ||
+      (limitChange && !limitChange.firstChange)
+    ) {
+      void this.loadTransactions();
+    }
   }
 
   async reload(): Promise<void> {
@@ -127,6 +145,7 @@ export class AppTransactionListCardComponent implements OnInit {
     }
 
     const previousSettled = currentRow.settled;
+    let shouldNotifyTransactionStateChange = false;
     this.setPendingSettled(rowId, true);
     this.rows.update((rows) => rows.map((row) => (row.id === rowId ? { ...row, settled: nextSettled } : row)));
 
@@ -141,11 +160,15 @@ export class AppTransactionListCardComponent implements OnInit {
           rows.map((row) => (row.id === rowId ? { ...row, settled: result.row?.settled ?? nextSettled } : row)),
         );
       }
+      shouldNotifyTransactionStateChange = true;
     } catch (error) {
-      console.error('[transaction-list-card] Failed to update settled state:', error);
+      console.error('[overview-recent-transactions-card] Failed to update settled state:', error);
       this.rows.update((rows) => rows.map((row) => (row.id === rowId ? { ...row, settled: previousSettled } : row)));
     } finally {
       this.setPendingSettled(rowId, false);
+      if (shouldNotifyTransactionStateChange) {
+        this.transactionStateChanged.emit();
+      }
     }
   }
 
@@ -189,7 +212,7 @@ export class AppTransactionListCardComponent implements OnInit {
 
     try {
       const safeLimit = this.normalizeLimit(this.limit());
-      const { from, to } = toCurrentMonthRangeTimestamps();
+      const { from, to } = toMonthRangeTimestamps(this.year(), this.monthIndex());
       const [transactions, accounts, categories] = await Promise.all([
         this.transactionsService.listTransactions({
           page: 1,
@@ -223,11 +246,11 @@ export class AppTransactionListCardComponent implements OnInit {
             categoryIcon: this.resolveVisualIcon(category?.icon),
             categoryColorHex: this.resolveVisualColorHex(category?.colorKey),
             categoryType: category?.type ?? 'exclude',
-          };
+          } satisfies OverviewRecentTransactionsCardRow;
         }),
       );
     } catch (error) {
-      console.error('[transaction-list-card] Failed to load recent transactions:', error);
+      console.error('[overview-recent-transactions-card] Failed to load recent transactions:', error);
       this.rows.set([]);
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transactions.');
     } finally {
