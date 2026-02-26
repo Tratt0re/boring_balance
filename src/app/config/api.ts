@@ -37,6 +37,7 @@ export interface ElectronIpcClient {
   };
   readonly analytics: {
     readonly availableYears: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsAvailableYearsResponse>;
+    readonly compareMonths: IpcRequest<DTO.AnalyticsCompareMonthsPayload, DTO.AnalyticsCompareMonthsResponse>;
     readonly expensesIncomesNetCashflowByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsExpensesIncomesNetCashflowByMonthResponse

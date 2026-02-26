@@ -1,0 +1,44 @@
+<div class="rounded-lg border border-border/60 bg-card p-4">
+  <div>
+    <p class="text-sm font-semibold tracking-tight">
+      {{ titleKey() | translate }}
+    </p>
+    <p class="mt-1 text-xs text-muted-foreground">
+      {{ periodLabel() }}
+    </p>
+  </div>
+
+  <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div class="space-y-1.5">
+      <label class="text-xs font-medium text-muted-foreground">
+        {{ 'compare.selectors.year' | translate }}
+      </label>
+      <z-select
+        class="w-full"
+        [zValue]="yearValue().toString()"
+        [zPlaceholder]="'compare.selectors.year' | translate"
+        (zSelectionChange)="onYearSelectionChange($event)"
+      >
+        @for (option of yearOptions(); track option.value) {
+          <z-select-item [zValue]="option.value" [zLabel]="option.label" />
+        }
+      </z-select>
+    </div>
+
+    <div class="space-y-1.5">
+      <label class="text-xs font-medium text-muted-foreground">
+        {{ 'compare.selectors.month' | translate }}
+      </label>
+      <z-select
+        class="w-full"
+        [zValue]="monthValue().toString()"
+        [zPlaceholder]="'compare.selectors.month' | translate"
+        (zSelectionChange)="onMonthSelectionChange($event)"
+      >
+        @for (option of monthOptions(); track option.value) {
+          <z-select-item [zValue]="option.value" [zLabel]="option.label" />
+        }
+      </z-select>
+    </div>
+  </div>
+</div>

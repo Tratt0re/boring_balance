@@ -245,6 +245,47 @@
       }
     }
   },
+  "compare": {
+    "loadingTitle": "Preparing comparison",
+    "loadingDescription": "Loading analytics for the selected months",
+    "loadFailedWithError": "Failed to load comparison analytics: {{error}}",
+    "empty": "No comparison data available for the selected months.",
+    "selectors": {
+      "left": {
+        "title": "Month 1"
+      },
+      "right": {
+        "title": "Month 2"
+      },
+      "year": "Year",
+      "month": "Month"
+    },
+    "metrics": {
+      "delta": "Delta"
+    },
+    "cards": {
+      "summary": {
+        "title": "Comparison summary",
+        "description": "Paired bars for income, expenses and net cashflow"
+      },
+      "radar": {
+        "title": "Radar comparison",
+        "description": "Expense categories compared across the selected months (top categories)",
+        "empty": "No expense categories available for radar comparison."
+      },
+      "dailyCalendar": {
+        "title": "Daily expense calendar",
+        "description": "Daily expense intensity with a shared scale across both months",
+        "panelHint": "Daily expenses (same scale)",
+        "empty": "No daily expense activity available for the selected months."
+      },
+      "expensesByCategory": {
+        "title": "Expenses by category",
+        "description": "Category totals side by side for the selected months with delta",
+        "empty": "No expense category data available for the selected months."
+      }
+    }
+  },
   "category": {
     "exclude": {
       "name": "Exclude",

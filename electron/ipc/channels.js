@@ -23,6 +23,7 @@ const CHANNELS = Object.freeze({
   }),
   analytics: Object.freeze({
     availableYears: 'db:analytics:available-years',
+    compareMonths: 'db:analytics:compare-months',
     expensesIncomesNetCashflowByMonth: 'db:analytics:expenses-incomes-net-cashflow-by-month',
     receivablesPayables: 'db:analytics:receivables-payables',
     netWorthByAccount: 'db:analytics:net-worth-by-account',

@@ -238,23 +238,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   );
 
   ngAfterContentInit() {
-    const hostWidth = this.elementRef.nativeElement.offsetWidth || 0;
-    // Setup select host reference for each item
-    let i = 0;
-    for (const item of this.selectItems()) {
-      item.setSelectHost({
-        selectedValue: () => (this.zMultiple() ? (this.zValue() as string[]) : [this.zValue() as string]),
-        selectItem: (value: string, label: string) => this.selectItem(value, label),
-        navigateTo: () => this.navigateTo(item, i),
-      });
-      item.zSize.set(this.zSize());
-      i++;
-
-      if (hostWidth <= COMPACT_MODE_WIDTH_THRESHOLD) {
-        this.isCompact.set(true);
-        item.zMode.set('compact');
-      }
-    }
+    this.syncSelectItems();
   }
 
   ngOnDestroy() {
@@ -379,6 +363,24 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     return labels;
   }
 
+  private syncSelectItems(): void {
+    const items = this.selectItems();
+    const hostWidth = this.elementRef.nativeElement.offsetWidth || 0;
+    const shouldUseCompactMode = hostWidth > 0 && hostWidth <= COMPACT_MODE_WIDTH_THRESHOLD;
+
+    this.isCompact.set(shouldUseCompactMode);
+
+    items.forEach((item, index) => {
+      item.setSelectHost({
+        selectedValue: () => (this.zMultiple() ? (this.zValue() as string[]) : [this.zValue() as string]),
+        selectItem: (value: string, label: string) => this.selectItem(value, label),
+        navigateTo: () => this.navigateTo(item, index),
+      });
+      item.zSize.set(this.zSize());
+      item.zMode.set(shouldUseCompactMode ? 'compact' : 'normal');
+    });
+  }
+
   private provideLabelForSingleSelectMode(selectedValue: string): string[] {
     const manualLabel = this.zLabel();
     if (manualLabel) {
@@ -397,6 +399,10 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     if (this.isOpen()) {
       return;
     }
+
+    // Options can be projected asynchronously (e.g. after API data loads).
+    // Re-sync item host bindings right before opening.
+    this.syncSelectItems();
 
     // Create overlay if it doesn't exist
     if (!this.overlayRef) {
@@ -440,7 +446,8 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   private updateFocusWhenNormalMode(): void {
     if (!this.isCompact()) {
-      this.isFocus.set(!this.isOpen());
+      // In normal mode the trigger should look active only while the dropdown is open.
+      this.isFocus.set(this.isOpen());
     }
   }
 

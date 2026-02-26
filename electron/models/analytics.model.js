@@ -22,6 +22,29 @@ function toMonthKey(unixTimestampMilliseconds) {
   return `${year}-${month}`;
 }
 
+function toDateKey(unixTimestampMilliseconds) {
+  const date = new Date(Number(unixTimestampMilliseconds));
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function toMonthRangeFromSelection(selection) {
+  const year = Number(selection?.year);
+  const monthIndex = Number(selection?.month_index);
+  const from = new Date(year, monthIndex, 1, 0, 0, 0, 0).getTime();
+  const to = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999).getTime();
+
+  return {
+    year,
+    month_index: monthIndex,
+    month_key: `${year}-${String(monthIndex + 1).padStart(2, '0')}`,
+    from,
+    to,
+  };
+}
+
 function appendNotEqualFilter(existingFilter, value) {
   if (existingFilter === undefined) {
     return { ne: value };
@@ -459,6 +482,74 @@ function aggregateByCategoryAndMonth(rows, filterContext, targetCategoryType) {
   });
 }
 
+function toCompareCategoryRows(rows, monthKey, options = {}) {
+  const useAbsoluteAmount = Boolean(options.absoluteAmount);
+
+  return rows
+    .filter((row) => row?.month === monthKey)
+    .map((row) => {
+      const rawAmountCents = Number(row.total_cents ?? 0);
+      const amountCents = useAbsoluteAmount ? Math.abs(rawAmountCents) : rawAmountCents;
+
+      return {
+        category_id: Number(row.category_id),
+        category_name: String(row.category_name ?? ''),
+        amount_cents: amountCents,
+      };
+    })
+    .filter((row) => Number(row.amount_cents) > 0)
+    .sort((left, right) => {
+      const amountComparison = Number(right.amount_cents) - Number(left.amount_cents);
+      if (amountComparison !== 0) {
+        return amountComparison;
+      }
+
+      return String(left.category_name).localeCompare(String(right.category_name));
+    });
+}
+
+function dailyTotalsByDate(filters = {}) {
+  const database = getDatabase();
+  const filterContext = resolveFilterContext(database, filters);
+  const rows = selectTransactions(
+    database,
+    buildTransactionsWhere(filters, filterContext, { excludeTransfers: true }),
+    TRANSACTION_ASC_ORDER,
+  );
+  const totalsByDate = new Map();
+
+  for (const row of rows) {
+    const category = filterContext.categoryById.get(Number(row.category_id));
+    if (!category || category.type === 'exclude') {
+      continue;
+    }
+
+    const amountCents = Number(row.amount_cents ?? 0);
+    if (amountCents === 0) {
+      continue;
+    }
+
+    const date = toDateKey(row.occurred_at);
+    const currentDate = totalsByDate.get(date) ?? {
+      date,
+      expenses_cents: 0,
+      incomes_cents: 0,
+      net_cashflow_cents: 0,
+    };
+
+    if (category.type === 'expense') {
+      currentDate.expenses_cents += Math.abs(amountCents);
+    } else if (category.type === 'income') {
+      currentDate.incomes_cents += amountCents;
+    }
+
+    currentDate.net_cashflow_cents = currentDate.incomes_cents - currentDate.expenses_cents;
+    totalsByDate.set(date, currentDate);
+  }
+
+  return Array.from(totalsByDate.values()).sort((left, right) => left.date.localeCompare(right.date));
+}
+
 function expensesByCategoryByMonth(filters = {}) {
   const database = getDatabase();
   const filterContext = resolveFilterContext(database, filters);
@@ -597,8 +688,48 @@ function moneyFlowSankeyByMonth(filters = {}) {
   };
 }
 
+function buildCompareMonthSnapshot(selection) {
+  const period = toMonthRangeFromSelection(selection);
+  const monthFilters = {
+    date_from: period.from,
+    date_to: period.to,
+  };
+
+  const moneyFlowTotals = moneyFlowSankeyByMonth(monthFilters)?.totals ?? {
+    incomes_cents: 0,
+    expenses_cents: 0,
+    savings_cents: 0,
+    investments_cents: 0,
+    crypto_cents: 0,
+    net_cashflow_cents: 0,
+  };
+  const netWorth = netWorthByAccount({
+    date_to: period.to,
+  });
+  const expensesByCategory = expensesByCategoryByMonth(monthFilters);
+  const incomesByCategory = incomesByCategoryByMonth(monthFilters);
+  const dailyTotals = dailyTotalsByDate(monthFilters);
+
+  return {
+    period,
+    totals: moneyFlowTotals,
+    net_worth: netWorth,
+    expenses_by_category: toCompareCategoryRows(expensesByCategory.rows, period.month_key, { absoluteAmount: true }),
+    incomes_by_category: toCompareCategoryRows(incomesByCategory.rows, period.month_key),
+    daily_totals: dailyTotals,
+  };
+}
+
+function compareMonths(payload) {
+  return {
+    left: buildCompareMonthSnapshot(payload.left),
+    right: buildCompareMonthSnapshot(payload.right),
+  };
+}
+
 module.exports = {
   availableYears,
+  compareMonths,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,
   netWorthByAccount,

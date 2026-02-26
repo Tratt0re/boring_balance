@@ -19,6 +19,10 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
     return this.ipcClient.expensesIncomesNetCashflowByMonth(payload);
   }
 
+  compareMonths(payload: DTO.AnalyticsCompareMonthsPayload): Promise<DTO.AnalyticsCompareMonthsResponse> {
+    return this.ipcClient.compareMonths(payload);
+  }
+
   receivablesPayables(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsReceivablesPayablesResponse> {
     return this.ipcClient.receivablesPayables(payload);
   }

@@ -1,5 +1,109 @@
-<section class="flex flex-col gap-4">
-  <z-skeleton class="h-8 w-36"></z-skeleton>
-  <z-skeleton class="h-44 w-full"></z-skeleton>
-  <z-skeleton class="h-44 w-full"></z-skeleton>
+<section class="flex min-h-full flex-col gap-4">
+  <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+    <app-compare-year-month-select
+      [titleKey]="'compare.selectors.left.title'"
+      [periodLabel]="leftPeriodLongLabel()"
+      [yearValue]="leftYear()"
+      [monthValue]="leftMonthIndex()"
+      [yearOptions]="yearOptions()"
+      [monthOptions]="monthOptions()"
+      (yearChange)="onYearSelectionChange('left', $event)"
+      (monthChange)="onMonthSelectionChange('left', $event)"
+    />
+
+    <app-compare-year-month-select
+      [titleKey]="'compare.selectors.right.title'"
+      [periodLabel]="rightPeriodLongLabel()"
+      [yearValue]="rightYear()"
+      [monthValue]="rightMonthIndex()"
+      [yearOptions]="yearOptions()"
+      [monthOptions]="monthOptions()"
+      (yearChange)="onYearSelectionChange('right', $event)"
+      (monthChange)="onMonthSelectionChange('right', $event)"
+    />
+  </div>
+
+  @if (isLoading()) {
+    <app-base-card
+      [zTitle]="'compare.loadingTitle' | translate"
+      [zDescription]="'compare.loadingDescription' | translate"
+    >
+      <div class="flex h-40 items-center justify-center">
+        <div class="flex flex-col items-center gap-3 text-muted-foreground">
+          <z-loader zSize="lg" />
+          <p class="text-sm">{{ 'overview.cards.monthlyTotals.loading' | translate }}</p>
+        </div>
+      </div>
+    </app-base-card>
+  } @else if (loadError(); as loadErrorMessage) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ 'compare.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+    </div>
+  } @else if (hasComparisonData()) {
+    <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      <app-base-card
+        [zTitle]="'compare.cards.summary.title' | translate"
+        [zDescription]="'compare.cards.summary.description' | translate"
+      >
+        <app-bar-chart
+          [labels]="summaryBarChartLabels()"
+          [series]="summaryBarChartSeries()"
+          [height]="summaryBarChartHeight"
+          [showLegend]="true"
+          [dimOthersOnFocus]="true"
+          [blurOpacity]="0.14"
+          [valueAxisCurrencyCode]="summaryChartCurrencyCode()"
+          [showAxisTooltipDelta]="true"
+          [axisTooltipDeltaLabel]="'compare.metrics.delta' | translate"
+        ></app-bar-chart>
+      </app-base-card>
+
+      <app-base-card
+        [zTitle]="'compare.cards.radar.title' | translate"
+        [zDescription]="'compare.cards.radar.description' | translate"
+      >
+        @if (radarSeries().length === 0) {
+          <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+            {{ 'compare.cards.radar.empty' | translate }}
+          </div>
+        } @else {
+          <app-radar-chart
+            [indicators]="radarIndicators()"
+            [series]="radarSeries()"
+            [height]="radarChartHeight"
+            [showLegend]="true"
+            [dimOthersOnFocus]="true"
+            [blurOpacity]="0.14"
+            [showArea]="false"
+            [tooltipCurrencyCode]="summaryChartCurrencyCode()"
+          ></app-radar-chart>
+        }
+      </app-base-card>
+    </div>
+
+    <app-base-card
+      [zTitle]="'compare.cards.expensesByCategory.title' | translate"
+      [zDescription]="'compare.cards.expensesByCategory.description' | translate"
+    >
+      @if (expenseCategoryTableRows().length === 0) {
+        <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+          {{ 'compare.cards.expensesByCategory.empty' | translate }}
+        </div>
+      } @else {
+        <app-data-table
+          [data]="expenseCategoryTableRows()"
+          [structure]="expenseCategoryTableStructure()"
+          [appearance]="'default'"
+          [stickyHeader]="true"
+          [hoverable]="true"
+          [hasActionColumn]="false"
+          [emptyMessage]="'compare.cards.expensesByCategory.empty'"
+        ></app-data-table>
+      }
+    </app-base-card>
+  } @else {
+    <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+      {{ 'compare.empty' | translate }}
+    </div>
+  }
 </section>

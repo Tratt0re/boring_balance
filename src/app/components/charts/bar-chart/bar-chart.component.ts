@@ -67,6 +67,8 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   readonly valueAxisPercent = input(false, { transform: booleanAttribute });
   readonly valueAxisCurrencyCode = input<string | null>(null);
   readonly tooltipTrigger = input<AppBarChartTooltipTrigger>('axis');
+  readonly showAxisTooltipDelta = input(false, { transform: booleanAttribute });
+  readonly axisTooltipDeltaLabel = input('Delta');
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -85,6 +87,8 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       ? (value: unknown) => this.formatCurrencyValue(value, normalizedCurrencyCode)
       : null;
     const tooltipTrigger = this.tooltipTrigger();
+    const showAxisTooltipDelta = this.showAxisTooltipDelta();
+    const axisTooltipDeltaLabel = this.axisTooltipDeltaLabel();
     const valueAxisLabelFormatter = usePercentValueAxis
       ? (value: number | string) => `${Number.isFinite(Number(value)) ? Number(value) : value}%`
       : currencyFormatter
@@ -198,6 +202,12 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
         ...(!usePercentValueAxis && currencyFormatter
           ? {
               valueFormatter: (value: unknown) => currencyFormatter(value),
+            }
+          : {}),
+        ...(tooltipTrigger === 'axis' && showAxisTooltipDelta
+          ? {
+              formatter: (params: unknown) =>
+                this.formatAxisTooltip(params, usePercentValueAxis, currencyFormatter, axisTooltipDeltaLabel),
             }
           : {}),
         ...(tooltipTrigger === 'item'
@@ -359,6 +369,87 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     lines.push(...details);
 
     return lines.join('<br/>');
+  }
+
+  private formatAxisTooltip(
+    params: unknown,
+    usePercentValueAxis: boolean,
+    currencyFormatter: ((value: unknown) => string) | null,
+    deltaLabel: string,
+  ): string {
+    const tooltipParams = (Array.isArray(params) ? params : []) as Array<{
+      axisValueLabel?: unknown;
+      axisValue?: unknown;
+      seriesName?: unknown;
+      marker?: unknown;
+      value?: unknown;
+      data?: unknown;
+    }>;
+    if (tooltipParams.length === 0) {
+      return '';
+    }
+
+    const titleStyle = 'font-weight: 700;';
+    const labelStyle = 'font-weight: 300; opacity: 0.78;';
+    const valueStyle = 'font-weight: 700;';
+    const lines: string[] = [];
+    const axisLabelCandidate = tooltipParams.find((entry) => entry?.axisValueLabel !== undefined);
+    const axisLabel = String(axisLabelCandidate?.axisValueLabel ?? tooltipParams[0]?.axisValue ?? '');
+    const numericSeriesValues: number[] = [];
+
+    if (axisLabel.trim().length > 0) {
+      lines.push(`<span style="${titleStyle}">${this.escapeHtml(axisLabel)}</span>`);
+    }
+
+    for (const entry of tooltipParams) {
+      const seriesName = String(entry?.seriesName ?? '');
+      const marker = typeof entry?.marker === 'string' ? entry.marker : '';
+      const rawValue = this.extractTooltipAxisValue(entry?.value ?? entry?.data);
+      const numericValue = Number(rawValue);
+      const formattedValue = Number.isFinite(numericValue)
+        ? usePercentValueAxis
+          ? `${numericValue.toFixed(2)}%`
+          : currencyFormatter
+            ? currencyFormatter(numericValue)
+            : String(numericValue)
+        : `${rawValue ?? ''}`;
+
+      if (Number.isFinite(numericValue)) {
+        numericSeriesValues.push(numericValue);
+      }
+
+      const baseLine =
+        `<span style="${labelStyle}">${this.escapeHtml(seriesName)}:</span> ` +
+        `<strong style="${valueStyle}">${this.escapeHtml(formattedValue)}</strong>`;
+      lines.push(marker.length > 0 ? `${marker} ${baseLine}` : baseLine);
+    }
+
+    if (numericSeriesValues.length >= 2) {
+      const deltaValue = numericSeriesValues[0] - numericSeriesValues[1];
+      const formattedDelta = usePercentValueAxis
+        ? `${deltaValue.toFixed(2)}%`
+        : currencyFormatter
+          ? currencyFormatter(deltaValue)
+          : String(deltaValue);
+      lines.push(
+        `<span style="${labelStyle}">${this.escapeHtml(deltaLabel)}:</span> ` +
+          `<strong style="${valueStyle}">${this.escapeHtml(formattedDelta)}</strong>`,
+      );
+    }
+
+    return lines.join('<br/>');
+  }
+
+  private extractTooltipAxisValue(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return this.extractTooltipAxisValue(value[0]);
+    }
+
+    if (value && typeof value === 'object' && 'value' in (value as object)) {
+      return (value as { value?: unknown }).value;
+    }
+
+    return value;
   }
 
   private escapeHtml(value: string): string {

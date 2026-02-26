@@ -67,6 +67,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
   readonly radius = input('62%');
   readonly dimOthersOnFocus = input(false, { transform: booleanAttribute });
   readonly blurOpacity = input(0.2);
+  readonly tooltipCurrencyCode = input<string | null>(null);
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -82,6 +83,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
     const normalizedDefaultPointOpacity = Math.min(Math.max(this.pointOpacity(), 0), 1);
     const normalizedDefaultPointSize = Math.max(1, this.pointSize());
     const normalizedSplitNumber = Math.max(1, Math.round(this.splitNumber()));
+    const normalizedTooltipCurrencyCode = this.normalizeCurrencyCode(this.tooltipCurrencyCode());
 
     const values = sourceSeries.flatMap((item) => item.value);
     const autoMax = values.length > 0 ? Math.max(...values) : 100;
@@ -185,6 +187,8 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
           color: tooltipForeground,
           fontFamily,
         },
+        formatter: (params: unknown) =>
+          this.formatTooltip(params, normalizedIndicators, normalizedTooltipCurrencyCode),
       },
       legend: {
         show: this.showLegend() && radarSeries.length > 0,
@@ -237,5 +241,104 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.themeObserver?.disconnect();
     this.themeObserver = null;
+  }
+
+  private formatTooltip(
+    params: unknown,
+    indicators: ReadonlyArray<{ name: string; min: number; max: number }>,
+    currencyCode: string | null,
+  ): string {
+    const tooltipParams = params as {
+      seriesName?: string;
+      marker?: string;
+      value?: unknown;
+      data?: { value?: unknown } | null;
+    };
+    const marker = typeof tooltipParams?.marker === 'string' ? tooltipParams.marker : '';
+    const seriesName =
+      typeof tooltipParams?.seriesName === 'string' && tooltipParams.seriesName.trim().length > 0
+        ? tooltipParams.seriesName
+        : '';
+    const rawValue =
+      tooltipParams?.value &&
+      typeof tooltipParams.value === 'object' &&
+      !Array.isArray(tooltipParams.value) &&
+      'value' in (tooltipParams.value as object)
+        ? (tooltipParams.value as { value?: unknown }).value
+        : (tooltipParams?.value ?? tooltipParams?.data?.value);
+    const valueList = Array.isArray(rawValue) ? rawValue : [];
+    const labelStyle = 'font-weight: 300; opacity: 0.78;';
+    const valueStyle = 'font-weight: 700;';
+    const lines: string[] = [];
+
+    if (seriesName.length > 0) {
+      const safeSeriesName = this.escapeHtml(seriesName);
+      lines.push(
+        marker.length > 0
+          ? `${marker} <strong style="${valueStyle}">${safeSeriesName}</strong>`
+          : `<strong style="${valueStyle}">${safeSeriesName}</strong>`,
+      );
+    }
+
+    for (let index = 0; index < indicators.length; index += 1) {
+      const indicator = indicators[index];
+      const rawItemValue = valueList[index];
+      const formattedValue = currencyCode
+        ? this.formatCurrencyValue(rawItemValue, currencyCode)
+        : this.formatNumberValue(rawItemValue);
+
+      lines.push(
+        `<span style="${labelStyle}">${this.escapeHtml(indicator.name)}:</span> ` +
+          `<strong style="${valueStyle}">${this.escapeHtml(formattedValue)}</strong>`,
+      );
+    }
+
+    return lines.join('<br/>');
+  }
+
+  private formatNumberValue(value: unknown): string {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+      return `${value ?? ''}`;
+    }
+
+    return new Intl.NumberFormat(undefined, {
+      maximumFractionDigits: 2,
+    }).format(numericValue);
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  private normalizeCurrencyCode(value: string | null | undefined): string | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+
+    const normalizedValue = value.trim().toUpperCase();
+    return normalizedValue.length > 0 ? normalizedValue : null;
+  }
+
+  private formatCurrencyValue(value: unknown, currencyCode: string): string {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) {
+      return `${value ?? ''}`;
+    }
+
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: currencyCode,
+        maximumFractionDigits: 2,
+      }).format(numericValue);
+    } catch {
+      return `${numericValue.toFixed(2)} ${currencyCode}`;
+    }
   }
 }

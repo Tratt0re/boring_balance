@@ -20,8 +20,12 @@ const FILTER_FIELDS = new Set([
   'category_types',
   'settled',
 ]);
+const COMPARE_MONTH_PAYLOAD_FIELDS = new Set(['left', 'right']);
+const COMPARE_MONTH_SELECTION_FIELDS = new Set(['year', 'month_index']);
 const ALLOWED_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings', 'brokerage', 'crypto', 'credit']);
 const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
+const MIN_COMPARE_YEAR = 1970;
+const MAX_COMPARE_YEAR = 9999;
 
 function normalizeDateRangeValue(filters, shortKey, legacyKey, labelPrefix) {
   const shortValue = filters[shortKey];
@@ -81,6 +85,27 @@ function normalizePayloadFilters(payload) {
   });
 }
 
+function normalizeCompareMonthSelection(input, label) {
+  const selection = ensurePlainObject(input, label);
+  assertAllowedKeys(selection, COMPARE_MONTH_SELECTION_FIELDS, label);
+
+  const year = Number(selection.year);
+  const monthIndex = Number(selection.month_index);
+
+  if (!Number.isInteger(year) || year < MIN_COMPARE_YEAR || year > MAX_COMPARE_YEAR) {
+    throw new Error(`${label}.year must be an integer between ${MIN_COMPARE_YEAR} and ${MAX_COMPARE_YEAR}.`);
+  }
+
+  if (!Number.isInteger(monthIndex) || monthIndex < 0 || monthIndex > 11) {
+    throw new Error(`${label}.month_index must be an integer between 0 and 11.`);
+  }
+
+  return {
+    year,
+    month_index: monthIndex,
+  };
+}
+
 function expensesIncomesNetCashflowByMonth(payload) {
   const filters = normalizePayloadFilters(payload);
   return analyticsModel.expensesIncomesNetCashflowByMonth(filters);
@@ -89,6 +114,16 @@ function expensesIncomesNetCashflowByMonth(payload) {
 function availableYears(payload) {
   const filters = normalizePayloadFilters(payload);
   return analyticsModel.availableYears(filters);
+}
+
+function compareMonths(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, COMPARE_MONTH_PAYLOAD_FIELDS, 'payload');
+
+  return analyticsModel.compareMonths({
+    left: normalizeCompareMonthSelection(body.left, 'payload.left'),
+    right: normalizeCompareMonthSelection(body.right, 'payload.right'),
+  });
 }
 
 function receivablesPayables(payload) {
@@ -118,6 +153,7 @@ function moneyFlowSankeyByMonth(payload) {
 
 module.exports = {
   availableYears,
+  compareMonths,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,
   netWorthByAccount,

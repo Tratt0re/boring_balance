@@ -245,6 +245,47 @@
       }
     }
   },
+  "compare": {
+    "loadingTitle": "Preparazione confronto",
+    "loadingDescription": "Caricamento analisi per i mesi selezionati",
+    "loadFailedWithError": "Caricamento confronto non riuscito: {{error}}",
+    "empty": "Nessun dato di confronto disponibile per i mesi selezionati.",
+    "selectors": {
+      "left": {
+        "title": "Mese 1"
+      },
+      "right": {
+        "title": "Mese 2"
+      },
+      "year": "Anno",
+      "month": "Mese"
+    },
+    "metrics": {
+      "delta": "Delta"
+    },
+    "cards": {
+      "summary": {
+        "title": "Riepilogo confronto",
+        "description": "Barre affiancate per entrate, spese e flusso di cassa netto"
+      },
+      "radar": {
+        "title": "Confronto radar",
+        "description": "Categorie di spesa confrontate tra i mesi selezionati (categorie principali)",
+        "empty": "Nessuna categoria di spesa disponibile per il confronto radar."
+      },
+      "dailyCalendar": {
+        "title": "Calendario spese giornaliere",
+        "description": "Intensita delle spese giornaliere con scala condivisa tra i due mesi",
+        "panelHint": "Spese giornaliere (stessa scala)",
+        "empty": "Nessuna attivita di spesa giornaliera per i mesi selezionati."
+      },
+      "expensesByCategory": {
+        "title": "Spese per categoria",
+        "description": "Totali per categoria affiancati per i mesi selezionati con delta",
+        "empty": "Nessun dato di spesa per categoria disponibile per i mesi selezionati."
+      }
+    }
+  },
   "category": {
     "exclude": {
       "name": "Escluso",
