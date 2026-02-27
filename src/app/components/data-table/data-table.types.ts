@@ -39,6 +39,12 @@ export interface TableCurrencyConfig {
   readonly iconModeColumnKey?: string;
 }
 
+export interface TableNumberConfig {
+  readonly useGrouping?: boolean;
+  readonly minimumFractionDigits?: number;
+  readonly maximumFractionDigits?: number;
+}
+
 export interface ColumnDataItem extends TableDataStructureItem {
   readonly columnName: string;
   readonly columnKey: string;
@@ -46,6 +52,7 @@ export interface ColumnDataItem extends TableDataStructureItem {
   readonly align?: TableCellAlign;
   readonly sortable?: boolean;
   readonly translate?: boolean;
+  readonly number?: TableNumberConfig;
   readonly currency?: TableCurrencyConfig;
   readonly badge?: TableBadgeConfig;
   readonly cellIcon?: TableCellIconConfig;

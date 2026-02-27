@@ -25,7 +25,8 @@
       "template": "Modello",
       "occurrences": "Occorrenze",
       "frequencyUnit": "Unita di frequenza",
-      "monthPolicy": "Se il giorno non esiste nel mese"
+      "monthPolicy": "Se il giorno non esiste nel mese",
+      "year": "Anno"
     },
     "placeholders": {
       "selectType": "Seleziona tipo",
@@ -434,6 +435,83 @@
       "actions": {
         "cancel": "Annulla",
         "archive": "Archivia"
+      }
+    }
+  },
+  "budgets": {
+    "view": {
+      "setup": "Impostazione budget",
+      "analysis": "Analisi budget"
+    },
+    "table": {
+      "description": "Impostazione budget per categoria",
+      "emptyMessage": "Nessun budget trovato.",
+      "unknownCategory": "Categoria sconosciuta",
+      "actions": {
+        "add": "Aggiungi budget",
+        "edit": "Modifica budget",
+        "delete": "Elimina budget"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Aggiungi budget",
+        "description": "Crea un budget attivo per il {{year}}.",
+        "actions": {
+          "cancel": "Annulla",
+          "create": "Crea budget"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di creare il budget.",
+          "categoryRequired": "La categoria e obbligatoria.",
+          "amountRequired": "L'importo e obbligatorio.",
+          "amountInvalid": "L'importo deve essere un numero positivo.",
+          "descriptionMaxLength": "La descrizione deve contenere al massimo 75 caratteri.",
+          "createFailed": "Creazione del budget non riuscita."
+        }
+      },
+      "edit": {
+        "title": "Modifica budget",
+        "description": "Aggiorna le impostazioni del budget per il {{year}}.",
+        "actions": {
+          "cancel": "Annulla",
+          "save": "Salva modifiche"
+        },
+        "errors": {
+          "fixValidation": "Correggi i campi evidenziati prima di salvare il budget.",
+          "updateFailed": "Aggiornamento del budget non riuscito."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminare budget?",
+      "description": "Sei sicuro di voler eliminare il budget per \"{{category}}\"?",
+      "actions": {
+        "cancel": "Annulla",
+        "delete": "Elimina"
+      }
+    },
+    "analysis": {
+      "title": "Analisi budget",
+      "description": "Confronta gli obiettivi di budget con le spese reali di categoria per l'anno selezionato.",
+      "loading": "Caricamento analisi budget...",
+      "empty": "Nessun dato di analisi budget disponibile per {{year}}.",
+      "series": {
+        "budget": "Budget",
+        "expenses": "Spese"
+      },
+      "metrics": {
+        "totalBudget": "Totale budget",
+        "totalExpenses": "Totale spese",
+        "delta": "Budget residuo",
+        "availablePercent": "Budget ancora disponibile"
+      },
+      "chart": {
+        "title": "Budget vs spese per categoria",
+        "description": "Confronto orizzontale tra importo di budget e totale spese per ogni categoria budget."
+      },
+      "errors": {
+        "loadFailedWithError": "Caricamento analisi budget non riuscito: {{error}}"
       }
     }
   },

@@ -21,8 +21,16 @@ const CHANNELS = Object.freeze({
     update: 'db:categories:update',
     remove: 'db:categories:remove',
   }),
+  budgets: Object.freeze({
+    create: 'db:budgets:create',
+    get: 'db:budgets:get',
+    list: 'db:budgets:list',
+    update: 'db:budgets:update',
+    remove: 'db:budgets:remove',
+  }),
   analytics: Object.freeze({
     availableYears: 'db:analytics:available-years',
+    budgetVsExpensesByCategoryByYear: 'db:analytics:budget-vs-expenses-by-category-by-year',
     compareMonths: 'db:analytics:compare-months',
     expensesIncomesNetCashflowByMonth: 'db:analytics:expenses-incomes-net-cashflow-by-month',
     receivablesPayables: 'db:analytics:receivables-payables',

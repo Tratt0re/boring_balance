@@ -1067,10 +1067,12 @@ export class AppDataTableComponent {
     return Number(leftBoolean) - Number(rightBoolean);
   }
 
-  private formatValueByType(value: unknown, type: TableCellType): string {
+  private formatValueByType(value: unknown, column: ColumnDataItem): string {
     if (this.isEmptyValue(value)) {
       return '-';
     }
+
+    const type = column.type ?? 'string';
 
     switch (type) {
       case 'number': {
@@ -1079,7 +1081,11 @@ export class AppDataTableComponent {
           return '-';
         }
 
-        return new Intl.NumberFormat(this.resolveLocale()).format(numericValue);
+        try {
+          return new Intl.NumberFormat(this.resolveLocale(), column.number).format(numericValue);
+        } catch {
+          return `${numericValue}`;
+        }
       }
 
       case 'currency': {
@@ -1173,7 +1179,7 @@ export class AppDataTableComponent {
 
   private formatColumnValue(value: unknown, column: ColumnDataItem): string {
     const translatedValue = this.translateIfString(value);
-    return this.formatValueByType(translatedValue, column.type ?? 'string');
+    return this.formatValueByType(translatedValue, column);
   }
 
   private isActionDataItem(item: TableDataItem): item is ActionDataItem {

@@ -1,5 +1,115 @@
-<section class="flex flex-col gap-4">
-  <z-skeleton class="h-8 w-40"></z-skeleton>
-  <z-skeleton class="h-52 w-full"></z-skeleton>
-  <z-skeleton class="h-24 w-full"></z-skeleton>
+<section class="flex min-h-full flex-col gap-4">
+  @if (activeSectionView() === 'setup') {
+    <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out space-y-4">
+      @if (isLoading()) {
+        <z-skeleton class="h-12 w-full"></z-skeleton>
+        <z-skeleton class="h-60 w-full"></z-skeleton>
+      } @else if (loadError(); as loadError) {
+        <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+          Failed to load budgets: {{ loadError }}
+        </div>
+      } @else {
+        <app-data-table
+          [data]="budgets()"
+          [structure]="budgetTableStructure"
+          [title]="'budgets.view.setup'"
+          description="budgets.table.description"
+          emptyMessage="budgets.table.emptyMessage"
+          [appearance]="'default'"
+          [showEmpty]="true"
+          [hoverable]="true"
+          [selectable]="false"
+          [hasActionColumn]="false"
+          [showPagination]="true"
+          [currentPage]="page()"
+          [totalPages]="pageCount()"
+          [pageSize]="pageSize()"
+          [pageSizeOptions]="pageSizeOptions"
+          [maxVisiblePages]="5"
+          [currencyCode]="currencyCode()"
+          [pageSizeLabel]="'common.pagination.rowsPerPage' | translate"
+          [showPageSizeSelector]="true"
+          [showTopPagination]="true"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+        ></app-data-table>
+      }
+    </div>
+  } @else {
+    <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out space-y-4">
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <h2 class="text-xl font-semibold tracking-tight">
+            {{ 'budgets.analysis.title' | translate }}
+          </h2>
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ analysisYearLabel() }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:min-w-[32rem]">
+          <div class="rounded-lg border border-border/60 bg-card p-3">
+            <p class="text-xs uppercase tracking-wide text-muted-foreground">
+              {{ 'budgets.analysis.metrics.totalBudget' | translate }}
+            </p>
+            <p class="mt-1 text-lg font-semibold tracking-tight">
+              {{ formatCurrency(analysisBudgetTotalAmount()) }}
+            </p>
+          </div>
+
+          <div class="rounded-lg border border-border/60 bg-card p-3">
+            <p class="text-xs uppercase tracking-wide text-muted-foreground">
+              {{ 'budgets.analysis.metrics.totalExpenses' | translate }}
+            </p>
+            <p class="mt-1 text-lg font-semibold tracking-tight">
+              {{ formatCurrency(analysisExpensesTotalAmount()) }}
+            </p>
+          </div>
+
+          <div class="rounded-lg border border-border/60 bg-card p-3">
+            <p class="text-xs uppercase tracking-wide text-muted-foreground">
+              {{ 'budgets.analysis.metrics.delta' | translate }}
+            </p>
+            <p class="mt-1 text-lg font-semibold tracking-tight">
+              {{ formatSignedCurrency(analysisDeltaAmount()) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <app-base-card
+        [zTitle]="'budgets.analysis.chart.title' | translate"
+        [zDescription]="'budgets.analysis.chart.description' | translate"
+      >
+        @if (analysisLoading()) {
+          <div class="flex h-72 items-center justify-center">
+            <div class="flex flex-col items-center gap-3 text-muted-foreground">
+              <z-loader zSize="lg" />
+              <p class="text-sm">{{ 'budgets.analysis.loading' | translate }}</p>
+            </div>
+          </div>
+        } @else if (analysisError(); as analysisErrorMessage) {
+          <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+            {{ 'budgets.analysis.errors.loadFailedWithError' | translate : { error: analysisErrorMessage } }}
+          </div>
+        } @else if (!analysisHasData()) {
+          <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+            {{ 'budgets.analysis.empty' | translate : { year: analysisYear() } }}
+          </div>
+        } @else {
+          <app-bar-chart
+            class="mt-1"
+            [labels]="analysisChartLabels()"
+            [series]="analysisChartSeries()"
+            [orientation]="'horizontal'"
+            [showLegend]="true"
+            [valueAxisCurrencyCode]="currencyCode()"
+            [tooltipTrigger]="'axis'"
+            [axisTooltipDetailsByIndex]="analysisAxisTooltipDetailsByIndex()"
+            [height]="analysisChartHeight()"
+          ></app-bar-chart>
+        }
+      </app-base-card>
+    </div>
+  }
 </section>

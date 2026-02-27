@@ -1,6 +1,7 @@
 export * from './accounts.dto';
 export * from './analytics.dto';
 export * from './app-meta.dto';
+export * from './budgets.dto';
 export * from './categories.dto';
 export * from './common.dto';
 export * from './plan-items.dto';

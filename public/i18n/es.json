@@ -25,7 +25,8 @@
       "template": "Plantilla",
       "occurrences": "Ocurrencias",
       "frequencyUnit": "Unidad de frecuencia",
-      "monthPolicy": "Si el dia no existe en el mes"
+      "monthPolicy": "Si el dia no existe en el mes",
+      "year": "Ano"
     },
     "placeholders": {
       "selectType": "Selecciona tipo",
@@ -393,6 +394,83 @@
       "actions": {
         "cancel": "Cancelar",
         "archive": "Archivar"
+      }
+    }
+  },
+  "budgets": {
+    "view": {
+      "setup": "Configuracion de presupuesto",
+      "analysis": "Analisis de presupuesto"
+    },
+    "table": {
+      "description": "Configuracion de presupuestos por categoria",
+      "emptyMessage": "No se encontraron presupuestos.",
+      "unknownCategory": "Categoria desconocida",
+      "actions": {
+        "add": "Agregar presupuesto",
+        "edit": "Editar presupuesto",
+        "delete": "Eliminar presupuesto"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar presupuesto",
+        "description": "Crea un presupuesto activo para {{year}}.",
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear presupuesto"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear el presupuesto.",
+          "categoryRequired": "La categoria es obligatoria.",
+          "amountRequired": "El importe es obligatorio.",
+          "amountInvalid": "El importe debe ser un numero positivo.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
+          "createFailed": "No se pudo crear el presupuesto."
+        }
+      },
+      "edit": {
+        "title": "Editar presupuesto",
+        "description": "Actualiza la configuracion del presupuesto para {{year}}.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar el presupuesto.",
+          "updateFailed": "No se pudo actualizar el presupuesto."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminar presupuesto?",
+      "description": "Estas seguro de que quieres eliminar el presupuesto de \"{{category}}\"?",
+      "actions": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "analysis": {
+      "title": "Analisis de presupuesto",
+      "description": "Compara los objetivos de presupuesto con los gastos reales por categoria para el ano seleccionado.",
+      "loading": "Cargando analisis de presupuesto...",
+      "empty": "No hay datos de analisis de presupuesto para {{year}}.",
+      "series": {
+        "budget": "Presupuesto",
+        "expenses": "Gastos"
+      },
+      "metrics": {
+        "totalBudget": "Presupuesto total",
+        "totalExpenses": "Gastos totales",
+        "delta": "Presupuesto restante",
+        "availablePercent": "Presupuesto aun disponible"
+      },
+      "chart": {
+        "title": "Presupuesto vs gastos por categoria",
+        "description": "Comparacion horizontal entre importe de presupuesto y total de gastos para cada categoria con presupuesto."
+      },
+      "errors": {
+        "loadFailedWithError": "No se pudo cargar el analisis de presupuesto: {{error}}"
       }
     }
   },

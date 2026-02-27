@@ -177,6 +177,23 @@ function normalizeInteger(value, label) {
 }
 
 /**
+ * Validates a non-negative integer (zero or positive).
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @returns {number} Non-negative integer.
+ * @throws {Error} If value is not a non-negative integer.
+ */
+function normalizeNonNegativeInteger(value, label) {
+  const normalizedValue = Number(value);
+  if (!Number.isInteger(normalizedValue) || normalizedValue < 0) {
+    throw new Error(`${label} must be a non-negative integer.`);
+  }
+
+  return normalizedValue;
+}
+
+/**
  * Converts a numeric amount value to integer cents.
  *
  * @param {unknown} value - Input amount as a number (e.g. 1.5).
@@ -571,6 +588,27 @@ function normalizeUnixTimestampMilliseconds(value, label) {
 }
 
 /**
+ * Validates a calendar year integer.
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @param {{ min?: number, max?: number }} [options={}] - Inclusive year bounds.
+ * @returns {number} Normalized calendar year.
+ * @throws {Error} If value is not an integer inside the allowed range.
+ */
+function normalizeCalendarYear(value, label, options = {}) {
+  const minYear = Number.isInteger(options.min) ? options.min : 1;
+  const maxYear = Number.isInteger(options.max) ? options.max : 9999;
+  const normalizedValue = Number(value);
+
+  if (!Number.isInteger(normalizedValue) || normalizedValue < minYear || normalizedValue > maxYear) {
+    throw new Error(`${label} must be an integer between ${minYear} and ${maxYear}.`);
+  }
+
+  return normalizedValue;
+}
+
+/**
  * Returns the current Unix timestamp in milliseconds.
  *
  * @returns {number} Current Unix timestamp in milliseconds.
@@ -590,9 +628,11 @@ module.exports = {
   extractString,
   normalizeAmountToCents,
   normalizeBooleanFlag,
+  normalizeCalendarYear,
   normalizeFiltersListPayload,
   normalizeInternalPlanItemId,
   normalizeInteger,
+  normalizeNonNegativeInteger,
   normalizeOptionalAmountFilterToCents,
   normalizeOptionalBooleanFlag,
   normalizeOptionalEnumArray,

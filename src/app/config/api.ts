@@ -7,6 +7,7 @@ export enum APIChannel {
   APP_META = 'appMeta',
   ACCOUNTS = 'accounts',
   CATEGORIES = 'categories',
+  BUDGETS = 'budgets',
   ANALYTICS = 'analytics',
   PLAN_ITEMS = 'planItems',
   TRANSACTIONS = 'transactions',
@@ -35,8 +36,19 @@ export interface ElectronIpcClient {
     readonly update: IpcRequest<DTO.CategoryUpdateDto, DTO.CategoryUpdateResponse>;
     readonly remove: IpcRequest<DTO.CategoryRemoveDto, DTO.CategoryRemoveResponse>;
   };
+  readonly budgets: {
+    readonly create: IpcRequest<DTO.BudgetCreateDto, DTO.BudgetCreateResponse>;
+    readonly get: IpcRequest<DTO.BudgetGetDto, DTO.BudgetGetResponse>;
+    readonly list: OptionalIpcRequest<DTO.BudgetListDto, DTO.BudgetListResponse>;
+    readonly update: IpcRequest<DTO.BudgetUpdateDto, DTO.BudgetUpdateResponse>;
+    readonly remove: IpcRequest<DTO.BudgetRemoveDto, DTO.BudgetRemoveResponse>;
+  };
   readonly analytics: {
     readonly availableYears: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsAvailableYearsResponse>;
+    readonly budgetVsExpensesByCategoryByYear: IpcRequest<
+      DTO.AnalyticsBudgetVsExpensesByCategoryByYearPayload,
+      DTO.AnalyticsBudgetVsExpensesByCategoryByYearResponse
+    >;
     readonly compareMonths: IpcRequest<DTO.AnalyticsCompareMonthsPayload, DTO.AnalyticsCompareMonthsResponse>;
     readonly expensesIncomesNetCashflowByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,

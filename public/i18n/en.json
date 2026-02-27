@@ -25,7 +25,8 @@
       "template": "Template",
       "occurrences": "Occurrences",
       "frequencyUnit": "Frequency unit",
-      "monthPolicy": "If the day is not in the month"
+      "monthPolicy": "If the day is not in the month",
+      "year": "Year"
     },
     "placeholders": {
       "selectType": "Select type",
@@ -434,6 +435,83 @@
       "actions": {
         "cancel": "Cancel",
         "archive": "Archive"
+      }
+    }
+  },
+  "budgets": {
+    "view": {
+      "setup": "Budget setup",
+      "analysis": "Budget analysis"
+    },
+    "table": {
+      "description": "Budget setup by category",
+      "emptyMessage": "No budgets found.",
+      "unknownCategory": "Unknown category",
+      "actions": {
+        "add": "Add budget",
+        "edit": "Edit budget",
+        "delete": "Delete budget"
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Add budget",
+        "description": "Create a budget active for {{year}}.",
+        "actions": {
+          "cancel": "Cancel",
+          "create": "Create budget"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before creating the budget.",
+          "categoryRequired": "Category is required.",
+          "amountRequired": "Amount is required.",
+          "amountInvalid": "Amount must be a positive number.",
+          "descriptionMaxLength": "Description must be at most 75 characters.",
+          "createFailed": "Failed to create budget."
+        }
+      },
+      "edit": {
+        "title": "Edit budget",
+        "description": "Update budget settings for {{year}}.",
+        "actions": {
+          "cancel": "Cancel",
+          "save": "Save changes"
+        },
+        "errors": {
+          "fixValidation": "Please fix the highlighted fields before saving the budget.",
+          "updateFailed": "Failed to update budget."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Delete budget?",
+      "description": "Are you sure you want to delete the budget for \"{{category}}\"?",
+      "actions": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
+    "analysis": {
+      "title": "Budget analysis",
+      "description": "Compare budget targets against actual category expenses for the selected year.",
+      "loading": "Loading budget analysis...",
+      "empty": "No budget analysis data available for {{year}}.",
+      "series": {
+        "budget": "Budget",
+        "expenses": "Expenses"
+      },
+      "metrics": {
+        "totalBudget": "Total budget",
+        "totalExpenses": "Total expenses",
+        "delta": "Remaining budget",
+        "availablePercent": "Budget still available"
+      },
+      "chart": {
+        "title": "Budget vs expenses by category",
+        "description": "Horizontal comparison of budget amount and expense total for each budget category."
+      },
+      "errors": {
+        "loadFailedWithError": "Failed to load budget analysis: {{error}}"
       }
     }
   },

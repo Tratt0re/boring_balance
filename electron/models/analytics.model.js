@@ -45,6 +45,18 @@ function toMonthRangeFromSelection(selection) {
   };
 }
 
+function toYearRange(year) {
+  const normalizedYear = Number(year);
+  const from = new Date(normalizedYear, 0, 1, 0, 0, 0, 0).getTime();
+  const to = new Date(normalizedYear, 11, 31, 23, 59, 59, 999).getTime();
+
+  return {
+    year: normalizedYear,
+    from,
+    to,
+  };
+}
+
 function appendNotEqualFilter(existingFilter, value) {
   if (existingFilter === undefined) {
     return { ne: value };
@@ -727,8 +739,144 @@ function compareMonths(payload) {
   };
 }
 
+function budgetVsExpensesByCategoryByYear(year) {
+  const database = getDatabase();
+  const period = toYearRange(year);
+  const budgetRows = selectRows(
+    database,
+    'budgets',
+    {
+      archived: 0,
+      created_at: {
+        gte: period.from,
+        lte: period.to,
+      },
+    },
+    {
+      orderBy: [
+        { column: 'category_id', direction: 'ASC' },
+        { column: 'id', direction: 'ASC' },
+      ],
+    },
+  );
+
+  if (budgetRows.length === 0) {
+    return {
+      year: period.year,
+      rows: [],
+      totals: {
+        budget_amount_cents: 0,
+        expenses_total_cents: 0,
+        delta_cents: 0,
+      },
+    };
+  }
+
+  const categoryIds = Array.from(new Set(
+    budgetRows
+      .map((row) => Number(row.category_id))
+      .filter((categoryId) => Number.isInteger(categoryId) && categoryId > 0),
+  ));
+  if (categoryIds.length === 0) {
+    return {
+      year: period.year,
+      rows: [],
+      totals: {
+        budget_amount_cents: 0,
+        expenses_total_cents: 0,
+        delta_cents: 0,
+      },
+    };
+  }
+
+  const categories = selectRows(database, 'categories', {
+    id: { in: categoryIds },
+  });
+  const categoryById = new Map(categories.map((category) => [Number(category.id), category]));
+  const expenseCategoryIds = categoryIds.filter((categoryId) => categoryById.get(categoryId)?.type === 'expense');
+  const expenseCategoryIdsSet = new Set(expenseCategoryIds);
+
+  if (expenseCategoryIds.length === 0) {
+    return {
+      year: period.year,
+      rows: [],
+      totals: {
+        budget_amount_cents: 0,
+        expenses_total_cents: 0,
+        delta_cents: 0,
+      },
+    };
+  }
+
+  const expenseTransactions = selectRows(
+    database,
+    'transactions',
+    {
+      category_id: { in: expenseCategoryIds },
+      occurred_at: {
+        gte: period.from,
+        lte: period.to,
+      },
+      transfer_id: { isNull: true },
+    },
+    { orderBy: TRANSACTION_ASC_ORDER },
+  );
+  const netExpensesByCategoryId = new Map();
+
+  for (const row of expenseTransactions) {
+    const categoryId = Number(row.category_id);
+    if (!expenseCategoryIdsSet.has(categoryId)) {
+      continue;
+    }
+
+    const amountCents = Number(row.amount_cents ?? 0);
+    if (!Number.isFinite(amountCents) || amountCents === 0) {
+      continue;
+    }
+
+    netExpensesByCategoryId.set(categoryId, (netExpensesByCategoryId.get(categoryId) ?? 0) + amountCents);
+  }
+
+  const rows = budgetRows
+    .map((budgetRow) => {
+      const categoryId = Number(budgetRow.category_id);
+      const category = categoryById.get(categoryId);
+      if (!category || category.type !== 'expense') {
+        return null;
+      }
+
+      const budgetAmountCents = Math.max(0, Number(budgetRow.amount_cents ?? 0));
+      const expensesTotalCents = Math.max(0, Math.abs(Number(netExpensesByCategoryId.get(categoryId) ?? 0)));
+
+      return {
+        budget_id: Number(budgetRow.id),
+        year: period.year,
+        category_id: categoryId,
+        category_name: String(category.name ?? ''),
+        budget_amount_cents: budgetAmountCents,
+        expenses_total_cents: expensesTotalCents,
+        delta_cents: budgetAmountCents - expensesTotalCents,
+      };
+    })
+    .filter((row) => row !== null);
+
+  const budgetAmountTotalCents = rows.reduce((total, row) => total + Number(row.budget_amount_cents), 0);
+  const expensesTotalCents = rows.reduce((total, row) => total + Number(row.expenses_total_cents), 0);
+
+  return {
+    year: period.year,
+    rows,
+    totals: {
+      budget_amount_cents: budgetAmountTotalCents,
+      expenses_total_cents: expensesTotalCents,
+      delta_cents: budgetAmountTotalCents - expensesTotalCents,
+    },
+  };
+}
+
 module.exports = {
   availableYears,
+  budgetVsExpensesByCategoryByYear,
   compareMonths,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,

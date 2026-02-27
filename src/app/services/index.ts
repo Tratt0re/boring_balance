@@ -5,6 +5,7 @@ export * from './app-meta.service';
 export * from './local-preferences.service';
 export * from './i18n.service';
 export * from './accounts.service';
+export * from './budgets.service';
 export * from './categories.service';
 export * from './plan-items.service';
 export * from './transactions.service';

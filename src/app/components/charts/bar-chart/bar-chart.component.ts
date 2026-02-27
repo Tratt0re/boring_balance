@@ -32,6 +32,7 @@ export interface AppBarChartSeries {
   readonly borderRadius?: number | readonly [number, number, number, number];
   readonly themeColor?: AppChartThemeColor;
   readonly color?: string;
+  readonly dataColors?: readonly string[];
   readonly tooltipValueText?: string;
   readonly tooltipValueTextByIndex?: readonly string[];
   readonly tooltipDetails?: readonly string[];
@@ -69,6 +70,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   readonly tooltipTrigger = input<AppBarChartTooltipTrigger>('axis');
   readonly showAxisTooltipDelta = input(false, { transform: booleanAttribute });
   readonly axisTooltipDeltaLabel = input('Delta');
+  readonly axisTooltipDetailsByIndex = input<readonly (readonly string[] | undefined)[]>([]);
 
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
@@ -151,20 +153,30 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       const defaultNegativeRadius = isHorizontal
         ? [seriesCornerRadius, 0, 0, seriesCornerRadius]
         : [0, 0, seriesCornerRadius, seriesCornerRadius];
-      const data = seriesItem.borderRadius !== undefined
-        ? seriesItem.data
-        : seriesItem.data.map((value) => ({
-            value,
-            itemStyle: {
-              borderRadius: value < 0 ? defaultNegativeRadius : defaultPositiveRadius,
-            },
-          }));
+      const applyDefaultCornerRadius = seriesItem.borderRadius === undefined;
+      const hasPerDataColors = (seriesItem.dataColors ?? []).some((candidate) => candidate.trim().length > 0);
+      const data = seriesItem.data.map((value, dataIndex) => {
+        const dataColor = this.resolveSeriesDataPointColor(seriesItem.dataColors?.[dataIndex], index);
+        if (!applyDefaultCornerRadius && !dataColor) {
+          return value;
+        }
+
+        return {
+          value,
+          itemStyle: {
+            ...(applyDefaultCornerRadius
+              ? { borderRadius: value < 0 ? defaultNegativeRadius : defaultPositiveRadius }
+              : {}),
+            ...(dataColor ? { color: dataColor } : {}),
+          },
+        };
+      });
       const itemStyle = {
         color,
         ...(seriesItem.borderRadius !== undefined ? { borderRadius: seriesItem.borderRadius } : {}),
       };
       const emphasisItemStyle = {
-        color,
+        ...(hasPerDataColors ? {} : { color }),
         opacity: 0.9,
         borderColor: 'transparent',
         borderWidth: 0.5,
@@ -181,7 +193,14 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
           focus: shouldDimOthersOnFocus ? ('series' as const) : ('none' as const),
           itemStyle: emphasisItemStyle,
         },
-        blur: shouldDimOthersOnFocus ? { itemStyle: { color, opacity: normalizedBlurOpacity } } : undefined,
+        blur: shouldDimOthersOnFocus
+          ? {
+              itemStyle: {
+                ...(hasPerDataColors ? {} : { color }),
+                opacity: normalizedBlurOpacity,
+              },
+            }
+          : undefined,
       };
     });
 
@@ -315,16 +334,8 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     const percentStyle = 'font-weight: 400;';
     const formatLabelValue = (label: string, value: string) =>
       `<span style="${labelStyle}">${this.escapeHtml(label)}</span> <strong style="${valueStyle}">${this.escapeHtml(value)}</strong>`;
-    const formatDetailLine = (line: string) => {
-      const separatorIndex = line.indexOf(':');
-      if (separatorIndex < 0) {
-        return `<span style="${labelStyle}">${this.escapeHtml(line)}</span>`;
-      }
-
-      const detailLabel = line.slice(0, separatorIndex + 1);
-      const detailValue = line.slice(separatorIndex + 1).trim();
-      return formatLabelValue(detailLabel, detailValue);
-    };
+    const formatDetailLine = (line: string) =>
+      this.formatTooltipDetailLine(line, labelStyle, formatLabelValue);
     const shouldHideValue = series?.tooltipHideValue === true;
     const indexedTooltipValueText =
       dataIndex >= 0 && Array.isArray(series?.tooltipValueTextByIndex)
@@ -396,6 +407,10 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     const axisLabelCandidate = tooltipParams.find((entry) => entry?.axisValueLabel !== undefined);
     const axisLabel = String(axisLabelCandidate?.axisValueLabel ?? tooltipParams[0]?.axisValue ?? '');
     const numericSeriesValues: number[] = [];
+    const rawDataIndex = tooltipParams
+      .map((entry) => Number((entry as { dataIndex?: unknown })?.dataIndex))
+      .find((index) => Number.isInteger(index) && index >= 0);
+    const dataIndex = Number.isInteger(rawDataIndex) ? Number(rawDataIndex) : -1;
 
     if (axisLabel.trim().length > 0) {
       lines.push(`<span style="${titleStyle}">${this.escapeHtml(axisLabel)}</span>`);
@@ -437,6 +452,21 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       );
     }
 
+    const axisTooltipDetailsByIndex = this.axisTooltipDetailsByIndex();
+    if (dataIndex >= 0 && dataIndex < axisTooltipDetailsByIndex.length) {
+      const details = axisTooltipDetailsByIndex[dataIndex] ?? [];
+      const formatLabelValue = (label: string, value: string) =>
+        `<span style="${labelStyle}">${this.escapeHtml(label)}</span> ` +
+        `<strong style="${valueStyle}">${this.escapeHtml(value)}</strong>`;
+
+      for (const detailLine of details) {
+        const formattedLine = this.formatTooltipDetailLine(detailLine, labelStyle, formatLabelValue);
+        if (formattedLine.length > 0) {
+          lines.push(formattedLine);
+        }
+      }
+    }
+
     return lines.join('<br/>');
   }
 
@@ -452,6 +482,17 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     return value;
   }
 
+  private resolveSeriesDataPointColor(value: string | undefined, seriesIndex: number): string | null {
+    if (typeof value !== 'string' || value.trim().length === 0) {
+      return null;
+    }
+
+    return resolveChartSeriesColor({
+      index: seriesIndex,
+      color: value,
+    });
+  }
+
   private escapeHtml(value: string): string {
     return value
       .replaceAll('&', '&amp;')
@@ -459,6 +500,26 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;')
       .replaceAll("'", '&#39;');
+  }
+
+  private formatTooltipDetailLine(
+    line: string,
+    labelStyle: string,
+    formatLabelValue: (label: string, value: string) => string,
+  ): string {
+    const normalizedLine = `${line ?? ''}`.trim();
+    if (normalizedLine.length === 0) {
+      return '';
+    }
+
+    const separatorIndex = normalizedLine.indexOf(':');
+    if (separatorIndex < 0) {
+      return `<span style="${labelStyle}">${this.escapeHtml(normalizedLine)}</span>`;
+    }
+
+    const detailLabel = normalizedLine.slice(0, separatorIndex + 1);
+    const detailValue = normalizedLine.slice(separatorIndex + 1).trim();
+    return formatLabelValue(detailLabel, detailValue);
   }
 
   private normalizeCurrencyCode(value: string | null | undefined): string | null {

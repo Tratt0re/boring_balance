@@ -139,6 +139,30 @@ export interface AnalyticsCompareMonthsResponseDto {
   readonly right: AnalyticsCompareMonthSnapshotDto;
 }
 
+export interface AnalyticsBudgetVsExpensesByCategoryByYearPayloadDto {
+  readonly year: number;
+}
+
+export interface AnalyticsBudgetVsExpensesByCategoryByYearRowDto {
+  readonly budget_id: RowId;
+  readonly year: number;
+  readonly category_id: RowId;
+  readonly category_name: string;
+  readonly budget_amount_cents: number;
+  readonly expenses_total_cents: number;
+  readonly delta_cents: number;
+}
+
+export interface AnalyticsBudgetVsExpensesByCategoryByYearResponseDto {
+  readonly year: number;
+  readonly rows: readonly AnalyticsBudgetVsExpensesByCategoryByYearRowDto[];
+  readonly totals: {
+    readonly budget_amount_cents: number;
+    readonly expenses_total_cents: number;
+    readonly delta_cents: number;
+  };
+}
+
 export type AnalyticsExpensesIncomesNetCashflowByMonthResponse = AnalyticsMonthlySummaryResponseDto;
 export type AnalyticsAvailableYearsResponse = AnalyticsAvailableYearsResponseDto;
 export type AnalyticsReceivablesPayablesResponse = AnalyticsReceivablesPayablesResponseDto;
@@ -148,3 +172,5 @@ export type AnalyticsIncomesByCategoryByMonthResponse = AnalyticsCategoryByMonth
 export type AnalyticsMoneyFlowSankeyByMonthResponse = AnalyticsMoneyFlowSankeyByMonthResponseDto;
 export type AnalyticsCompareMonthsPayload = AnalyticsCompareMonthsPayloadDto;
 export type AnalyticsCompareMonthsResponse = AnalyticsCompareMonthsResponseDto;
+export type AnalyticsBudgetVsExpensesByCategoryByYearPayload = AnalyticsBudgetVsExpensesByCategoryByYearPayloadDto;
+export type AnalyticsBudgetVsExpensesByCategoryByYearResponse = AnalyticsBudgetVsExpensesByCategoryByYearResponseDto;

@@ -2,6 +2,7 @@ const { analyticsModel } = require('../models');
 const {
   assertAllowedKeys,
   ensurePlainObject,
+  normalizeCalendarYear,
   normalizeOptionalBooleanFlag,
   normalizeOptionalEnumArray,
   normalizeOptionalIdArray,
@@ -22,6 +23,7 @@ const FILTER_FIELDS = new Set([
 ]);
 const COMPARE_MONTH_PAYLOAD_FIELDS = new Set(['left', 'right']);
 const COMPARE_MONTH_SELECTION_FIELDS = new Set(['year', 'month_index']);
+const BUDGET_VS_EXPENSES_BY_CATEGORY_BY_YEAR_PAYLOAD_FIELDS = new Set(['year']);
 const ALLOWED_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings', 'brokerage', 'crypto', 'credit']);
 const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
 const MIN_COMPARE_YEAR = 1970;
@@ -88,13 +90,11 @@ function normalizePayloadFilters(payload) {
 function normalizeCompareMonthSelection(input, label) {
   const selection = ensurePlainObject(input, label);
   assertAllowedKeys(selection, COMPARE_MONTH_SELECTION_FIELDS, label);
-
-  const year = Number(selection.year);
+  const year = normalizeCalendarYear(selection.year, `${label}.year`, {
+    min: MIN_COMPARE_YEAR,
+    max: MAX_COMPARE_YEAR,
+  });
   const monthIndex = Number(selection.month_index);
-
-  if (!Number.isInteger(year) || year < MIN_COMPARE_YEAR || year > MAX_COMPARE_YEAR) {
-    throw new Error(`${label}.year must be an integer between ${MIN_COMPARE_YEAR} and ${MAX_COMPARE_YEAR}.`);
-  }
 
   if (!Number.isInteger(monthIndex) || monthIndex < 0 || monthIndex > 11) {
     throw new Error(`${label}.month_index must be an integer between 0 and 11.`);
@@ -126,6 +126,18 @@ function compareMonths(payload) {
   });
 }
 
+function budgetVsExpensesByCategoryByYear(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, BUDGET_VS_EXPENSES_BY_CATEGORY_BY_YEAR_PAYLOAD_FIELDS, 'payload');
+
+  const year = normalizeCalendarYear(body.year, 'payload.year', {
+    min: MIN_COMPARE_YEAR,
+    max: MAX_COMPARE_YEAR,
+  });
+
+  return analyticsModel.budgetVsExpensesByCategoryByYear(year);
+}
+
 function receivablesPayables(payload) {
   const filters = normalizePayloadFilters(payload);
   return analyticsModel.receivablesPayables(filters);
@@ -153,6 +165,7 @@ function moneyFlowSankeyByMonth(payload) {
 
 module.exports = {
   availableYears,
+  budgetVsExpensesByCategoryByYear,
   compareMonths,
   expensesIncomesNetCashflowByMonth,
   receivablesPayables,

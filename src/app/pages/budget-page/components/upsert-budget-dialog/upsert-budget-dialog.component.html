@@ -1,0 +1,63 @@
+<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'common.labels.category' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-combobox
+      zWidth="full"
+      formControlName="categoryId"
+      [placeholder]="'common.placeholders.selectCategory' | translate"
+      [searchPlaceholder]="'common.filters.placeholders.searchCategory' | translate"
+      [options]="$any(categoryOptions)"
+    />
+    @if (visibleCategoryErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div>
+    <label class="mb-1.5 block text-sm font-medium" for="budget-amount">
+      {{ 'common.labels.amount' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <input
+      id="budget-amount"
+      z-input
+      type="number"
+      formControlName="amount"
+      step="0.01"
+      min="0.01"
+      aria-required="true"
+      [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
+      [attr.placeholder]="'common.placeholders.amountZero' | translate"
+    />
+    @if (visibleAmountErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="budget-description">
+      {{ 'common.labels.description' | translate }}
+    </label>
+    <textarea
+      id="budget-description"
+      z-input
+      formControlName="description"
+      rows="3"
+      class="max-h-32 resize-y"
+      [attr.maxlength]="descriptionMaxLength"
+      [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
+      [attr.placeholder]="'common.placeholders.optionalDescription' | translate"
+    ></textarea>
+    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
+    @if (visibleDescriptionErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  @if (errorKey(); as currentError) {
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+  }
+</form>

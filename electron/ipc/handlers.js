@@ -2,6 +2,7 @@ const {
   appMetaController,
   accountsController,
   categoriesController,
+  budgetsController,
   analyticsController,
   planItemsController,
   transactionsController,
@@ -29,7 +30,14 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.categories.update]: categoriesController.update,
   [CHANNELS.categories.remove]: categoriesController.remove,
 
+  [CHANNELS.budgets.create]: budgetsController.create,
+  [CHANNELS.budgets.get]: budgetsController.get,
+  [CHANNELS.budgets.list]: budgetsController.list,
+  [CHANNELS.budgets.update]: budgetsController.update,
+  [CHANNELS.budgets.remove]: budgetsController.remove,
+
   [CHANNELS.analytics.availableYears]: analyticsController.availableYears,
+  [CHANNELS.analytics.budgetVsExpensesByCategoryByYear]: analyticsController.budgetVsExpensesByCategoryByYear,
   [CHANNELS.analytics.compareMonths]: analyticsController.compareMonths,
   [CHANNELS.analytics.expensesIncomesNetCashflowByMonth]: analyticsController.expensesIncomesNetCashflowByMonth,
   [CHANNELS.analytics.receivablesPayables]: analyticsController.receivablesPayables,
