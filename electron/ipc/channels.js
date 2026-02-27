@@ -59,6 +59,15 @@ const CHANNELS = Object.freeze({
     update: 'db:transactions:update',
     remove: 'db:transactions:remove',
   }),
+  backup: Object.freeze({
+    getSettings: 'backup:getSettings',
+    updateSettings: 'backup:updateSettings',
+    getState: 'backup:getState',
+    selectFolder: 'backup:selectFolder',
+    list: 'backup:list',
+    runNow: 'backup:runNow',
+    restore: 'backup:restore',
+  }),
 });
 
 module.exports = {

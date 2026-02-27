@@ -8,11 +8,13 @@ const {
   markFirstStartCompleted,
   runMigrations,
 } = require('./database');
+const { backupController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
 const APP_NAME = 'Expense Tracker';
 const APP_STORAGE_DIR_NAME = 'expense_tracker';
+let beforeQuitHandled = false;
 
 app.setName(APP_NAME);
 app.setAboutPanelOptions({
@@ -38,6 +40,7 @@ app.whenReady()
     }
 
     registerIpcHandlers();
+    backupController.init();
     createWindow();
 
     app.on('activate', () => {
@@ -57,6 +60,24 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('before-quit', () => {
-  closeDatabase();
+app.on('before-quit', (event) => {
+  if (beforeQuitHandled) {
+    backupController.dispose();
+    closeDatabase();
+    return;
+  }
+
+  beforeQuitHandled = true;
+  event.preventDefault();
+
+  Promise.resolve()
+    .then(() => backupController.onAppBeforeQuit())
+    .catch((error) => {
+      console.error('[electron] Backup before quit failed:', error);
+    })
+    .finally(() => {
+      backupController.dispose();
+      closeDatabase();
+      app.quit();
+    });
 });
