@@ -5,6 +5,7 @@ const {
   budgetsController,
   analyticsController,
   planItemsController,
+  backupController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -63,6 +64,14 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.transactions.listTransfers]: transfersController.list,
   [CHANNELS.transactions.update]: transactionsController.update,
   [CHANNELS.transactions.remove]: transactionsController.remove,
+
+  [CHANNELS.backup.getSettings]: backupController.getSettings,
+  [CHANNELS.backup.updateSettings]: backupController.updateSettings,
+  [CHANNELS.backup.getState]: backupController.getState,
+  [CHANNELS.backup.selectFolder]: backupController.selectFolder,
+  [CHANNELS.backup.list]: backupController.list,
+  [CHANNELS.backup.runNow]: backupController.runNow,
+  [CHANNELS.backup.restore]: backupController.restore,
 });
 
 module.exports = {

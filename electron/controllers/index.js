@@ -4,6 +4,7 @@ const categoriesController = require('./categories.controller');
 const budgetsController = require('./budgets.controller');
 const analyticsController = require('./analytics.controller');
 const planItemsController = require('./plan-items.controller');
+const backupController = require('./backup.controller');
 const { transactionsController, transfersController } = require('./transactions');
 
 module.exports = {
@@ -13,6 +14,7 @@ module.exports = {
   budgetsController,
   analyticsController,
   planItemsController,
+  backupController,
   transactionsController,
   transfersController,
 };

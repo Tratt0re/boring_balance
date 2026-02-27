@@ -1,4 +1,4 @@
-const { closeDatabase, createDatabase, getDatabase } = require('./db');
+const { closeDatabase, createDatabase, getDatabase, getDatabasePath } = require('./db');
 const {
   countRows,
   deleteRows,
@@ -18,6 +18,7 @@ module.exports = {
   createDatabase,
   deleteRows,
   getDatabase,
+  getDatabasePath,
   getMigrationFilePaths,
   getSchemaFilePaths,
   initSchema,

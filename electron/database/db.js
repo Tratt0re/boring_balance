@@ -66,4 +66,5 @@ module.exports = {
   closeDatabase,
   createDatabase,
   getDatabase,
+  getDatabasePath,
 };
