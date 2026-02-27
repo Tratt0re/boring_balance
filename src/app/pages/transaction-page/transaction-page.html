@@ -1,11 +1,11 @@
 <section class="flex flex-col gap-4">
   @if (activeView() === 'common') {
     <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out space-y-4">
-      <app-transactions-table-section [toolbarItems]="toolbarItems()"></app-transactions-table-section>
+      <app-transactions-table-section [toolbarItemNavigation]="toolbarItemNavigation()"></app-transactions-table-section>
     </div>
   } @else {
     <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out space-y-4">
-      <app-transfers-table-section [toolbarItems]="toolbarItems()"></app-transfers-table-section>
+      <app-transfers-table-section [toolbarItemNavigation]="toolbarItemNavigation()"></app-transfers-table-section>
     </div>
   }
 </section>

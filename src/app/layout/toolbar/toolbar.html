@@ -1,17 +1,40 @@
-<z-header [zHeight]="null" class="justify-between gap-4 py-4">
+<z-header [zHeight]="64" class="justify-between gap-4">
   <div class="flex min-w-0 items-center gap-2">
     <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
 
-    @if (title(); as title) {
-      <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
-      <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>
-    }
+    <div class="flex min-w-0 items-center">
+      @if (!hasItemNavigation() && title(); as title) {
+        <div class="flex min-w-0 items-center gap-2">
+          <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
+          <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>
+        </div>
+      }
+
+      @if (itemNavigation(); as item) {
+        <div class="flex items-center gap-2">
+          <z-segmented
+            [zDefaultValue]="item.defaultValue ?? ''"
+            [zSize]="item.size ?? 'sm'"
+            [zAriaLabel]="item.ariaLabel ?? 'Toolbar segmented control'"
+            (zChange)="onItemNavigationChange(item, $event)"
+          >
+            @for (option of item.options; track option.value) {
+              <z-segmented-item
+                [value]="option.value"
+                [label]="option.label | translate"
+                [disabled]="option.disabled ?? false"
+              />
+            }
+          </z-segmented>
+        </div>
+      }
+    </div>
   </div>
 
-  <div class="flex flex-wrap items-center justify-end gap-2">
-    @for (item of nonSegmentedItems(); track item.id) {
-      @if (isSelectItem(item)) {
-        <div class="inline-flex items-center gap-2">
+  <div class="flex min-w-0 items-center justify-end gap-2 overflow-x-auto">
+    @for (item of itemActions(); track item.id) {
+      @if (isSelectAction(item)) {
+        <div class="inline-flex shrink-0 items-center gap-2">
           @if (item.label) {
             <span class="whitespace-nowrap text-xs font-medium text-muted-foreground">
               {{ item.label | translate }}
@@ -35,41 +58,23 @@
             }
           </z-select>
         </div>
+      } @else if (isToolbarAction(item)) {
+        <button
+          z-button
+          type="button"
+          class="shrink-0"
+          [zType]="item.buttonType ?? 'default'"
+          [zSize]="item.buttonSize ?? 'sm'"
+          [zShape]="item.buttonShape ?? 'default'"
+          [zDisabled]="isActionDisabled(item)"
+          (click)="onActionClick(item)"
+        >
+          @if (item.icon) {
+            <z-icon [zType]="item.icon" class="size-4" />
+          }
+          <span>{{ item.label | translate }}</span>
+        </button>
       }
-    }
-
-    @for (action of actions(); track action.id) {
-      <button
-        z-button
-        type="button"
-        [zType]="action.buttonType ?? 'default'"
-        [zSize]="action.buttonSize ?? 'sm'"
-        [zShape]="action.buttonShape ?? 'default'"
-        [zDisabled]="isActionDisabled(action)"
-        (click)="onActionClick(action)"
-      >
-        @if (action.icon) {
-          <z-icon [zType]="action.icon" class="size-4" />
-        }
-        <span>{{ action.label | translate }}</span>
-      </button>
-    }
-
-    @for (item of segmentedItems(); track item.id) {
-      <z-segmented
-        [zDefaultValue]="item.defaultValue ?? ''"
-        [zSize]="item.size ?? 'sm'"
-        [zAriaLabel]="item.ariaLabel ?? 'Toolbar segmented control'"
-        (zChange)="onSegmentedItemChange(item, $event)"
-      >
-        @for (option of item.options; track option.value) {
-          <z-segmented-item
-            [value]="option.value"
-            [label]="option.label | translate"
-            [disabled]="option.disabled ?? false"
-          />
-        }
-      </z-segmented>
     }
   </div>
 </z-header>

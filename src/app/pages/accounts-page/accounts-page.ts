@@ -168,7 +168,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.accounts',
-      actions: this.toolbarActions,
+      itemActions: this.toolbarActions,
     });
     void this.loadAccounts();
   }

@@ -28,8 +28,8 @@ export class RootLayout {
   protected readonly menuSections: readonly MenuSectionConfig[] = MenuConfiguration.sections;
   protected readonly showSidebarOverlay = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
   protected readonly toolbarTitle = this.toolbarContextService.title;
-  protected readonly toolbarActions = this.toolbarContextService.actions;
-  protected readonly toolbarItems = this.toolbarContextService.items;
+  protected readonly toolbarItemActions = this.toolbarContextService.itemActions;
+  protected readonly toolbarItemNavigation = this.toolbarContextService.itemNavigation;
 
   constructor() {
     if (this.isSmallScreen()) {

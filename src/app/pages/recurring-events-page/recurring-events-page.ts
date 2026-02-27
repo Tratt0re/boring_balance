@@ -191,7 +191,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.recurringEvents',
-      actions: this.toolbarActions,
+      itemActions: this.toolbarActions,
     });
     void this.loadInitialData();
   }

@@ -35,7 +35,7 @@ import {
 import { AccountsService } from '@/services/accounts.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { TransactionsService } from '@/services/transactions.service';
-import { ToolbarContextService, type ToolbarAction, type ToolbarItem } from '@/services/toolbar-context.service';
+import { ToolbarContextService, type ToolbarAction, type ToolbarItemNavigation } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -235,7 +235,7 @@ const createTransferTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransfersTableSectionComponent implements OnInit, OnDestroy {
-  readonly toolbarItems = input<readonly ToolbarItem[]>([]);
+  readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
 
   protected readonly transfers = signal<readonly TransferModel[]>([]);
   protected readonly total = signal(0);
@@ -518,8 +518,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.transactions',
-      items: this.toolbarItems(),
-      actions: [this.addTransferToolbarAction],
+      itemNavigation: this.toolbarItemNavigation(),
+      itemActions: [this.addTransferToolbarAction],
     });
   }
 

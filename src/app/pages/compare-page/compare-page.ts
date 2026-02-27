@@ -377,7 +377,7 @@ export class ComparePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.compare',
-      actions: [],
+      itemActions: [],
     });
     this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.languageVersion.update((currentValue) => currentValue + 1);

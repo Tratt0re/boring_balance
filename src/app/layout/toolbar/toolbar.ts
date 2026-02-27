@@ -8,7 +8,12 @@ import { ZardIconComponent } from '@/shared/components/icon';
 import { ZardSegmentedComponent, ZardSegmentedItemComponent } from '@/shared/components/segmented';
 import { ZardSelectImports } from '@/shared/components/select';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
-import type { ToolbarAction, ToolbarItem, ToolbarSegmentedItem, ToolbarSelectItem } from '@/services/toolbar-context.service';
+import type {
+  ToolbarAction,
+  ToolbarItemAction,
+  ToolbarItemNavigation,
+  ToolbarSelectItem,
+} from '@/services/toolbar-context.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -29,8 +34,8 @@ import type { ToolbarAction, ToolbarItem, ToolbarSegmentedItem, ToolbarSelectIte
 export class Toolbar {
   readonly sidebarCollapsed = input(false);
   readonly title = input<string | null>(null);
-  readonly items = input<readonly ToolbarItem[]>([]);
-  readonly actions = input<readonly ToolbarAction[]>([]);
+  readonly itemActions = input<readonly ToolbarItemAction[]>([]);
+  readonly itemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly sidebarToggle = output<void>();
 
   protected onSidebarToggle(): void {
@@ -62,20 +67,16 @@ export class Toolbar {
     }
   }
 
-  protected isSegmentedItem(item: ToolbarItem): item is ToolbarSegmentedItem {
-    return item.type === 'segmented';
+  protected isToolbarAction(item: ToolbarItemAction): item is ToolbarAction {
+    return 'action' in item;
   }
 
-  protected isSelectItem(item: ToolbarItem): item is ToolbarSelectItem {
-    return item.type === 'select';
+  protected isSelectAction(item: ToolbarItemAction): item is ToolbarSelectItem {
+    return 'type' in item && item.type === 'select';
   }
 
-  protected segmentedItems(): readonly ToolbarSegmentedItem[] {
-    return this.items().filter((item): item is ToolbarSegmentedItem => this.isSegmentedItem(item));
-  }
-
-  protected nonSegmentedItems(): readonly Exclude<ToolbarItem, ToolbarSegmentedItem>[] {
-    return this.items().filter((item): item is Exclude<ToolbarItem, ToolbarSegmentedItem> => !this.isSegmentedItem(item));
+  protected hasItemNavigation(): boolean {
+    return this.itemNavigation() !== null;
   }
 
   protected isToolbarItemDisabled(item: { disabled?: boolean | (() => boolean) }): boolean {
@@ -91,7 +92,7 @@ export class Toolbar {
     return typeof value === 'string' ? value : '';
   }
 
-  protected onSegmentedItemChange(item: ToolbarSegmentedItem, value: string): void {
+  protected onItemNavigationChange(item: ToolbarItemNavigation, value: string): void {
     try {
       const result = item.change(value);
       if (result && typeof result.then === 'function') {

@@ -123,7 +123,7 @@ export class OverviewPage implements OnInit, OnDestroy, AfterViewInit {
     this.releaseToolbarActions?.();
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.overview',
-      actions: this.buildToolbarActions(),
+      itemActions: this.buildToolbarActions(),
     });
   }
 

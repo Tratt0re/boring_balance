@@ -167,7 +167,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.categories',
-      actions: this.toolbarActions,
+      itemActions: this.toolbarActions,
     });
     void this.loadCategories();
   }

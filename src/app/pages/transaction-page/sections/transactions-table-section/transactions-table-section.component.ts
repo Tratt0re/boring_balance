@@ -32,7 +32,7 @@ import { AccountsService } from '@/services/accounts.service';
 import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { TransactionsService } from '@/services/transactions.service';
-import { ToolbarContextService, type ToolbarAction, type ToolbarItem } from '@/services/toolbar-context.service';
+import { ToolbarContextService, type ToolbarAction, type ToolbarItemNavigation } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -252,7 +252,7 @@ const createTransactionTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
-  readonly toolbarItems = input<readonly ToolbarItem[]>([]);
+  readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
 
   protected readonly rows = signal<readonly TransactionTableRow[]>([]);
   protected readonly total = signal(0);
@@ -623,8 +623,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.transactions',
-      items: this.toolbarItems(),
-      actions: [this.addTransactionToolbarAction],
+      itemNavigation: this.toolbarItemNavigation(),
+      itemActions: [this.addTransactionToolbarAction],
     });
   }
 

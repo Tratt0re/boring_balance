@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 
 import type {
   ZardButtonShapeVariants,
@@ -52,6 +52,8 @@ export interface ToolbarSelectItem {
 }
 
 export type ToolbarItem = ToolbarSegmentedItem | ToolbarSelectItem;
+export type ToolbarItemAction = ToolbarAction | ToolbarSelectItem;
+export type ToolbarItemNavigation = ToolbarSegmentedItem;
 
 export interface ToolbarAction {
   readonly id: string;
@@ -66,21 +68,51 @@ export interface ToolbarAction {
 
 export interface ToolbarContextConfig {
   readonly title?: string | null;
+  readonly itemActions?: readonly ToolbarItemAction[];
+  readonly itemNavigation?: ToolbarItemNavigation | null;
+  /**
+   * @deprecated Prefer `itemActions`.
+   */
   readonly actions?: readonly ToolbarAction[];
+  /**
+   * @deprecated Prefer `itemActions` and `itemNavigation`.
+   */
   readonly items?: readonly ToolbarItem[];
+}
+
+interface NormalizedToolbarContextConfig {
+  readonly title: string | null;
+  readonly itemActions: readonly ToolbarItemAction[];
+  readonly itemNavigation: ToolbarItemNavigation | null;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ToolbarContextService {
   private readonly titleState = signal<string | null>(null);
-  private readonly actionsState = signal<readonly ToolbarAction[]>([]);
-  private readonly itemsState = signal<readonly ToolbarItem[]>([]);
+  private readonly itemActionsState = signal<readonly ToolbarItemAction[]>([]);
+  private readonly itemNavigationState = signal<ToolbarItemNavigation | null>(null);
   private nextContextId = 1;
   private activeContextId: number | null = null;
 
   readonly title = this.titleState.asReadonly();
-  readonly actions = this.actionsState.asReadonly();
-  readonly items = this.itemsState.asReadonly();
+  readonly itemActions = this.itemActionsState.asReadonly();
+  readonly itemNavigation = this.itemNavigationState.asReadonly();
+  /**
+   * @deprecated Prefer `itemActions`.
+   */
+  readonly actions = computed<readonly ToolbarAction[]>(() =>
+    this.itemActionsState().filter((item): item is ToolbarAction => this.isToolbarAction(item)),
+  );
+  /**
+   * @deprecated Prefer `itemActions` and `itemNavigation`.
+   */
+  readonly items = computed<readonly ToolbarItem[]>(() => {
+    const itemNavigation = this.itemNavigationState();
+    return [
+      ...(itemNavigation ? [itemNavigation] : []),
+      ...this.itemActionsState().filter((item): item is ToolbarSelectItem => this.isToolbarSelectItem(item)),
+    ];
+  });
 
   activate(config: ToolbarContextConfig | readonly ToolbarAction[]): () => void {
     const contextId = this.nextContextId++;
@@ -88,8 +120,8 @@ export class ToolbarContextService {
     const normalizedConfig = this.normalizeConfig(config);
 
     this.titleState.set(normalizedConfig.title ?? null);
-    this.actionsState.set([...(normalizedConfig.actions ?? [])]);
-    this.itemsState.set([...(normalizedConfig.items ?? [])]);
+    this.itemActionsState.set([...(normalizedConfig.itemActions ?? [])]);
+    this.itemNavigationState.set(normalizedConfig.itemNavigation ?? null);
 
     return () => {
       if (this.activeContextId !== contextId) {
@@ -98,16 +130,53 @@ export class ToolbarContextService {
 
       this.activeContextId = null;
       this.titleState.set(null);
-      this.actionsState.set([]);
-      this.itemsState.set([]);
+      this.itemActionsState.set([]);
+      this.itemNavigationState.set(null);
     };
   }
 
-  private normalizeConfig(config: ToolbarContextConfig | readonly ToolbarAction[]): ToolbarContextConfig {
-    if (Array.isArray(config)) {
-      return { actions: config, title: null };
+  private normalizeConfig(config: ToolbarContextConfig | readonly ToolbarAction[]): NormalizedToolbarContextConfig {
+    if (this.isToolbarActionsConfig(config)) {
+      return {
+        title: null,
+        itemActions: config,
+        itemNavigation: null,
+      };
     }
 
-    return config as ToolbarContextConfig;
+    const contextConfig = config as ToolbarContextConfig;
+    const legacyItems = contextConfig.items ?? [];
+    const legacyItemActions = legacyItems.filter((item): item is ToolbarSelectItem => this.isToolbarSelectItem(item));
+    const legacyItemNavigations = legacyItems.filter((item): item is ToolbarSegmentedItem =>
+      this.isToolbarNavigationItem(item),
+    );
+
+    if (legacyItemNavigations.length > 1) {
+      console.warn('[toolbar] Only one `itemNavigation` is supported. Extra segmented items are ignored.');
+    }
+
+    return {
+      title: contextConfig.title ?? null,
+      itemActions: contextConfig.itemActions ?? [...(contextConfig.actions ?? []), ...legacyItemActions],
+      itemNavigation: contextConfig.itemNavigation ?? legacyItemNavigations[0] ?? null,
+    };
+  }
+
+  private isToolbarActionsConfig(
+    config: ToolbarContextConfig | readonly ToolbarAction[],
+  ): config is readonly ToolbarAction[] {
+    return Array.isArray(config);
+  }
+
+  private isToolbarAction(item: ToolbarItemAction): item is ToolbarAction {
+    return 'action' in item;
+  }
+
+  private isToolbarSelectItem(item: ToolbarItem | ToolbarItemAction): item is ToolbarSelectItem {
+    return 'type' in item && item.type === 'select';
+  }
+
+  private isToolbarNavigationItem(item: ToolbarItem): item is ToolbarItemNavigation {
+    return item.type === 'segmented';
   }
 }

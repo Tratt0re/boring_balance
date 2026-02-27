@@ -20,7 +20,12 @@ import { AnalyticsService } from '@/services/analytics.service';
 import { BudgetsService } from '@/services/budgets.service';
 import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
-import { ToolbarContextService, type ToolbarAction, type ToolbarItem } from '@/services/toolbar-context.service';
+import {
+  ToolbarContextService,
+  type ToolbarAction,
+  type ToolbarItemAction,
+  type ToolbarItemNavigation,
+} from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardLoaderComponent } from '@/shared/components/loader';
@@ -256,24 +261,24 @@ export class BudgetPage implements OnInit, OnDestroy {
     },
   ];
 
-  private readonly toolbarItems = computed<readonly ToolbarItem[]>(() => {
-    const items: ToolbarItem[] = [
-      {
-        id: 'budget-sections-view',
-        type: 'segmented',
-        ariaLabel: 'Budget sections',
-        size: 'sm',
-        defaultValue: this.activeSectionView(),
-        options: [
-          { value: 'setup', label: 'budgets.view.setup' },
-          { value: 'analysis', label: 'budgets.view.analysis' },
-        ],
-        change: (value) => this.onSectionViewChange(value),
-      },
-    ];
+  private readonly toolbarItemNavigation = computed<ToolbarItemNavigation>(() => ({
+    id: 'budget-sections-view',
+    type: 'segmented',
+    ariaLabel: 'Budget sections',
+    size: 'sm',
+    defaultValue: this.activeSectionView(),
+    options: [
+      { value: 'setup', label: 'budgets.view.setup' },
+      { value: 'analysis', label: 'budgets.view.analysis' },
+    ],
+    change: (value) => this.onSectionViewChange(value),
+  }));
+
+  private readonly toolbarItemActions = computed<readonly ToolbarItemAction[]>(() => {
+    const actions: ToolbarItemAction[] = [];
 
     if (this.activeSectionView() === 'analysis') {
-      items.push({
+      actions.push({
         id: 'budget-analysis-year',
         type: 'select',
         label: 'breakdown.toolbar.selectYear',
@@ -286,7 +291,11 @@ export class BudgetPage implements OnInit, OnDestroy {
       });
     }
 
-    return items;
+    if (this.activeSectionView() === 'setup') {
+      actions.push(...this.setupToolbarActions);
+    }
+
+    return actions;
   });
 
   private releaseToolbarActions: (() => void) | null = null;
@@ -365,8 +374,8 @@ export class BudgetPage implements OnInit, OnDestroy {
     this.releaseToolbarActions?.();
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.budget',
-      items: this.toolbarItems(),
-      actions: this.activeSectionView() === 'setup' ? this.setupToolbarActions : [],
+      itemNavigation: this.toolbarItemNavigation(),
+      itemActions: this.toolbarItemActions(),
     });
   }
 

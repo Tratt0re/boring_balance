@@ -93,7 +93,7 @@ export class BreakdownPage implements OnInit, OnDestroy {
     this.releaseToolbarActions?.();
     this.releaseToolbarActions = this.toolbarContextService.activate({
       title: 'nav.items.breakdown',
-      items: [
+      itemActions: [
         {
           id: 'breakdown-year',
           type: 'select',
@@ -105,21 +105,20 @@ export class BreakdownPage implements OnInit, OnDestroy {
           options: this.toolbarYearOptions,
           change: (value) => this.onYearChange(value),
         },
-        {
-          id: 'breakdown-section-view',
-          type: 'segmented',
-          ariaLabel: 'Breakdown sections',
-          size: 'sm',
-          defaultValue: this.activeSectionView(),
-          options: [
-            { value: 'expense', label: 'overview.cards.monthlyTotals.series.expenses' },
-            { value: 'income', label: 'overview.cards.monthlyTotals.series.incomes' },
-            { value: 'money-flow', label: 'overview.cards.moneyFlowSankey.title' },
-          ],
-          change: (value) => this.onSectionViewChange(value),
-        },
       ],
-      actions: [],
+      itemNavigation: {
+        id: 'breakdown-section-view',
+        type: 'segmented',
+        ariaLabel: 'Breakdown sections',
+        size: 'sm',
+        defaultValue: this.activeSectionView(),
+        options: [
+          { value: 'expense', label: 'overview.cards.monthlyTotals.series.expenses' },
+          { value: 'income', label: 'overview.cards.monthlyTotals.series.incomes' },
+          { value: 'money-flow', label: 'overview.cards.moneyFlowSankey.title' },
+        ],
+        change: (value) => this.onSectionViewChange(value),
+      },
     });
   }
 
