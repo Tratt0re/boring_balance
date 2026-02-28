@@ -130,6 +130,117 @@
       "about": "About"
     }
   },
+  "dataBackups": {
+    "page": {
+      "title": "Data & Backups",
+      "description": "Manage local backups and prepare for sync and import/export features."
+    },
+    "sections": {
+      "backups": {
+        "title": "Backups"
+      },
+      "sync": {
+        "title": "Sync"
+      },
+      "exportImport": {
+        "title": "Export / Import"
+      }
+    },
+    "backups": {
+      "destination": {
+        "title": "Backup destination",
+        "description": "Enable backups and choose where snapshots will be stored."
+      },
+      "form": {
+        "enabled": "Enable backups",
+        "folderPath": "Backup folder",
+        "folderNotSet": "Not set"
+      },
+      "disabledInfo": "Enable backups to configure automatic snapshots, run manual backups, and manage restore points.",
+      "warnings": {
+        "missingFolder": "Backups are enabled but no backup folder is configured yet."
+      },
+      "autoBackup": {
+        "title": "Automatic backups",
+        "description": "Use predefined backup cadence and retention levels for a safer setup.",
+        "onQuit": "Run backup on app quit",
+        "intervalMin": "Interval (minutes, 0 to disable)",
+        "retentionCount": "Retention count",
+        "intervalOptions": {
+          "off": "Off",
+          "minutes30": "Every 30 minutes",
+          "minutes60": "Every 60 minutes",
+          "minutes120": "Every 120 minutes"
+        }
+      },
+      "manual": {
+        "title": "Manual backup and status",
+        "description": "Run backups on demand and monitor the latest execution state."
+      },
+      "actions": {
+        "chooseFolder": "Choose folder",
+        "backupNow": "Backup now",
+        "refreshList": "Refresh list",
+        "restore": "Restore",
+        "delete": "Delete"
+      },
+      "status": {
+        "lastBackupAt": "Last backup",
+        "current": "Status",
+        "lastFile": "Last backup file",
+        "never": "Never",
+        "none": "None",
+        "idle": "Idle",
+        "running": "Running",
+        "ok": "Completed",
+        "error": "Failed"
+      },
+      "list": {
+        "title": "Available backups",
+        "description": "Review generated snapshots and restore or remove items when needed.",
+        "loading": "Refreshing backups list...",
+        "empty": "No backups found in the selected folder.",
+        "columns": {
+          "date": "Date",
+          "file": "File",
+          "size": "Size"
+        }
+      },
+      "restoreAlert": {
+        "title": "Restore backup",
+        "description": "This will replace the local database with \"{{fileName}}\". Continue?",
+        "actions": {
+          "restore": "Restore",
+          "cancel": "Cancel"
+        }
+      },
+      "deleteAlert": {
+        "title": "Delete backup",
+        "description": "This will permanently remove \"{{fileName}}\". Continue?",
+        "actions": {
+          "delete": "Delete",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "sync": {
+      "title": "Sync",
+      "placeholder": "Sync will be available soon.",
+      "controls": {
+        "enabled": "Enable sync",
+        "connect": "Connect source",
+        "syncNow": "Sync now"
+      }
+    },
+    "exportImport": {
+      "title": "Export / Import",
+      "placeholder": "Export/Import will be available soon.",
+      "controls": {
+        "exportCsv": "Export CSV",
+        "importData": "Import DB / CSV"
+      }
+    }
+  },
   "overview": {
     "toolbar": {
       "reload": "Reload"

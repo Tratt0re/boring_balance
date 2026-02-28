@@ -1,0 +1,199 @@
+<div class="space-y-4">
+  <div class="rounded-lg border border-border/60 bg-card p-4">
+    <h3 class="text-sm font-semibold tracking-tight">
+      {{ 'dataBackups.backups.destination.title' | translate }}
+    </h3>
+    <p class="mt-1 text-sm text-muted-foreground">
+      {{ 'dataBackups.backups.destination.description' | translate }}
+    </p>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <z-switch
+        [zChecked]="settings().enabled"
+        [zDisabled]="isBusy()"
+        (zCheckedChange)="onEnabledChange($event)"
+      >
+        {{ 'dataBackups.backups.form.enabled' | translate }}
+      </z-switch>
+    </div>
+
+    <div class="mt-4 grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+      <div>
+        <p class="text-xs uppercase tracking-wide text-muted-foreground">
+          {{ 'dataBackups.backups.form.folderPath' | translate }}
+        </p>
+        <p class="mt-1 break-all text-sm font-medium">
+          {{
+            settings().folderPath
+              ? settings().folderPath
+              : ('dataBackups.backups.form.folderNotSet' | translate)
+          }}
+        </p>
+      </div>
+
+      <button z-button zType="outline" [zDisabled]="!canChooseFolder()" (click)="onChooseFolder()">
+        {{ 'dataBackups.backups.actions.chooseFolder' | translate }}
+      </button>
+    </div>
+
+    @if (showMissingFolderWarning()) {
+      <div class="mt-3 rounded-md border border-amber-600/25 bg-amber-500/10 p-3 text-sm text-amber-700">
+        {{ 'dataBackups.backups.warnings.missingFolder' | translate }}
+      </div>
+    }
+  </div>
+
+  @if (settings().enabled) {
+    <div class="rounded-lg border border-border/60 bg-card p-4">
+      <h3 class="text-sm font-semibold tracking-tight">
+        {{ 'dataBackups.backups.autoBackup.title' | translate }}
+      </h3>
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'dataBackups.backups.autoBackup.description' | translate }}
+      </p>
+
+      <div class="mt-3 grid gap-3 lg:grid-cols-3">
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <z-switch
+            [zChecked]="settings().autoBackupOnQuit"
+            [zDisabled]="isBusy()"
+            (zCheckedChange)="onAutoBackupOnQuitChange($event)"
+          >
+            {{ 'dataBackups.backups.autoBackup.onQuit' | translate }}
+          </z-switch>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="backup-interval-min">
+            {{ 'dataBackups.backups.autoBackup.intervalMin' | translate }}
+          </label>
+          <z-select
+            id="backup-interval-min"
+            [zValue]="autoBackupIntervalValue()"
+            [zDisabled]="isBusy()"
+            (zSelectionChange)="onAutoBackupIntervalChange($event)"
+          >
+            @for (option of autoBackupIntervalOptions; track option.value) {
+              <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+            }
+          </z-select>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="backup-retention-count">
+            {{ 'dataBackups.backups.autoBackup.retentionCount' | translate }}
+          </label>
+          <z-select
+            id="backup-retention-count"
+            [zValue]="retentionCountValue()"
+            [zDisabled]="isBusy()"
+            (zSelectionChange)="onRetentionCountChange($event)"
+          >
+            @for (option of retentionCountOptions; track option.value) {
+              <z-select-item [zValue]="option.value" [zLabel]="option.label" />
+            }
+          </z-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-lg border border-border/60 bg-card p-4">
+      <h3 class="text-sm font-semibold tracking-tight">
+        {{ 'dataBackups.backups.manual.title' | translate }}
+      </h3>
+      <p class="mt-1 text-sm text-muted-foreground">
+        {{ 'dataBackups.backups.manual.description' | translate }}
+      </p>
+
+      <div class="mt-3 flex flex-wrap items-center gap-2">
+        <button
+          z-button
+          zType="default"
+          [zDisabled]="!canRunBackup()"
+          [zLoading]="runNowLoading()"
+          (click)="onRunNow()"
+        >
+          {{ 'dataBackups.backups.actions.backupNow' | translate }}
+        </button>
+
+        <button
+          z-button
+          zType="outline"
+          [zDisabled]="!settings().folderPath || backupsLoading() || isBusy()"
+          [zLoading]="backupsLoading()"
+          (click)="onRefreshList()"
+        >
+          {{ 'dataBackups.backups.actions.refreshList' | translate }}
+        </button>
+      </div>
+
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.backups.status.lastBackupAt' | translate }}
+          </p>
+          <p class="mt-1 text-sm font-medium">
+            {{
+              state().lastBackupAtMs
+                ? (state().lastBackupAtMs | date: 'medium')
+                : ('dataBackups.backups.status.never' | translate)
+            }}
+          </p>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.backups.status.current' | translate }}
+          </p>
+          <p class="mt-1 text-sm font-medium">{{ statusLabel(state().lastBackupStatus) }}</p>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.backups.status.lastFile' | translate }}
+          </p>
+          <p class="mt-1 break-all text-sm font-medium">
+            {{
+              state().lastBackupFileName
+                ? state().lastBackupFileName
+                : ('dataBackups.backups.status.none' | translate)
+            }}
+          </p>
+        </div>
+      </div>
+
+      @if (state().lastBackupStatus === 'error' && state().lastBackupError) {
+        <div class="mt-3 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+          {{ state().lastBackupError }}
+        </div>
+      }
+    </div>
+
+    <div class="rounded-lg border border-border/60 bg-card p-4">
+      <app-data-table
+        [data]="backupRows()"
+        [structure]="backupsTableStructure"
+        [title]="'dataBackups.backups.list.title'"
+        description="dataBackups.backups.list.description"
+        emptyMessage="dataBackups.backups.list.empty"
+        [appearance]="'default'"
+        [showEmpty]="true"
+        [hoverable]="true"
+        [selectable]="false"
+        [hasActionColumn]="false"
+        [showPagination]="false"
+      ></app-data-table>
+
+      @if (backupsLoading()) {
+        <div class="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+          <z-loader zSize="sm" />
+          <span>{{ 'dataBackups.backups.list.loading' | translate }}</span>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+      {{ 'dataBackups.backups.disabledInfo' | translate }}
+    </div>
+  }
+</div>

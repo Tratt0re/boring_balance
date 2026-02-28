@@ -2,6 +2,7 @@ import type * as DTO from '@/dtos';
 
 type IpcRequest<TPayload, TResult> = (payload: TPayload) => Promise<TResult>;
 type OptionalIpcRequest<TPayload, TResult> = (payload?: TPayload) => Promise<TResult>;
+type IpcEventListener<TPayload = unknown> = (payload: TPayload) => void;
 
 export enum APIChannel {
   APP_META = 'appMeta',
@@ -11,6 +12,7 @@ export enum APIChannel {
   ANALYTICS = 'analytics',
   PLAN_ITEMS = 'planItems',
   TRANSACTIONS = 'transactions',
+  BACKUP = 'backup',
 }
 
 export interface ElectronIpcClient {
@@ -98,10 +100,22 @@ export interface ElectronIpcClient {
     readonly update: IpcRequest<DTO.TransactionUpdateDto, DTO.TransactionUpdateResponse>;
     readonly remove: IpcRequest<DTO.TransactionRemoveDto, DTO.TransactionRemoveResponse>;
   };
+  readonly backup: {
+    readonly getSettings: OptionalIpcRequest<void, DTO.BackupGetSettingsResponse>;
+    readonly updateSettings: IpcRequest<DTO.BackupUpdateSettingsDto, DTO.BackupUpdateSettingsResponse>;
+    readonly getState: OptionalIpcRequest<void, DTO.BackupGetStateResponse>;
+    readonly selectFolder: OptionalIpcRequest<void, DTO.BackupSelectFolderResponse>;
+    readonly list: OptionalIpcRequest<void, DTO.BackupListResponse>;
+    readonly runNow: OptionalIpcRequest<void, DTO.BackupRunNowResponse>;
+    readonly remove: IpcRequest<DTO.BackupRemoveDto, DTO.BackupRemoveResponse>;
+    readonly restore: IpcRequest<DTO.BackupRestoreDto, DTO.BackupRestoreResponse>;
+  };
 }
 
 export interface ElectronAPI {
   readonly ipcClient: ElectronIpcClient;
+  readonly onIpcEvent?: (channel: string, listener: IpcEventListener) => void;
+  readonly offIpcEvent?: (channel: string, listener: IpcEventListener) => void;
   readonly platform: string;
   readonly versions: Readonly<{
     chrome: string;
