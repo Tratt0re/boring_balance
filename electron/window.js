@@ -8,7 +8,7 @@ const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:42
 const openWindows = new Set();
 
 function resolveRendererIndexPath() {
-  return path.join(__dirname, '..', 'dist', 'expense_tracker', 'browser', 'index.html');
+  return path.join(__dirname, '..', 'dist', 'boringbalance', 'browser', 'index.html');
 }
 
 function resolvePreloadPath() {

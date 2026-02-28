@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "expense_tracker": {
+    "boringbalance": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "expense_tracker:build:production"
+              "buildTarget": "boringbalance:build:production"
             },
             "development": {
-              "buildTarget": "expense_tracker:build:development"
+              "buildTarget": "boringbalance:build:development"
             }
           },
           "defaultConfiguration": "development"

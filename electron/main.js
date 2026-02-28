@@ -12,8 +12,8 @@ const { backupController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
-const APP_NAME = 'Expense Tracker';
-const APP_STORAGE_DIR_NAME = 'expense_tracker';
+const APP_NAME = 'Boring Balance';
+const APP_STORAGE_DIR_NAME = 'boringbalance';
 let beforeQuitHandled = false;
 
 app.setName(APP_NAME);

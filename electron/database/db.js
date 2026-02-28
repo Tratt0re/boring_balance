@@ -3,14 +3,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Database = require('better-sqlite3');
 
-const PROD_DB_FILENAME = 'expense-tracker.db';
-const DEV_DB_FILENAME = 'expense-tracker.dev.db';
-const APP_STORAGE_DIR_NAME = 'expense_tracker';
+const PROD_DB_FILENAME = 'boringbalance.db';
+const DEV_DB_FILENAME = 'boringbalance.dev.db';
+const APP_STORAGE_DIR_NAME = 'boringbalance';
 
 let db = null;
 
 function resolveDatabaseFilename() {
-  const normalizedOverride = process.env.EXPENSE_TRACKER_DB_ENV?.trim().toLowerCase();
+  const normalizedOverride = process.env.BORINGBALANCE_DB_ENV?.trim().toLowerCase();
 
   if (normalizedOverride === 'prod' || normalizedOverride === 'production') {
     return PROD_DB_FILENAME;

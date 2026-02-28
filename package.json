@@ -1,8 +1,8 @@
 {
-  "name": "expense_tracker",
+  "name": "boringbalance",
   "version": "0.0.0",
-  "description": "Desktop expense tracker built with Angular and Electron.",
-  "author": "Expense Tracker Team",
+  "description": "Desktop Boring Balance app built with Angular and Electron.",
+  "author": "boringbalance",
   "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
@@ -15,7 +15,7 @@
     "build:desktop": "npm run build:web && npm run build:preload:prod && electron-builder --dir --publish never",
     "dist": "npm run build:web && npm run build:preload:prod && electron-builder --publish never",
     "dist:mac": "npm run build:web && npm run build:preload:prod && electron-builder --mac --publish never",
-    "dist:win": "npm run build:web && npm run build:preload:prod && electron-builder --win --publish never",
+    "dist:win": "npm run build:web && npm run build:preload:prod && electron-builder --win --x64 --publish never",
     "dist:linux": "npm run build:web && npm run build:preload:prod && electron-builder --linux --publish never",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -39,16 +39,14 @@
   "private": true,
   "packageManager": "npm@11.8.0",
   "build": {
-    "appId": "com.expense_tracker.desktop",
-    "productName": "Expense Tracker",
+    "appId": "com.boringbalance.desktop",
+    "productName": "Boring Balance",
     "directories": {
       "output": "release"
     },
     "asar": true,
-    "npmRebuild": false,
-    "electronDist": "node_modules/electron/dist",
     "files": [
-      "dist/expense_tracker/browser/**/*",
+      "dist/boringbalance/browser/**/*",
       "electron/**/*",
       "package.json"
     ],

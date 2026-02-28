@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const { createIpcClient } = require('./ipc');
+const { createIpcClient } = require('./ipc/client');
 
 function invoke(channel, payload) {
   return ipcRenderer.invoke(channel, payload);

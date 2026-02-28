@@ -1,6 +1,6 @@
-# Expense Tracker
+# Boring Balance
 
-Desktop expense tracker built with Angular (renderer) and Electron (desktop shell).
+Desktop Boring Balance app built with Angular (renderer) and Electron (desktop shell).
 
 ## Development
 
@@ -22,7 +22,7 @@ Build the Angular renderer:
 npm run build:web
 ```
 
-Output goes to `dist/expense_tracker/browser`.
+Output goes to `dist/boringbalance/browser`.
 
 ## Production Packaging (Desktop)
 
@@ -66,9 +66,9 @@ The Electron process stores SQLite files in:
 `<userData>/data/`
 
 Environment-based filenames:
-- development (`app.isPackaged === false`): `expense-tracker.dev.db`
-- production (`app.isPackaged === true`): `expense-tracker.db`
+- development (`app.isPackaged === false`): `boringbalance.dev.db`
+- production (`app.isPackaged === true`): `boringbalance.db`
 
 Optional override:
-- set `EXPENSE_TRACKER_DB_ENV=dev` to force the dev DB file
-- set `EXPENSE_TRACKER_DB_ENV=prod` to force the prod DB file
+- set `BORINGBALANCE_DB_ENV=dev` to force the dev DB file
+- set `BORINGBALANCE_DB_ENV=prod` to force the prod DB file
