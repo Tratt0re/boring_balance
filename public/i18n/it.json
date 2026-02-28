@@ -225,11 +225,123 @@
     },
     "sync": {
       "title": "Sincronizzazione",
-      "placeholder": "La sincronizzazione sara disponibile a breve.",
-      "controls": {
+      "overview": {
+        "title": "Sincronizzazione con cartella esterna",
+        "description": "Usa una cartella che sincronizzi gia per conto tuo, come iCloud Drive, Dropbox, OneDrive, Syncthing, un NAS o una chiavetta USB.",
+        "warning": "La sincronizzazione usa una cartella gestita fuori dall'app. Boring Balance non carica dati su server propri e non esegue mai il database attivo dentro la cartella sincronizzata.",
         "enabled": "Abilita sync",
-        "connect": "Connetti origine",
-        "syncNow": "Sincronizza ora"
+        "chooseFolder": "Scegli cartella radice",
+        "selectedFolder": "Cartella radice selezionata",
+        "baseFolderPath": "Cartella radice",
+        "repoPath": "Cartella sync dell'app",
+        "notConnected": "Non collegato ancora",
+        "enableHints": {
+          "turnOnFirst": "Attiva prima Abilita sync. Poi scegli la cartella radice dove l'app creera o trovera i suoi file di sync.",
+          "ready": "La configurazione sync e aperta. Scegli la cartella radice dove l'app deve creare o trovare i suoi file di sync."
+        }
+      },
+      "setup": {
+        "title": "Collega una cartella sync",
+        "description": "Configura una cartella sync condivisa in tre passi: scegli la cartella radice e poi crea uno spazio nuovo oppure collegati a uno gia esistente.",
+        "steps": {
+          "rootFolder": {
+            "title": "1. Scegli una cartella radice",
+            "description": "Scegli una cartella esistente o creane una nuova. Boring Balance inserira dentro la sua cartella sync."
+          },
+          "create": {
+            "title": "2. Crea sul primo dispositivo",
+            "description": "Usa Crea quando questo dispositivo deve pubblicare i primi dati sync in quella cartella."
+          },
+          "attach": {
+            "title": "3. Collega sugli altri dispositivi",
+            "description": "Usa Collega quando un altro dispositivo ha gia creato la cartella sync e questo dispositivo deve solo unirsi."
+          }
+        },
+        "actions": {
+          "create": "Crea nuovo spazio sync",
+          "attach": "Collega a uno spazio esistente"
+        },
+        "status": {
+          "checking": "Controllo della cartella selezionata...",
+          "chooseFirst": "Scegli una cartella radice per continuare.",
+          "exists": "In questa cartella e stato trovato uno spazio sync. Usa Collega se un altro dispositivo la usa gia.",
+          "missing": "In questa cartella non esiste ancora uno spazio sync. Usa Crea se questo e il tuo primo dispositivo sincronizzato.",
+          "repoPathPending": "La cartella sync dell'app apparira qui dopo il controllo della cartella radice.",
+          "waitingForFolder": "Scegli una cartella radice per continuare."
+        },
+        "actionHelp": "Crea avvia uno spazio sync nuovo da questo dispositivo. Collega si unisce a uno spazio sync che esiste gia nella cartella radice selezionata."
+      },
+      "disabledInfo": "Attiva Abilita sync per iniziare la configurazione. Poi scegli una cartella radice dove Boring Balance creera o colleghera i suoi file di sync.",
+      "autoSync": {
+        "title": "Sync automatico",
+        "description": "Scegli quando l'app deve controllare le modifiche remote e quando deve pubblicare le modifiche locali. Un intervallo a 0 spegne quel timer.",
+        "autoPullIntervalMin": "Intervallo pull",
+        "autoPushIntervalMin": "Intervallo push",
+        "autoPushOnQuit": "Esegui push alla chiusura",
+        "autoPushOnQuitHint": "Se attivo, l'app pubblica l'ultimo snapshot locale prima di chiudersi.",
+        "retentionCountPerDevice": "Snapshot mantenuti per dispositivo",
+        "intervalOptions": {
+          "off": "Disattivato",
+          "minutes5": "Ogni 5 minuti",
+          "minutes15": "Ogni 15 minuti",
+          "minutes30": "Ogni 30 minuti",
+          "minutes60": "Ogni 60 minuti"
+        }
+      },
+      "manual": {
+        "title": "Sync manuale",
+        "description": "Usa questi pulsanti quando preferisci controllare il sync manualmente invece di aspettare i timer automatici.",
+        "tooltips": {
+          "syncNow": "Controlla prima se la cartella condivisa ha dati piu nuovi e poi pubblica questo dispositivo se serve.",
+          "pullNow": "Scarica lo snapshot sync piu nuovo dalla cartella condivisa quando e piu recente di questo dispositivo.",
+          "pushNow": "Pubblica i dati attuali di questo dispositivo nella cartella condivisa quando le modifiche locali sono piu recenti."
+        },
+        "hints": {
+          "syncNow": "Sincronizza ora esegue il flusso completo e sicuro: prima controlla le modifiche remote e poi pubblica le modifiche locali se serve.",
+          "pullNow": "Esegui pull legge solo dalla cartella condivisa e ripristina uno snapshot piu nuovo su questo dispositivo.",
+          "pushNow": "Esegui push scrive solo l'ultimo snapshot di questo dispositivo nella cartella condivisa."
+        }
+      },
+      "actions": {
+        "syncNow": "Sincronizza ora",
+        "pullNow": "Esegui pull",
+        "pushNow": "Esegui push"
+      },
+      "status": {
+        "title": "Stato",
+        "description": "Controlla lo stato attuale del sync e gli orari degli ultimi pull e push.",
+        "columns": {
+          "item": "Elemento",
+          "value": "Valore"
+        },
+        "rows": {
+          "current": "Stato attuale",
+          "lastPull": "Ultimo pull",
+          "lastPush": "Ultimo push"
+        },
+        "values": {
+          "never": "Mai",
+          "idle": "Inattivo",
+          "running": "In esecuzione",
+          "ok": "OK",
+          "error": "Errore",
+          "conflict": "Conflitto"
+        }
+      },
+      "alerts": {
+        "lastErrorTitle": "Ultimo errore",
+        "conflictTitle": "Conflitto rilevato",
+        "localCopyPath": "Copia locale salvata in",
+        "remoteSnapshotPath": "Snapshot remoto ripristinato da",
+        "conflictHint": "Abbiamo mantenuto una copia locale e ripristinato lo snapshot remoto."
+      },
+      "attachAlert": {
+        "title": "Collega spazio sync esistente",
+        "description": "Il collegamento puo sostituire il database locale di questo dispositivo se la cartella condivisa ha dati piu recenti o appartiene a una cronologia sync diversa. Vuoi continuare?",
+        "actions": {
+          "attach": "Collega",
+          "cancel": "Annulla"
+        }
       }
     },
     "exportImport": {

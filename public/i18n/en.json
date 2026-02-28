@@ -225,11 +225,123 @@
     },
     "sync": {
       "title": "Sync",
-      "placeholder": "Sync will be available soon.",
-      "controls": {
+      "overview": {
+        "title": "External folder sync",
+        "description": "Use a folder you already sync yourself, such as iCloud Drive, Dropbox, OneDrive, Syncthing, a NAS, or a USB drive.",
+        "warning": "Sync uses a folder you manage outside the app. Boring Balance does not upload data to its own servers and it never runs the live database inside the sync folder.",
         "enabled": "Enable sync",
-        "connect": "Connect source",
-        "syncNow": "Sync now"
+        "chooseFolder": "Choose root folder",
+        "selectedFolder": "Selected root folder",
+        "baseFolderPath": "Root folder",
+        "repoPath": "App sync folder",
+        "notConnected": "Not connected yet",
+        "enableHints": {
+          "turnOnFirst": "Turn on Enable sync first. Then choose the root folder where the app will create or find its sync files.",
+          "ready": "Sync setup is open. Choose the root folder where the app should create or find its sync files."
+        }
+      },
+      "setup": {
+        "title": "Connect a sync folder",
+        "description": "Set up a shared sync folder in three steps: choose the root folder, then create a new sync space or connect to one that already exists.",
+        "steps": {
+          "rootFolder": {
+            "title": "1. Choose a root folder",
+            "description": "Pick an existing folder or create a new one. Boring Balance will place its own sync folder inside it."
+          },
+          "create": {
+            "title": "2. Create on the first device",
+            "description": "Use Create when this device should publish the first sync data into that folder."
+          },
+          "attach": {
+            "title": "3. Connect on other devices",
+            "description": "Use Connect when another device already created the sync folder and this device should join it."
+          }
+        },
+        "actions": {
+          "create": "Create new sync space",
+          "attach": "Connect to existing sync space"
+        },
+        "status": {
+          "checking": "Checking the selected folder...",
+          "chooseFirst": "Choose a root folder to continue.",
+          "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
+          "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
+          "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
+          "waitingForFolder": "Choose a root folder to continue."
+        },
+        "actionHelp": "Create starts a brand new sync space from this device. Connect joins a sync space that already exists in the selected root folder."
+      },
+      "disabledInfo": "Turn on Enable sync to start setup. Then choose a root folder where Boring Balance will create or connect to its sync files.",
+      "autoSync": {
+        "title": "Automatic sync",
+        "description": "Choose when the app should check for remote changes and when it should publish local changes. Setting an interval to 0 turns that timer off.",
+        "autoPullIntervalMin": "Auto pull interval",
+        "autoPushIntervalMin": "Auto push interval",
+        "autoPushOnQuit": "Push on app quit",
+        "autoPushOnQuitHint": "When enabled, the app publishes the latest local snapshot before it closes.",
+        "retentionCountPerDevice": "Snapshots kept per device",
+        "intervalOptions": {
+          "off": "Off",
+          "minutes5": "Every 5 minutes",
+          "minutes15": "Every 15 minutes",
+          "minutes30": "Every 30 minutes",
+          "minutes60": "Every 60 minutes"
+        }
+      },
+      "manual": {
+        "title": "Manual sync",
+        "description": "Use these buttons when you want to control sync yourself instead of waiting for the automatic timers.",
+        "tooltips": {
+          "syncNow": "Checks the sync folder for newer data first, then publishes this device if needed.",
+          "pullNow": "Downloads the newest sync snapshot from the shared folder when it is newer than this device.",
+          "pushNow": "Publishes this device's current data to the shared folder when local changes are newer."
+        },
+        "hints": {
+          "syncNow": "Sync now runs the full safe sync flow: check remote changes first, then publish local changes if needed.",
+          "pullNow": "Pull now only reads from the shared folder and restores a newer snapshot to this device.",
+          "pushNow": "Push now only writes this device's latest snapshot to the shared folder."
+        }
+      },
+      "actions": {
+        "syncNow": "Sync now",
+        "pullNow": "Pull now",
+        "pushNow": "Push now"
+      },
+      "status": {
+        "title": "Status",
+        "description": "Review the current sync state and the most recent pull and push timestamps.",
+        "columns": {
+          "item": "Item",
+          "value": "Value"
+        },
+        "rows": {
+          "current": "Current status",
+          "lastPull": "Last pull",
+          "lastPush": "Last push"
+        },
+        "values": {
+          "never": "Never",
+          "idle": "Idle",
+          "running": "Running",
+          "ok": "OK",
+          "error": "Error",
+          "conflict": "Conflict"
+        }
+      },
+      "alerts": {
+        "lastErrorTitle": "Last error",
+        "conflictTitle": "Conflict detected",
+        "localCopyPath": "Local copy saved at",
+        "remoteSnapshotPath": "Remote snapshot restored from",
+        "conflictHint": "We kept a local copy and restored the remote snapshot."
+      },
+      "attachAlert": {
+        "title": "Connect existing sync space",
+        "description": "Connecting can replace this device's local database if the shared folder has newer data or belongs to a different sync history. Continue?",
+        "actions": {
+          "attach": "Connect",
+          "cancel": "Cancel"
+        }
       }
     },
     "exportImport": {

@@ -13,6 +13,7 @@ export enum APIChannel {
   PLAN_ITEMS = 'planItems',
   TRANSACTIONS = 'transactions',
   BACKUP = 'backup',
+  SYNC = 'sync',
 }
 
 export interface ElectronIpcClient {
@@ -109,6 +110,20 @@ export interface ElectronIpcClient {
     readonly runNow: OptionalIpcRequest<void, DTO.BackupRunNowResponse>;
     readonly remove: IpcRequest<DTO.BackupRemoveDto, DTO.BackupRemoveResponse>;
     readonly restore: IpcRequest<DTO.BackupRestoreDto, DTO.BackupRestoreResponse>;
+  };
+  readonly sync: {
+    readonly getSettings: OptionalIpcRequest<void, DTO.SyncGetSettingsResponse>;
+    readonly updateSettings: IpcRequest<DTO.SyncUpdateSettingsDto, DTO.SyncUpdateSettingsResponse>;
+    readonly getState: OptionalIpcRequest<void, DTO.SyncGetStateResponse>;
+    readonly selectFolder: OptionalIpcRequest<void, DTO.SyncSelectFolderResponse>;
+    readonly repoStatus: OptionalIpcRequest<DTO.SyncRepoStatusRequestDto, DTO.SyncRepoStatusResponse>;
+    readonly enableCreateRepo: IpcRequest<DTO.SyncEnableCreateRepoDto, DTO.SyncEnableCreateRepoResponse>;
+    readonly enableAttachRepo: IpcRequest<DTO.SyncEnableAttachRepoDto, DTO.SyncEnableAttachRepoResponse>;
+    readonly disable: OptionalIpcRequest<void, DTO.SyncDisableResponse>;
+    readonly syncNow: OptionalIpcRequest<void, DTO.SyncRunNowResponse>;
+    readonly pullNow: OptionalIpcRequest<void, DTO.SyncPullNowResponse>;
+    readonly pushNow: OptionalIpcRequest<void, DTO.SyncPushNowResponse>;
+    readonly listSnapshots: OptionalIpcRequest<void, DTO.SyncListSnapshotsResponse>;
   };
 }
 

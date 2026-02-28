@@ -69,6 +69,20 @@ const CHANNELS = Object.freeze({
     remove: 'backup:remove',
     restore: 'backup:restore',
   }),
+  sync: Object.freeze({
+    getSettings: 'sync:getSettings',
+    updateSettings: 'sync:updateSettings',
+    getState: 'sync:getState',
+    selectFolder: 'sync:selectFolder',
+    repoStatus: 'sync:repoStatus',
+    enableCreateRepo: 'sync:enableCreateRepo',
+    enableAttachRepo: 'sync:enableAttachRepo',
+    disable: 'sync:disable',
+    syncNow: 'sync:syncNow',
+    pullNow: 'sync:pullNow',
+    pushNow: 'sync:pushNow',
+    listSnapshots: 'sync:listSnapshots',
+  }),
 });
 
 module.exports = {

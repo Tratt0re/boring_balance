@@ -6,6 +6,7 @@ const {
   analyticsController,
   planItemsController,
   backupController,
+  syncController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -73,6 +74,19 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.backup.runNow]: backupController.runNow,
   [CHANNELS.backup.remove]: backupController.remove,
   [CHANNELS.backup.restore]: backupController.restore,
+
+  [CHANNELS.sync.getSettings]: syncController.getSettings,
+  [CHANNELS.sync.updateSettings]: syncController.updateSettings,
+  [CHANNELS.sync.getState]: syncController.getState,
+  [CHANNELS.sync.selectFolder]: syncController.selectFolder,
+  [CHANNELS.sync.repoStatus]: syncController.repoStatus,
+  [CHANNELS.sync.enableCreateRepo]: syncController.enableCreateRepo,
+  [CHANNELS.sync.enableAttachRepo]: syncController.enableAttachRepo,
+  [CHANNELS.sync.disable]: syncController.disableSync,
+  [CHANNELS.sync.syncNow]: syncController.syncNow,
+  [CHANNELS.sync.pullNow]: syncController.pullNow,
+  [CHANNELS.sync.pushNow]: syncController.pushNow,
+  [CHANNELS.sync.listSnapshots]: syncController.listSnapshots,
 });
 
 module.exports = {

@@ -6,4 +6,5 @@ export * from './budgets.dto';
 export * from './categories.dto';
 export * from './common.dto';
 export * from './plan-items.dto';
+export * from './sync.dto';
 export * from './transactions.dto';
