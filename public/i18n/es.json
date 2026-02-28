@@ -130,6 +130,117 @@
       "about": "Sobre la app"
     }
   },
+  "dataBackups": {
+    "page": {
+      "title": "Datos y respaldo",
+      "description": "Gestiona respaldos locales y prepara sincronizacion y exportacion/importacion."
+    },
+    "sections": {
+      "backups": {
+        "title": "Respaldos"
+      },
+      "sync": {
+        "title": "Sincronizacion"
+      },
+      "exportImport": {
+        "title": "Exportar / Importar"
+      }
+    },
+    "backups": {
+      "destination": {
+        "title": "Destino del respaldo",
+        "description": "Activa los respaldos y elige donde guardar los snapshots."
+      },
+      "form": {
+        "enabled": "Activar respaldos",
+        "folderPath": "Carpeta de respaldo",
+        "folderNotSet": "No configurada"
+      },
+      "disabledInfo": "Activa los respaldos para configurar copias automaticas, ejecutar backups manuales y gestionar restauraciones.",
+      "warnings": {
+        "missingFolder": "Los respaldos estan activos, pero aun no hay una carpeta configurada."
+      },
+      "autoBackup": {
+        "title": "Respaldos automaticos",
+        "description": "Usa intervalos y retencion predefinidos para una configuracion mas segura.",
+        "onQuit": "Respaldar al cerrar la app",
+        "intervalMin": "Intervalo (minutos, 0 para desactivar)",
+        "retentionCount": "Cantidad a conservar",
+        "intervalOptions": {
+          "off": "Desactivado",
+          "minutes30": "Cada 30 minutos",
+          "minutes60": "Cada 60 minutos",
+          "minutes120": "Cada 120 minutos"
+        }
+      },
+      "manual": {
+        "title": "Backup manual y estado",
+        "description": "Ejecuta respaldos bajo demanda y revisa el estado de la ultima ejecucion."
+      },
+      "actions": {
+        "chooseFolder": "Elegir carpeta",
+        "backupNow": "Respaldar ahora",
+        "refreshList": "Actualizar lista",
+        "restore": "Restaurar",
+        "delete": "Eliminar"
+      },
+      "status": {
+        "lastBackupAt": "Ultimo respaldo",
+        "current": "Estado",
+        "lastFile": "Ultimo archivo",
+        "never": "Nunca",
+        "none": "Ninguno",
+        "idle": "Inactivo",
+        "running": "En ejecucion",
+        "ok": "Completado",
+        "error": "Error"
+      },
+      "list": {
+        "title": "Respaldos disponibles",
+        "description": "Revisa snapshots generados y restaura o elimina elementos cuando sea necesario.",
+        "loading": "Actualizando lista de respaldos...",
+        "empty": "No se encontraron respaldos en la carpeta seleccionada.",
+        "columns": {
+          "date": "Fecha",
+          "file": "Archivo",
+          "size": "Tamano"
+        }
+      },
+      "restoreAlert": {
+        "title": "Restaurar respaldo",
+        "description": "La base de datos local sera reemplazada por \"{{fileName}}\". Deseas continuar?",
+        "actions": {
+          "restore": "Restaurar",
+          "cancel": "Cancelar"
+        }
+      },
+      "deleteAlert": {
+        "title": "Eliminar respaldo",
+        "description": "El archivo \"{{fileName}}\" se eliminara permanentemente. Deseas continuar?",
+        "actions": {
+          "delete": "Eliminar",
+          "cancel": "Cancelar"
+        }
+      }
+    },
+    "sync": {
+      "title": "Sincronizacion",
+      "placeholder": "La sincronizacion estara disponible pronto.",
+      "controls": {
+        "enabled": "Activar sync",
+        "connect": "Conectar origen",
+        "syncNow": "Sincronizar ahora"
+      }
+    },
+    "exportImport": {
+      "title": "Exportar / Importar",
+      "placeholder": "Exportar/Importar estara disponible pronto.",
+      "controls": {
+        "exportCsv": "Exportar CSV",
+        "importData": "Importar DB / CSV"
+      }
+    }
+  },
   "overview": {
     "toolbar": {
       "reload": "Recargar"

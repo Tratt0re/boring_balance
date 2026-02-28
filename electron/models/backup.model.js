@@ -280,6 +280,41 @@ function restoreBackup(backupFilePath, localDbPath) {
   };
 }
 
+function removeBackup(backupFilePath) {
+  if (typeof backupFilePath !== 'string' || backupFilePath.trim().length === 0) {
+    throw new Error('backupFilePath must be a non-empty string.');
+  }
+
+  const normalizedBackupFilePath = backupFilePath.trim();
+  if (!normalizedBackupFilePath.endsWith(SQLITE_FILE_SUFFIX)) {
+    throw new Error(`Backup file must end with "${SQLITE_FILE_SUFFIX}".`);
+  }
+
+  const sidecarPath = `${normalizedBackupFilePath.slice(0, -SQLITE_FILE_SUFFIX.length)}${SIDECAR_FILE_SUFFIX}`;
+  let changed = 0;
+
+  if (fs.existsSync(normalizedBackupFilePath)) {
+    const backupStats = fs.statSync(normalizedBackupFilePath);
+    if (!backupStats.isFile()) {
+      throw new Error(`Backup file is not a regular file: ${normalizedBackupFilePath}`);
+    }
+
+    fs.unlinkSync(normalizedBackupFilePath);
+    changed = 1;
+  }
+
+  if (fs.existsSync(sidecarPath)) {
+    const sidecarStats = fs.statSync(sidecarPath);
+    if (sidecarStats.isFile()) {
+      fs.unlinkSync(sidecarPath);
+    }
+  }
+
+  return {
+    changed,
+  };
+}
+
 module.exports = {
   BACKUP_FILE_PREFIX,
   SQLITE_FILE_SUFFIX,
@@ -287,5 +322,6 @@ module.exports = {
   listBackups,
   pruneBackups,
   readBackupMeta,
+  removeBackup,
   restoreBackup,
 };

@@ -71,6 +71,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.backup.selectFolder]: backupController.selectFolder,
   [CHANNELS.backup.list]: backupController.list,
   [CHANNELS.backup.runNow]: backupController.runNow,
+  [CHANNELS.backup.remove]: backupController.remove,
   [CHANNELS.backup.restore]: backupController.restore,
 });
 

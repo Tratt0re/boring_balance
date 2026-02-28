@@ -66,6 +66,7 @@ const CHANNELS = Object.freeze({
     selectFolder: 'backup:selectFolder',
     list: 'backup:list',
     runNow: 'backup:runNow',
+    remove: 'backup:remove',
     restore: 'backup:restore',
   }),
 });

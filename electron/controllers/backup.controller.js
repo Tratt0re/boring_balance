@@ -1,4 +1,5 @@
 const { app, dialog } = require('electron');
+const path = require('node:path');
 const {
   closeDatabase,
   createDatabase,
@@ -27,12 +28,14 @@ const BACKUP_SETTINGS_FIELDS = new Set([
   'autoBackupIntervalMin',
   'retentionCount',
 ]);
+const BACKUP_ALLOWED_INTERVAL_OPTIONS = new Set([0, 30, 60, 120]);
+const BACKUP_ALLOWED_RETENTION_OPTIONS = new Set([1, 2, 3, 4, 5]);
 const BACKUP_SETTINGS_DEFAULTS = Object.freeze({
   enabled: false,
   folderPath: null,
   autoBackupOnQuit: true,
-  autoBackupIntervalMin: 30,
-  retentionCount: 20,
+  autoBackupIntervalMin: 0,
+  retentionCount: 1,
 });
 const BACKUP_STATE_DEFAULTS = Object.freeze({
   lastBackupAtMs: null,
@@ -56,6 +59,24 @@ let initialized = false;
 let runtimeState = {
   ...BACKUP_STATE_DEFAULTS,
 };
+
+function normalizeAutoBackupIntervalOption(value, label) {
+  const normalizedValue = normalizeNonNegativeInteger(value, label);
+  if (!BACKUP_ALLOWED_INTERVAL_OPTIONS.has(normalizedValue)) {
+    throw new Error(`${label} must be one of: 0, 30, 60, 120.`);
+  }
+
+  return normalizedValue;
+}
+
+function normalizeRetentionCountOption(value, label) {
+  const normalizedValue = normalizePositiveInteger(value, label);
+  if (!BACKUP_ALLOWED_RETENTION_OPTIONS.has(normalizedValue)) {
+    throw new Error(`${label} must be one of: 1, 2, 3, 4, 5.`);
+  }
+
+  return normalizedValue;
+}
 
 function cloneSettings(settings) {
   return {
@@ -124,7 +145,7 @@ function normalizeSettingsFromStore(value) {
 
   try {
     if (storedValue.autoBackupIntervalMin !== undefined) {
-      normalizedSettings.autoBackupIntervalMin = normalizeNonNegativeInteger(
+      normalizedSettings.autoBackupIntervalMin = normalizeAutoBackupIntervalOption(
         storedValue.autoBackupIntervalMin,
         'settings.autoBackupIntervalMin',
       );
@@ -135,7 +156,10 @@ function normalizeSettingsFromStore(value) {
 
   try {
     if (storedValue.retentionCount !== undefined) {
-      normalizedSettings.retentionCount = normalizePositiveInteger(storedValue.retentionCount, 'settings.retentionCount');
+      normalizedSettings.retentionCount = normalizeRetentionCountOption(
+        storedValue.retentionCount,
+        'settings.retentionCount',
+      );
     }
   } catch {
     normalizedSettings.retentionCount = BACKUP_SETTINGS_DEFAULTS.retentionCount;
@@ -180,14 +204,17 @@ function applyBackupSettingsPatch(currentSettings, patch) {
   }
 
   if (patch.autoBackupIntervalMin !== undefined) {
-    nextSettings.autoBackupIntervalMin = normalizeNonNegativeInteger(
+    nextSettings.autoBackupIntervalMin = normalizeAutoBackupIntervalOption(
       patch.autoBackupIntervalMin,
       'payload.autoBackupIntervalMin',
     );
   }
 
   if (patch.retentionCount !== undefined) {
-    nextSettings.retentionCount = normalizePositiveInteger(patch.retentionCount, 'payload.retentionCount');
+    nextSettings.retentionCount = normalizeRetentionCountOption(
+      patch.retentionCount,
+      'payload.retentionCount',
+    );
   }
 
   return nextSettings;
@@ -424,6 +451,31 @@ async function restore(payload) {
   }
 }
 
+function remove(payload) {
+  const backupFilePath = extractString(payload, 'backupFilePath');
+  const settings = readBackupSettings();
+  if (!settings.folderPath) {
+    throw new Error('Backup folder path is not configured.');
+  }
+
+  const normalizedBackupFilePath = path.resolve(backupFilePath);
+  const normalizedFolderPath = path.resolve(settings.folderPath);
+  const relativeBackupPath = path.relative(normalizedFolderPath, normalizedBackupFilePath);
+  if (relativeBackupPath.startsWith('..') || path.isAbsolute(relativeBackupPath)) {
+    throw new Error('Backup file must be inside the configured backup folder.');
+  }
+
+  const backupFileName = path.basename(normalizedBackupFilePath);
+  if (
+    !backupFileName.startsWith(backupModel.BACKUP_FILE_PREFIX) ||
+    !backupFileName.endsWith(backupModel.SQLITE_FILE_SUFFIX)
+  ) {
+    throw new Error('Invalid backup file name.');
+  }
+
+  return backupModel.removeBackup(normalizedBackupFilePath);
+}
+
 async function onAppBeforeQuit() {
   const settings = readBackupSettings();
   if (!settings.enabled || !settings.autoBackupOnQuit || !settings.folderPath) {
@@ -451,6 +503,7 @@ module.exports = {
   init,
   list,
   onAppBeforeQuit,
+  remove,
   restore,
   runNow,
   selectFolder,

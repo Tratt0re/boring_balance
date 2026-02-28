@@ -1,0 +1,20 @@
+<section class="flex min-h-full flex-col gap-4">
+  <div class="rounded-lg border border-border/60 bg-card p-4">
+    <h2 class="text-xl font-semibold tracking-tight">{{ 'dataBackups.page.title' | translate }}</h2>
+    <p class="mt-1 text-sm text-muted-foreground">{{ 'dataBackups.page.description' | translate }}</p>
+  </div>
+
+  <z-accordion zType="single" [zCollapsible]="true" [zDefaultValue]="'backups'">
+    <z-accordion-item [zTitle]="'dataBackups.sections.backups.title' | translate" zValue="backups">
+      <app-backups-accordion-section />
+    </z-accordion-item>
+
+    <z-accordion-item [zTitle]="'dataBackups.sections.sync.title' | translate" zValue="sync">
+      <app-sync-accordion-section />
+    </z-accordion-item>
+
+    <z-accordion-item [zTitle]="'dataBackups.sections.exportImport.title' | translate" zValue="export-import">
+      <app-export-import-accordion-section />
+    </z-accordion-item>
+  </z-accordion>
+</section>

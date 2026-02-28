@@ -130,6 +130,117 @@
       "about": "Info app"
     }
   },
+  "dataBackups": {
+    "page": {
+      "title": "Dati e backup",
+      "description": "Gestisci i backup locali e prepara sincronizzazione ed export/import."
+    },
+    "sections": {
+      "backups": {
+        "title": "Backup"
+      },
+      "sync": {
+        "title": "Sincronizzazione"
+      },
+      "exportImport": {
+        "title": "Export / Import"
+      }
+    },
+    "backups": {
+      "destination": {
+        "title": "Destinazione backup",
+        "description": "Abilita i backup e scegli dove salvare gli snapshot."
+      },
+      "form": {
+        "enabled": "Abilita backup",
+        "folderPath": "Cartella backup",
+        "folderNotSet": "Non impostata"
+      },
+      "disabledInfo": "Abilita i backup per configurare backup automatici, creare snapshot manuali e gestire i ripristini.",
+      "warnings": {
+        "missingFolder": "I backup sono attivi ma non hai ancora configurato una cartella."
+      },
+      "autoBackup": {
+        "title": "Backup automatici",
+        "description": "Usa intervalli e retention predefiniti per una configurazione piu sicura.",
+        "onQuit": "Esegui backup alla chiusura",
+        "intervalMin": "Intervallo (minuti, 0 per disabilitare)",
+        "retentionCount": "Numero backup da mantenere",
+        "intervalOptions": {
+          "off": "Disattivato",
+          "minutes30": "Ogni 30 minuti",
+          "minutes60": "Ogni 60 minuti",
+          "minutes120": "Ogni 120 minuti"
+        }
+      },
+      "manual": {
+        "title": "Backup manuale e stato",
+        "description": "Esegui backup su richiesta e controlla lo stato dell'ultima esecuzione."
+      },
+      "actions": {
+        "chooseFolder": "Scegli cartella",
+        "backupNow": "Esegui backup",
+        "refreshList": "Aggiorna elenco",
+        "restore": "Ripristina",
+        "delete": "Elimina"
+      },
+      "status": {
+        "lastBackupAt": "Ultimo backup",
+        "current": "Stato",
+        "lastFile": "Ultimo file backup",
+        "never": "Mai",
+        "none": "Nessuno",
+        "idle": "Inattivo",
+        "running": "In esecuzione",
+        "ok": "Completato",
+        "error": "Errore"
+      },
+      "list": {
+        "title": "Backup disponibili",
+        "description": "Controlla gli snapshot creati e ripristina o elimina quelli non necessari.",
+        "loading": "Aggiornamento elenco backup...",
+        "empty": "Nessun backup trovato nella cartella selezionata.",
+        "columns": {
+          "date": "Data",
+          "file": "File",
+          "size": "Dimensione"
+        }
+      },
+      "restoreAlert": {
+        "title": "Ripristina backup",
+        "description": "Il database locale verra sostituito con \"{{fileName}}\". Vuoi continuare?",
+        "actions": {
+          "restore": "Ripristina",
+          "cancel": "Annulla"
+        }
+      },
+      "deleteAlert": {
+        "title": "Elimina backup",
+        "description": "Il file \"{{fileName}}\" verra eliminato in modo permanente. Vuoi continuare?",
+        "actions": {
+          "delete": "Elimina",
+          "cancel": "Annulla"
+        }
+      }
+    },
+    "sync": {
+      "title": "Sincronizzazione",
+      "placeholder": "La sincronizzazione sara disponibile a breve.",
+      "controls": {
+        "enabled": "Abilita sync",
+        "connect": "Connetti origine",
+        "syncNow": "Sincronizza ora"
+      }
+    },
+    "exportImport": {
+      "title": "Export / Import",
+      "placeholder": "Export/Import sara disponibile a breve.",
+      "controls": {
+        "exportCsv": "Esporta CSV",
+        "importData": "Importa DB / CSV"
+      }
+    }
+  },
   "overview": {
     "toolbar": {
       "reload": "Ricarica"

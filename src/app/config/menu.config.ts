@@ -37,7 +37,7 @@ export class MenuConfiguration {
       label: 'nav.sections.settings',
       placement: 'bottom',
       items: [
-        { label: 'nav.items.dataBackups', icon: 'hard-drive', path: '/data-n-backups' },
+        { label: 'nav.items.dataBackups', icon: 'hard-drive', path: '/data-backups' },
         { label: 'nav.items.about', icon: 'badge-info', path: '/about' },
       ],
     },
