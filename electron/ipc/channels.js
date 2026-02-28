@@ -69,6 +69,9 @@ const CHANNELS = Object.freeze({
     remove: 'backup:remove',
     restore: 'backup:restore',
   }),
+  dataExport: Object.freeze({
+    exportXlsx: 'dataExport:exportXlsx',
+  }),
   sync: Object.freeze({
     getSettings: 'sync:getSettings',
     updateSettings: 'sync:updateSettings',

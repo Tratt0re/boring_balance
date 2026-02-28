@@ -6,6 +6,7 @@ const analyticsModel = require('./analytics.model');
 const planItemsModel = require('./plan-items.model');
 const backupModel = require('./backup.model');
 const syncModel = require('./sync.model');
+const dataExportModel = require('./data-export.model');
 const { transactionsModel, transfersModel } = require('./transactions');
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
   planItemsModel,
   backupModel,
   syncModel,
+  dataExportModel,
   transactionsModel,
   transfersModel,
 };

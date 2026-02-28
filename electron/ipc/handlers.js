@@ -7,6 +7,7 @@ const {
   planItemsController,
   backupController,
   syncController,
+  dataExportController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -74,6 +75,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.backup.runNow]: backupController.runNow,
   [CHANNELS.backup.remove]: backupController.remove,
   [CHANNELS.backup.restore]: backupController.restore,
+
+  [CHANNELS.dataExport.exportXlsx]: dataExportController.exportXlsx,
 
   [CHANNELS.sync.getSettings]: syncController.getSettings,
   [CHANNELS.sync.updateSettings]: syncController.updateSettings,
