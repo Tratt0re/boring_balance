@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
 import {
   ZardComboboxComponent,
@@ -53,6 +54,7 @@ const GRID_SPAN_CLASS_BY_VALUE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppSheetFormComponent {
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly sheetData = inject<AppSheetFormData | null>(Z_SHEET_DATA, { optional: true });
 
@@ -399,7 +401,9 @@ export class AppSheetFormComponent {
           return null;
         }
 
-        const normalizedValue = value.trim();
+        const normalizedValue = field.inputType === 'number'
+          ? this.numberFormatService.normalizeInput(value)
+          : value.trim();
         return normalizedValue.length > 0 ? normalizedValue : null;
       }
       default:

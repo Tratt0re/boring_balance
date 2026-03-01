@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnDestroy,
   OnInit,
@@ -11,6 +12,7 @@ import {
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
@@ -50,6 +52,7 @@ export interface AppRadarChartSeries {
   },
 })
 export class AppRadarChartComponent implements OnInit, OnDestroy {
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly themeVersion = signal(0);
   private themeObserver: MutationObserver | null = null;
 
@@ -72,6 +75,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
+    this.numberFormatService.currencyFormatStyle();
     const { foreground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const sourceSeries = this.series();
@@ -302,9 +306,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
       return `${value ?? ''}`;
     }
 
-    return new Intl.NumberFormat(undefined, {
-      maximumFractionDigits: 2,
-    }).format(numericValue);
+    return this.numberFormatService.formatNumber(numericValue);
   }
 
   private escapeHtml(value: string): string {
@@ -321,8 +323,8 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const normalizedValue = value.trim().toUpperCase();
-    return normalizedValue.length > 0 ? normalizedValue : null;
+    const normalizedValue = value.trim();
+    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
   }
 
   private formatCurrencyValue(value: unknown, currencyCode: string): string {
@@ -331,14 +333,6 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
       return `${value ?? ''}`;
     }
 
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency: currencyCode,
-        maximumFractionDigits: 2,
-      }).format(numericValue);
-    } catch {
-      return `${numericValue.toFixed(2)} ${currencyCode}`;
-    }
+    return this.numberFormatService.formatCurrency(numericValue, currencyCode);
   }
 }

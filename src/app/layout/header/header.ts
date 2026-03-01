@@ -6,7 +6,7 @@ import { HeaderComponent } from '@/shared/components/layout/header.component';
 
 @Component({
   selector: 'app-header',
-  imports: [HeaderComponent, LanguageSelectorComponent, ThemeToggleComponent],
+  imports: [HeaderComponent],
   templateUrl: './header.html',
   encapsulation: ViewEncapsulation.None,
 })

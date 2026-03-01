@@ -15,6 +15,7 @@ import type {
   PlanItemUpdateDto,
 } from '@/dtos';
 import { amountToCents } from '@/models';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -99,6 +100,7 @@ export interface UpsertPlanItemDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertPlanItemDialogComponent {
+  protected readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly data = inject<UpsertPlanItemDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialPlanItem = this.data?.planItem;

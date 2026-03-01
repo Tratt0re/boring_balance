@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { EditableOptionItem } from '@/components/data-table';
 import type { BudgetCreateDto, BudgetUpdateDto } from '@/dtos';
 import { amountToCents } from '@/models/common.model';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -35,6 +36,7 @@ export interface UpsertBudgetDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertBudgetDialogComponent {
+  protected readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly data = inject<UpsertBudgetDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialBudget = this.data?.budget;

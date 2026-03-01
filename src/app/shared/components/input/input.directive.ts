@@ -3,7 +3,9 @@ import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import { mergeClasses, noopFn, transform } from '@/shared/utils/merge-classes';
+import { resolveNumberFormatSeparators } from '@/shared/utils/number-format';
 
 import {
   inputVariants,
@@ -27,14 +29,17 @@ type OnChangeType = (value: string) => void;
   host: {
     '[class]': 'classes()',
     '(input)': 'updateValue($event.target)',
+    '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',
   },
   exportAs: 'zInput',
 })
 export class ZardInputDirective implements ControlValueAccessor {
   private readonly elementRef = inject(ElementRef);
+  private readonly numberFormatService = inject(NumberFormatService);
   private onTouched: OnTouchedType = noopFn;
   private onChangeFn: OnChangeType = noopFn;
+  private isFocused = false;
 
   readonly class = input<ClassValue>('');
   readonly zBorderless = input(false, { transform });
@@ -57,11 +62,13 @@ export class ZardInputDirective implements ControlValueAccessor {
   );
 
   constructor() {
+    this.enableNumericModeIfNeeded();
+
     effect(() => {
       const value = this.value();
 
       if (value !== undefined && value !== null) {
-        this.elementRef.nativeElement.value = value;
+        this.syncNativeValue(value);
       }
     });
   }
@@ -78,11 +85,39 @@ export class ZardInputDirective implements ControlValueAccessor {
 
   protected updateValue(target: EventTarget | null): void {
     const el = target as HTMLInputElement | HTMLTextAreaElement | null;
-    this.value.set(el?.value ?? '');
+    const inputValue = el?.value ?? '';
+
+    if (!this.isNumericInput()) {
+      this.value.set(inputValue);
+      this.onChangeFn(this.value());
+      return;
+    }
+
+    const normalizedValue = this.numberFormatService.normalizeInput(inputValue, {
+      allowDecimal: this.allowsDecimalInput(),
+      allowNegative: this.allowsNegativeInput(),
+    });
+
+    this.value.set(normalizedValue);
+    this.syncNativeValue(normalizedValue, false);
     this.onChangeFn(this.value());
   }
 
-  protected onBlur() {
+  protected onFocus(): void {
+    this.isFocused = true;
+
+    if (this.isNumericInput()) {
+      this.syncNativeValue(this.value(), false);
+    }
+  }
+
+  protected onBlur(): void {
+    this.isFocused = false;
+
+    if (this.isNumericInput()) {
+      this.syncNativeValue(this.value(), true);
+    }
+
     this.onTouched();
   }
 
@@ -106,6 +141,84 @@ export class ZardInputDirective implements ControlValueAccessor {
   writeValue(value?: string): void {
     const newValue = value ?? '';
     this.value.set(newValue);
-    this.elementRef.nativeElement.value = newValue;
+    this.syncNativeValue(newValue);
+  }
+
+  private enableNumericModeIfNeeded(): void {
+    if (!this.isNativeNumericInput()) {
+      return;
+    }
+
+    const element = this.elementRef.nativeElement as HTMLInputElement;
+    element.dataset['zNumericInput'] = 'true';
+    element.type = 'text';
+    element.inputMode = this.allowsDecimalInput() ? 'decimal' : 'numeric';
+    element.autocomplete = 'off';
+  }
+
+  private syncNativeValue(value: string, useGrouping = !this.isFocused): void {
+    const element = this.elementRef.nativeElement as HTMLInputElement | HTMLTextAreaElement;
+    const nextValue = this.isNumericInput() ? this.toLocalizedNumericValue(value, useGrouping) : value;
+
+    if (element.value !== nextValue) {
+      element.value = nextValue;
+    }
+
+    if (this.isNumericInput()) {
+      (element as HTMLInputElement).inputMode = this.allowsDecimalInput() ? 'decimal' : 'numeric';
+    }
+  }
+
+  private isNativeNumericInput(): boolean {
+    return (
+      this.elementRef.nativeElement.tagName.toLowerCase() === 'input'
+      && this.elementRef.nativeElement.getAttribute('type') === 'number'
+    );
+  }
+
+  private isNumericInput(): boolean {
+    return this.elementRef.nativeElement.dataset?.['zNumericInput'] === 'true';
+  }
+
+  private allowsDecimalInput(): boolean {
+    const stepValue = this.elementRef.nativeElement.getAttribute('step');
+    if (!stepValue || stepValue === 'any') {
+      return true;
+    }
+
+    const parsedStep = Number(stepValue);
+    return !Number.isFinite(parsedStep) || !Number.isInteger(parsedStep);
+  }
+
+  private allowsNegativeInput(): boolean {
+    const minValue = this.elementRef.nativeElement.getAttribute('min');
+    if (!minValue) {
+      return true;
+    }
+
+    const parsedMin = Number(minValue);
+    return !Number.isFinite(parsedMin) || parsedMin < 0;
+  }
+
+  private toLocalizedNumericValue(value: string, useGrouping: boolean): string {
+    const normalizedValue = `${value ?? ''}`;
+    if (!/^-?\d+(\.\d*)?$/.test(normalizedValue)) {
+      return normalizedValue;
+    }
+
+    const separators = resolveNumberFormatSeparators(this.numberFormatService.currencyFormatStyle());
+    const isNegative = normalizedValue.startsWith('-');
+    const unsignedValue = isNegative ? normalizedValue.slice(1) : normalizedValue;
+    const [integerPart, fractionPart] = unsignedValue.split('.');
+    const groupedIntegerPart = useGrouping
+      ? integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, separators.thousands)
+      : integerPart;
+    const signPrefix = isNegative ? '-' : '';
+
+    if (fractionPart === undefined) {
+      return `${signPrefix}${groupedIntegerPart}`;
+    }
+
+    return `${signPrefix}${groupedIntegerPart}${separators.decimal}${fractionPart}`;
   }
 }

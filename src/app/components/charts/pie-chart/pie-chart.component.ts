@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnDestroy,
   OnInit,
@@ -11,6 +12,7 @@ import {
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartCssColor,
@@ -38,6 +40,7 @@ export interface AppPieChartItem {
   },
 })
 export class AppPieChartComponent implements OnInit, OnDestroy {
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly themeVersion = signal(0);
   private themeObserver: MutationObserver | null = null;
 
@@ -58,6 +61,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
+    this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const showLegend = this.showLegend();
@@ -183,9 +187,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
           const name = params?.name ?? '';
           const rawValue = Number(params?.value ?? 0);
           const formattedValue = Number.isFinite(rawValue)
-            ? new Intl.NumberFormat(undefined, {
-                maximumFractionDigits: 2,
-              }).format(rawValue)
+            ? this.numberFormatService.formatNumber(rawValue)
             : `${params?.value ?? ''}`;
           const percent = Number(params?.percent ?? 0);
           const details = Array.isArray(params?.data?.tooltipDetails) ? params.data.tooltipDetails : [];
@@ -196,7 +198,9 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
             return details.length === 0 ? baseWithoutPercent : `${baseWithoutPercent}<br/>${formattedDetails}`;
           }
 
-          const baseWithPercent = `${baseWithoutPercent} <span style="${labelStyle}">(${escapeHtml(`${percent}%`)})</span>`;
+          const baseWithPercent =
+            `${baseWithoutPercent} <span style="${labelStyle}">(` +
+            `${escapeHtml(this.numberFormatService.formatPercent(percent, { maximumFractionDigits: 2 }))})</span>`;
           const formattedDetails = details.map((line) => formatTooltipDetailLine(line)).join('<br/>');
           return details.length === 0 ? baseWithPercent : `${baseWithPercent}<br/>${formattedDetails}`;
         },

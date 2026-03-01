@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -51,6 +52,7 @@ export interface UpsertTransactionDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertTransactionDialogComponent {
+  protected readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly data = inject<UpsertTransactionDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransaction = this.data?.transaction;

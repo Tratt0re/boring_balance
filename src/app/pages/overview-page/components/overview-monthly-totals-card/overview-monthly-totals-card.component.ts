@@ -55,7 +55,7 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, On
   protected readonly chartHeight = computed(() =>
     this.isSmallScreen() ? MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE : MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP,
   );
-  protected readonly currencyCode = computed(() => this.localPreferencesService.getCurrency().toUpperCase());
+  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
   constructor(
     private readonly analyticsService: AnalyticsService,

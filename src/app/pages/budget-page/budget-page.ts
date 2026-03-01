@@ -20,6 +20,7 @@ import { AnalyticsService } from '@/services/analytics.service';
 import { BudgetsService } from '@/services/budgets.service';
 import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import {
   ToolbarContextService,
   type ToolbarAction,
@@ -179,7 +180,7 @@ export class BudgetPage implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
-  protected readonly currencyCode = computed(() => this.localPreferencesService.getCurrency().toUpperCase());
+  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
   protected readonly budgetTableStructure = createBudgetTableStructure(
     (row) => this.onEditBudget(row),
     (row) => this.onDeleteBudget(row),
@@ -305,6 +306,7 @@ export class BudgetPage implements OnInit, OnDestroy {
     private readonly budgetsService: BudgetsService,
     private readonly categoriesService: CategoriesService,
     private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
@@ -797,17 +799,7 @@ export class BudgetPage implements OnInit, OnDestroy {
   }
 
   protected formatCurrency(amount: number): string {
-    const currency = this.currencyCode();
-
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 2,
-      }).format(amount);
-    } catch {
-      return `${amount.toFixed(2)} ${currency}`;
-    }
+    return this.numberFormatService.formatCurrency(amount, this.currencyCode());
   }
 
   protected formatSignedCurrency(amount: number): string {
@@ -821,15 +813,10 @@ export class BudgetPage implements OnInit, OnDestroy {
 
   private formatPercent(value: number): string {
     const normalizedValue = Number.isFinite(value) ? value : 0;
-
-    try {
-      return `${new Intl.NumberFormat(undefined, {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
-      }).format(normalizedValue)}%`;
-    } catch {
-      return `${normalizedValue.toFixed(1)}%`;
-    }
+    return this.numberFormatService.formatPercent(normalizedValue, {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    });
   }
 
   protected analysisBudgetTotalAmount(): number {

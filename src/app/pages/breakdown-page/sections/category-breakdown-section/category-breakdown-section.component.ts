@@ -7,6 +7,7 @@ import {
   OnInit,
   SimpleChanges,
   computed,
+  effect,
   input,
   signal,
 } from '@angular/core';
@@ -21,6 +22,7 @@ import type { AnalyticsCategoryByMonthRowDto, AnalyticsFilterPayload, CategoryTy
 import { AnalyticsService } from '@/services/analytics.service';
 import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 
 type BreakdownCategoryType = Extract<CategoryType, 'expense' | 'income'>;
@@ -211,8 +213,18 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnDestroy, OnC
     private readonly analyticsService: AnalyticsService,
     private readonly categoriesService: CategoriesService,
     private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly translateService: TranslateService,
-  ) {}
+  ) {
+    effect(() => {
+      this.numberFormatService.currencySymbol();
+      this.numberFormatService.currencyFormatStyle();
+
+      if (!this.isLoading()) {
+        this.rebuildLocalizedViewModel();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.initializeLocalizedPlaceholders();
@@ -271,22 +283,12 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnDestroy, OnC
   }
 
   protected formatCurrencyFromCents(amountCents: number): string {
-    const currency = this.localPreferencesService.getCurrency().toUpperCase();
     const amount = Number(amountCents) / AMOUNT_CENTS_DIVISOR;
-
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 2,
-      }).format(amount);
-    } catch {
-      return `${amount.toFixed(2)} ${currency}`;
-    }
+    return this.numberFormatService.formatCurrency(amount);
   }
 
   protected currentCurrencyCode(): string {
-    return this.localPreferencesService.getCurrency().toUpperCase();
+    return this.localPreferencesService.currencyPreference();
   }
 
   private async loadData(): Promise<void> {

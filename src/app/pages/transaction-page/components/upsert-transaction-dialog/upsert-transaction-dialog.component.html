@@ -68,7 +68,7 @@
       step="0.01"
       aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
-      [attr.placeholder]="'common.placeholders.amountZero' | translate"
+      [attr.placeholder]="numberFormatService.amountPlaceholder()"
     />
     @if (visibleAmountErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>

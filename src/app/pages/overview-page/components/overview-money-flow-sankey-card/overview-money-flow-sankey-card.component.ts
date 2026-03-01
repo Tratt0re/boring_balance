@@ -6,6 +6,7 @@ import {
   OnInit,
   SimpleChanges,
   computed,
+  effect,
   input,
   signal,
 } from '@angular/core';
@@ -18,6 +19,7 @@ import type { AnalyticsMoneyFlowSankeyByMonthResponse } from '@/dtos';
 import { AnalyticsService } from '@/services/analytics.service';
 import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import {
   allocateBucketsToTargetTotalCents,
@@ -61,14 +63,24 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
   protected readonly chartHeight = computed(() =>
     this.isSmallScreen() ? MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE : MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP,
   );
-  protected readonly currencyCode = computed(() => this.localPreferencesService.getCurrency().toUpperCase());
+  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
   constructor(
     private readonly analyticsService: AnalyticsService,
     private readonly categoriesService: CategoriesService,
     private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly translateService: TranslateService,
-  ) {}
+  ) {
+    effect(() => {
+      this.numberFormatService.currencySymbol();
+      this.numberFormatService.currencyFormatStyle();
+
+      if (this.responseCache) {
+        this.rebuildLocalizedViewModel();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
@@ -156,18 +168,8 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
   }
 
   private formatCurrencyFromCents(amountCents: number): string {
-    const currency = this.localPreferencesService.getCurrency().toUpperCase();
     const amount = amountCents / AMOUNT_CENTS_DIVISOR;
-
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 2,
-      }).format(amount);
-    } catch {
-      return `${amount.toFixed(2)} ${currency}`;
-    }
+    return this.numberFormatService.formatCurrency(amount);
   }
 
   private buildMoneyFlowSankeyChart(response: AnalyticsMoneyFlowSankeyByMonthResponse): {

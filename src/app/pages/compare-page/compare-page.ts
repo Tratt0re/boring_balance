@@ -211,7 +211,7 @@ export class ComparePage implements OnInit, OnDestroy {
     ] as const;
   });
 
-  protected readonly summaryChartCurrencyCode = computed(() => this.localPreferencesService.getCurrency().toUpperCase());
+  protected readonly summaryChartCurrencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
   protected readonly expenseRadarRows = computed<readonly CompareExpenseCategoryTableRow[]>(() =>
     this.expenseCategoryTableRows().slice(0, RADAR_EXPENSE_CATEGORY_LIMIT),

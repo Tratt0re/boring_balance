@@ -1,17 +1,33 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 
 import {
   LOCAL_PREFERENCE_DEFAULTS,
+  type CurrencyFormatStyle,
   LocalPreferenceKey,
   type ThemePreference,
 } from '@/config/local-preferences.config';
+import {
+  normalizeCurrencyFormatStyle,
+  normalizeCurrencySymbol,
+} from '@/shared/utils/number-format';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocalPreferencesService {
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly themePreferenceSignal = signal<ThemePreference>(LOCAL_PREFERENCE_DEFAULTS.theme);
+  private readonly languagePreferenceSignal = signal<string>(LOCAL_PREFERENCE_DEFAULTS.language);
+  private readonly currencyPreferenceSignal = signal<string>(LOCAL_PREFERENCE_DEFAULTS.currency);
+  private readonly currencyFormatStyleSignal = signal<CurrencyFormatStyle>(
+    LOCAL_PREFERENCE_DEFAULTS.currencyFormatStyle,
+  );
+
+  readonly themePreference = this.themePreferenceSignal.asReadonly();
+  readonly languagePreference = this.languagePreferenceSignal.asReadonly();
+  readonly currencyPreference = this.currencyPreferenceSignal.asReadonly();
+  readonly currencyFormatStylePreference = this.currencyFormatStyleSignal.asReadonly();
 
   init(): void {
     if (!this.isBrowser) {
@@ -22,6 +38,7 @@ export class LocalPreferencesService {
     this.setThemeColor(this.getThemeColor());
     this.setLanguage(this.getLanguage());
     this.setCurrency(this.getCurrency());
+    this.setCurrencyFormatStyle(this.getCurrencyFormatStyle());
     this.setOnboardingCompleted(this.getOnboardingCompleted());
   }
 
@@ -35,7 +52,11 @@ export class LocalPreferencesService {
   }
 
   setTheme(theme: ThemePreference): void {
-    this.setText(LocalPreferenceKey.THEME, theme);
+    const normalizedTheme: ThemePreference =
+      theme === 'light' || theme === 'dark' || theme === 'system' ? theme : LOCAL_PREFERENCE_DEFAULTS.theme;
+
+    this.themePreferenceSignal.set(normalizedTheme);
+    this.setText(LocalPreferenceKey.THEME, normalizedTheme);
   }
 
   getThemeColor(): string {
@@ -55,15 +76,29 @@ export class LocalPreferencesService {
   }
 
   setLanguage(language: string): void {
-    this.setText(LocalPreferenceKey.LANGUAGE, language.trim() || LOCAL_PREFERENCE_DEFAULTS.language);
+    const normalizedLanguage = language.trim() || LOCAL_PREFERENCE_DEFAULTS.language;
+    this.languagePreferenceSignal.set(normalizedLanguage);
+    this.setText(LocalPreferenceKey.LANGUAGE, normalizedLanguage);
   }
 
   getCurrency(): string {
-    return this.getText(LocalPreferenceKey.CURRENCY) ?? LOCAL_PREFERENCE_DEFAULTS.currency;
+    return normalizeCurrencySymbol(this.getText(LocalPreferenceKey.CURRENCY));
   }
 
   setCurrency(currency: string): void {
-    this.setText(LocalPreferenceKey.CURRENCY, currency.trim() || LOCAL_PREFERENCE_DEFAULTS.currency);
+    const normalizedCurrency = normalizeCurrencySymbol(currency);
+    this.currencyPreferenceSignal.set(normalizedCurrency);
+    this.setText(LocalPreferenceKey.CURRENCY, normalizedCurrency);
+  }
+
+  getCurrencyFormatStyle(): CurrencyFormatStyle {
+    return normalizeCurrencyFormatStyle(this.getText(LocalPreferenceKey.CURRENCY_FORMAT_STYLE));
+  }
+
+  setCurrencyFormatStyle(currencyFormatStyle: CurrencyFormatStyle): void {
+    const normalizedCurrencyFormatStyle = normalizeCurrencyFormatStyle(currencyFormatStyle);
+    this.currencyFormatStyleSignal.set(normalizedCurrencyFormatStyle);
+    this.setText(LocalPreferenceKey.CURRENCY_FORMAT_STYLE, normalizedCurrencyFormatStyle);
   }
 
   getOnboardingCompleted(): boolean {

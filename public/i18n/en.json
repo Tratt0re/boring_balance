@@ -147,25 +147,44 @@
       }
     },
     "general": {
-      "intro": "General preferences are not fully configurable yet. Existing app-level options will be added here as they are wired into the renderer.",
+      "intro": "These preferences update immediately and stay stored on this device.",
       "cards": {
         "theme": {
-          "title": "Theme color",
-          "value": "Coming soon",
-          "description": "Theme personalization will be available in a future update."
+          "title": "Theme",
+          "description": "Choose how the app looks across every page.",
+          "fieldLabel": "Theme mode",
+          "options": {
+            "system": "System",
+            "light": "Light",
+            "dark": "Dark"
+          }
         },
         "language": {
           "title": "Language",
-          "description": "Current interface language."
+          "description": "Use the same language selector available in the header.",
+          "fieldLabel": "App language"
         },
         "currency": {
           "title": "Currency symbol",
-          "value": "Coming soon",
-          "description": "Currency preferences will be configurable here in a future update."
+          "description": "Pick the symbol shown in currency values throughout the app.",
+          "fieldLabel": "Symbol",
+          "customLabel": "Custom symbol",
+          "customPlaceholder": "CHF",
+          "options": {
+            "custom": "Custom"
+          }
+        },
+        "numberFormat": {
+          "title": "Currency display style",
+          "description": "Set the thousands and decimal separators used in amounts and number inputs.",
+          "fieldLabel": "Format",
+          "previewLabel": "Preview",
+          "options": {
+            "US": "1,234,567.89",
+            "EU_DOT": "1.234.567,89",
+            "EU_SPACE": "1 234 567,89"
+          }
         }
-      },
-      "language": {
-        "system": "System default"
       }
     },
     "about": {
@@ -1041,9 +1060,9 @@
   "header": {
     "language": {
       "options": {
-        "en": "EN",
-        "es": "ES",
-        "it": "IT"
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano"
       }
     },
     "theme": {
