@@ -126,8 +126,61 @@
       "accounts": "Accounts",
       "categories": "Categories",
       "recurringEvents": "Recurring events",
+      "settings": "Settings",
       "dataBackups": "Data & Backups",
       "about": "About"
+    }
+  },
+  "settings": {
+    "page": {
+      "title": "Settings",
+      "description": "Manage app preferences, backups, sync, exports, and local app details."
+    },
+    "sections": {
+      "general": {
+        "title": "General",
+        "description": "Adjust app-wide preferences and display defaults."
+      },
+      "about": {
+        "title": "About",
+        "description": "Review local app information and renderer runtime details."
+      }
+    },
+    "general": {
+      "intro": "General preferences are not fully configurable yet. Existing app-level options will be added here as they are wired into the renderer.",
+      "cards": {
+        "theme": {
+          "title": "Theme color",
+          "value": "Coming soon",
+          "description": "Theme personalization will be available in a future update."
+        },
+        "language": {
+          "title": "Language",
+          "description": "Current interface language."
+        },
+        "currency": {
+          "title": "Currency symbol",
+          "value": "Coming soon",
+          "description": "Currency preferences will be configurable here in a future update."
+        }
+      },
+      "language": {
+        "system": "System default"
+      }
+    },
+    "about": {
+      "appNameLabel": "App",
+      "appVersionLabel": "App version",
+      "appVersionUnavailable": "Not available in this build",
+      "localFirst": "Boring Balance is a local-first desktop app. Backup, sync, and export tools run directly on your device.",
+      "runtime": {
+        "title": "Runtime",
+        "description": "Renderer runtime versions exposed through the Electron bridge.",
+        "electron": "Electron",
+        "node": "Node.js",
+        "chrome": "Chrome",
+        "unknown": "Unavailable"
+      }
     }
   },
   "dataBackups": {
@@ -321,6 +374,7 @@
         },
         "values": {
           "never": "Never",
+          "noLastPull": "No last pull available",
           "idle": "Idle",
           "running": "Running",
           "ok": "OK",
@@ -345,11 +399,22 @@
       }
     },
     "exportImport": {
-      "title": "Export / Import",
-      "placeholder": "Export/Import will be available soon.",
+      "export": {
+        "title": "Export",
+        "description": "Export transactions and transfers to an Excel file.",
+        "lastExportLabel": "Last export"
+      },
+      "import": {
+        "title": "Import",
+        "placeholder": "Import tools will be available in a future update."
+      },
       "controls": {
-        "exportCsv": "Export CSV",
+        "exportExcel": "Export to Excel",
         "importData": "Import DB / CSV"
+      },
+      "messages": {
+        "success": "Export completed: {{fileName}}",
+        "error": "Failed to export data."
       }
     }
   },

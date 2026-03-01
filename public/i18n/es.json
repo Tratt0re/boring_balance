@@ -126,8 +126,61 @@
       "accounts": "Cuentas",
       "categories": "Categorias",
       "recurringEvents": "Eventos recurrentes",
+      "settings": "Configuracion",
       "dataBackups": "Datos y respaldo",
       "about": "Sobre la app"
+    }
+  },
+  "settings": {
+    "page": {
+      "title": "Configuracion",
+      "description": "Gestiona preferencias de la app, respaldos, sincronizacion, exportaciones y detalles locales."
+    },
+    "sections": {
+      "general": {
+        "title": "General",
+        "description": "Ajusta preferencias globales y valores de visualizacion."
+      },
+      "about": {
+        "title": "Acerca de",
+        "description": "Revisa informacion local de la app y detalles del runtime."
+      }
+    },
+    "general": {
+      "intro": "Las preferencias generales todavia no son totalmente configurables. Las opciones globales de la app se agregaran aqui a medida que se conecten al renderer.",
+      "cards": {
+        "theme": {
+          "title": "Color del tema",
+          "value": "Proximamente",
+          "description": "La personalizacion del tema estara disponible en una futura actualizacion."
+        },
+        "language": {
+          "title": "Idioma",
+          "description": "Idioma actual de la interfaz."
+        },
+        "currency": {
+          "title": "Simbolo de moneda",
+          "value": "Proximamente",
+          "description": "Las preferencias de moneda se podran configurar aqui en una futura actualizacion."
+        }
+      },
+      "language": {
+        "system": "Predeterminado del sistema"
+      }
+    },
+    "about": {
+      "appNameLabel": "App",
+      "appVersionLabel": "Version de la app",
+      "appVersionUnavailable": "No disponible en esta build",
+      "localFirst": "Boring Balance es una app de escritorio local-first. Las herramientas de respaldo, sync y exportacion se ejecutan directamente en tu dispositivo.",
+      "runtime": {
+        "title": "Runtime",
+        "description": "Versiones del runtime del renderer expuestas por el puente de Electron.",
+        "electron": "Electron",
+        "node": "Node.js",
+        "chrome": "Chrome",
+        "unknown": "No disponible"
+      }
     }
   },
   "dataBackups": {
@@ -321,6 +374,7 @@
         },
         "values": {
           "never": "Nunca",
+          "noLastPull": "No hay ultimo pull disponible",
           "idle": "Inactivo",
           "running": "En ejecucion",
           "ok": "OK",
@@ -345,11 +399,22 @@
       }
     },
     "exportImport": {
-      "title": "Exportar / Importar",
-      "placeholder": "Exportar/Importar estara disponible pronto.",
+      "export": {
+        "title": "Exportar",
+        "description": "Exporta transacciones y transferencias a un archivo de Excel.",
+        "lastExportLabel": "Ultima exportacion"
+      },
+      "import": {
+        "title": "Importar",
+        "placeholder": "Las herramientas de importacion estaran disponibles en una proxima actualizacion."
+      },
       "controls": {
-        "exportCsv": "Exportar CSV",
+        "exportExcel": "Exportar a Excel",
         "importData": "Importar DB / CSV"
+      },
+      "messages": {
+        "success": "Exportacion completada: {{fileName}}",
+        "error": "No se pudieron exportar los datos."
       }
     }
   },

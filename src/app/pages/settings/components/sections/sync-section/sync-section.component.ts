@@ -5,12 +5,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import type * as DTO from '@/dtos';
-import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
-import { ZardButtonComponent } from '@/shared/components/button';
-import { ZardLoaderComponent } from '@/shared/components/loader';
-import { ZardSelectImports } from '@/shared/components/select';
-import { ZardSwitchComponent } from '@/shared/components/switch';
-import { ZardTooltipImports } from '@/shared/components/tooltip';
 import {
   SYNC_INTERVAL_OPTIONS,
   SYNC_RETENTION_COUNT_OPTIONS,
@@ -18,8 +12,14 @@ import {
   SYNC_STATE_DEFAULTS,
   type RepoStatusDto,
   type SyncStateDto,
-} from '../../models/sync.models';
-import { SyncService } from '../../services/sync.service';
+} from '@/pages/data-backups-page/models/sync.models';
+import { SyncService } from '@/pages/data-backups-page/services/sync.service';
+import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardLoaderComponent } from '@/shared/components/loader';
+import { ZardSelectImports } from '@/shared/components/select';
+import { ZardSwitchComponent } from '@/shared/components/switch';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 
 interface SelectOption {
   readonly value: string;
@@ -62,7 +62,7 @@ const SYNC_STATUS_TABLE_STRUCTURE: readonly TableDataItem[] = [
 ] as const;
 
 @Component({
-  selector: 'app-sync-accordion-section',
+  selector: 'app-sync-section',
   imports: [
     AppDataTableComponent,
     TranslatePipe,
@@ -72,10 +72,10 @@ const SYNC_STATUS_TABLE_STRUCTURE: readonly TableDataItem[] = [
     ...ZardTooltipImports,
     ...ZardSelectImports,
   ],
-  templateUrl: './sync-accordion-section.component.html',
-  styleUrl: './sync-accordion-section.component.scss',
+  templateUrl: './sync-section.component.html',
+  styleUrl: './sync-section.component.scss',
 })
-export class SyncAccordionSectionComponent implements OnInit, OnDestroy {
+export class SyncSectionComponent implements OnInit, OnDestroy {
   private readonly syncService = inject(SyncService);
   private readonly alertDialogService = inject(ZardAlertDialogService);
   private readonly translateService = inject(TranslateService);
@@ -176,7 +176,7 @@ export class SyncAccordionSectionComponent implements OnInit, OnDestroy {
     {
       id: 'last-pull',
       label: 'dataBackups.sync.status.rows.lastPull',
-      value: this.formatTimestamp(this.state().lastPullAtMs),
+      value: this.formatLastPullTimestamp(this.state().lastPullAtMs),
     },
     {
       id: 'last-push',
@@ -463,8 +463,17 @@ export class SyncAccordionSectionComponent implements OnInit, OnDestroy {
       : SYNC_RETENTION_COUNT_OPTIONS[0];
   }
 
+  private formatLastPullTimestamp(value: number | null): string {
+    const normalizedValue = this.normalizeTimestampValue(value);
+    if (normalizedValue === null) {
+      return this.translateService.instant('dataBackups.sync.status.values.noLastPull');
+    }
+
+    return this.formatTimestamp(normalizedValue);
+  }
+
   private formatTimestamp(value: number | null): string {
-    const normalizedValue = typeof value === 'number' && Number.isInteger(value) ? value : null;
+    const normalizedValue = this.normalizeTimestampValue(value);
     if (normalizedValue === null) {
       return this.translateService.instant('dataBackups.sync.status.values.never');
     }
@@ -473,5 +482,9 @@ export class SyncAccordionSectionComponent implements OnInit, OnDestroy {
       dateStyle: 'medium',
       timeStyle: 'short',
     }).format(new Date(normalizedValue));
+  }
+
+  private normalizeTimestampValue(value: number | null): number | null {
+    return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : null;
   }
 }

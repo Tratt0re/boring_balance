@@ -34,11 +34,10 @@ export class MenuConfiguration {
       ]
     },
     {
-      label: 'nav.sections.settings',
+      label: '',
       placement: 'bottom',
       items: [
-        { label: 'nav.items.dataBackups', icon: 'hard-drive', path: '/data-backups' },
-        { label: 'nav.items.about', icon: 'badge-info', path: '/about' },
+        { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
       ],
     },
   ];

@@ -126,8 +126,61 @@
       "accounts": "Conti",
       "categories": "Categorie",
       "recurringEvents": "Eventi ricorrenti",
+      "settings": "Impostazioni",
       "dataBackups": "Dati e backup",
       "about": "Info app"
+    }
+  },
+  "settings": {
+    "page": {
+      "title": "Impostazioni",
+      "description": "Gestisci preferenze dell'app, backup, sincronizzazione, export e dettagli locali."
+    },
+    "sections": {
+      "general": {
+        "title": "Generali",
+        "description": "Regola le preferenze globali e i valori di visualizzazione."
+      },
+      "about": {
+        "title": "Info",
+        "description": "Controlla le informazioni locali dell'app e i dettagli del runtime."
+      }
+    },
+    "general": {
+      "intro": "Le preferenze generali non sono ancora completamente configurabili. Le opzioni globali verranno aggiunte qui man mano che saranno collegate al renderer.",
+      "cards": {
+        "theme": {
+          "title": "Colore tema",
+          "value": "Presto disponibile",
+          "description": "La personalizzazione del tema arrivera in un aggiornamento futuro."
+        },
+        "language": {
+          "title": "Lingua",
+          "description": "Lingua attuale dell'interfaccia."
+        },
+        "currency": {
+          "title": "Simbolo valuta",
+          "value": "Presto disponibile",
+          "description": "Le preferenze valuta saranno configurabili qui in un aggiornamento futuro."
+        }
+      },
+      "language": {
+        "system": "Predefinito di sistema"
+      }
+    },
+    "about": {
+      "appNameLabel": "App",
+      "appVersionLabel": "Versione app",
+      "appVersionUnavailable": "Non disponibile in questa build",
+      "localFirst": "Boring Balance e un'app desktop local-first. Backup, sync ed export vengono eseguiti direttamente sul dispositivo.",
+      "runtime": {
+        "title": "Runtime",
+        "description": "Versioni del runtime renderer esposte tramite il bridge Electron.",
+        "electron": "Electron",
+        "node": "Node.js",
+        "chrome": "Chrome",
+        "unknown": "Non disponibile"
+      }
     }
   },
   "dataBackups": {
@@ -321,6 +374,7 @@
         },
         "values": {
           "never": "Mai",
+          "noLastPull": "Nessun ultimo pull disponibile",
           "idle": "Inattivo",
           "running": "In esecuzione",
           "ok": "OK",
@@ -345,11 +399,22 @@
       }
     },
     "exportImport": {
-      "title": "Export / Import",
-      "placeholder": "Export/Import sara disponibile a breve.",
+      "export": {
+        "title": "Export",
+        "description": "Esporta transazioni e trasferimenti in un file Excel.",
+        "lastExportLabel": "Ultimo export"
+      },
+      "import": {
+        "title": "Import",
+        "placeholder": "Gli strumenti di import saranno disponibili in un prossimo aggiornamento."
+      },
       "controls": {
-        "exportCsv": "Esporta CSV",
+        "exportExcel": "Esporta in Excel",
         "importData": "Importa DB / CSV"
+      },
+      "messages": {
+        "success": "Export completato: {{fileName}}",
+        "error": "Impossibile esportare i dati."
       }
     }
   },

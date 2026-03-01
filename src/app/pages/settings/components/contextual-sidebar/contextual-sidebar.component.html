@@ -1,0 +1,25 @@
+<aside class="flex h-auto min-h-0 flex-col overflow-hidden rounded-xl border border-border/60 bg-card p-2 shadow-sm lg:h-full">
+  <nav
+    aria-label="Settings sections"
+    class="flex gap-2 overflow-x-auto pb-1 lg:min-h-0 lg:flex-1 lg:flex-col lg:gap-1 lg:overflow-x-hidden lg:overflow-y-auto lg:pr-1 lg:pb-0"
+  >
+    @for (item of items(); track item.key) {
+      <button
+        type="button"
+        class="min-w-32 shrink-0 rounded-lg border px-3 py-3 text-left transition-colors lg:w-full"
+        [class]="
+          activeKey() === item.key
+            ? 'border-sidebar-primary bg-sidebar-primary/10 text-foreground'
+            : 'border-transparent text-muted-foreground hover:border-border/60 hover:bg-muted/40 hover:text-foreground'
+        "
+        [attr.aria-current]="activeKey() === item.key ? 'page' : null"
+        (click)="onSelect(item.key)"
+      >
+        <span class="block text-sm font-semibold tracking-tight whitespace-nowrap lg:whitespace-normal">
+          {{ item.label | translate }}
+        </span>
+        <span class="mt-1 hidden text-xs leading-5 lg:block">{{ item.description | translate }}</span>
+      </button>
+    }
+  </nav>
+</aside>

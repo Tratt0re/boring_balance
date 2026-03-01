@@ -1,0 +1,29 @@
+<section class="settings-page">
+  <div class="settings-page__sidebar">
+      <app-contextual-sidebar
+        [items]="navItems"
+        [activeKey]="activeKey()"
+        (keySelected)="onSectionSelected($event)"
+      />
+  </div>
+
+  <div class="min-w-0">
+    @switch (activeKey()) {
+      @case ('general') {
+        <app-general-section />
+      }
+      @case ('backups') {
+        <app-backups-section />
+      }
+      @case ('sync') {
+        <app-sync-section />
+      }
+      @case ('export') {
+        <app-export-section />
+      }
+      @case ('about') {
+        <app-about-section />
+      }
+    }
+  </div>
+</section>

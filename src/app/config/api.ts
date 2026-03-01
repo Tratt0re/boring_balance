@@ -13,6 +13,7 @@ export enum APIChannel {
   PLAN_ITEMS = 'planItems',
   TRANSACTIONS = 'transactions',
   BACKUP = 'backup',
+  DATA_EXPORT = 'dataExport',
   SYNC = 'sync',
 }
 
@@ -110,6 +111,9 @@ export interface ElectronIpcClient {
     readonly runNow: OptionalIpcRequest<void, DTO.BackupRunNowResponse>;
     readonly remove: IpcRequest<DTO.BackupRemoveDto, DTO.BackupRemoveResponse>;
     readonly restore: IpcRequest<DTO.BackupRestoreDto, DTO.BackupRestoreResponse>;
+  };
+  readonly dataExport: {
+    readonly exportXlsx: OptionalIpcRequest<void, DTO.ExportXlsxResponse>;
   };
   readonly sync: {
     readonly getSettings: OptionalIpcRequest<void, DTO.SyncGetSettingsResponse>;

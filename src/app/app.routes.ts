@@ -4,10 +4,10 @@ import { AccountsPage } from '@/pages/accounts-page/accounts-page';
 import { BreakdownPage } from '@/pages/breakdown-page/breakdown-page';
 import { ComparePage } from '@/pages/compare-page/compare-page';
 import { CategoriesPage } from '@/pages/categories-page/categories-page';
-import { DataBackupsPage } from '@/pages/data-backups-page/data-backups-page';
 import { BudgetPage } from '@/pages/budget-page/budget-page';
 import { OverviewPage } from '@/pages/overview-page/overview-page';
 import { RecurringEventsPage } from '@/pages/recurring-events-page/recurring-events-page';
+import { SettingsPage } from '@/pages/settings/settings.page';
 import { TransactionPage } from '@/pages/transaction-page/transaction-page';
 
 export const routes: Routes = [
@@ -19,6 +19,9 @@ export const routes: Routes = [
   { path: 'budget', component: BudgetPage },
   { path: 'categories', component: CategoriesPage },
   { path: 'recurring-events', component: RecurringEventsPage },
-  { path: 'data-backups', component: DataBackupsPage },
+  { path: 'settings', pathMatch: 'full', redirectTo: 'settings/general' },
+  { path: 'settings/:section', component: SettingsPage },
+  { path: 'data-backups', pathMatch: 'full', redirectTo: 'settings/backups' },
+  { path: 'about', pathMatch: 'full', redirectTo: 'settings/about' },
   { path: '**', redirectTo: '' },
 ];

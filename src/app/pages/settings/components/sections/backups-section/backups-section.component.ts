@@ -5,19 +5,19 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
+import { type BackupFileInfoDto } from '@/pages/data-backups-page/models/backup.models';
+import {
+  BACKUP_AUTO_INTERVAL_OPTIONS,
+  BACKUP_RETENTION_COUNT_OPTIONS,
+  BACKUP_SETTINGS_DEFAULTS,
+  BACKUP_STATE_DEFAULTS,
+} from '@/pages/data-backups-page/models/backup.models';
 import { BackupService } from '@/services/backup.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
-import {
-  BACKUP_AUTO_INTERVAL_OPTIONS,
-  BACKUP_RETENTION_COUNT_OPTIONS,
-  BACKUP_SETTINGS_DEFAULTS,
-  BACKUP_STATE_DEFAULTS,
-  type BackupFileInfoDto,
-} from '../../models/backup.models';
 
 interface BackupTableRow {
   readonly id: string;
@@ -100,7 +100,7 @@ const createBackupsTableStructure = (
   ] as const;
 
 @Component({
-  selector: 'app-backups-accordion-section',
+  selector: 'app-backups-section',
   imports: [
     DatePipe,
     AppDataTableComponent,
@@ -110,9 +110,10 @@ const createBackupsTableStructure = (
     ZardSwitchComponent,
     ...ZardSelectImports,
   ],
-  templateUrl: './backups-accordion-section.component.html',
+  templateUrl: './backups-section.component.html',
+  styleUrl: './backups-section.component.scss',
 })
-export class BackupsAccordionSectionComponent implements OnInit {
+export class BackupsSectionComponent implements OnInit {
   private readonly backupService = inject(BackupService);
   private readonly alertDialogService = inject(ZardAlertDialogService);
   private readonly translateService = inject(TranslateService);
@@ -262,6 +263,17 @@ export class BackupsAccordionSectionComponent implements OnInit {
     this.onDeleteBackup(backup.fullPath, backup.fileName);
   }
 
+  protected statusLabel(status: 'idle' | 'running' | 'ok' | 'error'): string {
+    const keyByStatus = {
+      idle: 'dataBackups.backups.status.idle',
+      running: 'dataBackups.backups.status.running',
+      ok: 'dataBackups.backups.status.ok',
+      error: 'dataBackups.backups.status.error',
+    } as const;
+
+    return this.translateService.instant(keyByStatus[status]);
+  }
+
   private onRestoreBackup(backupFilePath: string, backupFileName: string): void {
     if (!backupFilePath || this.isBusy()) {
       return;
@@ -357,17 +369,6 @@ export class BackupsAccordionSectionComponent implements OnInit {
     )
       ? normalizedValue
       : BACKUP_RETENTION_COUNT_OPTIONS[0];
-  }
-
-  protected statusLabel(status: 'idle' | 'running' | 'ok' | 'error'): string {
-    const keyByStatus = {
-      idle: 'dataBackups.backups.status.idle',
-      running: 'dataBackups.backups.status.running',
-      ok: 'dataBackups.backups.status.ok',
-      error: 'dataBackups.backups.status.error',
-    } as const;
-
-    return this.translateService.instant(keyByStatus[status]);
   }
 
   private applySettingsPatch(patch: {
