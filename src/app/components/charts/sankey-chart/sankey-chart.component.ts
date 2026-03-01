@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnDestroy,
   OnInit,
@@ -11,6 +12,7 @@ import {
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
@@ -48,6 +50,7 @@ export interface AppSankeyChartLink {
   },
 })
 export class AppSankeyChartComponent implements OnInit, OnDestroy {
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly themeVersion = signal(0);
   private themeObserver: MutationObserver | null = null;
 
@@ -70,6 +73,7 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
+    this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const normalizedLineOpacity = Math.min(Math.max(this.lineOpacity(), 0), 1);
@@ -98,9 +102,7 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         return this.formatCurrencyValue(numericValue, normalizedCurrencyCode);
       }
 
-      return new Intl.NumberFormat(undefined, {
-        maximumFractionDigits: 2,
-      }).format(numericValue);
+      return this.numberFormatService.formatNumber(numericValue);
     };
     const formatTooltipPercent = (value: unknown, total: number): string | null => {
       if (!shouldShowTooltipPercent || !Number.isFinite(total) || total <= 0) {
@@ -117,14 +119,10 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         return null;
       }
 
-      try {
-        return `${new Intl.NumberFormat(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }).format(percent)}%`;
-      } catch {
-        return `${percent.toFixed(2)}%`;
-      }
+      return this.numberFormatService.formatPercent(percent, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     };
 
     const sankeyNodes = this.nodes().map((node, index) => ({
@@ -299,19 +297,11 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const normalizedValue = value.trim().toUpperCase();
-    return normalizedValue.length > 0 ? normalizedValue : null;
+    const normalizedValue = value.trim();
+    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
   }
 
   private formatCurrencyValue(value: number, currencyCode: string): string {
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency: currencyCode,
-        maximumFractionDigits: 2,
-      }).format(value);
-    } catch {
-      return `${value.toFixed(2)} ${currencyCode}`;
-    }
+    return this.numberFormatService.formatCurrency(value, currencyCode);
   }
 }

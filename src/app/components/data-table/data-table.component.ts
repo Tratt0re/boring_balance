@@ -18,6 +18,7 @@ import type { ClassValue } from 'clsx';
 import { AppPaginationComponent } from '@/components/pagination/pagination.component';
 import { APP_ICON_OPTIONS } from '@/config/visual-options.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
@@ -88,6 +89,7 @@ const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value
 })
 export class AppDataTableComponent {
   private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly rowTrackKeyByIdentity = new WeakMap<TableRow, number>();
   private nextRowTrackKey = 1;
@@ -1081,11 +1083,7 @@ export class AppDataTableComponent {
           return '-';
         }
 
-        try {
-          return new Intl.NumberFormat(this.resolveLocale(), column.number).format(numericValue);
-        } catch {
-          return `${numericValue}`;
-        }
+        return this.numberFormatService.formatNumber(numericValue, column.number);
       }
 
       case 'currency': {
@@ -1095,15 +1093,7 @@ export class AppDataTableComponent {
         }
 
         const currency = this.resolveCurrencyCode();
-
-        try {
-          return new Intl.NumberFormat(this.resolveLocale(), {
-            style: 'currency',
-            currency,
-          }).format(numericValue);
-        } catch {
-          return `${numericValue}`;
-        }
+        return this.numberFormatService.formatCurrency(numericValue, currency);
       }
 
       case 'date': {
@@ -1318,8 +1308,8 @@ export class AppDataTableComponent {
       return '';
     }
 
-    const parsedValue = Number(inputValue);
-    return Number.isFinite(parsedValue) ? parsedValue : inputValue;
+    const parsedValue = this.numberFormatService.parse(inputValue);
+    return parsedValue ?? inputValue;
   }
 
   private resolveSelectValue(selectedValue: string, column: EditableColumnDataItem): unknown {
@@ -1381,10 +1371,10 @@ export class AppDataTableComponent {
   private resolveCurrencyCode(): string {
     const explicitCurrencyCode = this.currencyCode().trim();
     if (explicitCurrencyCode.length > 0) {
-      return explicitCurrencyCode.toUpperCase();
+      return this.numberFormatService.normalizeCurrencySymbol(explicitCurrencyCode);
     }
 
-    return this.localPreferencesService.getCurrency().toUpperCase();
+    return this.localPreferencesService.currencyPreference();
   }
 
   private resolveLocale(): string | undefined {

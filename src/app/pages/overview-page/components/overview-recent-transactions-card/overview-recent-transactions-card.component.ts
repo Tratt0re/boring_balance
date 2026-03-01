@@ -20,7 +20,7 @@ import {
 } from '@/config/visual-options.config';
 import { AccountsService } from '@/services/accounts.service';
 import { CategoriesService } from '@/services/categories.service';
-import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { TransactionsService } from '@/services/transactions.service';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -85,7 +85,7 @@ export class OverviewRecentTransactionsCardComponent implements OnInit, OnChange
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly translateService: TranslateService,
   ) {}
 
@@ -185,17 +185,7 @@ export class OverviewRecentTransactionsCardComponent implements OnInit, OnChange
   }
 
   protected formatAmount(amount: number): string {
-    const currency = this.localPreferencesService.getCurrency().toUpperCase();
-
-    try {
-      return new Intl.NumberFormat(this.resolveLocale(), {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 2,
-      }).format(amount);
-    } catch {
-      return `${amount.toFixed(2)} ${currency}`;
-    }
+    return this.numberFormatService.formatCurrency(amount);
   }
 
   protected settledToggleActionLabel(settled: boolean): string {

@@ -147,25 +147,44 @@
       }
     },
     "general": {
-      "intro": "Las preferencias generales todavia no son totalmente configurables. Las opciones globales de la app se agregaran aqui a medida que se conecten al renderer.",
+      "intro": "Estas preferencias se actualizan al instante y quedan guardadas en este dispositivo.",
       "cards": {
         "theme": {
-          "title": "Color del tema",
-          "value": "Proximamente",
-          "description": "La personalizacion del tema estara disponible en una futura actualizacion."
+          "title": "Tema",
+          "description": "Elige como se ve la app en todas las paginas.",
+          "fieldLabel": "Modo de tema",
+          "options": {
+            "system": "Sistema",
+            "light": "Claro",
+            "dark": "Oscuro"
+          }
         },
         "language": {
           "title": "Idioma",
-          "description": "Idioma actual de la interfaz."
+          "description": "Usa el mismo selector de idioma que ya existe en el header.",
+          "fieldLabel": "Idioma de la app"
         },
         "currency": {
           "title": "Simbolo de moneda",
-          "value": "Proximamente",
-          "description": "Las preferencias de moneda se podran configurar aqui en una futura actualizacion."
+          "description": "Elige el simbolo que se muestra en los importes de toda la app.",
+          "fieldLabel": "Simbolo",
+          "customLabel": "Simbolo personalizado",
+          "customPlaceholder": "CHF",
+          "options": {
+            "custom": "Personalizado"
+          }
+        },
+        "numberFormat": {
+          "title": "Estilo de visualizacion de moneda",
+          "description": "Define los separadores de miles y decimales para importes y entradas numericas.",
+          "fieldLabel": "Formato",
+          "previewLabel": "Vista previa",
+          "options": {
+            "US": "1,234,567.89",
+            "EU_DOT": "1.234.567,89",
+            "EU_SPACE": "1 234 567,89"
+          }
         }
-      },
-      "language": {
-        "system": "Predeterminado del sistema"
       }
     },
     "about": {
@@ -1000,9 +1019,9 @@
   "header": {
     "language": {
       "options": {
-        "en": "EN",
-        "es": "ES",
-        "it": "IT"
+        "en": "English",
+        "es": "Español",
+        "it": "Italiano"
       }
     },
     "theme": {

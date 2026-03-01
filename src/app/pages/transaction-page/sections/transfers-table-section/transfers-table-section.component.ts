@@ -34,6 +34,7 @@ import {
 } from '@/pages/transaction-page/components/upsert-transfer-dialog/upsert-transfer-dialog.component';
 import { AccountsService } from '@/services/accounts.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { TransactionsService } from '@/services/transactions.service';
 import { ToolbarContextService, type ToolbarAction, type ToolbarItemNavigation } from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
@@ -403,6 +404,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
     private readonly dialogService: ZardDialogService,
@@ -1030,16 +1032,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private formatActiveFilterAmount(amount: number): string {
-    const currency = this.localPreferencesService.getCurrency().toUpperCase();
-
-    try {
-      return new Intl.NumberFormat(this.resolveLocale(), {
-        style: 'currency',
-        currency,
-      }).format(amount);
-    } catch {
-      return `${amount}`;
-    }
+    return this.numberFormatService.formatCurrency(amount);
   }
 
   private resolveLocale(): string {

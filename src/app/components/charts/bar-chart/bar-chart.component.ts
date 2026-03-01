@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   OnDestroy,
   OnInit,
@@ -11,6 +12,7 @@ import {
 import type { EChartsCoreOption } from 'echarts/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
+import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
@@ -50,6 +52,7 @@ export interface AppBarChartSeries {
   },
 })
 export class AppBarChartComponent implements OnInit, OnDestroy {
+  private readonly numberFormatService = inject(NumberFormatService);
   private readonly themeVersion = signal(0);
   private themeObserver: MutationObserver | null = null;
 
@@ -75,6 +78,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
   protected readonly options = computed<EChartsCoreOption>(() => {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
+    this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
 
@@ -92,10 +96,13 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     const showAxisTooltipDelta = this.showAxisTooltipDelta();
     const axisTooltipDeltaLabel = this.axisTooltipDeltaLabel();
     const valueAxisLabelFormatter = usePercentValueAxis
-      ? (value: number | string) => `${Number.isFinite(Number(value)) ? Number(value) : value}%`
+      ? (value: number | string) =>
+          Number.isFinite(Number(value))
+            ? this.numberFormatService.formatPercent(Number(value))
+            : `${value}%`
       : currencyFormatter
         ? (value: number | string) => currencyFormatter(value)
-      : undefined;
+        : undefined;
     const axisPointerType = this.axisPointerType();
     const axisPointer =
       axisPointerType === 'shadow'
@@ -328,7 +335,12 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
         : rawValueCandidate;
     const numericValue = Number(rawValue);
     const percentText =
-      usePercentValueAxis && Number.isFinite(numericValue) ? `${numericValue.toFixed(2)}%` : null;
+      usePercentValueAxis && Number.isFinite(numericValue)
+        ? this.numberFormatService.formatPercent(numericValue, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        : null;
     const labelStyle = 'font-weight: 300; opacity: 0.78;';
     const valueStyle = 'font-weight: 700;';
     const percentStyle = 'font-weight: 400;';
@@ -423,7 +435,10 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       const numericValue = Number(rawValue);
       const formattedValue = Number.isFinite(numericValue)
         ? usePercentValueAxis
-          ? `${numericValue.toFixed(2)}%`
+          ? this.numberFormatService.formatPercent(numericValue, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
           : currencyFormatter
             ? currencyFormatter(numericValue)
             : String(numericValue)
@@ -442,7 +457,10 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     if (numericSeriesValues.length >= 2) {
       const deltaValue = numericSeriesValues[0] - numericSeriesValues[1];
       const formattedDelta = usePercentValueAxis
-        ? `${deltaValue.toFixed(2)}%`
+        ? this.numberFormatService.formatPercent(deltaValue, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
         : currencyFormatter
           ? currencyFormatter(deltaValue)
           : String(deltaValue);
@@ -527,8 +545,8 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const normalizedValue = value.trim().toUpperCase();
-    return normalizedValue.length > 0 ? normalizedValue : null;
+    const normalizedValue = value.trim();
+    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
   }
 
   private formatCurrencyValue(value: unknown, currencyCode: string): string {
@@ -537,14 +555,6 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
       return `${value ?? ''}`;
     }
 
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency: currencyCode,
-        maximumFractionDigits: 2,
-      }).format(numericValue);
-    } catch {
-      return `${numericValue.toFixed(2)} ${currencyCode}`;
-    }
+    return this.numberFormatService.formatCurrency(numericValue, currencyCode);
   }
 }

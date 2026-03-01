@@ -3,18 +3,22 @@ export enum LocalPreferenceKey {
   THEME_COLOR = 'theme_color',
   LANGUAGE = 'language',
   CURRENCY = 'currency',
+  CURRENCY_FORMAT_STYLE = 'currency_format_style',
   ONBOARDING_COMPLETED = 'onboarding_completed',
   TRANSACTIONS_TABLE_STATE = 'transactions_table_state',
   TRANSFERS_TABLE_STATE = 'transfers_table_state',
 }
 
 export type ThemePreference = 'light' | 'dark' | 'system';
+export type CurrencySymbol = string;
+export type CurrencyFormatStyle = 'US' | 'EU_DOT' | 'EU_SPACE';
 
 export interface LocalPreferences {
   readonly theme: ThemePreference;
   readonly themeColor: string;
   readonly language: string;
-  readonly currency: string;
+  readonly currency: CurrencySymbol;
+  readonly currencyFormatStyle: CurrencyFormatStyle;
   readonly onboardingCompleted: boolean;
 }
 
@@ -22,6 +26,7 @@ export const LOCAL_PREFERENCE_DEFAULTS: Readonly<LocalPreferences> = Object.free
   theme: 'system',
   themeColor: 'default',
   language: 'en',
-  currency: 'EUR',
+  currency: '€',
+  currencyFormatStyle: 'EU_DOT',
   onboardingCompleted: false,
 });

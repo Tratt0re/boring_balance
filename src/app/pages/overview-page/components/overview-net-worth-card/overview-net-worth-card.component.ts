@@ -6,6 +6,7 @@ import {
   OnInit,
   SimpleChanges,
   computed,
+  effect,
   input,
   signal,
 } from '@angular/core';
@@ -18,7 +19,7 @@ import { DEFAULT_VISUAL_COLOR_KEY } from '@/config/visual-options.config';
 import type { AnalyticsNetWorthByAccountResponse } from '@/dtos';
 import { AccountsService } from '@/services/accounts.service';
 import { AnalyticsService } from '@/services/analytics.service';
-import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { NumberFormatService } from '@/services/number-format.service';
 import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
@@ -124,9 +125,18 @@ export class OverviewNetWorthCardComponent implements OnInit, OnDestroy, OnChang
   constructor(
     private readonly analyticsService: AnalyticsService,
     private readonly accountsService: AccountsService,
-    private readonly localPreferencesService: LocalPreferencesService,
+    private readonly numberFormatService: NumberFormatService,
     private readonly translateService: TranslateService,
-  ) {}
+  ) {
+    effect(() => {
+      this.numberFormatService.currencySymbol();
+      this.numberFormatService.currencyFormatStyle();
+
+      if (this.netWorthResponseCache) {
+        this.rebuildLocalizedViewModel();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
@@ -153,31 +163,16 @@ export class OverviewNetWorthCardComponent implements OnInit, OnDestroy, OnChang
   }
 
   protected formatCurrencyFromCents(amountCents: number): string {
-    const currency = this.localPreferencesService.getCurrency().toUpperCase();
     const amount = amountCents / AMOUNT_CENTS_DIVISOR;
-
-    try {
-      return new Intl.NumberFormat(undefined, {
-        style: 'currency',
-        currency,
-        maximumFractionDigits: 2,
-      }).format(amount);
-    } catch {
-      return `${amount.toFixed(2)} ${currency}`;
-    }
+    return this.numberFormatService.formatCurrency(amount);
   }
 
   protected formatPercent(value: number): string {
     const normalizedValue = Number.isFinite(value) ? Math.abs(value) : 0;
-
-    try {
-      return `${new Intl.NumberFormat(this.resolveLocale(), {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(normalizedValue)}%`;
-    } catch {
-      return `${normalizedValue.toFixed(2)}%`;
-    }
+    return this.numberFormatService.formatPercent(normalizedValue, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   }
 
   protected formatSignedCurrencyFromCents(amountCents: number): string {
@@ -324,13 +319,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnDestroy, OnChang
     this.totalNetWorthCents.set(totalNetWorthCents);
     this.totalNetWorthPreviousMonthTotalCents.set(Number(netWorthResponse.totals?.previous_month_total_cents ?? 0));
     this.totalNetWorthPreviousMonthDeltaCents.set(Number.isFinite(previousMonthDeltaCents) ? previousMonthDeltaCents : 0);
-  }
-
-  private resolveLocale(): string | undefined {
-    const currentLanguage = this.translateService.getCurrentLang();
-    return typeof currentLanguage === 'string' && currentLanguage.trim().length > 0
-      ? currentLanguage
-      : undefined;
   }
 
   private translate(key: string, params?: Record<string, unknown>): string {
