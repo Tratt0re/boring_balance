@@ -1,5 +1,6 @@
 export interface SyncSettingsDto {
   readonly enabled: boolean;
+  readonly folderPath?: string | null;
   readonly baseFolderPath: string | null;
   readonly repoFolderName: string;
   readonly repoPath: string | null;
@@ -10,13 +11,22 @@ export interface SyncSettingsDto {
   readonly autoPushOnQuit: boolean;
   readonly retentionCountPerDevice: number;
   readonly lastSeenRemoteSnapshotId: string | null;
+  readonly lastPublishedCounter?: number | null;
   readonly lastPublishedLocalCounter: number | null;
+  readonly lastPulledCounter?: number | null;
+  readonly lastError?: string | null;
 }
 
 export interface SyncConflictInfoDto {
-  readonly localCopyPath: string;
+  readonly localCopyPath: string | null;
   readonly remoteSnapshotPath: string;
   readonly reason: string;
+}
+
+export interface SyncRemoteLatestDto {
+  readonly changeCounter: number;
+  readonly lastWriteMs: number;
+  readonly file: string;
 }
 
 export interface SyncStateDto {
@@ -24,6 +34,7 @@ export interface SyncStateDto {
   readonly lastPullAtMs: number | null;
   readonly lastPushAtMs: number | null;
   readonly lastError: string | null;
+  readonly remoteLatest?: SyncRemoteLatestDto | null;
   readonly conflictInfo?: SyncConflictInfoDto | null;
 }
 
@@ -37,6 +48,7 @@ export interface SyncRepoMetaResponseDto {
 }
 
 export interface SyncRepoStatusRequestDto {
+  readonly folderPath?: string;
   readonly baseFolderPath?: string;
 }
 
@@ -47,6 +59,9 @@ export interface SyncRepoStatusResponseDto {
 }
 
 export interface SyncUpdateSettingsDto {
+  readonly enabled?: boolean;
+  readonly folderPath?: string | null;
+  readonly baseFolderPath?: string | null;
   readonly repoFolderName?: string;
   readonly deviceName?: string | null;
   readonly autoPullIntervalMin?: number;
@@ -57,6 +72,14 @@ export interface SyncUpdateSettingsDto {
 
 export interface SyncSelectFolderResponseDto {
   readonly folderPath: string;
+}
+
+export interface SyncEnableDto {
+  readonly folderPath: string;
+}
+
+export interface SyncEnableResponseDto {
+  readonly ok: boolean;
 }
 
 export interface SyncEnableCreateRepoDto {
@@ -94,16 +117,21 @@ export interface SyncActionPruneResultDto {
 export interface SyncActionResultDto {
   readonly action: string;
   readonly reason?: string;
+  readonly pulled?: boolean;
+  readonly pushed?: boolean;
   readonly repoId?: string;
   readonly repoPath?: string;
   readonly snapshotId?: string;
+  readonly snapshotFile?: string;
   readonly snapshotFilePath?: string;
+  readonly remote?: SyncRemoteLatestDto;
   readonly restoredFrom?: string;
   readonly restoredTo?: string;
   readonly previousLocalCopyPath?: string | null;
   readonly restoredRemote?: boolean;
   readonly createdAtMs?: number;
   readonly sizeBytes?: number;
+  readonly indexUpdated?: boolean;
   readonly selectionReason?: string;
   readonly meta?: SyncSnapshotMetaDto | null;
   readonly prune?: SyncActionPruneResultDto | null;
@@ -113,7 +141,7 @@ export interface SyncActionResultDto {
 export interface SyncNowResultDto {
   readonly pulled: boolean;
   readonly pushed: boolean;
-  readonly skipped: boolean;
+  readonly skipped?: readonly string[];
   readonly pullResult?: SyncActionResultDto | null;
   readonly pushResult?: SyncActionResultDto | null;
 }
@@ -141,6 +169,7 @@ export type SyncUpdateSettingsResponse = SyncSettingsDto;
 export type SyncGetStateResponse = SyncStateDto;
 export type SyncSelectFolderResponse = SyncSelectFolderResponseDto | null;
 export type SyncRepoStatusResponse = SyncRepoStatusResponseDto;
+export type SyncEnableResponse = SyncEnableResponseDto;
 export type SyncEnableCreateRepoResponse = SyncEnableResultDto;
 export type SyncEnableAttachRepoResponse = SyncEnableResultDto;
 export type SyncDisableResponse = SyncDisableResponseDto;

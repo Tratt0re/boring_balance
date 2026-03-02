@@ -355,6 +355,7 @@
         "intervalOptions": {
           "off": "Off",
           "minutes5": "Every 5 minutes",
+          "minutes10": "Every 10 minutes",
           "minutes15": "Every 15 minutes",
           "minutes30": "Every 30 minutes",
           "minutes60": "Every 60 minutes"

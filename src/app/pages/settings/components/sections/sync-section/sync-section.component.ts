@@ -7,7 +7,6 @@ import { AppDataTableComponent, type TableDataItem } from '@/components/data-tab
 import type * as DTO from '@/dtos';
 import {
   SYNC_INTERVAL_OPTIONS,
-  SYNC_RETENTION_COUNT_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
   SYNC_STATE_DEFAULTS,
   type RepoStatusDto,
@@ -35,17 +34,10 @@ interface StatusRow {
 const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
   { value: '0', label: 'dataBackups.sync.autoSync.intervalOptions.off' },
   { value: '5', label: 'dataBackups.sync.autoSync.intervalOptions.minutes5' },
+  { value: '10', label: 'dataBackups.sync.autoSync.intervalOptions.minutes10' },
   { value: '15', label: 'dataBackups.sync.autoSync.intervalOptions.minutes15' },
   { value: '30', label: 'dataBackups.sync.autoSync.intervalOptions.minutes30' },
   { value: '60', label: 'dataBackups.sync.autoSync.intervalOptions.minutes60' },
-] as const;
-
-const SYNC_RETENTION_SELECT_OPTIONS: readonly SelectOption[] = [
-  { value: '1', label: '1' },
-  { value: '2', label: '2' },
-  { value: '3', label: '3' },
-  { value: '5', label: '5' },
-  { value: '10', label: '10' },
 ] as const;
 
 const SYNC_STATUS_TABLE_STRUCTURE: readonly TableDataItem[] = [
@@ -113,11 +105,9 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
 
   protected readonly selectedFolderPath = signal<string | null>(null);
   protected readonly selectedRepoStatus = signal<RepoStatusDto | null>(null);
-  protected readonly pendingConnectMode = signal<'create' | 'attach' | null>(null);
   protected readonly setupModeEnabled = signal(false);
 
   protected readonly intervalOptions = SYNC_INTERVAL_SELECT_OPTIONS;
-  protected readonly retentionCountOptions = SYNC_RETENTION_SELECT_OPTIONS;
   protected readonly statusTableStructure = SYNC_STATUS_TABLE_STRUCTURE;
   protected readonly syncModeEnabled = computed(() => this.settings().enabled || this.setupModeEnabled());
 
@@ -126,9 +116,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   );
   protected readonly autoPushIntervalValue = computed(() =>
     String(this.normalizeIntervalOption(this.settings().autoPushIntervalMin)),
-  );
-  protected readonly retentionCountValue = computed(() =>
-    String(this.normalizeRetentionCountOption(this.settings().retentionCountPerDevice)),
   );
   protected readonly isBusy = computed(
     () =>
@@ -146,19 +133,14 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   );
   protected readonly showSetupSection = computed(() => !this.settings().enabled && this.syncModeEnabled());
   protected readonly showDisabledInfo = computed(() => !this.settings().enabled && !this.syncModeEnabled());
-  protected readonly canCreateRepo = computed(
+  protected readonly canEnableSelectedFolder = computed(
     () =>
       this.showSetupSection()
       && !this.isBusy()
+      && !this.repoStatusLoading()
+      && Boolean(this.selectedFolderPath())
       && this.selectedRepoStatus() !== null
-      && this.selectedRepoStatus()?.exists === false,
-  );
-  protected readonly canAttachRepo = computed(
-    () =>
-      this.showSetupSection()
-      && !this.isBusy()
-      && this.selectedRepoStatus() !== null
-      && this.selectedRepoStatus()?.exists === true,
+      && typeof this.selectedRepoStatus()?.exists === 'boolean',
   );
   protected readonly canRunManualActions = computed(() => this.settings().enabled && !this.isBusy());
   protected readonly hasConflict = computed(
@@ -230,49 +212,29 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
     });
   }
 
-  protected onCreateNewSyncSpace(): void {
+  protected onEnableSync(): void {
     const folderPath = this.selectedFolderPath();
-    if (!folderPath || !this.canCreateRepo()) {
+    if (!folderPath || !this.canEnableSelectedFolder()) {
       return;
     }
 
-    this.pendingConnectMode.set('create');
-    void firstValueFrom(this.syncService.enableCreateRepo(folderPath, this.settings().deviceName))
-      .then(() => {
-        this.resetPendingSelection();
-      })
-      .catch(() => undefined)
-      .finally(() => {
-        this.pendingConnectMode.set(null);
+    if (this.selectedRepoStatus()?.exists) {
+      this.alertDialogService.confirm({
+        zTitle: this.translateService.instant('dataBackups.sync.attachAlert.title'),
+        zDescription: this.translateService.instant('dataBackups.sync.attachAlert.description'),
+        zOkText: this.translateService.instant('dataBackups.sync.attachAlert.actions.attach'),
+        zCancelText: this.translateService.instant('dataBackups.sync.attachAlert.actions.cancel'),
+        zOkDestructive: true,
+        zMaskClosable: true,
+        zClosable: true,
+        zOnOk: () => {
+          this.runEnable(folderPath);
+        },
       });
-  }
-
-  protected onAttachExistingSyncSpace(): void {
-    const folderPath = this.selectedFolderPath();
-    if (!folderPath || !this.canAttachRepo()) {
       return;
     }
 
-    this.alertDialogService.confirm({
-      zTitle: this.translateService.instant('dataBackups.sync.attachAlert.title'),
-      zDescription: this.translateService.instant('dataBackups.sync.attachAlert.description'),
-      zOkText: this.translateService.instant('dataBackups.sync.attachAlert.actions.attach'),
-      zCancelText: this.translateService.instant('dataBackups.sync.attachAlert.actions.cancel'),
-      zOkDestructive: true,
-      zMaskClosable: true,
-      zClosable: true,
-      zOnOk: () => {
-        this.pendingConnectMode.set('attach');
-        void firstValueFrom(this.syncService.enableAttachRepo(folderPath))
-          .then(() => {
-            this.resetPendingSelection();
-          })
-          .catch(() => undefined)
-          .finally(() => {
-            this.pendingConnectMode.set(null);
-          });
-      },
-    });
+    this.runEnable(folderPath);
   }
 
   protected onAutoPullIntervalChange(value: string | string[]): void {
@@ -313,22 +275,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
     }
 
     this.queueSettingsPatch({ autoPushOnQuit });
-  }
-
-  protected onRetentionCountChange(value: string | string[]): void {
-    const selectionValue = this.extractSelectionValue(value);
-    if (selectionValue === null || !this.settings().enabled) {
-      return;
-    }
-
-    const parsedValue = Number.parseInt(selectionValue, 10);
-    if (!Number.isInteger(parsedValue)) {
-      return;
-    }
-
-    this.queueSettingsPatch({
-      retentionCountPerDevice: this.normalizeRetentionCountOption(parsedValue),
-    });
   }
 
   protected onSyncNow(): void {
@@ -385,10 +331,16 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   }
 
   protected setupRepoPath(): string {
-    return (
-      this.selectedRepoStatus()?.repoPath
-      ?? this.translateService.instant('dataBackups.sync.setup.status.repoPathPending')
-    );
+    if (this.selectedRepoStatus()?.repoPath) {
+      return this.selectedRepoStatus()?.repoPath ?? '';
+    }
+
+    const folderPath = this.selectedFolderPath();
+    if (!folderPath) {
+      return this.translateService.instant('dataBackups.sync.setup.status.repoPathPending');
+    }
+
+    return this.joinFolderPreview(folderPath, this.settings().repoFolderName);
   }
 
   private async loadRepoStatus(folderPath: string): Promise<void> {
@@ -403,7 +355,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   private resetPendingSelection(resetSetupMode = false): void {
     this.selectedFolderPath.set(null);
     this.selectedRepoStatus.set(null);
-    this.pendingConnectMode.set(null);
 
     if (resetSetupMode) {
       this.setupModeEnabled.set(false);
@@ -454,15 +405,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
       : SYNC_INTERVAL_OPTIONS[0];
   }
 
-  private normalizeRetentionCountOption(value: number): number {
-    const normalizedValue = Math.trunc(Number(value));
-    return SYNC_RETENTION_COUNT_OPTIONS.includes(
-      normalizedValue as (typeof SYNC_RETENTION_COUNT_OPTIONS)[number],
-    )
-      ? normalizedValue
-      : SYNC_RETENTION_COUNT_OPTIONS[0];
-  }
-
   private formatLastPullTimestamp(value: number | null): string {
     const normalizedValue = this.normalizeTimestampValue(value);
     if (normalizedValue === null) {
@@ -486,5 +428,24 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
 
   private normalizeTimestampValue(value: number | null): number | null {
     return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : null;
+  }
+
+  private runEnable(folderPath: string): void {
+    void firstValueFrom(this.syncService.enable(folderPath))
+      .then(() => {
+        this.resetPendingSelection(true);
+      })
+      .catch(() => undefined);
+  }
+
+  private joinFolderPreview(folderPath: string, childName: string): string {
+    const normalizedFolderPath = folderPath.trim();
+    const separator = normalizedFolderPath.includes('\\') ? '\\' : '/';
+
+    if (normalizedFolderPath.endsWith('/') || normalizedFolderPath.endsWith('\\')) {
+      return `${normalizedFolderPath}${childName}`;
+    }
+
+    return `${normalizedFolderPath}${separator}${childName}`;
   }
 }

@@ -18,10 +18,8 @@ import type * as DTO from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import {
   SYNC_INTERVAL_OPTIONS,
-  SYNC_RETENTION_COUNT_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
   SYNC_STATE_DEFAULTS,
-  type EnableSyncResultDto,
   type RepoStatusDto,
   type SyncActionResultDto,
   type SyncNowResultDto,
@@ -148,10 +146,10 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     );
   }
 
-  repoStatus(baseFolderPath?: string): Observable<RepoStatusDto> {
+  repoStatus(folderPath?: string): Observable<RepoStatusDto> {
     this.repoStatusLoadingSubject.next(true);
 
-    const payload = baseFolderPath ? { baseFolderPath } : undefined;
+    const payload = folderPath ? { folderPath } : undefined;
     return from(this.ipcClient.repoStatus(payload)).pipe(
       map((result) => this.normalizeRepoStatus(result)),
       catchError((error) => {
@@ -165,44 +163,21 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     );
   }
 
-  enableCreateRepo(baseFolderPath: string, deviceName?: string | null): Observable<EnableSyncResultDto> {
+  enable(folderPath: string): Observable<DTO.SyncEnableResponseDto> {
     this.enableLoadingSubject.next(true);
 
     return from(
-      this.ipcClient.enableCreateRepo({
-        baseFolderPath,
-        deviceName,
+      this.ipcClient.enable({
+        folderPath,
       }),
     ).pipe(
-      map((result) => this.normalizeEnableResult(result)),
-      tap((result) => {
-        toast.success(`Sync enabled at ${result.repoPath}`);
+      tap(() => {
+        toast.success('Sync enabled.');
         void this.refreshSettingsAndState();
       }),
       finalize(() => this.enableLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to create the sync space.'));
-        return throwError(() => error);
-      }),
-    );
-  }
-
-  enableAttachRepo(baseFolderPath: string): Observable<EnableSyncResultDto> {
-    this.enableLoadingSubject.next(true);
-
-    return from(
-      this.ipcClient.enableAttachRepo({
-        baseFolderPath,
-      }),
-    ).pipe(
-      map((result) => this.normalizeEnableResult(result)),
-      tap((result) => {
-        toast.success(`Sync connected (${result.actionTaken ?? 'ready'}).`);
-        void this.refreshSettingsAndState();
-      }),
-      finalize(() => this.enableLoadingSubject.next(false)),
-      catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to attach the sync space.'));
+        toast.error(this.toErrorMessage(error, 'Failed to enable sync.'));
         return throwError(() => error);
       }),
     );
@@ -345,6 +320,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   }
 
   private normalizeSettings(value: DTO.SyncSettingsDto): SyncSettingsDto {
+    const folderPath =
+      typeof value?.folderPath === 'string' && value.folderPath.trim().length > 0
+        ? value.folderPath.trim()
+        : typeof value?.baseFolderPath === 'string' && value.baseFolderPath.trim().length > 0
+          ? value.baseFolderPath.trim()
+          : null;
     const repoFolderName =
       typeof value?.repoFolderName === 'string' && value.repoFolderName.trim().length > 0
         ? value.repoFolderName.trim()
@@ -355,10 +336,8 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
 
     return {
       enabled: Boolean(value?.enabled),
-      baseFolderPath:
-        typeof value?.baseFolderPath === 'string' && value.baseFolderPath.trim().length > 0
-          ? value.baseFolderPath.trim()
-          : null,
+      folderPath,
+      baseFolderPath: folderPath,
       repoFolderName,
       repoPath:
         typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0 ? value.repoPath.trim() : null,
@@ -380,17 +359,20 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
           : SYNC_SETTINGS_DEFAULTS.autoPushIntervalMin,
       autoPushOnQuit: Boolean(value?.autoPushOnQuit),
       retentionCountPerDevice:
-        Number.isInteger(retentionCountPerDevice)
-        && SYNC_RETENTION_COUNT_OPTIONS.includes(
-          retentionCountPerDevice as (typeof SYNC_RETENTION_COUNT_OPTIONS)[number],
-        )
+        Number.isInteger(retentionCountPerDevice) && retentionCountPerDevice > 0
           ? retentionCountPerDevice
           : SYNC_SETTINGS_DEFAULTS.retentionCountPerDevice,
       lastSeenRemoteSnapshotId:
         typeof value?.lastSeenRemoteSnapshotId === 'string' && value.lastSeenRemoteSnapshotId.trim().length > 0
           ? value.lastSeenRemoteSnapshotId.trim()
           : null,
+      lastPublishedCounter: this.normalizeIntegerOrNull(
+        value?.lastPublishedCounter ?? value?.lastPublishedLocalCounter,
+      ),
       lastPublishedLocalCounter: this.normalizeIntegerOrNull(value?.lastPublishedLocalCounter),
+      lastPulledCounter: this.normalizeIntegerOrNull(value?.lastPulledCounter),
+      lastError:
+        typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null,
     };
   }
 
@@ -407,6 +389,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       lastPushAtMs: this.normalizeIntegerOrNull(value?.lastPushAtMs),
       lastError:
         typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null,
+      remoteLatest: this.normalizeRemoteLatest(value?.remoteLatest ?? null),
       conflictInfo: this.normalizeConflictInfo(value?.conflictInfo ?? null),
     };
   }
@@ -427,7 +410,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     const reason =
       typeof value.reason === 'string' && value.reason.trim().length > 0 ? value.reason.trim() : null;
 
-    if (!localCopyPath || !remoteSnapshotPath || !reason) {
+    if (!remoteSnapshotPath || !reason) {
       return null;
     }
 
@@ -435,6 +418,26 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       localCopyPath,
       remoteSnapshotPath,
       reason,
+    };
+  }
+
+  private normalizeRemoteLatest(value: DTO.SyncRemoteLatestDto | null | undefined): DTO.SyncRemoteLatestDto | null {
+    if (!value) {
+      return null;
+    }
+
+    const changeCounter = this.normalizeIntegerOrNull(value.changeCounter);
+    const lastWriteMs = this.normalizeIntegerOrNull(value.lastWriteMs);
+    const file = typeof value.file === 'string' && value.file.trim().length > 0 ? value.file.trim() : null;
+
+    if (changeCounter === null || lastWriteMs === null || !file) {
+      return null;
+    }
+
+    return {
+      changeCounter,
+      lastWriteMs,
+      file,
     };
   }
 
@@ -461,22 +464,13 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     };
   }
 
-  private normalizeEnableResult(value: DTO.SyncEnableResultDto): EnableSyncResultDto {
-    return {
-      repoId: String(value?.repoId ?? ''),
-      repoPath: String(value?.repoPath ?? ''),
-      actionTaken:
-        typeof value?.actionTaken === 'string' && value.actionTaken.trim().length > 0
-          ? value.actionTaken.trim()
-          : undefined,
-    };
-  }
-
   private normalizeActionResult(value: DTO.SyncActionResultDto): SyncActionResultDto {
     return {
       action: String(value?.action ?? ''),
       reason:
         typeof value?.reason === 'string' && value.reason.trim().length > 0 ? value.reason.trim() : null,
+      pulled: typeof value?.pulled === 'boolean' ? value.pulled : undefined,
+      pushed: typeof value?.pushed === 'boolean' ? value.pushed : undefined,
       repoId: typeof value?.repoId === 'string' && value.repoId.trim().length > 0 ? value.repoId.trim() : null,
       repoPath:
         typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0 ? value.repoPath.trim() : null,
@@ -484,10 +478,15 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         typeof value?.snapshotId === 'string' && value.snapshotId.trim().length > 0
           ? value.snapshotId.trim()
           : null,
+      snapshotFile:
+        typeof value?.snapshotFile === 'string' && value.snapshotFile.trim().length > 0
+          ? value.snapshotFile.trim()
+          : null,
       snapshotFilePath:
         typeof value?.snapshotFilePath === 'string' && value.snapshotFilePath.trim().length > 0
           ? value.snapshotFilePath.trim()
           : null,
+      remote: this.normalizeRemoteLatest(value?.remote ?? null),
       restoredFrom:
         typeof value?.restoredFrom === 'string' && value.restoredFrom.trim().length > 0
           ? value.restoredFrom.trim()
@@ -503,6 +502,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       restoredRemote: typeof value?.restoredRemote === 'boolean' ? value.restoredRemote : undefined,
       createdAtMs: this.normalizeIntegerOrNull(value?.createdAtMs),
       sizeBytes: this.normalizeIntegerOrNull(value?.sizeBytes),
+      indexUpdated: typeof value?.indexUpdated === 'boolean' ? value.indexUpdated : undefined,
       selectionReason:
         typeof value?.selectionReason === 'string' && value.selectionReason.trim().length > 0
           ? value.selectionReason.trim()
@@ -515,7 +515,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return {
       pulled: Boolean(value?.pulled),
       pushed: Boolean(value?.pushed),
-      skipped: Boolean(value?.skipped),
+      skipped: Array.isArray(value?.skipped)
+        ? value.skipped
+          .filter((entry): entry is string => typeof entry === 'string')
+          .map((entry) => entry.trim())
+          .filter((entry) => entry.length > 0)
+        : undefined,
       pullResult: value?.pullResult ? this.normalizeActionResult(value.pullResult) : null,
       pushResult: value?.pushResult ? this.normalizeActionResult(value.pushResult) : null,
     };

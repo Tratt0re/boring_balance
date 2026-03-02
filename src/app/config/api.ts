@@ -120,6 +120,7 @@ export interface ElectronIpcClient {
     readonly updateSettings: IpcRequest<DTO.SyncUpdateSettingsDto, DTO.SyncUpdateSettingsResponse>;
     readonly getState: OptionalIpcRequest<void, DTO.SyncGetStateResponse>;
     readonly selectFolder: OptionalIpcRequest<void, DTO.SyncSelectFolderResponse>;
+    readonly enable: IpcRequest<DTO.SyncEnableDto, DTO.SyncEnableResponse>;
     readonly repoStatus: OptionalIpcRequest<DTO.SyncRepoStatusRequestDto, DTO.SyncRepoStatusResponse>;
     readonly enableCreateRepo: IpcRequest<DTO.SyncEnableCreateRepoDto, DTO.SyncEnableCreateRepoResponse>;
     readonly enableAttachRepo: IpcRequest<DTO.SyncEnableAttachRepoDto, DTO.SyncEnableAttachRepoResponse>;

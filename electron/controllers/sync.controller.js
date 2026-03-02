@@ -1,4 +1,4 @@
-const { app, dialog } = require('electron');
+const { dialog } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
@@ -20,12 +20,14 @@ const {
   normalizeBooleanFlag,
   normalizeNonNegativeInteger,
   normalizeOptionalString,
-  normalizePositiveInteger,
   requireString,
 } = require('./utils');
 
 const SYNC_SETTINGS_SECTION_KEY = 'sync';
 const SYNC_SETTINGS_FIELDS = new Set([
+  'enabled',
+  'folderPath',
+  'baseFolderPath',
   'repoFolderName',
   'deviceName',
   'autoPullIntervalMin',
@@ -35,23 +37,21 @@ const SYNC_SETTINGS_FIELDS = new Set([
 ]);
 const SYNC_SETTINGS_DEFAULTS = Object.freeze({
   enabled: false,
-  baseFolderPath: null,
-  repoFolderName: syncModel.DEFAULT_REPO_FOLDER_NAME,
-  repoPath: null,
+  folderPath: null,
   deviceId: null,
-  deviceName: null,
-  autoPullIntervalMin: 0,
-  autoPushIntervalMin: 0,
+  autoPullIntervalMin: 10,
+  autoPushIntervalMin: 30,
   autoPushOnQuit: true,
-  retentionCountPerDevice: 3,
-  lastSeenRemoteSnapshotId: null,
-  lastPublishedLocalCounter: null,
+  lastPublishedCounter: null,
+  lastPulledCounter: null,
+  lastError: null,
 });
 const SYNC_STATE_DEFAULTS = Object.freeze({
   status: 'idle',
   lastPullAtMs: null,
   lastPushAtMs: null,
   lastError: null,
+  remoteLatest: null,
   conflictInfo: null,
 });
 const SYNC_EVENT_CHANNELS = Object.freeze({
@@ -62,6 +62,7 @@ const SYNC_EVENT_CHANNELS = Object.freeze({
   pushFailed: 'sync:pushFailed',
   conflictDetected: 'sync:conflictDetected',
 });
+const LEGACY_REPO_ID = 'snapshot-index';
 
 let autoPullTimer = null;
 let autoPushTimer = null;
@@ -76,38 +77,71 @@ function normalizeIntegerOrNull(value) {
   return Number.isInteger(normalizedValue) ? normalizedValue : null;
 }
 
-function normalizeRepoFolderName(value, label) {
-  const normalizedValue = requireString(value, label, { allowEmpty: false });
-  if (normalizedValue.includes('/') || normalizedValue.includes('\\')) {
-    throw new Error(`${label} cannot contain path separators.`);
+function normalizeOptionalCounter(value, label) {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (value === null) {
+    return null;
+  }
+
+  const normalizedValue = normalizeIntegerOrNull(value);
+  if (!Number.isInteger(normalizedValue) || normalizedValue < 0) {
+    throw new Error(`${label} must be a non-negative integer or null.`);
   }
 
   return normalizedValue;
 }
 
-function deriveRepoPath(baseFolderPath, repoFolderName) {
-  if (typeof baseFolderPath !== 'string' || baseFolderPath.trim().length === 0) {
+function resolveFolderPath(value, label = 'folderPath') {
+  const normalizedFolderPath = path.resolve(requireString(value, label, { allowEmpty: false }));
+  if (!fs.existsSync(normalizedFolderPath)) {
+    throw new Error(`${label} does not exist: ${normalizedFolderPath}`);
+  }
+
+  const stats = fs.statSync(normalizedFolderPath);
+  if (!stats.isDirectory()) {
+    throw new Error(`${label} is not a directory: ${normalizedFolderPath}`);
+  }
+
+  fs.accessSync(normalizedFolderPath, fs.constants.R_OK | fs.constants.W_OK);
+  return normalizedFolderPath;
+}
+
+function resolveSyncRootPath(folderPath) {
+  if (typeof folderPath !== 'string' || folderPath.trim().length === 0) {
     return null;
   }
 
-  return path.resolve(baseFolderPath.trim(), repoFolderName);
+  return path.join(path.resolve(folderPath.trim()), syncModel.SYNC_CONTAINER_DIR_NAME);
 }
 
-function cloneSettings(settings) {
-  return {
-    enabled: settings.enabled,
-    baseFolderPath: settings.baseFolderPath,
-    repoFolderName: settings.repoFolderName,
-    repoPath: settings.repoPath,
-    deviceId: settings.deviceId,
-    deviceName: settings.deviceName,
-    autoPullIntervalMin: settings.autoPullIntervalMin,
-    autoPushIntervalMin: settings.autoPushIntervalMin,
-    autoPushOnQuit: settings.autoPushOnQuit,
-    retentionCountPerDevice: settings.retentionCountPerDevice,
-    lastSeenRemoteSnapshotId: settings.lastSeenRemoteSnapshotId,
-    lastPublishedLocalCounter: settings.lastPublishedLocalCounter,
-  };
+function resolveIndexPath(folderPath) {
+  const syncRootPath = resolveSyncRootPath(folderPath);
+  return syncRootPath ? path.join(syncRootPath, syncModel.INDEX_FILE_NAME) : null;
+}
+
+function resolveSnapshotsDirPath(folderPath) {
+  const syncRootPath = resolveSyncRootPath(folderPath);
+  return syncRootPath ? path.join(syncRootPath, syncModel.SNAPSHOTS_DIR_NAME) : null;
+}
+
+function resolveSnapshotPath(folderPath, snapshotFile) {
+  const snapshotsDirPath = resolveSnapshotsDirPath(folderPath);
+  if (!snapshotsDirPath) {
+    return null;
+  }
+
+  return path.join(snapshotsDirPath, requireString(snapshotFile, 'snapshotFile', { allowEmpty: false }));
+}
+
+function snapshotIdFromFile(snapshotFile) {
+  if (typeof snapshotFile !== 'string' || !snapshotFile.endsWith(syncModel.SQLITE_FILE_SUFFIX)) {
+    return null;
+  }
+
+  return snapshotFile.slice(0, -syncModel.SQLITE_FILE_SUFFIX.length);
 }
 
 function cloneConflictInfo() {
@@ -122,12 +156,25 @@ function cloneConflictInfo() {
   };
 }
 
+function cloneRemoteLatest() {
+  if (!runtimeState.remoteLatest) {
+    return null;
+  }
+
+  return {
+    changeCounter: runtimeState.remoteLatest.changeCounter,
+    lastWriteMs: runtimeState.remoteLatest.lastWriteMs,
+    file: runtimeState.remoteLatest.file,
+  };
+}
+
 function cloneState() {
   return {
     status: runtimeState.status,
     lastPullAtMs: runtimeState.lastPullAtMs,
     lastPushAtMs: runtimeState.lastPushAtMs,
     lastError: runtimeState.lastError,
+    remoteLatest: cloneRemoteLatest(),
     conflictInfo: cloneConflictInfo(),
   };
 }
@@ -145,41 +192,113 @@ function setRuntimeState(patch) {
   broadcastStateChanged();
 }
 
-function isSameLineage(localDbUuid, remoteDbUuid) {
-  const normalizedLocalDbUuid =
-    typeof localDbUuid === 'string' && localDbUuid.trim().length > 0 ? localDbUuid.trim() : null;
-  const normalizedRemoteDbUuid =
-    typeof remoteDbUuid === 'string' && remoteDbUuid.trim().length > 0 ? remoteDbUuid.trim() : null;
+function normalizeRemoteLatest(indexLatest) {
+  if (!indexLatest) {
+    return null;
+  }
 
-  return normalizedLocalDbUuid === normalizedRemoteDbUuid;
+  const changeCounter = normalizeIntegerOrNull(indexLatest.change_counter);
+  const lastWriteMs = normalizeIntegerOrNull(indexLatest.last_write_ms);
+  const file =
+    typeof indexLatest.file === 'string' && indexLatest.file.trim().length > 0 ? indexLatest.file.trim() : null;
+
+  if (!Number.isInteger(changeCounter) || !Number.isInteger(lastWriteMs) || !file) {
+    return null;
+  }
+
+  return {
+    changeCounter,
+    lastWriteMs,
+    file,
+  };
 }
 
-function hasCounterAdvanced(currentCounter, baselineCounter) {
-  if (!Number.isInteger(currentCounter)) {
-    return true;
-  }
-
-  if (!Number.isInteger(baselineCounter)) {
-    return true;
-  }
-
-  return currentCounter > baselineCounter;
+function setRunningState() {
+  setRuntimeState({
+    status: 'running',
+    lastError: null,
+  });
 }
 
-function resolveRemotePublishedCounter(remoteCounter) {
-  return Number.isInteger(remoteCounter) ? remoteCounter : null;
+function setSuccessState(patch = {}) {
+  setRuntimeState({
+    status: 'ok',
+    lastError: null,
+    conflictInfo: null,
+    ...patch,
+  });
 }
 
-function resolvePublishedSnapshotCounter(snapshotCounter, localCounter) {
-  if (Number.isInteger(snapshotCounter)) {
-    return snapshotCounter;
+function setIdleState() {
+  setRuntimeState({
+    status: 'idle',
+    lastError: null,
+    conflictInfo: null,
+  });
+}
+
+function setErrorState(errorMessage, patch = {}) {
+  setRuntimeState({
+    status: 'error',
+    lastError: errorMessage,
+    conflictInfo: null,
+    ...patch,
+  });
+}
+
+function emitConflict(conflictInfo, patch = {}) {
+  const normalizedConflictInfo = {
+    localCopyPath: conflictInfo.localCopyPath ?? null,
+    remoteSnapshotPath: conflictInfo.remoteSnapshotPath ?? null,
+    reason: conflictInfo.reason,
+  };
+
+  setRuntimeState({
+    status: 'conflict',
+    lastError: normalizedConflictInfo.reason,
+    conflictInfo: normalizedConflictInfo,
+    ...patch,
+  });
+  broadcastIpcEvent(SYNC_EVENT_CHANNELS.conflictDetected, normalizedConflictInfo);
+}
+
+function cloneSettings(settings) {
+  return {
+    enabled: settings.enabled,
+    folderPath: settings.folderPath,
+    deviceId: settings.deviceId,
+    autoPullIntervalMin: settings.autoPullIntervalMin,
+    autoPushIntervalMin: settings.autoPushIntervalMin,
+    autoPushOnQuit: settings.autoPushOnQuit,
+    lastPublishedCounter: settings.lastPublishedCounter,
+    lastPulledCounter: settings.lastPulledCounter,
+    lastError: settings.lastError,
+  };
+}
+
+function readIndexedSnapshotId(folderPath) {
+  const indexPath = resolveIndexPath(folderPath);
+  if (!indexPath) {
+    return null;
   }
 
-  if (Number.isInteger(localCounter)) {
-    return localCounter;
-  }
+  const indexValue = syncModel.readIndex(indexPath);
+  return snapshotIdFromFile(indexValue?.latest?.file ?? null);
+}
 
-  return null;
+function buildPublicSettings(settings) {
+  const syncRootPath = resolveSyncRootPath(settings.folderPath);
+
+  return {
+    ...cloneSettings(settings),
+    baseFolderPath: settings.folderPath,
+    repoFolderName: syncModel.SYNC_CONTAINER_DIR_NAME,
+    repoPath: syncRootPath,
+    deviceName: null,
+    retentionCountPerDevice: 1,
+    lastSeenRemoteSnapshotId: readIndexedSnapshotId(settings.folderPath),
+    lastPublishedLocalCounter: settings.lastPublishedCounter,
+  };
 }
 
 function normalizeSettingsFromStore(value) {
@@ -196,38 +315,36 @@ function normalizeSettingsFromStore(value) {
     normalizedSettings.enabled = SYNC_SETTINGS_DEFAULTS.enabled;
   }
 
-  try {
-    if (storedValue.baseFolderPath !== undefined) {
-      normalizedSettings.baseFolderPath =
-        normalizeOptionalString(storedValue.baseFolderPath, 'settings.baseFolderPath', { allowNull: true }) ?? null;
-    }
-  } catch {
-    normalizedSettings.baseFolderPath = SYNC_SETTINGS_DEFAULTS.baseFolderPath;
-  }
+  const folderPathSource =
+    storedValue.folderPath !== undefined
+      ? 'folderPath'
+      : storedValue.baseFolderPath !== undefined
+        ? 'baseFolderPath'
+        : storedValue.repoPath !== undefined
+          ? 'repoPath'
+          : null;
+  const rawFolderPath = folderPathSource ? storedValue[folderPathSource] : undefined;
 
   try {
-    if (storedValue.repoFolderName !== undefined) {
-      normalizedSettings.repoFolderName = normalizeRepoFolderName(storedValue.repoFolderName, 'settings.repoFolderName');
+    if (rawFolderPath !== undefined) {
+      const normalizedFolderPath =
+        normalizeOptionalString(rawFolderPath, 'settings.folderPath', { allowNull: true }) ?? null;
+      if (!normalizedFolderPath) {
+        normalizedSettings.folderPath = null;
+      } else if (folderPathSource === 'repoPath') {
+        normalizedSettings.folderPath = path.dirname(path.resolve(normalizedFolderPath));
+      } else {
+        normalizedSettings.folderPath = path.resolve(normalizedFolderPath);
+      }
     }
   } catch {
-    normalizedSettings.repoFolderName = SYNC_SETTINGS_DEFAULTS.repoFolderName;
+    normalizedSettings.folderPath = SYNC_SETTINGS_DEFAULTS.folderPath;
   }
-
-  normalizedSettings.repoPath = deriveRepoPath(normalizedSettings.baseFolderPath, normalizedSettings.repoFolderName);
 
   if (typeof storedValue.deviceId === 'string' && storedValue.deviceId.trim().length > 0) {
     normalizedSettings.deviceId = storedValue.deviceId.trim();
   } else {
     normalizedSettings.deviceId = randomUUID();
-  }
-
-  try {
-    if (storedValue.deviceName !== undefined) {
-      normalizedSettings.deviceName =
-        normalizeOptionalString(storedValue.deviceName, 'settings.deviceName', { allowNull: true }) ?? null;
-    }
-  } catch {
-    normalizedSettings.deviceName = SYNC_SETTINGS_DEFAULTS.deviceName;
   }
 
   try {
@@ -262,35 +379,42 @@ function normalizeSettingsFromStore(value) {
   }
 
   try {
-    if (storedValue.retentionCountPerDevice !== undefined) {
-      normalizedSettings.retentionCountPerDevice = normalizePositiveInteger(
-        storedValue.retentionCountPerDevice,
-        'settings.retentionCountPerDevice',
-      );
+    const normalizedLastPublishedCounter = normalizeOptionalCounter(
+      storedValue.lastPublishedCounter !== undefined
+        ? storedValue.lastPublishedCounter
+        : storedValue.lastPublishedLocalCounter,
+      'settings.lastPublishedCounter',
+    );
+    if (normalizedLastPublishedCounter !== undefined) {
+      normalizedSettings.lastPublishedCounter = normalizedLastPublishedCounter;
     }
   } catch {
-    normalizedSettings.retentionCountPerDevice = SYNC_SETTINGS_DEFAULTS.retentionCountPerDevice;
+    normalizedSettings.lastPublishedCounter = SYNC_SETTINGS_DEFAULTS.lastPublishedCounter;
   }
 
   try {
-    if (storedValue.lastSeenRemoteSnapshotId !== undefined) {
-      normalizedSettings.lastSeenRemoteSnapshotId =
-        normalizeOptionalString(storedValue.lastSeenRemoteSnapshotId, 'settings.lastSeenRemoteSnapshotId', {
-          allowNull: true,
-        }) ?? null;
+    const normalizedLastPulledCounter = normalizeOptionalCounter(
+      storedValue.lastPulledCounter,
+      'settings.lastPulledCounter',
+    );
+    if (normalizedLastPulledCounter !== undefined) {
+      normalizedSettings.lastPulledCounter = normalizedLastPulledCounter;
     }
   } catch {
-    normalizedSettings.lastSeenRemoteSnapshotId = SYNC_SETTINGS_DEFAULTS.lastSeenRemoteSnapshotId;
+    normalizedSettings.lastPulledCounter = SYNC_SETTINGS_DEFAULTS.lastPulledCounter;
   }
 
   try {
-    if (storedValue.lastPublishedLocalCounter !== undefined) {
-      const normalizedCounter = normalizeIntegerOrNull(storedValue.lastPublishedLocalCounter);
-      normalizedSettings.lastPublishedLocalCounter =
-        Number.isInteger(normalizedCounter) && normalizedCounter >= 0 ? normalizedCounter : null;
+    if (storedValue.lastError !== undefined) {
+      normalizedSettings.lastError =
+        normalizeOptionalString(storedValue.lastError, 'settings.lastError', { allowNull: true }) ?? null;
     }
   } catch {
-    normalizedSettings.lastPublishedLocalCounter = SYNC_SETTINGS_DEFAULTS.lastPublishedLocalCounter;
+    normalizedSettings.lastError = SYNC_SETTINGS_DEFAULTS.lastError;
+  }
+
+  if (!normalizedSettings.folderPath) {
+    normalizedSettings.enabled = false;
   }
 
   return normalizedSettings;
@@ -299,11 +423,11 @@ function normalizeSettingsFromStore(value) {
 function readSyncSettings() {
   const storedSettings = getSettingsSection(SYNC_SETTINGS_SECTION_KEY, SYNC_SETTINGS_DEFAULTS);
   const normalizedSettings = normalizeSettingsFromStore(storedSettings);
-  const normalizedStoredSettings = JSON.stringify(normalizedSettings);
-  const normalizedExpectedSettings = JSON.stringify(storedSettings);
+  const normalizedStoredValue = JSON.stringify(cloneSettings(normalizedSettings));
+  const currentStoredValue = JSON.stringify(storedSettings);
 
-  if (normalizedStoredSettings !== normalizedExpectedSettings) {
-    setSettingsSection(SYNC_SETTINGS_SECTION_KEY, normalizedSettings);
+  if (normalizedStoredValue !== currentStoredValue) {
+    setSettingsSection(SYNC_SETTINGS_SECTION_KEY, cloneSettings(normalizedSettings));
   }
 
   return normalizedSettings;
@@ -313,31 +437,30 @@ function persistSyncSettings(settings) {
   return normalizeSettingsFromStore(setSettingsSection(SYNC_SETTINGS_SECTION_KEY, cloneSettings(settings)));
 }
 
-function persistSettingsPatch(settings, patch = {}) {
-  const nextSettings = normalizeSettingsFromStore({
-    ...cloneSettings(settings),
+function persistSettingsPatch(patch) {
+  const currentSettings = readSyncSettings();
+  return persistSyncSettings({
+    ...currentSettings,
     ...Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined)),
   });
-
-  return persistSyncSettings(nextSettings);
 }
 
 function applySyncSettingsPatch(currentSettings, patch) {
   const nextSettings = {
-    ...cloneSettings(currentSettings),
+    ...currentSettings,
   };
 
-  if (patch.repoFolderName !== undefined) {
-    if (currentSettings.enabled) {
-      throw new Error('Cannot change repoFolderName while sync is enabled.');
-    }
-
-    nextSettings.repoFolderName = normalizeRepoFolderName(patch.repoFolderName, 'payload.repoFolderName');
+  if (patch.enabled !== undefined) {
+    nextSettings.enabled = normalizeBooleanFlag(patch.enabled, 'payload.enabled') === 1;
   }
 
-  if (patch.deviceName !== undefined) {
-    nextSettings.deviceName =
-      normalizeOptionalString(patch.deviceName, 'payload.deviceName', { allowNull: true }) ?? null;
+  const nextFolderPathValue = patch.folderPath !== undefined ? patch.folderPath : patch.baseFolderPath;
+  if (nextFolderPathValue !== undefined) {
+    nextSettings.folderPath =
+      normalizeOptionalString(nextFolderPathValue, 'payload.folderPath', { allowNull: true }) ?? null;
+    if (nextSettings.folderPath) {
+      nextSettings.folderPath = resolveFolderPath(nextSettings.folderPath);
+    }
   }
 
   if (patch.autoPullIntervalMin !== undefined) {
@@ -358,14 +481,11 @@ function applySyncSettingsPatch(currentSettings, patch) {
     nextSettings.autoPushOnQuit = normalizeBooleanFlag(patch.autoPushOnQuit, 'payload.autoPushOnQuit') === 1;
   }
 
-  if (patch.retentionCountPerDevice !== undefined) {
-    nextSettings.retentionCountPerDevice = normalizePositiveInteger(
-      patch.retentionCountPerDevice,
-      'payload.retentionCountPerDevice',
-    );
+  if (nextSettings.enabled && !nextSettings.folderPath) {
+    throw new Error('payload.folderPath is required when enabling sync.');
   }
 
-  return normalizeSettingsFromStore(nextSettings);
+  return nextSettings;
 }
 
 function clearSchedulers() {
@@ -383,7 +503,7 @@ function clearSchedulers() {
 function restartSchedulers(settings = readSyncSettings()) {
   clearSchedulers();
 
-  if (!settings.enabled) {
+  if (!settings.enabled || !settings.folderPath) {
     return;
   }
 
@@ -426,23 +546,85 @@ async function waitForRunningSync() {
   try {
     await runningSyncPromise;
   } catch {
-    // Ignore current task failures when waiting for shutdown or reconfiguration.
+    // Ignore the current failure while waiting for a safe shutdown or reconfiguration.
   }
 }
 
-function ensureBaseFolderPath(baseFolderPath) {
-  const normalizedBaseFolderPath = path.resolve(requireString(baseFolderPath, 'baseFolderPath', { allowEmpty: false }));
-  if (!fs.existsSync(normalizedBaseFolderPath)) {
-    throw new Error(`baseFolderPath does not exist: ${normalizedBaseFolderPath}`);
+function ensureConfiguredSettings(settings, options = {}) {
+  const requireEnabled = options.requireEnabled !== false;
+
+  if (requireEnabled && !settings.enabled) {
+    throw new Error('Sync is disabled.');
   }
 
-  const stats = fs.statSync(normalizedBaseFolderPath);
-  if (!stats.isDirectory()) {
-    throw new Error(`baseFolderPath is not a directory: ${normalizedBaseFolderPath}`);
+  if (!settings.folderPath) {
+    throw new Error('Sync folder is not configured.');
   }
 
-  fs.accessSync(normalizedBaseFolderPath, fs.constants.R_OK | fs.constants.W_OK);
-  return normalizedBaseFolderPath;
+  return syncModel.ensureSyncDirs(settings.folderPath);
+}
+
+function assertCompleteLocalMeta(localMeta) {
+  const dbUuid =
+    typeof localMeta?.db_uuid === 'string' && localMeta.db_uuid.trim().length > 0 ? localMeta.db_uuid.trim() : null;
+  const changeCounter = normalizeIntegerOrNull(localMeta?.change_counter);
+  const lastWriteMs = normalizeIntegerOrNull(localMeta?.last_write_ms);
+  const schemaVersion = normalizeIntegerOrNull(localMeta?.schema_version);
+
+  if (!dbUuid || !Number.isInteger(changeCounter) || changeCounter < 0) {
+    throw new Error('Local database metadata is missing a valid app_meta.db_uuid or app_meta.change_counter.');
+  }
+
+  if (!Number.isInteger(lastWriteMs) || lastWriteMs < 0) {
+    throw new Error('Local database metadata is missing a valid app_meta.last_write_ms.');
+  }
+
+  if (!Number.isInteger(schemaVersion) || schemaVersion < 0) {
+    throw new Error('Local database metadata is missing a valid app_meta.schema_version.');
+  }
+
+  return {
+    db_uuid: dbUuid,
+    change_counter: changeCounter,
+    last_write_ms: lastWriteMs,
+    schema_version: schemaVersion,
+  };
+}
+
+function hasLocalChangesSinceLastPublish(localMeta, lastPublishedCounter) {
+  if (!Number.isInteger(localMeta.change_counter)) {
+    return true;
+  }
+
+  if (!Number.isInteger(lastPublishedCounter)) {
+    return true;
+  }
+
+  return localMeta.change_counter > lastPublishedCounter;
+}
+
+function buildActionBase(settings) {
+  return {
+    repoId: LEGACY_REPO_ID,
+    repoPath: resolveSyncRootPath(settings.folderPath),
+  };
+}
+
+function buildRemoteInfo(indexLatest) {
+  const normalizedRemote = normalizeRemoteLatest(indexLatest);
+  if (!normalizedRemote) {
+    return undefined;
+  }
+
+  return normalizedRemote;
+}
+
+function buildConflictInfo(localCopyPath, remoteSnapshotPath, reason) {
+  return {
+    localCopyPath: localCopyPath ?? null,
+    remoteSnapshotPath,
+    reason,
+  };
 }
 
 function resolveUniqueLocalCopyPath(localDbPath, prefix) {
@@ -462,29 +644,6 @@ function resolveUniqueLocalCopyPath(localDbPath, prefix) {
   return candidatePath;
 }
 
-async function createLocalConflictCopy() {
-  const localDbPath = getDatabasePath();
-  const conflictCopyPath = resolveUniqueLocalCopyPath(localDbPath, 'db-local-conflict');
-  const temporaryPath = `${conflictCopyPath}.tmp`;
-
-  if (fs.existsSync(temporaryPath)) {
-    fs.unlinkSync(temporaryPath);
-  }
-
-  try {
-    await getDatabase().backup(temporaryPath);
-    fs.renameSync(temporaryPath, conflictCopyPath);
-  } catch (error) {
-    if (fs.existsSync(temporaryPath)) {
-      fs.unlinkSync(temporaryPath);
-    }
-
-    throw error;
-  }
-
-  return conflictCopyPath;
-}
-
 function movePreviousLocalCopyToConflict(previousLocalCopyPath, localDbPath) {
   if (typeof previousLocalCopyPath !== 'string' || previousLocalCopyPath.trim().length === 0) {
     return null;
@@ -497,17 +656,16 @@ function movePreviousLocalCopyToConflict(previousLocalCopyPath, localDbPath) {
 
   const conflictCopyPath = resolveUniqueLocalCopyPath(localDbPath, 'db-local-conflict');
   fs.renameSync(normalizedPreviousLocalCopyPath, conflictCopyPath);
-
   return conflictCopyPath;
 }
 
-async function restoreSnapshotIntoLocal(snapshotInfo, options = {}) {
+async function restoreSnapshotIntoLocal(snapshotPath, options = {}) {
   const localDbPath = getDatabasePath();
   let databaseReopened = false;
 
   try {
     closeDatabase();
-    const restoreResult = syncModel.restoreSnapshotToLocal(snapshotInfo.snapshotFilePath, localDbPath);
+    const restoreResult = syncModel.restoreSnapshotToLocal(snapshotPath, localDbPath);
     const conflictLocalCopyPath = options.markConflict
       ? movePreviousLocalCopyToConflict(restoreResult.previousLocalCopyPath, localDbPath)
       : null;
@@ -533,320 +691,276 @@ async function restoreSnapshotIntoLocal(snapshotInfo, options = {}) {
   }
 }
 
-function setRunningState() {
-  setRuntimeState({
-    status: 'running',
-    lastError: null,
-  });
-}
-
-function setSuccessState(patch = {}) {
-  setRuntimeState({
-    status: 'ok',
-    lastError: null,
-    conflictInfo: null,
-    ...patch,
-  });
-}
-
-function setErrorState(errorMessage) {
-  setRuntimeState({
-    status: 'error',
+function updateStoredError(errorMessage) {
+  return persistSettingsPatch({
     lastError: errorMessage,
   });
 }
 
-function emitConflict(conflictInfo, patch = {}) {
-  const normalizedConflictInfo = {
-    localCopyPath: conflictInfo.localCopyPath,
-    remoteSnapshotPath: conflictInfo.remoteSnapshotPath,
-    reason: conflictInfo.reason,
+function buildPullCompletedResult(settings, indexLatest, snapshotPath, restoreResult) {
+  return {
+    ...buildActionBase(settings),
+    action: 'pulled',
+    pulled: true,
+    remote: buildRemoteInfo(indexLatest),
+    snapshotId: snapshotIdFromFile(indexLatest.file),
+    snapshotFile: indexLatest.file,
+    snapshotFilePath: snapshotPath,
+    restoredFrom: restoreResult.restoredFrom,
+    restoredTo: restoreResult.restoredTo,
+    previousLocalCopyPath: restoreResult.previousLocalCopyPath,
+    createdAtMs: indexLatest.created_at_ms,
   };
+}
 
-  setRuntimeState({
-    status: 'conflict',
-    lastError: normalizedConflictInfo.reason,
-    conflictInfo: normalizedConflictInfo,
-    ...patch,
+function buildPushCompletedResult(settings, snapshotResult, indexUpdated) {
+  return {
+    ...buildActionBase(settings),
+    action: 'pushed',
+    pushed: true,
+    snapshotId: snapshotIdFromFile(snapshotResult.file),
+    snapshotFile: snapshotResult.file,
+    snapshotFilePath: snapshotResult.filePath,
+    createdAtMs: snapshotResult.created_at_ms,
+    sizeBytes: snapshotResult.size_bytes,
+    meta: snapshotResult.meta,
+    indexUpdated,
+  };
+}
+
+function handlePullFailure(error, currentIndexLatest = null) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  updateStoredError(errorMessage);
+  setErrorState(errorMessage, {
+    remoteLatest: normalizeRemoteLatest(currentIndexLatest),
   });
-  broadcastIpcEvent(SYNC_EVENT_CHANNELS.conflictDetected, normalizedConflictInfo);
+  broadcastIpcEvent(SYNC_EVENT_CHANNELS.pullFailed, { error: errorMessage });
+  throw error;
 }
 
-function ensureConfiguredSettings(settings, options = {}) {
-  const requireEnabled = options.requireEnabled !== false;
-
-  if (requireEnabled && !settings.enabled) {
-    throw new Error('Sync is disabled.');
-  }
-
-  if (!settings.baseFolderPath || !settings.repoPath) {
-    throw new Error('Sync repository is not configured.');
-  }
-
-  return syncModel.attachRepo(settings.repoPath);
-}
-
-function extractEnablePayload(payload, options = {}) {
-  if (typeof payload === 'string') {
-    return {
-      baseFolderPath: payload,
-      deviceName: null,
-    };
-  }
-
-  const body = ensurePlainObject(payload, 'payload');
-  const baseFolderPath = body.baseFolderPath;
-  const deviceName = options.allowDeviceName
-    ? normalizeOptionalString(body.deviceName, 'payload.deviceName', { allowNull: true }) ?? null
-    : null;
-
-  return {
-    baseFolderPath,
-    deviceName,
-  };
-}
-
-function buildRepoPathForBaseFolder(baseFolderPath, repoFolderName) {
-  return deriveRepoPath(ensureBaseFolderPath(baseFolderPath), repoFolderName);
-}
-
-function buildConflictInfo(localCopyPath, snapshotInfo, reason) {
-  return {
-    localCopyPath,
-    remoteSnapshotPath: snapshotInfo.snapshotFilePath,
-    reason,
-  };
+function handlePushFailure(error, currentIndexLatest = null) {
+  const errorMessage = error instanceof Error ? error.message : String(error);
+  updateStoredError(errorMessage);
+  setErrorState(errorMessage, {
+    remoteLatest: normalizeRemoteLatest(currentIndexLatest),
+  });
+  broadcastIpcEvent(SYNC_EVENT_CHANNELS.pushFailed, { error: errorMessage });
+  throw error;
 }
 
 async function performPull(settings, options = {}) {
   const currentSettings = normalizeSettingsFromStore(settings);
+  let currentIndexLatest = null;
 
   try {
-    const repoMeta = ensureConfiguredSettings(currentSettings, {
+    const syncPaths = ensureConfiguredSettings(currentSettings, {
       requireEnabled: options.requireEnabled !== false,
     });
-    const localMeta = syncModel.readDbMeta(getDatabase());
-    const snapshots = syncModel.listAllSnapshots(repoMeta.repoPath);
-    const selection = syncModel.pickBestSnapshot(snapshots, localMeta.dbUuid);
+    const localMeta = assertCompleteLocalMeta(syncModel.getLocalDbMeta(getDatabase()));
+    const indexValue = syncModel.readIndex(syncPaths.indexPath);
 
-    if (!selection.snapshot) {
-      persistSyncSettings(currentSettings);
-      setSuccessState();
+    currentIndexLatest = indexValue?.latest ?? null;
+    if (!currentIndexLatest) {
+      const persistedSettings = persistSettingsPatch({ lastError: null });
+      setSuccessState({
+        remoteLatest: null,
+      });
 
       return {
+        ...buildActionBase(persistedSettings),
         action: 'skipped',
-        reason: 'No remote snapshots were found.',
-        repoId: repoMeta.repoId,
-        selectionReason: selection.reason,
+        pulled: false,
+        reason: 'No remote snapshot is indexed.',
       };
     }
 
-    const remoteSnapshot = selection.snapshot;
-    const sameLineage = isSameLineage(localMeta.dbUuid, remoteSnapshot.meta?.db_uuid);
-    const remoteCounter = normalizeIntegerOrNull(remoteSnapshot.meta?.change_counter);
-    const publishedRemoteCounter = resolveRemotePublishedCounter(remoteCounter);
+    const remoteLatest = buildRemoteInfo(currentIndexLatest);
+    const snapshotPath = resolveSnapshotPath(currentSettings.folderPath, currentIndexLatest.file);
+    if (!snapshotPath || !fs.existsSync(snapshotPath)) {
+      throw new Error(`Indexed snapshot file is missing: ${currentIndexLatest.file}`);
+    }
 
-    if (!sameLineage) {
-      const conflictReason = options.resolveConflictWithRemote
-        ? 'Remote snapshot replaced the local database because the repository belongs to a different lineage.'
-        : 'Remote snapshot belongs to a different database lineage.';
-
-      if (options.resolveConflictWithRemote) {
-        const restoreResult = await restoreSnapshotIntoLocal(remoteSnapshot, { markConflict: true });
-        const persistedSettings = persistSettingsPatch(currentSettings, {
-          lastSeenRemoteSnapshotId: remoteSnapshot.snapshotId,
-          lastPublishedLocalCounter: publishedRemoteCounter,
-        });
-        const conflictInfo = buildConflictInfo(
-          restoreResult.conflictLocalCopyPath,
-          remoteSnapshot,
-          conflictReason,
-        );
-
-        emitConflict(conflictInfo, {
-          lastPullAtMs: remoteSnapshot.createdAtMs,
-        });
-
-        return {
-          action: 'conflict',
-          restoredRemote: true,
-          repoId: repoMeta.repoId,
-          repoPath: persistedSettings.repoPath,
-          snapshotId: remoteSnapshot.snapshotId,
-          selectionReason: selection.reason,
-          conflictInfo,
-        };
-      }
-
-      const localCopyPath = await createLocalConflictCopy();
-      const persistedSettings = persistSettingsPatch(currentSettings, {
-        lastSeenRemoteSnapshotId: remoteSnapshot.snapshotId,
+    if (currentIndexLatest.db_uuid !== localMeta.db_uuid) {
+      const restoreResult = await restoreSnapshotIntoLocal(snapshotPath, { markConflict: true });
+      const persistedSettings = persistSettingsPatch({
+        lastPulledCounter: currentIndexLatest.change_counter,
+        lastPublishedCounter: currentIndexLatest.change_counter,
+        lastError: 'db_uuid mismatch; remote adopted; local preserved',
       });
-      const conflictInfo = buildConflictInfo(localCopyPath, remoteSnapshot, conflictReason);
-
-      emitConflict(conflictInfo);
-
-      return {
+      const conflictInfo = buildConflictInfo(
+        restoreResult.conflictLocalCopyPath,
+        snapshotPath,
+        'db_uuid mismatch; remote adopted; local preserved',
+      );
+      const pullResult = {
+        ...buildActionBase(persistedSettings),
         action: 'conflict',
-        restoredRemote: false,
-        repoId: repoMeta.repoId,
-        repoPath: persistedSettings.repoPath,
-        snapshotId: remoteSnapshot.snapshotId,
-        selectionReason: selection.reason,
+        pulled: true,
+        restoredRemote: true,
+        remote: remoteLatest,
+        snapshotId: snapshotIdFromFile(currentIndexLatest.file),
+        snapshotFile: currentIndexLatest.file,
+        snapshotFilePath: snapshotPath,
+        restoredFrom: restoreResult.restoredFrom,
+        restoredTo: restoreResult.restoredTo,
+        previousLocalCopyPath: restoreResult.previousLocalCopyPath,
+        createdAtMs: currentIndexLatest.created_at_ms,
         conflictInfo,
       };
-    }
 
-    const shouldRestore =
-      (Number.isInteger(localMeta.changeCounter) && Number.isInteger(remoteCounter) && remoteCounter > localMeta.changeCounter)
-      || (!Number.isInteger(localMeta.changeCounter)
-        && Number.isInteger(remoteCounter)
-        && options.preferRemoteWhenCounterUnknown === true);
-
-    if (!shouldRestore) {
-      const persistedSettings = persistSettingsPatch(currentSettings, {
-        lastSeenRemoteSnapshotId: remoteSnapshot.snapshotId,
-        lastPublishedLocalCounter: publishedRemoteCounter,
+      emitConflict(conflictInfo, {
+        lastPullAtMs: Date.now(),
+        remoteLatest,
       });
 
-      setSuccessState();
+      return pullResult;
+    }
+
+    if (!syncModel.isRemoteNewer(currentIndexLatest, localMeta)) {
+      const persistedSettings = persistSettingsPatch({ lastError: null });
+      setSuccessState({
+        remoteLatest,
+      });
 
       return {
+        ...buildActionBase(persistedSettings),
         action: 'skipped',
+        pulled: false,
+        remote: remoteLatest,
         reason: 'Remote snapshot is not newer than the local database.',
-        repoId: repoMeta.repoId,
-        repoPath: persistedSettings.repoPath,
-        snapshotId: remoteSnapshot.snapshotId,
-        selectionReason: selection.reason,
       };
     }
 
-    const restoreResult = await restoreSnapshotIntoLocal(remoteSnapshot);
-    const persistedSettings = persistSettingsPatch(currentSettings, {
-      lastSeenRemoteSnapshotId: remoteSnapshot.snapshotId,
-      lastPublishedLocalCounter: publishedRemoteCounter,
+    const restoreResult = await restoreSnapshotIntoLocal(snapshotPath);
+    const persistedSettings = persistSettingsPatch({
+      lastPulledCounter: currentIndexLatest.change_counter,
+      lastPublishedCounter: currentIndexLatest.change_counter,
+      lastError: null,
     });
-    const pullResult = {
-      action: 'pulled',
-      repoId: repoMeta.repoId,
-      repoPath: persistedSettings.repoPath,
-      snapshotId: remoteSnapshot.snapshotId,
-      snapshotFilePath: remoteSnapshot.snapshotFilePath,
-      restoredFrom: restoreResult.restoredFrom,
-      restoredTo: restoreResult.restoredTo,
-      previousLocalCopyPath: restoreResult.previousLocalCopyPath,
-      createdAtMs: remoteSnapshot.createdAtMs,
-      selectionReason: selection.reason,
-    };
+    const pullResult = buildPullCompletedResult(persistedSettings, currentIndexLatest, snapshotPath, restoreResult);
 
     setSuccessState({
-      lastPullAtMs: remoteSnapshot.createdAtMs,
+      lastPullAtMs: Date.now(),
+      remoteLatest,
     });
     broadcastIpcEvent(SYNC_EVENT_CHANNELS.pullCompleted, pullResult);
 
     return pullResult;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    setErrorState(errorMessage);
-    broadcastIpcEvent(SYNC_EVENT_CHANNELS.pullFailed, { error: errorMessage });
-    throw error;
+    return handlePullFailure(error, currentIndexLatest);
   }
 }
 
 async function performPush(settings, options = {}) {
   const currentSettings = normalizeSettingsFromStore(settings);
+  let currentIndexLatest = null;
 
   try {
-    const repoMeta = ensureConfiguredSettings(currentSettings, {
+    const syncPaths = ensureConfiguredSettings(currentSettings, {
       requireEnabled: options.requireEnabled !== false,
     });
-    const localMeta = syncModel.readDbMeta(getDatabase());
-    const snapshots = syncModel.listAllSnapshots(repoMeta.repoPath);
-    const selection = syncModel.pickBestSnapshot(snapshots, localMeta.dbUuid);
-    const remoteSnapshot = selection.snapshot;
-    const remoteCounter = normalizeIntegerOrNull(remoteSnapshot?.meta?.change_counter);
+    const localMeta = assertCompleteLocalMeta(syncModel.getLocalDbMeta(getDatabase()));
+    const indexValue = syncModel.readIndex(syncPaths.indexPath);
 
-    if (remoteSnapshot && !isSameLineage(localMeta.dbUuid, remoteSnapshot.meta?.db_uuid)) {
-      const localCopyPath = await createLocalConflictCopy();
-      const persistedSettings = persistSettingsPatch(currentSettings, {
-        lastSeenRemoteSnapshotId: remoteSnapshot.snapshotId,
+    currentIndexLatest = indexValue?.latest ?? null;
+    if (currentIndexLatest && currentIndexLatest.db_uuid !== localMeta.db_uuid) {
+      const remoteLatest = buildRemoteInfo(currentIndexLatest);
+      const snapshotPath = resolveSnapshotPath(currentSettings.folderPath, currentIndexLatest.file);
+      if (!snapshotPath || !fs.existsSync(snapshotPath)) {
+        throw new Error(`Indexed snapshot file is missing: ${currentIndexLatest.file}`);
+      }
+
+      const restoreResult = await restoreSnapshotIntoLocal(snapshotPath, { markConflict: true });
+      const persistedSettings = persistSettingsPatch({
+        lastPulledCounter: currentIndexLatest.change_counter,
+        lastPublishedCounter: currentIndexLatest.change_counter,
+        lastError: 'db_uuid mismatch; remote adopted; local preserved',
       });
       const conflictInfo = buildConflictInfo(
-        localCopyPath,
-        remoteSnapshot,
-        'Cannot publish to a repository with a different database lineage.',
+        restoreResult.conflictLocalCopyPath,
+        snapshotPath,
+        'db_uuid mismatch; remote adopted; local preserved',
       );
-
-      emitConflict(conflictInfo);
-
-      return {
+      const conflictResult = {
+        ...buildActionBase(persistedSettings),
         action: 'conflict',
-        repoId: repoMeta.repoId,
-        repoPath: persistedSettings.repoPath,
-        snapshotId: remoteSnapshot.snapshotId,
-        selectionReason: selection.reason,
+        pushed: false,
+        pulled: true,
+        restoredRemote: true,
+        remote: remoteLatest,
+        snapshotId: snapshotIdFromFile(currentIndexLatest.file),
+        snapshotFile: currentIndexLatest.file,
+        snapshotFilePath: snapshotPath,
+        restoredFrom: restoreResult.restoredFrom,
+        restoredTo: restoreResult.restoredTo,
+        previousLocalCopyPath: restoreResult.previousLocalCopyPath,
+        createdAtMs: currentIndexLatest.created_at_ms,
         conflictInfo,
       };
-    }
 
-    const baselineCounter = resolveRemotePublishedCounter(remoteCounter);
-    if (!hasCounterAdvanced(localMeta.changeCounter, baselineCounter)) {
-      const persistedSettings = persistSettingsPatch(currentSettings, {
-        lastPublishedLocalCounter: baselineCounter,
-        lastSeenRemoteSnapshotId: remoteSnapshot?.snapshotId ?? currentSettings.lastSeenRemoteSnapshotId,
+      emitConflict(conflictInfo, {
+        lastPullAtMs: Date.now(),
+        remoteLatest,
       });
 
-      setSuccessState();
+      return conflictResult;
+    }
+
+    if (!hasLocalChangesSinceLastPublish(localMeta, currentSettings.lastPublishedCounter)) {
+      const persistedSettings = persistSettingsPatch({ lastError: null });
+      setSuccessState({
+        remoteLatest: normalizeRemoteLatest(currentIndexLatest),
+      });
 
       return {
+        ...buildActionBase(persistedSettings),
         action: 'skipped',
+        pushed: false,
         reason: 'Local database has no unpublished changes.',
-        repoId: repoMeta.repoId,
-        repoPath: persistedSettings.repoPath,
-        selectionReason: selection.reason,
       };
     }
 
     const snapshotResult = await syncModel.createSnapshot(
       getDatabase(),
-      repoMeta.repoPath,
+      syncPaths.snapshotsDir,
       currentSettings.deviceId,
-      app.getVersion(),
-      currentSettings.deviceName,
+      localMeta,
     );
-    const pruneResult = syncModel.pruneSnapshots(
-      repoMeta.repoPath,
-      currentSettings.deviceId,
-      currentSettings.retentionCountPerDevice,
-    );
-    const publishedCounter = resolvePublishedSnapshotCounter(snapshotResult.meta?.change_counter, localMeta.changeCounter);
-    const persistedSettings = persistSettingsPatch(currentSettings, {
-      lastSeenRemoteSnapshotId: snapshotResult.snapshotId,
-      lastPublishedLocalCounter: publishedCounter,
-    });
-    const pushResult = {
-      action: 'pushed',
-      repoId: repoMeta.repoId,
-      repoPath: persistedSettings.repoPath,
-      snapshotId: snapshotResult.snapshotId,
-      snapshotFilePath: snapshotResult.snapshotFilePath,
-      createdAtMs: snapshotResult.createdAtMs,
-      sizeBytes: snapshotResult.sizeBytes,
-      meta: snapshotResult.meta,
-      prune: pruneResult,
+    const nextIndexLatest = {
+      file: snapshotResult.file,
+      db_uuid: localMeta.db_uuid,
+      change_counter: localMeta.change_counter,
+      last_write_ms: localMeta.last_write_ms,
+      created_at_ms: snapshotResult.created_at_ms,
+      device_id: currentSettings.deviceId,
     };
+    let indexUpdated = false;
+
+    if (syncModel.isLocalNewerThanIndex(localMeta, currentIndexLatest)) {
+      syncModel.writeIndexAtomic(syncPaths.indexPath, {
+        schema_version: syncModel.SYNC_SCHEMA_VERSION,
+        updated_at_ms: Date.now(),
+        latest: nextIndexLatest,
+      });
+      currentIndexLatest = nextIndexLatest;
+      indexUpdated = true;
+    }
+
+    const persistedSettings = persistSettingsPatch({
+      lastPublishedCounter: localMeta.change_counter,
+      lastError: null,
+    });
+    const pushResult = buildPushCompletedResult(persistedSettings, snapshotResult, indexUpdated);
 
     setSuccessState({
-      lastPushAtMs: snapshotResult.createdAtMs,
+      lastPushAtMs: Date.now(),
+      remoteLatest: normalizeRemoteLatest(currentIndexLatest),
     });
     broadcastIpcEvent(SYNC_EVENT_CHANNELS.pushCompleted, pushResult);
 
     return pushResult;
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    setErrorState(errorMessage);
-    broadcastIpcEvent(SYNC_EVENT_CHANNELS.pushFailed, { error: errorMessage });
-    throw error;
+    return handlePushFailure(error, currentIndexLatest);
   }
 }
 
@@ -857,13 +971,16 @@ function init() {
 
   initialized = true;
   const settings = readSyncSettings();
-  restartSchedulers(settings);
+  const indexPath = resolveIndexPath(settings.folderPath);
+  const indexValue = indexPath ? syncModel.readIndex(indexPath) : null;
 
-  if (settings.enabled && settings.repoPath) {
-    void pullNow().catch((error) => {
-      console.error('[electron] Startup sync pull failed:', error);
-    });
-  }
+  runtimeState = {
+    ...SYNC_STATE_DEFAULTS,
+    status: settings.lastError ? 'error' : SYNC_STATE_DEFAULTS.status,
+    lastError: settings.lastError,
+    remoteLatest: normalizeRemoteLatest(indexValue?.latest ?? null),
+  };
+  restartSchedulers(settings);
 }
 
 function dispose() {
@@ -872,7 +989,7 @@ function dispose() {
 }
 
 function getSettings() {
-  return readSyncSettings();
+  return buildPublicSettings(readSyncSettings());
 }
 
 function updateSettings(payload) {
@@ -881,10 +998,14 @@ function updateSettings(payload) {
 
   const currentSettings = readSyncSettings();
   const nextSettings = applySyncSettingsPatch(currentSettings, patch);
-  const persistedSettings = persistSyncSettings(nextSettings);
 
+  if (nextSettings.enabled && nextSettings.folderPath) {
+    syncModel.ensureSyncDirs(nextSettings.folderPath);
+  }
+
+  const persistedSettings = persistSyncSettings(nextSettings);
   restartSchedulers(persistedSettings);
-  return persistedSettings;
+  return buildPublicSettings(persistedSettings);
 }
 
 function getState() {
@@ -905,176 +1026,107 @@ async function selectFolder() {
   };
 }
 
-function repoStatus(payload) {
-  const settings = readSyncSettings();
-  let repoPath = settings.repoPath;
+function resolveEnableFolderPath(payload) {
+  if (typeof payload === 'string') {
+    return resolveFolderPath(payload, 'folderPath');
+  }
 
-  if (payload !== undefined && payload !== null) {
-    if (typeof payload === 'string') {
-      repoPath = buildRepoPathForBaseFolder(payload, settings.repoFolderName);
-    } else {
-      const body = ensurePlainObject(payload, 'payload');
-      if (body.baseFolderPath !== undefined) {
-        repoPath = buildRepoPathForBaseFolder(body.baseFolderPath, settings.repoFolderName);
+  const body = ensurePlainObject(payload, 'payload');
+  const rawFolderPath = body.folderPath !== undefined ? body.folderPath : body.baseFolderPath;
+  return resolveFolderPath(rawFolderPath, 'payload.folderPath');
+}
+
+async function enable(payload) {
+  return runSyncTask(async () => {
+    try {
+      const folderPath = resolveEnableFolderPath(payload);
+      const syncPaths = syncModel.ensureSyncDirs(folderPath);
+      const currentSettings = readSyncSettings();
+      const nextSettings = persistSyncSettings({
+        ...currentSettings,
+        enabled: true,
+        folderPath: syncPaths.folderPath,
+        lastError: null,
+      });
+
+      setRunningState();
+      const pullResult = await performPull(nextSettings, { requireEnabled: false });
+      if (pullResult.action !== 'conflict') {
+        setRunningState();
+        await performPush(readSyncSettings(), { requireEnabled: false });
       }
+
+      restartSchedulers(readSyncSettings());
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      if (runtimeState.status !== 'error' || runtimeState.lastError !== errorMessage) {
+        updateStoredError(errorMessage);
+        setErrorState(errorMessage);
+      }
+
+      throw error;
     }
-  }
+  });
+}
 
-  if (!repoPath) {
-    return {
-      exists: false,
-      repoPath: null,
-    };
-  }
+async function disable() {
+  clearSchedulers();
+  await waitForRunningSync();
 
-  const exists = syncModel.repoExists(repoPath);
-  if (!exists) {
-    return {
-      exists: false,
-      repoPath,
-    };
-  }
+  const currentSettings = readSyncSettings();
+  const nextSettings = persistSyncSettings({
+    ...currentSettings,
+    enabled: false,
+    lastError: null,
+  });
 
-  const repoMeta = syncModel.attachRepo(repoPath);
+  restartSchedulers(nextSettings);
+  setIdleState();
+
   return {
-    exists: true,
-    repoPath,
-    repoMeta,
+    ok: true,
   };
-}
-
-async function enableCreateRepo(payload) {
-  const currentSettings = readSyncSettings();
-  if (currentSettings.enabled) {
-    throw new Error('Disable sync before creating a new repository.');
-  }
-
-  const { baseFolderPath, deviceName } = extractEnablePayload(payload, { allowDeviceName: true });
-  const repoPath = buildRepoPathForBaseFolder(baseFolderPath, currentSettings.repoFolderName);
-
-  return runSyncTask(async () => {
-    setRunningState();
-    try {
-      const nextSettings = normalizeSettingsFromStore({
-        ...cloneSettings(currentSettings),
-        enabled: true,
-        baseFolderPath: ensureBaseFolderPath(baseFolderPath),
-        repoFolderName: currentSettings.repoFolderName,
-        repoPath,
-        deviceName: deviceName ?? currentSettings.deviceName,
-        lastSeenRemoteSnapshotId: null,
-        lastPublishedLocalCounter: null,
-      });
-
-      const repoMeta = syncModel.initRepo(nextSettings.repoPath, nextSettings.deviceId, nextSettings.deviceName);
-      await performPush(nextSettings, { requireEnabled: false });
-      const persistedSettings = readSyncSettings();
-      restartSchedulers(persistedSettings);
-
-      return {
-        repoId: repoMeta.repoId,
-        repoPath: repoMeta.repoPath,
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      setErrorState(errorMessage);
-      throw error;
-    }
-  });
-}
-
-async function enableAttachRepo(payload) {
-  const currentSettings = readSyncSettings();
-  if (currentSettings.enabled) {
-    throw new Error('Disable sync before attaching to a repository.');
-  }
-
-  const { baseFolderPath } = extractEnablePayload(payload);
-  const normalizedBaseFolderPath = ensureBaseFolderPath(baseFolderPath);
-  const repoPath = buildRepoPathForBaseFolder(normalizedBaseFolderPath, currentSettings.repoFolderName);
-
-  return runSyncTask(async () => {
-    setRunningState();
-    try {
-      const nextSettings = normalizeSettingsFromStore({
-        ...cloneSettings(currentSettings),
-        enabled: true,
-        baseFolderPath: normalizedBaseFolderPath,
-        repoFolderName: currentSettings.repoFolderName,
-        repoPath,
-      });
-
-      const repoMeta = syncModel.attachRepo(nextSettings.repoPath);
-      const pullResult = await performPull(nextSettings, {
-        requireEnabled: false,
-        resolveConflictWithRemote: true,
-        preferRemoteWhenCounterUnknown: true,
-      });
-      const persistedSettings = readSyncSettings();
-      restartSchedulers(persistedSettings);
-
-      return {
-        repoId: repoMeta.repoId,
-        repoPath: repoMeta.repoPath,
-        actionTaken:
-          pullResult.action === 'pulled' ? 'pulled' : pullResult.action === 'conflict' ? 'conflict' : 'kept_local',
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      setErrorState(errorMessage);
-      throw error;
-    }
-  });
-}
-
-async function disableSync() {
-  return runSyncTask(async () => {
-    clearSchedulers();
-
-    const currentSettings = readSyncSettings();
-    persistSyncSettings({
-      ...cloneSettings(currentSettings),
-      enabled: false,
-    });
-
-    setRuntimeState({
-      status: 'idle',
-      lastError: null,
-      conflictInfo: null,
-    });
-
-    return {
-      ok: true,
-    };
-  });
 }
 
 async function syncNow() {
   return runSyncTask(async () => {
-    const settings = readSyncSettings();
+    const skipped = [];
 
     setRunningState();
-    const pullResult = await performPull(settings);
+    const pullResult = await performPull(readSyncSettings());
+    if (!pullResult.pulled && pullResult.reason) {
+      skipped.push(pullResult.reason);
+    }
+
     if (pullResult.action === 'conflict') {
+      skipped.push('Push skipped because a db_uuid mismatch was resolved from the remote snapshot.');
       return {
-        pulled: false,
+        pulled: true,
         pushed: false,
-        skipped: true,
+        skipped: skipped.length > 0 ? skipped : undefined,
         pullResult,
         pushResult: {
+          ...buildActionBase(readSyncSettings()),
           action: 'skipped',
-          reason: 'Push skipped because a sync conflict was detected.',
+          pushed: false,
+          reason: 'Push skipped because a db_uuid mismatch was resolved from the remote snapshot.',
         },
       };
     }
 
     setRunningState();
     const pushResult = await performPush(readSyncSettings());
+    if (!pushResult.pushed && pushResult.reason) {
+      skipped.push(pushResult.reason);
+    }
 
     return {
-      pulled: pullResult.action === 'pulled',
-      pushed: pushResult.action === 'pushed',
-      skipped: pullResult.action !== 'pulled' && pushResult.action !== 'pushed',
+      pulled: Boolean(pullResult.pulled),
+      pushed: Boolean(pushResult.pushed),
+      skipped: skipped.length > 0 ? skipped : undefined,
       pullResult,
       pushResult,
     };
@@ -1095,13 +1147,85 @@ async function pushNow() {
   });
 }
 
-function listSnapshots() {
-  const settings = readSyncSettings();
-  if (!settings.repoPath) {
-    throw new Error('Sync repository is not configured.');
+function repoStatus(payload) {
+  let folderPath = readSyncSettings().folderPath;
+
+  if (payload !== undefined && payload !== null) {
+    if (typeof payload === 'string') {
+      folderPath = resolveFolderPath(payload, 'folderPath');
+    } else {
+      const body = ensurePlainObject(payload, 'payload');
+      if (body.folderPath !== undefined || body.baseFolderPath !== undefined) {
+        folderPath = resolveFolderPath(
+          body.folderPath !== undefined ? body.folderPath : body.baseFolderPath,
+          'payload.folderPath',
+        );
+      }
+    }
   }
 
-  return syncModel.listAllSnapshots(settings.repoPath);
+  const syncRootPath = resolveSyncRootPath(folderPath);
+  if (!syncRootPath) {
+    return {
+      exists: false,
+      repoPath: null,
+    };
+  }
+
+  const exists = fs.existsSync(syncRootPath) && fs.statSync(syncRootPath).isDirectory();
+  if (!exists) {
+    return {
+      exists: false,
+      repoPath: syncRootPath,
+    };
+  }
+
+  const indexPath = resolveIndexPath(folderPath);
+  const indexValue = indexPath ? syncModel.readIndex(indexPath) : null;
+
+  return {
+    exists: true,
+    repoPath: syncRootPath,
+    repoMeta: {
+      repoId: LEGACY_REPO_ID,
+      createdAtMs: indexValue?.updated_at_ms ?? Math.round(fs.statSync(syncRootPath).mtimeMs),
+      syncSchemaVersion: syncModel.SYNC_SCHEMA_VERSION,
+      appName: 'Boring Balance',
+      repoPath: syncRootPath,
+      repoFilePath: indexPath ?? undefined,
+    },
+  };
+}
+
+async function enableCreateRepo(payload) {
+  await enable(payload);
+  const folderPath = resolveEnableFolderPath(payload);
+
+  return {
+    repoId: LEGACY_REPO_ID,
+    repoPath: resolveSyncRootPath(folderPath),
+    actionTaken: 'enabled',
+  };
+}
+
+async function enableAttachRepo(payload) {
+  await enable(payload);
+  const folderPath = resolveEnableFolderPath(payload);
+
+  return {
+    repoId: LEGACY_REPO_ID,
+    repoPath: resolveSyncRootPath(folderPath),
+    actionTaken: 'enabled',
+  };
+}
+
+function listSnapshots() {
+  const settings = readSyncSettings();
+  if (!settings.folderPath) {
+    return [];
+  }
+
+  return syncModel.listSnapshots(settings.folderPath);
 }
 
 async function onAppBeforeQuit() {
@@ -1109,7 +1233,7 @@ async function onAppBeforeQuit() {
   await waitForRunningSync();
 
   const settings = readSyncSettings();
-  if (!settings.enabled || !settings.autoPushOnQuit || !settings.repoPath) {
+  if (!settings.enabled || !settings.autoPushOnQuit || !settings.folderPath) {
     return null;
   }
 
@@ -1125,8 +1249,10 @@ async function onAppBeforeQuit() {
 }
 
 module.exports = {
-  disableSync,
+  disable,
+  disableSync: disable,
   dispose,
+  enable,
   enableAttachRepo,
   enableCreateRepo,
   getSettings,
