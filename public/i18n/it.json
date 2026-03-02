@@ -355,6 +355,7 @@
         "intervalOptions": {
           "off": "Disattivato",
           "minutes5": "Ogni 5 minuti",
+          "minutes10": "Ogni 10 minuti",
           "minutes15": "Ogni 15 minuti",
           "minutes30": "Ogni 30 minuti",
           "minutes60": "Ogni 60 minuti"

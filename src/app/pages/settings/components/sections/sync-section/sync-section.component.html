@@ -31,8 +31,8 @@
         <p class="mt-1 break-all text-sm font-medium">
           @if (settings().enabled) {
             {{
-              settings().baseFolderPath
-                ? settings().baseFolderPath
+              settings().folderPath
+                ? settings().folderPath
                 : ('dataBackups.sync.overview.notConnected' | translate)
             }}
           } @else {
@@ -97,35 +97,6 @@
         {{ 'dataBackups.sync.setup.description' | translate }}
       </p>
 
-      <div class="mt-4 grid gap-3 lg:grid-cols-3">
-        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
-          <p class="text-xs uppercase tracking-wide text-muted-foreground">
-            {{ 'dataBackups.sync.setup.steps.rootFolder.title' | translate }}
-          </p>
-          <p class="mt-1 text-sm">
-            {{ 'dataBackups.sync.setup.steps.rootFolder.description' | translate }}
-          </p>
-        </div>
-
-        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
-          <p class="text-xs uppercase tracking-wide text-muted-foreground">
-            {{ 'dataBackups.sync.setup.steps.create.title' | translate }}
-          </p>
-          <p class="mt-1 text-sm">
-            {{ 'dataBackups.sync.setup.steps.create.description' | translate }}
-          </p>
-        </div>
-
-        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
-          <p class="text-xs uppercase tracking-wide text-muted-foreground">
-            {{ 'dataBackups.sync.setup.steps.attach.title' | translate }}
-          </p>
-          <p class="mt-1 text-sm">
-            {{ 'dataBackups.sync.setup.steps.attach.description' | translate }}
-          </p>
-        </div>
-      </div>
-
       <div class="mt-4 grid gap-3 md:grid-cols-2">
         <div class="rounded-md border border-border/60 bg-muted/40 p-3">
           <p class="text-xs uppercase tracking-wide text-muted-foreground">
@@ -176,21 +147,17 @@
         <button
           z-button
           zType="default"
-          [zDisabled]="!canCreateRepo()"
-          [zLoading]="pendingConnectMode() === 'create'"
-          (click)="onCreateNewSyncSpace()"
+          [zDisabled]="!canEnableSelectedFolder()"
+          [zLoading]="enableLoading()"
+          (click)="onEnableSync()"
         >
-          {{ 'dataBackups.sync.setup.actions.create' | translate }}
-        </button>
-
-        <button
-          z-button
-          zType="outline"
-          [zDisabled]="!canAttachRepo()"
-          [zLoading]="pendingConnectMode() === 'attach'"
-          (click)="onAttachExistingSyncSpace()"
-        >
-          {{ 'dataBackups.sync.setup.actions.attach' | translate }}
+          {{
+            (
+              selectedRepoStatus()?.exists
+                ? 'dataBackups.sync.setup.actions.attach'
+                : 'dataBackups.sync.setup.actions.create'
+            ) | translate
+          }}
         </button>
       </div>
     </div>
@@ -223,7 +190,7 @@
         </p>
       </div>
 
-      <div class="mt-3 grid gap-3 lg:grid-cols-3">
+      <div class="mt-3 grid gap-3 lg:grid-cols-2">
         <div class="rounded-md border border-border/60 bg-muted/40 p-3">
           <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="sync-pull-interval">
             {{ 'dataBackups.sync.autoSync.autoPullIntervalMin' | translate }}
@@ -252,22 +219,6 @@
           >
             @for (option of intervalOptions; track option.value) {
               <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
-            }
-          </z-select>
-        </div>
-
-        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
-          <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="sync-retention-count">
-            {{ 'dataBackups.sync.autoSync.retentionCountPerDevice' | translate }}
-          </label>
-          <z-select
-            id="sync-retention-count"
-            [zValue]="retentionCountValue()"
-            [zDisabled]="isBusy()"
-            (zSelectionChange)="onRetentionCountChange($event)"
-          >
-            @for (option of retentionCountOptions; track option.value) {
-              <z-select-item [zValue]="option.value" [zLabel]="option.label" />
             }
           </z-select>
         </div>
@@ -366,8 +317,10 @@
         <div class="mt-3 rounded-md border border-amber-600/25 bg-amber-500/10 p-3 text-sm text-amber-700">
           <p class="font-medium">{{ 'dataBackups.sync.alerts.conflictTitle' | translate }}</p>
           <p class="mt-1 break-words">{{ state().conflictInfo?.reason }}</p>
-          <p class="mt-3 font-medium">{{ 'dataBackups.sync.alerts.localCopyPath' | translate }}</p>
-          <p class="mt-1 break-all">{{ state().conflictInfo?.localCopyPath }}</p>
+          @if (state().conflictInfo?.localCopyPath) {
+            <p class="mt-3 font-medium">{{ 'dataBackups.sync.alerts.localCopyPath' | translate }}</p>
+            <p class="mt-1 break-all">{{ state().conflictInfo?.localCopyPath }}</p>
+          }
           <p class="mt-3 font-medium">{{ 'dataBackups.sync.alerts.remoteSnapshotPath' | translate }}</p>
           <p class="mt-1 break-all">{{ state().conflictInfo?.remoteSnapshotPath }}</p>
           <p class="mt-3">{{ 'dataBackups.sync.alerts.conflictHint' | translate }}</p>

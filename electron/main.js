@@ -8,7 +8,7 @@ const {
   markFirstStartCompleted,
   runMigrations,
 } = require('./database');
-const { backupController } = require('./controllers');
+const { backupController, syncController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { createWindow } = require('./window');
 
@@ -41,6 +41,7 @@ app.whenReady()
 
     registerIpcHandlers();
     backupController.init();
+    syncController.init();
     createWindow();
 
     app.on('activate', () => {
@@ -62,6 +63,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', (event) => {
   if (beforeQuitHandled) {
+    syncController.dispose();
     backupController.dispose();
     closeDatabase();
     return;
@@ -71,11 +73,21 @@ app.on('before-quit', (event) => {
   event.preventDefault();
 
   Promise.resolve()
-    .then(() => backupController.onAppBeforeQuit())
-    .catch((error) => {
-      console.error('[electron] Backup before quit failed:', error);
+    .then(async () => {
+      try {
+        await syncController.onAppBeforeQuit();
+      } catch (error) {
+        console.error('[electron] Sync before quit failed:', error);
+      }
+
+      try {
+        await backupController.onAppBeforeQuit();
+      } catch (error) {
+        console.error('[electron] Backup before quit failed:', error);
+      }
     })
     .finally(() => {
+      syncController.dispose();
       backupController.dispose();
       closeDatabase();
       app.quit();
