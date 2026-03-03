@@ -46,7 +46,7 @@ export interface AppSankeyChartLink {
   templateUrl: './sankey-chart.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block',
+    class: 'block min-w-0 w-full max-w-full',
   },
 })
 export class AppSankeyChartComponent implements OnInit, OnDestroy {

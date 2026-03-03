@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -99,7 +100,8 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   readonly zSize = input<ZardSegmentedVariants['zSize']>('default');
   readonly zOptions = input<SegmentedOption[]>([]);
   readonly zDefaultValue = input<string>('');
-  readonly zDisabled = input(false);
+  readonly zDisabled = input(false, { transform: booleanAttribute });
+  readonly zFull = input(false, { transform: booleanAttribute });
   readonly zAriaLabel = input<string>('Segmented control');
 
   readonly zChange = output<string>();
@@ -156,15 +158,20 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
     }
   }
 
-  protected readonly classes = computed(() => mergeClasses(segmentedVariants({ zSize: this.zSize() }), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(segmentedVariants({ zSize: this.zSize() }), this.zFull() ? 'flex w-full' : '', this.class()),
+  );
 
-  protected readonly wrapperClasses = computed(() => 'inline-block');
+  protected readonly wrapperClasses = computed(() => (this.zFull() ? 'block w-full' : 'inline-block'));
 
   protected getItemClasses(value: string): string {
-    return segmentedItemVariants({
-      zSize: this.zSize(),
-      isActive: this.isSelected(value),
-    });
+    return mergeClasses(
+      segmentedItemVariants({
+        zSize: this.zSize(),
+        isActive: this.isSelected(value),
+      }),
+      this.zFull() ? 'flex-1' : '',
+    );
   }
 
   protected isSelected(value: string): boolean {

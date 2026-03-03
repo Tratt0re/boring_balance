@@ -9,6 +9,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -17,7 +18,7 @@ import { type AppBarChartSeries, AppBarChartComponent } from '@/components/chart
 import { AnalyticsService } from '@/services/analytics.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
-import { formatMonthLabel, toAbsoluteAmount, toAmount, toYearRangeTimestamps } from '../overview-cards.utils';
+import { formatMonthLabel, toAbsoluteAmount, toAmount, toYearRangeTimestamps } from '../../overview-cards.utils';
 
 const MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP = '15rem';
 const MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE = '18rem';
@@ -25,6 +26,7 @@ const MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE = '18rem';
 @Component({
   selector: 'app-overview-monthly-totals-card',
   imports: [
+    NgTemplateOutlet,
     AppBaseCardComponent,
     AppBarChartComponent,
     TranslatePipe,
@@ -47,13 +49,15 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, On
 
   readonly year = input(new Date().getFullYear());
   readonly isSmallScreen = input(false);
+  readonly chartHeightOverride = input<string | null>(null);
+  readonly showCard = input(true);
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly labels = signal<readonly string[]>([]);
   protected readonly series = signal<readonly AppBarChartSeries[]>([]);
-  protected readonly chartHeight = computed(() =>
-    this.isSmallScreen() ? MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE : MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP,
+  protected readonly resolvedChartHeight = computed(() =>
+    this.resolveChartHeight(),
   );
   protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
@@ -117,6 +121,15 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, On
 
     this.labels.set(rows.map((row) => formatMonthLabel(row.month, this.resolveLocale())));
     this.series.set(this.buildMonthlyTotalsBarSeries(rows));
+  }
+
+  private resolveChartHeight(): string {
+    const requestedHeight = this.chartHeightOverride();
+    if (typeof requestedHeight === 'string' && requestedHeight.trim().length > 0) {
+      return requestedHeight;
+    }
+
+    return this.isSmallScreen() ? MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE : MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP;
   }
 
   private buildMonthlyTotalsBarSeries(

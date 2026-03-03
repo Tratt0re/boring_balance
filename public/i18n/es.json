@@ -451,6 +451,9 @@
     "cards": {
       "netWorth": {
         "title": "Patrimonio neto total",
+        "summaryTitle": "Patrimonio neto",
+        "receivablesPayablesTitle": "Por cobrar y por pagar",
+        "allocationTitle": "Asignacion",
         "descriptionDailyAverage": "Prom. patrimonio neto/dia (MTD): {{value}}/dia",
         "tooltips": {
           "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
@@ -466,6 +469,7 @@
       },
       "monthlyTotals": {
         "title": "Ingresos, gastos y flujo neto de caja",
+        "segmentTitle": "Ingresos y gastos",
         "descriptionCurrentYear": "Año actual: {{year}}",
         "loading": "Cargando analitica...",
         "loadFailedWithError": "Error al cargar la analitica: {{error}}",
@@ -475,6 +479,12 @@
           "expenses": "Gastos",
           "netCashflow": "Flujo neto de caja"
         }
+      },
+      "activity": {
+        "title": "Actividad",
+        "latestTransactions": "Ultimos {{count}} movimientos",
+        "latestTransfers": "Ultimos {{count}} transferencias",
+        "loadFailed": "No se pudo cargar la actividad."
       },
       "recentTransactions": {
         "title": "Ultimos movimientos",

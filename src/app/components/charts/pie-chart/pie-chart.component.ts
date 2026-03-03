@@ -27,6 +27,7 @@ export interface AppPieChartItem {
   readonly value: number;
   readonly themeColor?: AppChartThemeColor;
   readonly color?: string;
+  readonly tooltipValueText?: string;
   readonly tooltipDetails?: readonly string[];
 }
 
@@ -36,7 +37,7 @@ export interface AppPieChartItem {
   templateUrl: './pie-chart.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block',
+    class: 'block min-w-0 w-full max-w-full',
   },
 })
 export class AppPieChartComponent implements OnInit, OnDestroy {
@@ -49,9 +50,11 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
   readonly showLegend = input(true, { transform: booleanAttribute });
   readonly showLabels = input(true, { transform: booleanAttribute });
   readonly labelFormat = input<'namePercent' | 'percentOnly'>('namePercent');
+  readonly legendPosition = input<'bottom' | 'right'>('bottom');
   readonly smartPercentLabels = input(false, { transform: booleanAttribute });
   readonly insideLabelMinPercent = input(10);
   readonly donut = input(true, { transform: booleanAttribute });
+  readonly radiusScale = input(1);
   readonly dimOthersOnFocus = input(false, { transform: booleanAttribute });
   readonly blurOpacity = input(0.2);
   readonly scaleOnFocus = input(false, { transform: booleanAttribute });
@@ -65,10 +68,12 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const showLegend = this.showLegend();
+    const useRightLegend = showLegend && this.legendPosition() === 'right';
     const showLabels = this.showLabels();
     const labelFormatter = this.labelFormat() === 'percentOnly' ? '{d}%' : '{b}: {d}%';
     const smartPercentLabels = this.smartPercentLabels() && this.labelFormat() === 'percentOnly';
     const insideLabelMinPercent = Math.max(0, Number(this.insideLabelMinPercent()) || 0);
+    const normalizedRadiusScale = Math.max(0.5, Number(this.radiusScale()) || 1);
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const shouldScaleOnFocus = this.scaleOnFocus();
@@ -142,6 +147,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
       return {
         name: item.name,
         value: item.value,
+        tooltipValueText: item.tooltipValueText,
         tooltipDetails: item.tooltipDetails,
         ...(itemLabel ? { label: itemLabel } : {}),
         ...(itemLabelLine ? { labelLine: itemLabelLine } : {}),
@@ -162,6 +168,14 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
         },
       };
     });
+    const scalePercent = (value: number, max = 90): string => `${Math.min(max, Math.max(0, value * normalizedRadiusScale))}%`;
+    const pieRadius = useRightLegend
+      ? this.donut()
+        ? ([scalePercent(34), scalePercent(58, 72)] as const)
+        : scalePercent(58, 72)
+      : this.donut()
+        ? ([scalePercent(40), scalePercent(70, 82)] as const)
+        : scalePercent(70, 82);
 
     return {
       textStyle: {
@@ -181,14 +195,18 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
           name?: string;
           value?: unknown;
           percent?: number;
-          data?: { tooltipDetails?: readonly string[] };
+          data?: { tooltipDetails?: readonly string[]; tooltipValueText?: string };
         }) => {
           const marker = params?.marker ?? '';
           const name = params?.name ?? '';
           const rawValue = Number(params?.value ?? 0);
-          const formattedValue = Number.isFinite(rawValue)
-            ? this.numberFormatService.formatNumber(rawValue)
-            : `${params?.value ?? ''}`;
+          const customTooltipValueText = params?.data?.tooltipValueText;
+          const formattedValue =
+            typeof customTooltipValueText === 'string' && customTooltipValueText.trim().length > 0
+              ? customTooltipValueText
+              : Number.isFinite(rawValue)
+                ? this.numberFormatService.formatNumber(rawValue)
+                : `${params?.value ?? ''}`;
           const percent = Number(params?.percent ?? 0);
           const details = Array.isArray(params?.data?.tooltipDetails) ? params.data.tooltipDetails : [];
           const baseWithoutPercent = `${marker}${formatTooltipLabelValue(`${name}:`, formattedValue)}`;
@@ -207,7 +225,15 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
       },
       legend: {
         show: showLegend && pieData.length > 0,
-        bottom: 0,
+        ...(useRightLegend
+          ? {
+              orient: 'vertical' as const,
+              right: 0,
+              top: 'middle' as const,
+            }
+          : {
+              bottom: 0,
+            }),
         textStyle: {
           color: foreground,
           fontFamily,
@@ -217,8 +243,8 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
         {
           name: 'Pie',
           type: 'pie',
-          radius: this.donut() ? ['40%', '70%'] : '70%',
-          center: ['50%', showLegend ? '42%' : '50%'],
+          radius: pieRadius,
+          center: useRightLegend ? ['30%', '50%'] : ['50%', showLegend ? '42%' : '50%'],
           avoidLabelOverlap: true,
           minAngle: 2,
           label: {

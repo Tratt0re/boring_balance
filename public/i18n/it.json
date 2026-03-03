@@ -451,6 +451,9 @@
     "cards": {
       "netWorth": {
         "title": "Patrimonio netto totale",
+        "summaryTitle": "Patrimonio netto",
+        "receivablesPayablesTitle": "Crediti e debiti",
+        "allocationTitle": "Allocazione",
         "descriptionDailyAverage": "Media patrimonio netto/giorno (MTD): {{value}}/giorno",
         "tooltips": {
           "averageDailyChangePositive": "Il tuo patrimonio netto totale sta aumentando in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
@@ -466,6 +469,7 @@
       },
       "monthlyTotals": {
         "title": "Entrate, spese e flusso di cassa netto",
+        "segmentTitle": "Entrate e spese",
         "descriptionCurrentYear": "Anno corrente: {{year}}",
         "loading": "Caricamento analisi...",
         "loadFailedWithError": "Caricamento analisi non riuscito: {{error}}",
@@ -475,6 +479,12 @@
           "expenses": "Spese",
           "netCashflow": "Flusso di cassa netto"
         }
+      },
+      "activity": {
+        "title": "Attivita",
+        "latestTransactions": "Ultimi {{count}} movimenti",
+        "latestTransfers": "Ultimi {{count}} trasferimenti",
+        "loadFailed": "Impossibile caricare le attivita."
       },
       "recentTransactions": {
         "title": "Ultimi movimenti",

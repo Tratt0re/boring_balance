@@ -48,7 +48,7 @@ export interface AppBarChartSeries {
   templateUrl: './bar-chart.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block',
+    class: 'block min-w-0 w-full max-w-full',
   },
 })
 export class AppBarChartComponent implements OnInit, OnDestroy {

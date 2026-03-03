@@ -1,0 +1,31 @@
+<app-base-card
+  class="h-full"
+  [style.height.%]="100"
+  [zTitle]="'overview.cards.netWorth.allocationTitle' | translate"
+>
+  @if (isLoading()) {
+    <div class="flex h-40 items-center justify-center">
+      <z-loader zSize="default" />
+    </div>
+  } @else if (loadError()) {
+    <p class="text-sm text-destructive">{{ 'overview.errors.summaryLoad' | translate }}</p>
+  } @else if (distributionPieItems().length === 0) {
+    <div class="flex h-24 items-center justify-center rounded-md border border-border/50 bg-muted/30">
+      <p class="text-xs text-muted-foreground">{{ 'overview.cards.netWorth.emptyDistribution' | translate }}</p>
+    </div>
+  } @else {
+    <app-pie-chart
+      class="mt-1"
+      [data]="distributionPieItems()"
+      [showLegend]="true"
+      [showLabels]="false"
+      [legendPosition]="'right'"
+      [donut]="false"
+      [radiusScale]="3"
+      [dimOthersOnFocus]="true"
+      [blurOpacity]="0.2"
+      [tooltipShowPercentage]="true"
+      [height]="pieChartHeight()"
+    ></app-pie-chart>
+  }
+</app-base-card>

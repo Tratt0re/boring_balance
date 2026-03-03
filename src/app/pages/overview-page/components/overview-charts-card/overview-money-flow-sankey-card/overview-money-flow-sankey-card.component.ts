@@ -10,6 +10,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -27,7 +28,7 @@ import {
   resolveVisualColorHex,
   toAmount,
   toMonthRangeTimestamps,
-} from '../overview-cards.utils';
+} from '../../overview-cards.utils';
 
 const AMOUNT_CENTS_DIVISOR = 100;
 const MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP = '16rem';
@@ -36,6 +37,7 @@ const MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE = '18rem';
 @Component({
   selector: 'app-overview-money-flow-sankey-card',
   imports: [
+    NgTemplateOutlet,
     AppBaseCardComponent,
     AppSankeyChartComponent,
     TranslatePipe,
@@ -55,11 +57,16 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
   readonly isSmallScreen = input(false);
+  readonly chartHeightOverride = input<string | null>(null);
+  readonly showCard = input(true);
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly nodes = signal<readonly AppSankeyChartNode[]>([]);
   protected readonly links = signal<readonly AppSankeyChartLink[]>([]);
+  protected readonly resolvedChartHeight = computed(() =>
+    this.resolveChartHeight(),
+  );
   protected readonly chartHeight = computed(() =>
     this.isSmallScreen() ? MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE : MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP,
   );
@@ -118,6 +125,15 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
         year: 'numeric',
       }).format(new Date(this.year(), this.monthIndex(), 1));
     }
+  }
+
+  private resolveChartHeight(): string {
+    const requestedHeight = this.chartHeightOverride();
+    if (typeof requestedHeight === 'string' && requestedHeight.trim().length > 0) {
+      return requestedHeight;
+    }
+
+    return this.chartHeight();
   }
 
   private async loadData(): Promise<void> {

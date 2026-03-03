@@ -451,6 +451,9 @@
     "cards": {
       "netWorth": {
         "title": "Total net worth",
+        "summaryTitle": "Net Worth",
+        "receivablesPayablesTitle": "Receivables & Payables",
+        "allocationTitle": "Allocation",
         "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
         "tooltips": {
           "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
@@ -466,6 +469,7 @@
       },
       "monthlyTotals": {
         "title": "Income, expenses and net cashflow",
+        "segmentTitle": "Income & expenses",
         "descriptionCurrentYear": "Current year: {{year}}",
         "loading": "Loading analytics...",
         "loadFailedWithError": "Failed to load analytics: {{error}}",
@@ -475,6 +479,12 @@
           "expenses": "Expenses",
           "netCashflow": "Net Cashflow"
         }
+      },
+      "activity": {
+        "title": "Activity",
+        "latestTransactions": "Latest {{count}} transactions",
+        "latestTransfers": "Latest {{count}} transfers",
+        "loadFailed": "Unable to load activity."
       },
       "recentTransactions": {
         "title": "Last transactions",

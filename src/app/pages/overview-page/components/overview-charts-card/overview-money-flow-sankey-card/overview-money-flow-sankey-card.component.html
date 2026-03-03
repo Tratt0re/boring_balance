@@ -1,26 +1,23 @@
-<app-base-card
-  [style.height.%]="100"
-  [zTitle]="'overview.cards.moneyFlowSankey.title' | translate"
-  [zDescription]="'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }"
->
+<ng-template #cardContent>
   @if (isLoading()) {
-    <div class="mt-2 flex h-64 items-center justify-center">
+    <div class="flex h-64 items-center justify-center" [class.mt-2]="showCard()">
       <div class="flex flex-col items-center gap-3 text-muted-foreground">
         <z-loader zSize="lg" />
         <p class="text-sm">{{ 'overview.cards.moneyFlowSankey.loading' | translate }}</p>
       </div>
     </div>
   } @else if (loadError(); as loadError) {
-    <div class="mt-2 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive" [class.mt-2]="showCard()">
       {{ 'overview.cards.moneyFlowSankey.loadFailedWithError' | translate: { error: loadError } }}
     </div>
   } @else if (links().length === 0) {
-    <div class="mt-2 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+    <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground" [class.mt-2]="showCard()">
       {{ 'overview.cards.moneyFlowSankey.empty' | translate }}
     </div>
   } @else {
     <app-sankey-chart
-      class="mt-2"
+      [class.h-full]="!showCard()"
+      [class.mt-2]="showCard()"
       [nodes]="nodes()"
       [links]="links()"
       [showLabels]="true"
@@ -31,9 +28,21 @@
       [nodeWidth]="12"
       [nodeGap]="8"
       [layoutIterations]="48"
-      [height]="chartHeight()"
+      [height]="resolvedChartHeight()"
       [tooltipCurrencyCode]="currencyCode()"
       [tooltipShowPercent]="true"
     ></app-sankey-chart>
   }
-</app-base-card>
+</ng-template>
+
+@if (showCard()) {
+  <app-base-card
+    [style.height.%]="100"
+    [zTitle]="'overview.cards.moneyFlowSankey.title' | translate"
+    [zDescription]="'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }"
+  >
+    <ng-container [ngTemplateOutlet]="cardContent"></ng-container>
+  </app-base-card>
+} @else {
+  <ng-container [ngTemplateOutlet]="cardContent"></ng-container>
+}

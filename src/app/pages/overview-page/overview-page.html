@@ -1,31 +1,34 @@
-<section class="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:items-stretch">
-  <app-overview-net-worth-card
-    class="lg:col-span-5 lg:self-stretch"
+<section class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_22.5rem] lg:items-start">
+  <div class="grid min-w-0 grid-cols-1 gap-5 lg:col-span-2 lg:flex lg:h-[calc(100dvh-9rem)] lg:flex-col lg:overflow-y-auto lg:pr-1">
+    <div class="grid min-w-0 grid-cols-1 gap-5 lg:shrink-0 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-stretch">
+      <app-overview-net-worth-card
+        class="min-w-0"
+        [year]="currentCalendarYear"
+        [monthIndex]="currentCalendarMonthIndex"
+      ></app-overview-net-worth-card>
+
+      <app-overview-allocation-card
+        class="min-w-0"
+        [year]="currentCalendarYear"
+        [monthIndex]="currentCalendarMonthIndex"
+        [isSmallScreen]="isSingleColumnLayout()"
+        [groupSmallSegments]="false"
+      ></app-overview-allocation-card>
+    </div>
+
+    <app-overview-cashflow-card
+      class="min-w-0 lg:min-h-104 lg:flex-1"
+      [year]="currentCalendarYear"
+      [monthIndex]="currentCalendarMonthIndex"
+      [isSmallScreen]="isSingleColumnLayout()"
+    ></app-overview-cashflow-card>
+  </div>
+
+  <app-overview-activity-panel
+    class="min-h-0 lg:sticky lg:top-0 lg:self-start lg:h-[calc(100dvh-9rem)] lg:overflow-hidden"
     [year]="currentCalendarYear"
     [monthIndex]="currentCalendarMonthIndex"
-    [isSmallScreen]="isSingleColumnLayout()"
-  ></app-overview-net-worth-card>
-
-  <app-overview-monthly-totals-card
-    class="lg:col-span-7 lg:self-stretch"
-    [year]="currentCalendarYear"
-    [isSmallScreen]="isSingleColumnLayout()"
-  ></app-overview-monthly-totals-card>
-
-  <app-overview-recent-transactions-card
-    class="lg:col-span-5 lg:col-start-1 self-start"
-    [year]="currentCalendarYear"
-    [monthIndex]="currentCalendarMonthIndex"
-    [limit]="recentTransactionsLimit"
-    [height]="lastTransactionsCardHeight()"
-    (transactionStateChanged)="onRecentTransactionStateChanged()"
-  ></app-overview-recent-transactions-card>
-
-  <app-overview-money-flow-sankey-card
-    #moneyFlowSankeyCard
-    class="lg:col-span-7 self-start"
-    [year]="currentCalendarYear"
-    [monthIndex]="currentCalendarMonthIndex"
-    [isSmallScreen]="isSingleColumnLayout()"
-  ></app-overview-money-flow-sankey-card>
+    [limit]="recentActivityLimit"
+    (activityChanged)="onOverviewActivityChanged()"
+  ></app-overview-activity-panel>
 </section>

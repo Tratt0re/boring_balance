@@ -1,0 +1,45 @@
+<app-base-card
+  [style.height.%]="100"
+  [zTitle]="cardTitleKey() | translate"
+  [zBodyFill]="true"
+>
+  <div class="flex h-full min-h-0 flex-col gap-4">
+    <div class="shrink-0">
+      <z-segmented zSize="sm" [zFull]="true" [zDefaultValue]="activeView()" (zChange)="onViewChange($event)">
+        <z-segmented-item
+          value="incomeExpenses"
+          [label]="'overview.cards.monthlyTotals.segmentTitle' | translate"
+        ></z-segmented-item>
+        <z-segmented-item
+          value="moneyFlow"
+          [label]="'overview.cards.moneyFlowSankey.title' | translate"
+        ></z-segmented-item>
+      </z-segmented>
+    </div>
+
+    <div class="grid min-w-0 flex-1 min-h-[20rem] overflow-hidden">
+      <app-overview-monthly-totals-card
+        class="col-start-1 row-start-1 h-full min-h-0 min-w-0 w-full max-w-full overflow-hidden transition-opacity duration-300 ease-out"
+        [class.opacity-0]="activeView() !== 'incomeExpenses'"
+        [class.pointer-events-none]="activeView() !== 'incomeExpenses'"
+        [attr.aria-hidden]="activeView() !== 'incomeExpenses'"
+        [year]="year()"
+        [isSmallScreen]="isSmallScreen()"
+        [chartHeightOverride]="'100%'"
+        [showCard]="false"
+      ></app-overview-monthly-totals-card>
+
+      <app-overview-money-flow-sankey-card
+        class="col-start-1 row-start-1 h-full min-h-0 min-w-0 w-full max-w-full overflow-hidden transition-opacity duration-300 ease-out"
+        [class.opacity-0]="activeView() !== 'moneyFlow'"
+        [class.pointer-events-none]="activeView() !== 'moneyFlow'"
+        [attr.aria-hidden]="activeView() !== 'moneyFlow'"
+        [year]="year()"
+        [monthIndex]="monthIndex()"
+        [isSmallScreen]="isSmallScreen()"
+        [chartHeightOverride]="'100%'"
+        [showCard]="false"
+      ></app-overview-money-flow-sankey-card>
+    </div>
+  </div>
+</app-base-card>
