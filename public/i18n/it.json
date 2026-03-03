@@ -221,7 +221,7 @@
         "title": "Sincronizzazione"
       },
       "exportImport": {
-        "title": "Export / Import"
+        "title": "Import / Export"
       }
     },
     "backups": {
@@ -425,18 +425,88 @@
       }
     },
     "exportImport": {
+      "overview": {
+        "description": "Tieni una copia Excel ordinata dei tuoi dati, oppure parti dal template ufficiale quando vuoi importarli in modo sicuro."
+      },
       "export": {
         "title": "Export",
-        "description": "Esporta transazioni e trasferimenti in un file Excel da controllare, condividere o archiviare.",
+        "description": "Salva una copia Excel chiara delle tue attivita e impostazioni per controllarla, condividerla o conservarla.",
         "lastExportLabel": "Ultimo export"
       },
       "import": {
-        "title": "Import",
-        "placeholder": "Gli strumenti di import non sono ancora disponibili. Nel frattempo usa l'export per avere una copia portabile."
+        "title": "Import da template Excel",
+        "description": "Parti dal template ufficiale, controlla tutto prima e importa solo quando il file e pronto.",
+        "warning": "L'import viene prima validato. Se ci sono errori, non viene importato nulla.",
+        "selectedFileLabel": "File selezionato",
+        "template": {
+          "title": "Template di import",
+          "description": "Scarica il template Excel, compilalo con calma e poi torna qui per importarlo.",
+          "messages": {
+            "success": "Template salvato: {{fileName}}",
+            "error": "Impossibile salvare il template di import."
+          }
+        },
+        "actions": {
+          "title": "Importa file dati",
+          "description": "Scegli il file compilato, controlla gli eventuali problemi segnalati dall'app e importa solo quando e tutto a posto."
+        },
+        "validation": {
+          "previewTitle": "Anteprima validazione",
+          "previewDescription": "Queste righe sono pronte per l'import.",
+          "errorTitle": "Errori di validazione",
+          "errorDescription": "Correggi le righe qui sotto e valida di nuovo prima di importare."
+        },
+        "summary": {
+          "accounts": "Conti",
+          "categories": "Categorie",
+          "transactions": "Transazioni",
+          "transfers": "Trasferimenti"
+        },
+        "errors": {
+          "count": "{{count}} errori trovati",
+          "tableTitle": "Errori di import",
+          "tableDescription": "Ogni errore indica il foglio e la riga esatta da correggere.",
+          "empty": "Nessun errore di import.",
+          "columns": {
+            "sheet": "Foglio",
+            "row": "Riga",
+            "column": "Colonna",
+            "message": "Messaggio"
+          }
+        },
+        "result": {
+          "title": "Ultimo risultato di import",
+          "description": "Dopo un import riuscito l'app verra ricaricata.",
+          "labels": {
+            "inserted": "Inseriti",
+            "updated": "Aggiornati",
+            "skipped": "Saltati"
+          }
+        },
+        "confirm": {
+          "title": "Importare i dati da Excel?",
+          "description": "Questa operazione importera dati nel tuo database.",
+          "actions": {
+            "import": "Importa",
+            "cancel": "Annulla"
+          }
+        },
+        "messages": {
+          "fileRequired": "Seleziona prima un file Excel.",
+          "selectError": "Impossibile selezionare un file Excel.",
+          "validateError": "Impossibile validare il file Excel selezionato.",
+          "importSuccess": "Import completato. Ricarico i dati dell'app...",
+          "importError": "Import non riuscito."
+        }
       },
       "controls": {
         "exportExcel": "Esporta in Excel",
-        "importData": "Importa DB / CSV"
+        "importData": "Importa DB / CSV",
+        "downloadTemplate": "Scarica template",
+        "selectFile": "Seleziona file Excel",
+        "removeSelectedFile": "Rimuovi file",
+        "validateImport": "Valida",
+        "importExcel": "Importa"
       },
       "messages": {
         "success": "Export completato: {{fileName}}",

@@ -7,6 +7,7 @@ const planItemsController = require('./plan-items.controller');
 const backupController = require('./backup.controller');
 const syncController = require('./sync.controller');
 const dataExportController = require('./data-export.controller');
+const importExcelController = require('./import-excel.controller');
 const { transactionsController, transfersController } = require('./transactions');
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
   backupController,
   syncController,
   dataExportController,
+  importExcelController,
   transactionsController,
   transfersController,
 };

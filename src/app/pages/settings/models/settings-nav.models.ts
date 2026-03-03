@@ -28,8 +28,8 @@ export const SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
   {
     key: 'export',
-    label: 'dataBackups.exportImport.export.title',
-    description: 'dataBackups.exportImport.export.description',
+    label: 'dataBackups.sections.exportImport.title',
+    description: 'dataBackups.exportImport.overview.description',
   },
   {
     key: 'about',

@@ -3,5 +3,13 @@
 }
 
 .export-path {
-  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.import-path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

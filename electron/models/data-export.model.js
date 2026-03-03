@@ -1,3 +1,5 @@
+const fs = require('node:fs');
+const path = require('node:path');
 const { getDatabase, selectOne, selectRows } = require('../database');
 const { TRANSFER_CATEGORY_NAME } = require('./transactions/constants');
 const { formatUnixTimestampMillisecondsToDate } = require('../utils/date-utils');
@@ -11,6 +13,7 @@ const TRANSACTIONS_SHEET_NAME = 'transactions';
 const TRANSFERS_SHEET_NAME = 'transfers';
 const ACCOUNTS_SHEET_NAME = 'accounts';
 const CATEGORIES_SHEET_NAME = 'categories';
+const IMPORT_TEMPLATE_FILE_NAME = 'boring-balance-import-template.xlsx';
 
 const TRANSACTIONS_COLUMNS = Object.freeze([
   'date',
@@ -161,6 +164,20 @@ function selectCategorySheetRows(database) {
   }));
 }
 
+function resolveImportTemplatePath() {
+  return path.join(__dirname, '..', 'files', IMPORT_TEMPLATE_FILE_NAME);
+}
+
+function readImportTemplateBuffer() {
+  const templatePath = resolveImportTemplatePath();
+
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(`Import template not found: ${templatePath}`);
+  }
+
+  return fs.readFileSync(templatePath);
+}
+
 async function buildExportWorkbook(database = getDatabase()) {
   const normalizedDatabase = ensureDatabase(database);
   const transferCategoryId = resolveTransferCategoryId(normalizedDatabase);
@@ -195,5 +212,7 @@ async function buildExportWorkbook(database = getDatabase()) {
 }
 
 module.exports = {
+  IMPORT_TEMPLATE_FILE_NAME,
   buildExportWorkbook,
+  readImportTemplateBuffer,
 };

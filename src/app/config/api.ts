@@ -21,6 +21,7 @@ export enum APIChannel {
   TRANSACTIONS = 'transactions',
   BACKUP = 'backup',
   DATA_EXPORT = 'dataExport',
+  IMPORT_EXCEL = 'importExcel',
   SYNC = 'sync',
 }
 
@@ -121,6 +122,12 @@ export interface ElectronIpcClient {
   };
   readonly dataExport: {
     readonly exportXlsx: OptionalIpcRequest<void, DTO.ExportXlsxResponse>;
+    readonly downloadImportTemplate: OptionalIpcRequest<void, DTO.DownloadImportTemplateResponse>;
+  };
+  readonly importExcel: {
+    readonly selectFile: OptionalIpcRequest<void, DTO.ImportExcelSelectFileResponse>;
+    readonly validate: IpcRequest<DTO.ImportExcelValidateDto, DTO.ImportExcelValidateResponse>;
+    readonly commit: IpcRequest<DTO.ImportExcelCommitDto, DTO.ImportExcelCommitResponse>;
   };
   readonly sync: {
     readonly getSettings: OptionalIpcRequest<void, DTO.SyncGetSettingsResponse>;

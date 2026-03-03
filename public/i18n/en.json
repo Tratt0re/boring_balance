@@ -221,7 +221,7 @@
         "title": "Sync"
       },
       "exportImport": {
-        "title": "Export / Import"
+        "title": "Import / Export"
       }
     },
     "backups": {
@@ -425,18 +425,88 @@
       }
     },
     "exportImport": {
+      "overview": {
+        "description": "Keep a clear Excel copy of your data, or start from the official template when you want to bring information in safely."
+      },
       "export": {
         "title": "Export",
-        "description": "Export transactions and transfers to an Excel file you can review, share, or archive.",
+        "description": "Save a clean Excel copy of your activity and setup so you can review it, share it, or keep it for later.",
         "lastExportLabel": "Last export"
       },
       "import": {
-        "title": "Import",
-        "placeholder": "Import tools are not available yet. Use export for a portable copy in the meantime."
+        "title": "Import from Excel template",
+        "description": "Start with the official template, review everything first, and import only when the file is ready.",
+        "warning": "Imports are validated first. If errors exist, nothing is imported.",
+        "selectedFileLabel": "Selected file",
+        "template": {
+          "title": "Import template",
+          "description": "Download the Excel template, fill it in at your pace, then come back here to import it.",
+          "messages": {
+            "success": "Template saved: {{fileName}}",
+            "error": "Failed to save the import template."
+          }
+        },
+        "actions": {
+          "title": "Import data file",
+          "description": "Pick the completed workbook, check any issues the app finds, and import only when everything looks right."
+        },
+        "validation": {
+          "previewTitle": "Validation preview",
+          "previewDescription": "These rows are ready to be imported.",
+          "errorTitle": "Validation errors",
+          "errorDescription": "Fix the rows below and validate again before importing."
+        },
+        "summary": {
+          "accounts": "Accounts",
+          "categories": "Categories",
+          "transactions": "Transactions",
+          "transfers": "Transfers"
+        },
+        "errors": {
+          "count": "{{count}} errors found",
+          "tableTitle": "Import errors",
+          "tableDescription": "Each error points to the exact worksheet row that must be fixed.",
+          "empty": "No import errors.",
+          "columns": {
+            "sheet": "Sheet",
+            "row": "Row",
+            "column": "Column",
+            "message": "Message"
+          }
+        },
+        "result": {
+          "title": "Last import result",
+          "description": "The app will reload after a successful import.",
+          "labels": {
+            "inserted": "Inserted",
+            "updated": "Updated",
+            "skipped": "Skipped"
+          }
+        },
+        "confirm": {
+          "title": "Import data from Excel?",
+          "description": "This will import data into your database.",
+          "actions": {
+            "import": "Import",
+            "cancel": "Cancel"
+          }
+        },
+        "messages": {
+          "fileRequired": "Select an Excel file first.",
+          "selectError": "Failed to select an Excel file.",
+          "validateError": "Failed to validate the selected Excel file.",
+          "importSuccess": "Import completed. Reloading app data...",
+          "importError": "Import failed."
+        }
       },
       "controls": {
         "exportExcel": "Export to Excel",
-        "importData": "Import DB / CSV"
+        "importData": "Import DB / CSV",
+        "downloadTemplate": "Download template",
+        "selectFile": "Select Excel file",
+        "removeSelectedFile": "Remove file",
+        "validateImport": "Validate",
+        "importExcel": "Import"
       },
       "messages": {
         "success": "Export completed: {{fileName}}",

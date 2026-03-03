@@ -13,6 +13,13 @@ function resolveDefaultExportPath() {
   );
 }
 
+function resolveDefaultImportTemplatePath() {
+  return path.join(
+    app.getPath('documents'),
+    dataExportModel.IMPORT_TEMPLATE_FILE_NAME,
+  );
+}
+
 function ensureXlsxExtension(filePath) {
   const normalizedFilePath = filePath.trim();
   if (path.extname(normalizedFilePath).toLowerCase() === XLSX_EXTENSION) {
@@ -48,6 +55,33 @@ async function exportXlsx() {
   };
 }
 
+async function downloadImportTemplate() {
+  const result = await dialog.showSaveDialog({
+    title: 'Save import template',
+    defaultPath: resolveDefaultImportTemplatePath(),
+    filters: [
+      {
+        name: 'Excel Workbook',
+        extensions: ['xlsx'],
+      },
+    ],
+  });
+
+  if (result.canceled || !result.filePath) {
+    return null;
+  }
+
+  const filePath = ensureXlsxExtension(result.filePath);
+  const templateBuffer = dataExportModel.readImportTemplateBuffer();
+  safeWriteFileAtomic(filePath, templateBuffer);
+
+  return {
+    filePath,
+    fileName: path.basename(filePath),
+  };
+}
+
 module.exports = {
+  downloadImportTemplate,
   exportXlsx,
 };

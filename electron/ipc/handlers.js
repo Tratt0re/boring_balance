@@ -8,6 +8,7 @@ const {
   backupController,
   syncController,
   dataExportController,
+  importExcelController,
   transactionsController,
   transfersController,
 } = require('../controllers');
@@ -77,6 +78,11 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.backup.restore]: backupController.restore,
 
   [CHANNELS.dataExport.exportXlsx]: dataExportController.exportXlsx,
+  [CHANNELS.dataExport.downloadImportTemplate]: dataExportController.downloadImportTemplate,
+
+  [CHANNELS.importExcel.selectFile]: importExcelController.selectFile,
+  [CHANNELS.importExcel.validate]: importExcelController.validate,
+  [CHANNELS.importExcel.commit]: importExcelController.commit,
 
   [CHANNELS.sync.getSettings]: syncController.getSettings,
   [CHANNELS.sync.updateSettings]: syncController.updateSettings,

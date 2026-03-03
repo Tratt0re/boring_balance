@@ -71,6 +71,12 @@ const CHANNELS = Object.freeze({
   }),
   dataExport: Object.freeze({
     exportXlsx: 'dataExport:exportXlsx',
+    downloadImportTemplate: 'dataExport:downloadImportTemplate',
+  }),
+  importExcel: Object.freeze({
+    selectFile: 'importExcel:selectFile',
+    validate: 'importExcel:validate',
+    commit: 'importExcel:commit',
   }),
   sync: Object.freeze({
     getSettings: 'sync:getSettings',

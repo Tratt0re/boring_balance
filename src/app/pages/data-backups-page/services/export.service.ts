@@ -4,15 +4,20 @@ import { BehaviorSubject, Observable, finalize, from, map, of } from 'rxjs';
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
-import type { ExportXlsxResponseDto } from '../models/export.models';
+import type {
+  DownloadImportTemplateResponseDto,
+  ExportXlsxResponseDto,
+} from '../models/export.models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExportService extends BaseIpcService<APIChannel.DATA_EXPORT> {
   private readonly loadingSubject = new BehaviorSubject(false);
+  private readonly downloadTemplateLoadingSubject = new BehaviorSubject(false);
 
   readonly loading$ = this.loadingSubject.asObservable();
+  readonly downloadTemplateLoading$ = this.downloadTemplateLoadingSubject.asObservable();
 
   constructor() {
     super(APIChannel.DATA_EXPORT);
@@ -26,12 +31,27 @@ export class ExportService extends BaseIpcService<APIChannel.DATA_EXPORT> {
     this.loadingSubject.next(true);
 
     return from(this.ipcClient.exportXlsx()).pipe(
-      map((result) => this.normalizeExportResult(result)),
+      map((result) => this.normalizeFileResult(result)),
       finalize(() => this.loadingSubject.next(false)),
     );
   }
 
-  private normalizeExportResult(value: DTO.ExportXlsxResponse): ExportXlsxResponseDto {
+  downloadImportTemplate(): Observable<DownloadImportTemplateResponseDto> {
+    if (this.downloadTemplateLoadingSubject.value) {
+      return of(null);
+    }
+
+    this.downloadTemplateLoadingSubject.next(true);
+
+    return from(this.ipcClient.downloadImportTemplate()).pipe(
+      map((result) => this.normalizeFileResult(result)),
+      finalize(() => this.downloadTemplateLoadingSubject.next(false)),
+    );
+  }
+
+  private normalizeFileResult(
+    value: DTO.ExportXlsxResponse | DTO.DownloadImportTemplateResponse,
+  ): ExportXlsxResponseDto | DownloadImportTemplateResponseDto {
     if (!value) {
       return null;
     }

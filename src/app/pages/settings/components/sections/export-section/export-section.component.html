@@ -1,6 +1,6 @@
-<div class="rounded-lg border border-border/60 bg-card p-4">
-  <div class="flex flex-col gap-6">
-    <section class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+<div class="space-y-4">
+  <section class="rounded-lg border border-border/60 bg-card p-4">
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
       <div class="min-w-0">
         <h3 class="text-sm font-semibold tracking-tight">
           {{ 'dataBackups.exportImport.export.title' | translate }}
@@ -15,7 +15,9 @@
               {{ 'dataBackups.exportImport.export.lastExportLabel' | translate }}
             </p>
             <p class="mt-1 text-sm font-medium">{{ result.fileName }}</p>
-            <p class="export-path mt-1 text-xs text-muted-foreground">{{ result.filePath }}</p>
+            <p class="export-path mt-1 text-xs text-muted-foreground" [title]="result.filePath">
+              {{ result.filePath }}
+            </p>
           </div>
         }
       </div>
@@ -23,28 +25,282 @@
       <div class="flex shrink-0 items-center gap-2">
         <button
           z-button
-          [zDisabled]="exportLoading()"
+          [zDisabled]="exportLoading() || downloadImportTemplateLoading()"
           [zLoading]="exportLoading()"
           (click)="onExportXlsx()"
         >
           {{ 'dataBackups.exportImport.controls.exportExcel' | translate }}
         </button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="rounded-md border border-dashed border-border/70 bg-muted/20 px-3 py-3">
-      <h4 class="text-sm font-medium">
-        {{ 'dataBackups.exportImport.import.title' | translate }}
-      </h4>
-      <p class="mt-1 text-sm text-muted-foreground">
-        {{ 'dataBackups.exportImport.import.placeholder' | translate }}
-      </p>
-
-      <div class="mt-3">
-        <button z-button zType="outline" [zDisabled]="true">
-          {{ 'dataBackups.exportImport.controls.importData' | translate }}
-        </button>
+  <section class="rounded-lg border border-border/60 bg-card p-4">
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div class="min-w-0">
+          <h3 class="text-sm font-semibold tracking-tight">
+            {{ 'dataBackups.exportImport.import.title' | translate }}
+          </h3>
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ 'dataBackups.exportImport.import.description' | translate }}
+          </p>
+          <div class="mt-3 rounded-md border border-amber-600/25 bg-amber-500/10 px-3 py-2 text-sm text-amber-700">
+            {{ 'dataBackups.exportImport.import.warning' | translate }}
+          </div>
+        </div>
       </div>
-    </section>
-  </div>
+
+      <div class="rounded-md border border-border/60 bg-muted/20 px-3 py-3">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div class="min-w-0">
+            <h4 class="text-sm font-medium">
+              {{ 'dataBackups.exportImport.import.template.title' | translate }}
+            </h4>
+            <p class="mt-1 text-sm text-muted-foreground">
+              {{ 'dataBackups.exportImport.import.template.description' | translate }}
+            </p>
+          </div>
+
+          <div class="flex shrink-0 items-center gap-2">
+            <button
+              z-button
+              zType="outline"
+              [zDisabled]="templateBusy()"
+              [zLoading]="downloadImportTemplateLoading()"
+              (click)="onDownloadImportTemplate()"
+            >
+              {{ 'dataBackups.exportImport.controls.downloadTemplate' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-md border border-border/60 bg-muted/20 px-3 py-3">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div class="min-w-0">
+            <h4 class="text-sm font-medium">
+              {{ 'dataBackups.exportImport.import.actions.title' | translate }}
+            </h4>
+            <p class="mt-1 text-sm text-muted-foreground">
+              {{ 'dataBackups.exportImport.import.actions.description' | translate }}
+            </p>
+          </div>
+
+          <div class="flex shrink-0 flex-wrap items-center gap-2">
+            <button
+              z-button
+              zType="outline"
+              [zDisabled]="!canSelectImportFile()"
+              [zLoading]="selectingImportFile()"
+              (click)="onSelectImportFile()"
+            >
+              {{ 'dataBackups.exportImport.controls.selectFile' | translate }}
+            </button>
+            <button
+              z-button
+              zType="outline"
+              [zDisabled]="importBusy() || downloadImportTemplateLoading()"
+              [zLoading]="validatingImport()"
+              (click)="onValidateImport()"
+            >
+              {{ 'dataBackups.exportImport.controls.validateImport' | translate }}
+            </button>
+            <button
+              z-button
+              [zDisabled]="!canImport() || downloadImportTemplateLoading()"
+              [zLoading]="importingData()"
+              (click)="onConfirmImport()"
+            >
+              {{ 'dataBackups.exportImport.controls.importExcel' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (selectedImportFilePath(); as filePath) {
+        <div class="rounded-md border border-border/60 bg-muted/30 px-3 py-2">
+          <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+            <div class="min-w-0">
+              <p class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.selectedFileLabel' | translate }}
+              </p>
+              <p class="mt-1 text-sm font-medium">{{ selectedImportFileName() }}</p>
+              <p class="import-path mt-1 text-xs text-muted-foreground" [title]="filePath">
+                {{ filePath }}
+              </p>
+            </div>
+
+            <div class="flex shrink-0 items-center gap-2">
+              <button
+                z-button
+                zType="outline"
+                [zDisabled]="!canRemoveImportFile()"
+                (click)="onRemoveImportFile()"
+              >
+                {{ 'dataBackups.exportImport.controls.removeSelectedFile' | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (importPreviewSummary(); as summary) {
+        <div class="rounded-md border border-emerald-600/20 bg-emerald-500/5 p-3">
+          <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+            <h4 class="text-sm font-medium">
+              {{ 'dataBackups.exportImport.import.validation.previewTitle' | translate }}
+            </h4>
+            <p class="text-xs text-muted-foreground">
+              {{ 'dataBackups.exportImport.import.validation.previewDescription' | translate }}
+            </p>
+          </div>
+
+          <div class="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-md border border-border/60 bg-background px-3 py-2">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.accounts' | translate }}
+              </p>
+              <p class="mt-1 text-lg font-semibold">{{ summary.accounts }}</p>
+            </div>
+            <div class="rounded-md border border-border/60 bg-background px-3 py-2">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.categories' | translate }}
+              </p>
+              <p class="mt-1 text-lg font-semibold">{{ summary.categories }}</p>
+            </div>
+            <div class="rounded-md border border-border/60 bg-background px-3 py-2">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.transactions' | translate }}
+              </p>
+              <p class="mt-1 text-lg font-semibold">{{ summary.transactions }}</p>
+            </div>
+            <div class="rounded-md border border-border/60 bg-background px-3 py-2">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.transfers' | translate }}
+              </p>
+              <p class="mt-1 text-lg font-semibold">{{ summary.transfers }}</p>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (!importValidation()?.ok && importErrorRows().length > 0) {
+        <div class="rounded-md border border-destructive/20 bg-destructive/5 p-3">
+          <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+            <h4 class="text-sm font-medium text-destructive">
+              {{ 'dataBackups.exportImport.import.validation.errorTitle' | translate }}
+            </h4>
+            <p class="text-xs text-muted-foreground">
+              {{
+                'dataBackups.exportImport.import.errors.count'
+                  | translate: { count: importErrorRows().length }
+              }}
+            </p>
+          </div>
+
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ 'dataBackups.exportImport.import.validation.errorDescription' | translate }}
+          </p>
+
+          <div class="mt-3">
+            <app-data-table
+              [data]="importErrorRows()"
+              [structure]="importErrorTableStructure"
+              [title]="'dataBackups.exportImport.import.errors.tableTitle'"
+              [description]="'dataBackups.exportImport.import.errors.tableDescription'"
+              [emptyMessage]="'dataBackups.exportImport.import.errors.empty'"
+              [appearance]="'default'"
+              [showEmpty]="false"
+              [hoverable]="true"
+              [selectable]="false"
+              [hasActionColumn]="false"
+              [showPagination]="false"
+            />
+          </div>
+        </div>
+      }
+
+      @if (importResultSummary(); as result) {
+        <div class="rounded-md border border-border/60 bg-muted/20 p-3">
+          <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
+            <h4 class="text-sm font-medium">
+              {{ 'dataBackups.exportImport.import.result.title' | translate }}
+            </h4>
+            <p class="text-xs text-muted-foreground">
+              {{ 'dataBackups.exportImport.import.result.description' | translate }}
+            </p>
+          </div>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div class="rounded-md border border-border/60 bg-background px-3 py-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.accounts' | translate }}
+              </p>
+              <div class="mt-2 grid gap-2 sm:grid-cols-3">
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.inserted' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.accountsInserted }}</p>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.updated' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.accountsUpdated }}</p>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.skipped' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.accountsSkipped }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-md border border-border/60 bg-background px-3 py-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.categories' | translate }}
+              </p>
+              <div class="mt-2 grid gap-2 sm:grid-cols-3">
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.inserted' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.categoriesInserted }}</p>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.updated' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.categoriesUpdated }}</p>
+                </div>
+                <div>
+                  <p class="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {{ 'dataBackups.exportImport.import.result.labels.skipped' | translate }}
+                  </p>
+                  <p class="mt-1 text-base font-semibold">{{ result.categoriesSkipped }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-md border border-border/60 bg-background px-3 py-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.transactions' | translate }}
+              </p>
+              <p class="mt-2 text-base font-semibold">{{ result.transactionsInserted }}</p>
+            </div>
+
+            <div class="rounded-md border border-border/60 bg-background px-3 py-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'dataBackups.exportImport.import.summary.transfers' | translate }}
+              </p>
+              <p class="mt-2 text-base font-semibold">{{ result.transfersInserted }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
 </div>
