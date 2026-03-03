@@ -143,11 +143,13 @@
       },
       "about": {
         "title": "Info",
-        "description": "Controlla le informazioni locali dell'app e i dettagli del runtime."
+        "description": "Controlla le informazioni locali dell'app, i dettagli sulla privacy e i link del progetto."
       }
     },
     "general": {
       "intro": "Queste preferenze si aggiornano subito e restano salvate su questo dispositivo.",
+      "currencyGroupTitle": "Valuta",
+      "currencyGroupDescription": "Scegli simbolo e formato numerico usati in saldi, report e campi di input.",
       "cards": {
         "theme": {
           "title": "Tema",
@@ -191,7 +193,10 @@
       "appNameLabel": "App",
       "appVersionLabel": "Versione app",
       "appVersionUnavailable": "Non disponibile in questa build",
-      "localFirst": "Boring Balance e un'app desktop local-first. Backup, sync ed export vengono eseguiti direttamente sul dispositivo.",
+      "localFirst": "Boring Balance e un tracker di finanza personale che salva i dati sul tuo dispositivo in un database SQLite locale, cosi resti sempre tu ad averne il controllo. I tuoi dati vengono usati solo per le analisi dentro l'app e non sono condivisi all'esterno per impostazione predefinita.",
+      "openSourceNote": "La logica principale dell'app e open source ed e disponibile nel repository qui sotto.",
+      "openSourceCta": "Apri su GitHub",
+      "footer": "Creato con ❤️ da {{authorName}}",
       "runtime": {
         "title": "Runtime",
         "description": "Versioni del runtime renderer esposte tramite il bridge Electron.",

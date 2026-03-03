@@ -1,20 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { AppMetadataService } from '@/services/app-metadata.service';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardIconComponent } from '@/shared/components/icon';
 
 @Component({
   selector: 'app-about-section',
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, ZardButtonComponent, ZardIconComponent],
   templateUrl: './about-section.component.html',
   styleUrl: './about-section.component.scss',
 })
 export class AboutSectionComponent {
-  private readonly runtimeVersions = typeof window !== 'undefined'
-    ? window.electronAPI?.versions ?? null
-    : null;
+  private readonly appMetadataService = inject(AppMetadataService);
 
-  protected readonly appName = 'Boring Balance';
-  protected readonly appVersion: string | null = null;
-  protected readonly electronVersion = this.runtimeVersions?.electron ?? null;
-  protected readonly nodeVersion = this.runtimeVersions?.node ?? null;
-  protected readonly chromeVersion = this.runtimeVersions?.chrome ?? null;
+  protected readonly appName = this.appMetadataService.appInfo.name;
+  protected readonly appVersion = this.appMetadataService.appInfo.version;
+  protected readonly authorName = this.appMetadataService.appInfo.author;
+  protected readonly repositoryUrl = this.appMetadataService.appInfo.repositoryUrl;
 }

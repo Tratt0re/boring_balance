@@ -5,9 +5,11 @@ import type { CurrencyFormatStyle } from '@/config/local-preferences.config';
 import { I18nService } from '@/services/i18n.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
+import { CurrencyPreviewComponent } from '@/pages/settings/components/currency-preview/currency-preview.component';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { EDarkModes, ZardDarkMode } from '@/shared/services/dark-mode';
+import { applyThemeTransition } from '@/shared/utils/theme-transition';
 
 const CUSTOM_CURRENCY_VALUE = '__custom__';
 const DEFAULT_CUSTOM_CURRENCY_SYMBOL = 'CHF';
@@ -16,7 +18,7 @@ const CURRENCY_FORMAT_STYLE_VALUES: readonly CurrencyFormatStyle[] = ['US', 'EU_
 
 @Component({
   selector: 'app-general-section',
-  imports: [TranslatePipe, ZardInputDirective, ...ZardSelectImports],
+  imports: [TranslatePipe, CurrencyPreviewComponent, ZardInputDirective, ...ZardSelectImports],
   templateUrl: './general-section.component.html',
   styleUrl: './general-section.component.scss',
 })
@@ -37,12 +39,6 @@ export class GeneralSectionComponent {
   protected readonly selectedCurrencyOption = computed(() =>
     this.isCommonCurrencySymbol(this.selectedCurrencySymbol()) ? this.selectedCurrencySymbol() : CUSTOM_CURRENCY_VALUE,
   );
-  protected readonly currencyFormatPreview = computed(() =>
-    this.numberFormatService.formatNumber(1_234_567.89, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }),
-  );
 
   protected getLanguageLabelKey(language: string): string {
     return `header.language.options.${language}`;
@@ -52,6 +48,14 @@ export class GeneralSectionComponent {
     return `settings.general.cards.theme.options.${theme}`;
   }
 
+  protected themeOptionIcon(theme: EDarkModes): 'monitor' | 'sun' | 'moon' {
+    if (theme === EDarkModes.SYSTEM) {
+      return 'monitor';
+    }
+
+    return theme === EDarkModes.DARK ? 'moon' : 'sun';
+  }
+
   protected currencyFormatStyleLabelKey(style: CurrencyFormatStyle): string {
     return `settings.general.cards.numberFormat.options.${style}`;
   }
@@ -59,7 +63,9 @@ export class GeneralSectionComponent {
   protected onThemeChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
     if (selectedValue === EDarkModes.SYSTEM || selectedValue === EDarkModes.LIGHT || selectedValue === EDarkModes.DARK) {
-      this.darkMode.toggleTheme(selectedValue);
+      applyThemeTransition(this.darkMode, {
+        targetMode: selectedValue,
+      });
     }
   }
 

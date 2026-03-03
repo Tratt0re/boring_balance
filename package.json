@@ -1,8 +1,12 @@
 {
   "name": "boringbalance",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Desktop Boring Balance app built with Angular and Electron.",
-  "author": "boringbalance",
+  "author": "Tratt0re",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tratt0re/expense_tracker.git"
+  },
   "main": "electron/main.js",
   "scripts": {
     "ng": "ng",

@@ -1,5 +1,5 @@
-<section class="settings-page">
-  <div class="settings-page__sidebar">
+<section class="grid min-h-full gap-4 lg:min-h-[calc(100dvh-10rem)] lg:grid-cols-[17.5rem_minmax(0,1fr)] lg:items-stretch">
+  <div class="min-h-0 lg:sticky lg:top-0 lg:self-start lg:h-[calc(100dvh-10rem)] lg:overflow-hidden">
       <app-contextual-sidebar
         [items]="navItems"
         [activeKey]="activeKey()"
@@ -7,7 +7,12 @@
       />
   </div>
 
-  <div class="min-w-0">
+  <div class="flex min-w-0 min-h-0 flex-col gap-4">
+    <app-settings-section-header
+      [titleKey]="activeItem().label"
+      [descriptionKey]="activeItem().description"
+    />
+
     @switch (activeKey()) {
       @case ('general') {
         <app-general-section />
@@ -22,7 +27,7 @@
         <app-export-section />
       }
       @case ('about') {
-        <app-about-section />
+        <app-about-section class="min-h-0 flex-1" />
       }
     }
   </div>

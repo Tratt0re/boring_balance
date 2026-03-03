@@ -4,6 +4,13 @@ type IpcRequest<TPayload, TResult> = (payload: TPayload) => Promise<TResult>;
 type OptionalIpcRequest<TPayload, TResult> = (payload?: TPayload) => Promise<TResult>;
 type IpcEventListener<TPayload = unknown> = (payload: TPayload) => void;
 
+export interface ElectronAppInfo {
+  readonly name: string | null;
+  readonly version: string | null;
+  readonly author: string | null;
+  readonly repositoryUrl: string | null;
+}
+
 export enum APIChannel {
   APP_META = 'appMeta',
   ACCOUNTS = 'accounts',
@@ -136,6 +143,7 @@ export interface ElectronAPI {
   readonly ipcClient: ElectronIpcClient;
   readonly onIpcEvent?: (channel: string, listener: IpcEventListener) => void;
   readonly offIpcEvent?: (channel: string, listener: IpcEventListener) => void;
+  readonly appInfo: ElectronAppInfo;
   readonly platform: string;
   readonly versions: Readonly<{
     chrome: string;

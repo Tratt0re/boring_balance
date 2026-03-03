@@ -143,11 +143,13 @@
       },
       "about": {
         "title": "Acerca de",
-        "description": "Revisa informacion local de la app y detalles del runtime."
+        "description": "Revisa informacion local de la app, detalles de privacidad y enlaces del proyecto."
       }
     },
     "general": {
       "intro": "Estas preferencias se actualizan al instante y quedan guardadas en este dispositivo.",
+      "currencyGroupTitle": "Moneda",
+      "currencyGroupDescription": "Elige el simbolo y el formato numerico usados en balances, reportes y entradas.",
       "cards": {
         "theme": {
           "title": "Tema",
@@ -191,7 +193,10 @@
       "appNameLabel": "App",
       "appVersionLabel": "Version de la app",
       "appVersionUnavailable": "No disponible en esta build",
-      "localFirst": "Boring Balance es una app de escritorio local-first. Las herramientas de respaldo, sync y exportacion se ejecutan directamente en tu dispositivo.",
+      "localFirst": "Boring Balance es un gestor de finanzas personales que guarda tus datos en tu dispositivo dentro de una base SQLite local, asi que mantienes el control. Tus datos se usan solo para mostrar analiticas dentro de la app y no se comparten externamente por defecto.",
+      "openSourceNote": "La logica principal de la app es open source y esta disponible en el repositorio de abajo.",
+      "openSourceCta": "Abrir en GitHub",
+      "footer": "Hecho con ❤️ por {{authorName}}",
       "runtime": {
         "title": "Runtime",
         "description": "Versiones del runtime del renderer expuestas por el puente de Electron.",

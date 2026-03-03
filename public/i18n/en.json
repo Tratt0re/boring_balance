@@ -143,11 +143,13 @@
       },
       "about": {
         "title": "About",
-        "description": "Review local app information and renderer runtime details."
+        "description": "Review local app information, privacy details, and project links."
       }
     },
     "general": {
       "intro": "These preferences update immediately and stay stored on this device.",
+      "currencyGroupTitle": "Currency",
+      "currencyGroupDescription": "Choose the symbol and number format used across balances, reports, and inputs.",
       "cards": {
         "theme": {
           "title": "Theme",
@@ -191,7 +193,10 @@
       "appNameLabel": "App",
       "appVersionLabel": "App version",
       "appVersionUnavailable": "Not available in this build",
-      "localFirst": "Boring Balance is a local-first desktop app. Backup, sync, and export tools run directly on your device.",
+      "localFirst": "Boring Balance is a personal finance tracker that keeps your data on your device in a local SQLite database, so you stay in control. Your data is used only to generate analytics inside the app and is not shared externally by default.",
+      "openSourceNote": "The core app logic is open source and available in the repository below.",
+      "openSourceCta": "Open on GitHub",
+      "footer": "Made with ❤️ by {{authorName}}",
       "runtime": {
         "title": "Runtime",
         "description": "Renderer runtime versions exposed through the Electron bridge.",

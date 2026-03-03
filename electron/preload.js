@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 const { createIpcClient } = require('./ipc/client');
+const packageJson = require('../package.json');
 
 function invoke(channel, payload) {
   return ipcRenderer.invoke(channel, payload);
@@ -61,10 +62,50 @@ function offIpcEvent(channel, listener) {
 
 const ipcClient = createIpcClient(invoke);
 
+function normalizeText(value) {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
+}
+
+function resolveAuthorName(author) {
+  if (typeof author === 'string') {
+    return normalizeText(author);
+  }
+
+  if (author && typeof author === 'object' && 'name' in author) {
+    return normalizeText(author.name);
+  }
+
+  return null;
+}
+
+function resolveRepositoryUrl(repository) {
+  const rawUrl = typeof repository === 'string'
+    ? repository
+    : repository && typeof repository === 'object'
+      ? repository.url
+      : null;
+  const normalizedUrl = normalizeText(rawUrl);
+  if (!normalizedUrl) {
+    return null;
+  }
+
+  return normalizedUrl
+    .replace(/^git\+/, '')
+    .replace(/\.git$/i, '');
+}
+
+const appInfo = Object.freeze({
+  name: normalizeText(packageJson.build?.productName) ?? normalizeText(packageJson.name),
+  version: normalizeText(packageJson.version),
+  author: resolveAuthorName(packageJson.author),
+  repositoryUrl: resolveRepositoryUrl(packageJson.repository),
+});
+
 contextBridge.exposeInMainWorld('electronAPI', {
   ipcClient,
   onIpcEvent,
   offIpcEvent,
+  appInfo,
   platform: process.platform,
   versions: Object.freeze({
     chrome: process.versions.chrome,

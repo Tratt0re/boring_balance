@@ -5,6 +5,7 @@ import { map } from 'rxjs';
 
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ContextualSidebarComponent } from './components/contextual-sidebar/contextual-sidebar.component';
+import { SettingsSectionHeaderComponent } from './components/settings-section-header/settings-section-header.component';
 import { AboutSectionComponent } from './components/sections/about-section/about-section.component';
 import { BackupsSectionComponent } from './components/sections/backups-section/backups-section.component';
 import { ExportSectionComponent } from './components/sections/export-section/export-section.component';
@@ -21,6 +22,7 @@ import {
   selector: 'app-settings-page',
   imports: [
     ContextualSidebarComponent,
+    SettingsSectionHeaderComponent,
     GeneralSectionComponent,
     BackupsSectionComponent,
     SyncSectionComponent,
@@ -28,7 +30,6 @@ import {
     AboutSectionComponent,
   ],
   templateUrl: './settings.page.html',
-  styleUrl: './settings.page.scss',
 })
 export class SettingsPage implements OnInit, OnDestroy {
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -46,6 +47,9 @@ export class SettingsPage implements OnInit, OnDestroy {
     const section = this.routeSection();
     return isSettingsSectionKey(section) ? section : DEFAULT_SETTINGS_SECTION;
   });
+  protected readonly activeItem = computed(
+    () => this.navItems.find((item) => item.key === this.activeKey()) ?? this.navItems[0],
+  );
 
   constructor() {
     effect(() => {
