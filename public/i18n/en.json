@@ -139,21 +139,21 @@
     "sections": {
       "general": {
         "title": "General",
-        "description": "Adjust app-wide preferences and display defaults."
+        "description": "Set how the app looks and how money amounts appear across your workspace."
       },
       "about": {
         "title": "About",
-        "description": "Review local app information, privacy details, and project links."
+        "description": "See app details, privacy basics, and the project link in one place."
       }
     },
     "general": {
-      "intro": "These preferences update immediately and stay stored on this device.",
+      "intro": "These preferences update right away so the app matches how you read and review your finances.",
       "currencyGroupTitle": "Currency",
-      "currencyGroupDescription": "Choose the symbol and number format used across balances, reports, and inputs.",
+      "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
       "cards": {
         "theme": {
           "title": "Theme",
-          "description": "Choose how the app looks across every page.",
+          "description": "Pick the appearance that feels best for everyday use across the whole app.",
           "fieldLabel": "Theme mode",
           "options": {
             "system": "System",
@@ -163,12 +163,12 @@
         },
         "language": {
           "title": "Language",
-          "description": "Use the same language selector available in the header.",
+          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         },
         "currency": {
           "title": "Currency symbol",
-          "description": "Pick the symbol shown in currency values throughout the app.",
+          "description": "Select the symbol you want to see next to balances, transactions, and reports.",
           "fieldLabel": "Symbol",
           "customLabel": "Custom symbol",
           "customPlaceholder": "CHF",
@@ -178,9 +178,10 @@
         },
         "numberFormat": {
           "title": "Currency display style",
-          "description": "Set the thousands and decimal separators used in amounts and number inputs.",
+          "description": "Choose the separators used in amounts so entries and reports match what you expect.",
           "fieldLabel": "Format",
           "previewLabel": "Preview",
+          "previewDescription": "Preview the current symbol and number style before you keep entering data.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -193,8 +194,8 @@
       "appNameLabel": "App",
       "appVersionLabel": "App version",
       "appVersionUnavailable": "Not available in this build",
-      "localFirst": "Boring Balance is a personal finance tracker that keeps your data on your device in a local SQLite database, so you stay in control. Your data is used only to generate analytics inside the app and is not shared externally by default.",
-      "openSourceNote": "The core app logic is open source and available in the repository below.",
+      "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
+      "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
       "openSourceCta": "Open on GitHub",
       "footer": "Made with ❤️ by {{authorName}}",
       "runtime": {
@@ -226,20 +227,20 @@
     "backups": {
       "destination": {
         "title": "Backup destination",
-        "description": "Enable backups and choose where snapshots will be stored."
+        "description": "Turn on backups and choose where recovery copies should be saved."
       },
       "form": {
         "enabled": "Enable backups",
         "folderPath": "Backup folder",
         "folderNotSet": "Not set"
       },
-      "disabledInfo": "Enable backups to configure automatic snapshots, run manual backups, and manage restore points.",
+      "disabledInfo": "Turn on backups to create recovery copies automatically, run one on demand, and keep restore points ready.",
       "warnings": {
         "missingFolder": "Backups are enabled but no backup folder is configured yet."
       },
       "autoBackup": {
         "title": "Automatic backups",
-        "description": "Use predefined backup cadence and retention levels for a safer setup.",
+        "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
         "onQuit": "Run backup on app quit",
         "intervalMin": "Interval (minutes, 0 to disable)",
         "retentionCount": "Retention count",
@@ -252,7 +253,7 @@
       },
       "manual": {
         "title": "Manual backup and status",
-        "description": "Run backups on demand and monitor the latest execution state."
+        "description": "Create a backup now and review the latest backup result in one place."
       },
       "actions": {
         "chooseFolder": "Choose folder",
@@ -274,9 +275,9 @@
       },
       "list": {
         "title": "Available backups",
-        "description": "Review generated snapshots and restore or remove items when needed.",
+        "description": "Review saved backups, then restore or remove the ones you no longer need.",
         "loading": "Refreshing backups list...",
-        "empty": "No backups found in the selected folder.",
+        "empty": "No backups here yet. Run a backup to create your first restore point.",
         "columns": {
           "date": "Date",
           "file": "File",
@@ -285,7 +286,7 @@
       },
       "restoreAlert": {
         "title": "Restore backup",
-        "description": "This will replace the local database with \"{{fileName}}\". Continue?",
+        "description": "Restore \"{{fileName}}\" and replace your current data with that saved copy. Continue?",
         "actions": {
           "restore": "Restore",
           "cancel": "Cancel"
@@ -293,7 +294,7 @@
       },
       "deleteAlert": {
         "title": "Delete backup",
-        "description": "This will permanently remove \"{{fileName}}\". Continue?",
+        "description": "Delete \"{{fileName}}\" from your backup folder. You will not be able to restore from it afterward.",
         "actions": {
           "delete": "Delete",
           "cancel": "Cancel"
@@ -304,8 +305,8 @@
       "title": "Sync",
       "overview": {
         "title": "External folder sync",
-        "description": "Use a folder you already sync yourself, such as iCloud Drive, Dropbox, OneDrive, Syncthing, a NAS, or a USB drive.",
-        "warning": "Sync uses a folder you manage outside the app. Boring Balance does not upload data to its own servers and it never runs the live database inside the sync folder.",
+        "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
+        "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
         "enabled": "Enable sync",
         "chooseFolder": "Choose root folder",
         "selectedFolder": "Selected root folder",
@@ -313,13 +314,13 @@
         "repoPath": "App sync folder",
         "notConnected": "Not connected yet",
         "enableHints": {
-          "turnOnFirst": "Turn on Enable sync first. Then choose the root folder where the app will create or find its sync files.",
-          "ready": "Sync setup is open. Choose the root folder where the app should create or find its sync files."
+          "turnOnFirst": "Turn on sync first, then choose the folder you want to use across devices.",
+          "ready": "Sync is ready to connect. Choose the folder you want this device to use."
         }
       },
       "setup": {
         "title": "Connect a sync folder",
-        "description": "Set up a shared sync folder in three steps: choose the root folder, then create a new sync space or connect to one that already exists.",
+        "description": "Pick the shared folder, then either create a new sync space or connect to one that already exists.",
         "steps": {
           "rootFolder": {
             "title": "1. Choose a root folder",
@@ -346,16 +347,16 @@
           "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
           "waitingForFolder": "Choose a root folder to continue."
         },
-        "actionHelp": "Create starts a brand new sync space from this device. Connect joins a sync space that already exists in the selected root folder."
+        "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
       },
-      "disabledInfo": "Turn on Enable sync to start setup. Then choose a root folder where Boring Balance will create or connect to its sync files.",
+      "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
       "autoSync": {
         "title": "Automatic sync",
-        "description": "Choose when the app should check for remote changes and when it should publish local changes. Setting an interval to 0 turns that timer off.",
+        "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
         "autoPullIntervalMin": "Auto pull interval",
         "autoPushIntervalMin": "Auto push interval",
         "autoPushOnQuit": "Push on app quit",
-        "autoPushOnQuitHint": "When enabled, the app publishes the latest local snapshot before it closes.",
+        "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
         "retentionCountPerDevice": "Snapshots kept per device",
         "intervalOptions": {
           "off": "Off",
@@ -368,16 +369,16 @@
       },
       "manual": {
         "title": "Manual sync",
-        "description": "Use these buttons when you want to control sync yourself instead of waiting for the automatic timers.",
+        "description": "Use these actions when you want to check or share changes immediately.",
         "tooltips": {
-          "syncNow": "Checks the sync folder for newer data first, then publishes this device if needed.",
-          "pullNow": "Downloads the newest sync snapshot from the shared folder when it is newer than this device.",
-          "pushNow": "Publishes this device's current data to the shared folder when local changes are newer."
+          "syncNow": "Checks for newer shared data first, then shares this device if needed.",
+          "pullNow": "Brings in newer shared data without sending this device's changes.",
+          "pushNow": "Shares this device's latest changes without checking for newer shared data first."
         },
         "hints": {
-          "syncNow": "Sync now runs the full safe sync flow: check remote changes first, then publish local changes if needed.",
-          "pullNow": "Pull now only reads from the shared folder and restores a newer snapshot to this device.",
-          "pushNow": "Push now only writes this device's latest snapshot to the shared folder."
+          "syncNow": "Sync now is the safest full check: it looks for newer shared changes, then shares yours if needed.",
+          "pullNow": "Pull now only brings in newer shared data to this device.",
+          "pushNow": "Push now only shares this device's current changes to the shared folder."
         }
       },
       "actions": {
@@ -387,7 +388,7 @@
       },
       "status": {
         "title": "Status",
-        "description": "Review the current sync state and the most recent pull and push timestamps.",
+        "description": "Check the current sync state and see when this device last pulled or pushed.",
         "columns": {
           "item": "Item",
           "value": "Value"
@@ -412,11 +413,11 @@
         "conflictTitle": "Conflict detected",
         "localCopyPath": "Local copy saved at",
         "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "We kept a local copy and restored the remote snapshot."
+        "conflictHint": "Your local copy was kept, and the shared copy was opened so you can review the difference."
       },
       "attachAlert": {
         "title": "Connect existing sync space",
-        "description": "Connecting can replace this device's local database if the shared folder has newer data or belongs to a different sync history. Continue?",
+        "description": "Connecting can replace this device's current data if the shared folder is newer. Continue?",
         "actions": {
           "attach": "Connect",
           "cancel": "Cancel"
@@ -426,12 +427,12 @@
     "exportImport": {
       "export": {
         "title": "Export",
-        "description": "Export transactions and transfers to an Excel file.",
+        "description": "Export transactions and transfers to an Excel file you can review, share, or archive.",
         "lastExportLabel": "Last export"
       },
       "import": {
         "title": "Import",
-        "placeholder": "Import tools will be available in a future update."
+        "placeholder": "Import tools are not available yet. Use export for a portable copy in the meantime."
       },
       "controls": {
         "exportExcel": "Export to Excel",
@@ -459,6 +460,8 @@
         "summaryTitle": "Net Worth",
         "receivablesPayablesTitle": "Receivables & Payables",
         "allocationTitle": "Allocation",
+        "description": "See your current net worth, how it changed since last month, and how receivables or payables affect the full picture.",
+        "allocationDescription": "See which accounts make up your net worth so you can spot concentration at a glance.",
         "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
         "tooltips": {
           "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
@@ -470,12 +473,12 @@
         "receivables": "Receivables",
         "payables": "Payables",
         "totalAfterRP": "After R&P",
-        "emptyDistribution": "No account distribution data."
+        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation."
       },
       "monthlyTotals": {
         "title": "Income, expenses and net cashflow",
         "segmentTitle": "Income & expenses",
-        "descriptionCurrentYear": "Current year: {{year}}",
+        "descriptionCurrentYear": "Compare income, expenses, and net cashflow month by month across {{year}}.",
         "loading": "Loading analytics...",
         "loadFailedWithError": "Failed to load analytics: {{error}}",
         "empty": "No analytics data available for the selected filters.",
@@ -487,15 +490,15 @@
       },
       "activity": {
         "title": "Activity",
-        "latestTransactions": "Latest {{count}} transactions",
-        "latestTransfers": "Latest {{count}} transfers",
+        "latestTransactions": "Latest {{count}} transactions this month so you can review new spending and income quickly.",
+        "latestTransfers": "Latest {{count}} transfers this month so you can verify money moved between accounts.",
         "loadFailed": "Unable to load activity."
       },
       "recentTransactions": {
         "title": "Last transactions",
         "description": "Latest {{count}} transactions this month",
         "loadFailed": "Unable to load transactions.",
-        "empty": "No recent transactions.",
+        "empty": "No transactions this month yet. Add one to start building your activity feed.",
         "toggleSettled": "Toggle settled",
         "tooltips": {
           "settled": "Settled",
@@ -510,10 +513,10 @@
       },
       "moneyFlowSankey": {
         "title": "Money flow",
-        "description": "Flow for {{month}}",
+        "description": "{{month}} at a glance: see where money came from, where it went, and what remained.",
         "loading": "Loading money flow...",
         "loadFailedWithError": "Failed to load money flow: {{error}}",
-        "empty": "No money flow data available for this month.",
+        "empty": "No money flow for this month yet. Add transactions to see where money moved.",
         "tooltips": {
           "actualNetCashflow": "Actual net cashflow"
         },
@@ -540,13 +543,13 @@
     },
     "averageMode": {
       "label": "Use elapsed months for averages",
-      "hint": "Default averages are calculated over 12 months. When enabled, averages use only January through the current month (included), and only amounts from those months."
+      "hint": "Turn this on to compare against the months that have happened so far instead of averaging across the full year."
     },
     "sectionYear": "Year {{year}}",
     "moneyFlowOptions": {
       "showAllocationTargets": {
         "label": "Show savings, brokerage and crypto flows",
-        "hint": "Hide these targets to focus only on incomes and expenses."
+        "hint": "Hide these to focus on core income versus expenses, or show them to include savings and investment moves."
       }
     },
     "metrics": {
@@ -556,24 +559,24 @@
     "cards": {
       "moneyFlow": {
         "titleYear": "Money flow of the year: {{year}}",
-        "empty": "No money flow data available for the selected year."
+        "empty": "No money flow for this year yet. Add transactions to see how money moved over time."
       },
       "monthlyTrend": {
         "title": "{{label}} by month",
-        "description": "Total {{label}} by month"
+        "description": "See when {{label}} rises, dips, or stays steady across the year."
       },
       "monthlyByCategory": {
         "title": "{{label}} by category",
-        "description": "Monthly {{label}} split by category",
+        "description": "Compare how each month's {{label}} is split across categories.",
         "summaryTitle": "Category totals and averages"
       }
     }
   },
   "compare": {
     "loadingTitle": "Preparing comparison",
-    "loadingDescription": "Loading analytics for the selected months",
+    "loadingDescription": "Gathering both months so you can compare them side by side.",
     "loadFailedWithError": "Failed to load comparison analytics: {{error}}",
-    "empty": "No comparison data available for the selected months.",
+    "empty": "No comparison data for these months yet. Record activity in both months to compare them here.",
     "selectors": {
       "left": {
         "title": "Month 1"
@@ -590,23 +593,23 @@
     "cards": {
       "summary": {
         "title": "Comparison summary",
-        "description": "Paired bars for income, expenses and net cashflow"
+        "description": "Compare income, expenses, and net cashflow side by side to see which month changed more."
       },
       "radar": {
         "title": "Radar comparison",
-        "description": "Expense categories compared across the selected months (top categories)",
+        "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
         "empty": "No expense categories available for radar comparison."
       },
       "dailyCalendar": {
         "title": "Daily expense calendar",
-        "description": "Daily expense intensity with a shared scale across both months",
+        "description": "See which days carried the heaviest spending in each month with one shared scale.",
         "panelHint": "Daily expenses (same scale)",
-        "empty": "No daily expense activity available for the selected months."
+        "empty": "No daily spending data for the selected months."
       },
       "expensesByCategory": {
         "title": "Expenses by category",
-        "description": "Category totals side by side for the selected months with delta",
-        "empty": "No expense category data available for the selected months."
+        "description": "Review each category side by side, including the difference between the two months.",
+        "empty": "No expense category totals for the selected months."
       }
     }
   },
@@ -645,8 +648,8 @@
   },
   "accounts": {
     "table": {
-      "description": "Account configuration",
-      "emptyMessage": "No accounts found.",
+      "description": "Set up the accounts that hold your money or debt so balances and transfers stay organized.",
+      "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
       "actions": {
         "add": "Add account",
         "edit": "Edit account",
@@ -661,7 +664,7 @@
     "dialog": {
       "add": {
         "title": "Add account",
-        "description": "Create a new account with visual settings.",
+        "description": "Create an account you can use in transactions, transfers, and net worth tracking.",
         "placeholders": {
           "name": "Account name",
           "description": "Account description"
@@ -682,7 +685,7 @@
       },
       "edit": {
         "title": "Edit account",
-        "description": "Update account settings.",
+        "description": "Update how this account appears and where you use it across the app.",
         "actions": {
           "cancel": "Cancel",
           "save": "Save changes"
@@ -695,7 +698,7 @@
     },
     "archiveAlert": {
       "title": "Archive account?",
-      "description": "Are you sure you want to archive \"{{name}}\"? After confirmation, this account will no longer be selectable for new data. Existing data with this account will continue to show it until you edit those entries.",
+      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
       "actions": {
         "cancel": "Cancel",
         "archive": "Archive"
@@ -704,8 +707,8 @@
   },
   "categories": {
     "table": {
-      "description": "Category configuration",
-      "emptyMessage": "No categories found.",
+      "description": "Organize transactions into categories so reports, budgets, and comparisons stay meaningful.",
+      "emptyMessage": "No categories yet. Add your first category to organize spending and income.",
       "actions": {
         "add": "Add category",
         "edit": "Edit category",
@@ -720,7 +723,7 @@
     "dialog": {
       "add": {
         "title": "Add category",
-        "description": "Create a new category with visual settings and type.",
+        "description": "Create a category to label transactions and group them in reports.",
         "placeholders": {
           "name": "Category name",
           "description": "Category description"
@@ -741,7 +744,7 @@
       },
       "edit": {
         "title": "Edit category",
-        "description": "Update category settings.",
+        "description": "Update this category's label, type, or visual marker.",
         "actions": {
           "cancel": "Cancel",
           "save": "Save changes"
@@ -754,7 +757,7 @@
     },
     "archiveAlert": {
       "title": "Archive category?",
-      "description": "Are you sure you want to archive \"{{name}}\"? After confirmation, this category will no longer be selectable for new data. Existing data with this category will continue to show it until you edit those entries.",
+      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
       "actions": {
         "cancel": "Cancel",
         "archive": "Archive"
@@ -767,8 +770,8 @@
       "analysis": "Budget analysis"
     },
     "table": {
-      "description": "Budget setup by category",
-      "emptyMessage": "No budgets found.",
+      "description": "Set spending targets by category so you can compare your plan against real spending.",
+      "emptyMessage": "No budgets yet. Add your first budget to start tracking category targets.",
       "unknownCategory": "Unknown category",
       "actions": {
         "add": "Add budget",
@@ -779,7 +782,7 @@
     "dialog": {
       "add": {
         "title": "Add budget",
-        "description": "Create a budget active for {{year}}.",
+        "description": "Create a spending target for {{year}} so you can measure category spending against it.",
         "actions": {
           "cancel": "Cancel",
           "create": "Create budget"
@@ -795,7 +798,7 @@
       },
       "edit": {
         "title": "Edit budget",
-        "description": "Update budget settings for {{year}}.",
+        "description": "Update this category target for {{year}} as your plan changes.",
         "actions": {
           "cancel": "Cancel",
           "save": "Save changes"
@@ -808,7 +811,7 @@
     },
     "deleteAlert": {
       "title": "Delete budget?",
-      "description": "Are you sure you want to delete the budget for \"{{category}}\"?",
+      "description": "Delete the budget for \"{{category}}\". You can add it again later if needed.",
       "actions": {
         "cancel": "Cancel",
         "delete": "Delete"
@@ -818,7 +821,7 @@
       "title": "Budget analysis",
       "description": "Compare budget targets against actual category expenses for the selected year.",
       "loading": "Loading budget analysis...",
-      "empty": "No budget analysis data available for {{year}}.",
+      "empty": "No budget analysis for {{year}} yet. Add budgets and matching transactions to compare plan versus actual.",
       "series": {
         "budget": "Budget",
         "expenses": "Expenses"
@@ -831,7 +834,7 @@
       },
       "chart": {
         "title": "Budget vs expenses by category",
-        "description": "Horizontal comparison of budget amount and expense total for each budget category."
+        "description": "See which categories are on track, close to the limit, or already over budget."
       },
       "errors": {
         "loadFailedWithError": "Failed to load budget analysis: {{error}}"
@@ -849,8 +852,8 @@
     "transfers": {
       "title": "Transfers",
       "table": {
-        "description": "Money moved between your accounts.",
-        "emptyMessage": "No transfers found.",
+        "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
+        "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
         "actions": {
           "add": "Add transfer",
           "filter": "Filter transfers",
@@ -861,7 +864,7 @@
       "dialog": {
         "add": {
           "title": "Add transfer",
-          "description": "Move money between two accounts.",
+          "description": "Move money between two of your accounts without affecting income or expense totals.",
           "actions": {
             "cancel": "Cancel",
             "create": "Create transfer"
@@ -880,7 +883,7 @@
         },
         "edit": {
           "title": "Edit transfer",
-          "description": "Update transfer details.",
+          "description": "Update this transfer so your account movement history stays accurate.",
           "actions": {
             "cancel": "Cancel",
             "save": "Save changes"
@@ -893,7 +896,7 @@
       },
       "deleteAlert": {
         "title": "Delete transfer?",
-        "description": "Are you sure you want to delete this transfer? This action cannot be undone.",
+        "description": "Delete this transfer from your history. This cannot be undone.",
         "actions": {
           "cancel": "Cancel",
           "delete": "Delete"
@@ -901,15 +904,15 @@
       },
       "filters": {
         "title": "Filter transfers",
-        "description": "Apply one or more optional filters to narrow the transfer list.",
+        "description": "Narrow the transfer list to the dates, amounts, or accounts you want to review.",
         "empty": {
-          "account": "No accounts found."
+          "account": "No accounts yet. Add an account before filtering transfers."
         }
       }
     },
     "table": {
-      "description": "Transaction history",
-      "emptyMessage": "No transactions found.",
+      "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
+      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
       "actions": {
         "add": "Add transaction",
         "filter": "Filter transactions",
@@ -920,16 +923,16 @@
     },
     "filters": {
       "title": "Filter transactions",
-      "description": "Apply one or more optional filters to narrow the transaction list.",
+      "description": "Narrow the list to the dates, categories, accounts, or amounts you want to review.",
       "empty": {
-        "category": "No categories found.",
-        "account": "No accounts found."
+        "category": "No categories yet. Add a category before filtering transactions.",
+        "account": "No accounts yet. Add an account before filtering transactions."
       }
     },
     "dialog": {
       "add": {
         "title": "Add transaction",
-        "description": "Create a new transaction entry.",
+        "description": "Record an income or expense so it appears in balances, budgets, and reports.",
         "actions": {
           "cancel": "Cancel",
           "create": "Create transaction"
@@ -947,7 +950,7 @@
       },
       "edit": {
         "title": "Edit transaction",
-        "description": "Update transaction details.",
+        "description": "Update the details behind this income or expense entry.",
         "actions": {
           "cancel": "Cancel",
           "save": "Save changes"
@@ -960,7 +963,7 @@
     },
     "deleteAlert": {
       "title": "Delete transaction?",
-      "description": "Are you sure you want to delete this transaction? This action cannot be undone.",
+      "description": "Delete this transaction from your history. This cannot be undone.",
       "actions": {
         "cancel": "Cancel",
         "delete": "Delete"
@@ -968,7 +971,7 @@
     },
     "duplicateAlert": {
       "title": "Duplicate transaction?",
-      "description": "Are you sure you want to duplicate this transaction?",
+      "description": "Create a copy of this transaction so you can edit it instead of entering everything again.",
       "actions": {
         "cancel": "Cancel",
         "duplicate": "Duplicate"
@@ -1098,8 +1101,8 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Manage recurring plans that generate future transactions and transfers.",
-      "emptyMessage": "No recurring events found.",
+      "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
+      "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
       "columns": {
         "title": "Title",
         "startDate": "Start date",
@@ -1146,7 +1149,7 @@
     "dialog": {
       "add": {
         "title": "Add recurring event",
-        "description": "Create a recurring plan for a transaction or transfer. When you confirm, the scheduled items will be created immediately.",
+        "description": "Create a repeating rule so the app can add upcoming transactions or transfers for you.",
         "actions": {
           "cancel": "Cancel",
           "create": "Create recurring event"
@@ -1176,7 +1179,7 @@
       },
       "edit": {
         "title": "Edit recurring event",
-        "description": "Update recurring plan settings. Template changes are also applied to items already created from this plan.",
+        "description": "Update this rule and keep future planned items aligned with it.",
         "actions": {
           "cancel": "Cancel",
           "save": "Save changes"
@@ -1201,16 +1204,16 @@
           "frequencyInterval": "1"
         },
         "tooltips": {
-          "scheduleLockedAfterCreate": "After the recurring event is created, schedule settings cannot be changed."
+          "scheduleLockedAfterCreate": "After you create it, the schedule stays fixed so generated dates remain predictable."
         }
       }
     },
     "deleteAlert": {
       "title": "Delete recurring event?",
-      "description": "Are you sure you want to delete \"{{title}}\"?",
+      "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
       "options": {
         "deleteLinkedItems": "Also delete linked items already created by this plan",
-        "deleteLinkedItemsHint": "This removes generated transactions/transfers connected to this recurring event."
+        "deleteLinkedItemsHint": "This also removes the transactions or transfers that were already created from this rule."
       },
       "actions": {
         "cancel": "Cancel",
@@ -1219,7 +1222,7 @@
     },
     "runConfirm": {
       "title": "Run recurring event?",
-      "description": "Confirm to generate the missing scheduled items for \"{{title}}\" now.",
+      "description": "Generate any missing scheduled items for \"{{title}}\" now.",
       "actions": {
         "cancel": "Cancel",
         "run": "Run now"

@@ -21,6 +21,9 @@
           />
         }
       </z-select>
+      <p class="mt-2 text-xs text-muted-foreground">
+        {{ 'settings.general.cards.theme.description' | translate }}
+      </p>
     </div>
 
     <div>
@@ -36,6 +39,9 @@
           <z-select-item [zValue]="language" [zLabel]="getLanguageLabelKey(language) | translate" />
         }
       </z-select>
+      <p class="mt-2 text-xs text-muted-foreground">
+        {{ 'settings.general.cards.language.description' | translate }}
+      </p>
     </div>
   </div>
 
@@ -67,6 +73,9 @@
             [zLabel]="'settings.general.cards.currency.options.custom' | translate"
           />
         </z-select>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {{ 'settings.general.cards.currency.description' | translate }}
+        </p>
       </div>
 
       <div>
@@ -82,6 +91,9 @@
             <z-select-item [zValue]="style" [zLabel]="currencyFormatStyleLabelKey(style) | translate" />
           }
         </z-select>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {{ 'settings.general.cards.numberFormat.description' | translate }}
+        </p>
       </div>
     </div>
 
@@ -107,8 +119,11 @@
       <p class="text-xs uppercase tracking-wide text-muted-foreground">
         {{ 'settings.general.cards.numberFormat.previewLabel' | translate }}
       </p>
+      <p class="mt-1 text-xs text-muted-foreground">
+        {{ 'settings.general.cards.numberFormat.previewDescription' | translate }}
+      </p>
       <app-currency-preview
-        class="mt-1"
+        class="mt-2"
         [symbol]="selectedCurrencySymbol()"
         [displayStyle]="selectedCurrencyFormatStyle()"
         [sampleValue]="1234567.89"

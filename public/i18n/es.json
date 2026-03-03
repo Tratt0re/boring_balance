@@ -139,21 +139,21 @@
     "sections": {
       "general": {
         "title": "General",
-        "description": "Ajusta preferencias globales y valores de visualizacion."
+        "description": "Define como se ve la app y como se muestran los importes en todo tu espacio de trabajo."
       },
       "about": {
         "title": "Acerca de",
-        "description": "Revisa informacion local de la app, detalles de privacidad y enlaces del proyecto."
+        "description": "Consulta detalles de la app, privacidad basica y el enlace del proyecto en un solo lugar."
       }
     },
     "general": {
-      "intro": "Estas preferencias se actualizan al instante y quedan guardadas en este dispositivo.",
+      "intro": "Estas preferencias se aplican al instante para que la app se adapte a como revisas tus finanzas.",
       "currencyGroupTitle": "Moneda",
-      "currencyGroupDescription": "Elige el simbolo y el formato numerico usados en balances, reportes y entradas.",
+      "currencyGroupDescription": "Elige como se muestran los importes para que balances, reportes y formularios sean faciles de leer.",
       "cards": {
         "theme": {
           "title": "Tema",
-          "description": "Elige como se ve la app en todas las paginas.",
+          "description": "Elige la apariencia mas comoda para usar la app todos los dias.",
           "fieldLabel": "Modo de tema",
           "options": {
             "system": "Sistema",
@@ -163,12 +163,12 @@
         },
         "language": {
           "title": "Idioma",
-          "description": "Usa el mismo selector de idioma que ya existe en el header.",
+          "description": "Elige el idioma de la navegacion, las etiquetas y los mensajes de toda la app.",
           "fieldLabel": "Idioma de la app"
         },
         "currency": {
           "title": "Simbolo de moneda",
-          "description": "Elige el simbolo que se muestra en los importes de toda la app.",
+          "description": "Selecciona el simbolo que quieres ver junto a balances, movimientos y reportes.",
           "fieldLabel": "Simbolo",
           "customLabel": "Simbolo personalizado",
           "customPlaceholder": "CHF",
@@ -178,9 +178,10 @@
         },
         "numberFormat": {
           "title": "Estilo de visualizacion de moneda",
-          "description": "Define los separadores de miles y decimales para importes y entradas numericas.",
+          "description": "Elige los separadores de los importes para que entradas y reportes se vean como esperas.",
           "fieldLabel": "Formato",
           "previewLabel": "Vista previa",
+          "previewDescription": "Revisa el simbolo y el formato actuales antes de seguir cargando datos.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -193,8 +194,8 @@
       "appNameLabel": "App",
       "appVersionLabel": "Version de la app",
       "appVersionUnavailable": "No disponible en esta build",
-      "localFirst": "Boring Balance es un gestor de finanzas personales que guarda tus datos en tu dispositivo dentro de una base SQLite local, asi que mantienes el control. Tus datos se usan solo para mostrar analiticas dentro de la app y no se comparten externamente por defecto.",
-      "openSourceNote": "La logica principal de la app es open source y esta disponible en el repositorio de abajo.",
+      "localFirst": "Boring Balance es un gestor de finanzas personales pensado para la privacidad. Tus datos se quedan en tu dispositivo y la app los usa solo para mostrar balances y analisis.",
+      "openSourceNote": "La app principal es open source, asi que puedes revisar el proyecto o seguir su desarrollo desde el repositorio de abajo.",
       "openSourceCta": "Abrir en GitHub",
       "footer": "Hecho con ❤️ por {{authorName}}",
       "runtime": {
@@ -226,20 +227,20 @@
     "backups": {
       "destination": {
         "title": "Destino del respaldo",
-        "description": "Activa los respaldos y elige donde guardar los snapshots."
+        "description": "Activa los respaldos y elige donde guardar copias de recuperacion."
       },
       "form": {
         "enabled": "Activar respaldos",
         "folderPath": "Carpeta de respaldo",
         "folderNotSet": "No configurada"
       },
-      "disabledInfo": "Activa los respaldos para configurar copias automaticas, ejecutar backups manuales y gestionar restauraciones.",
+      "disabledInfo": "Activa los respaldos para crear copias de recuperacion automaticas, ejecutar una manual cuando quieras y mantener puntos de restauracion listos.",
       "warnings": {
         "missingFolder": "Los respaldos estan activos, pero aun no hay una carpeta configurada."
       },
       "autoBackup": {
         "title": "Respaldos automaticos",
-        "description": "Usa intervalos y retencion predefinidos para una configuracion mas segura.",
+        "description": "Define cada cuanto la app guarda copias de recuperacion y cuantas versiones anteriores conservar.",
         "onQuit": "Respaldar al cerrar la app",
         "intervalMin": "Intervalo (minutos, 0 para desactivar)",
         "retentionCount": "Cantidad a conservar",
@@ -252,7 +253,7 @@
       },
       "manual": {
         "title": "Backup manual y estado",
-        "description": "Ejecuta respaldos bajo demanda y revisa el estado de la ultima ejecucion."
+        "description": "Crea un respaldo ahora y revisa aqui el ultimo resultado."
       },
       "actions": {
         "chooseFolder": "Elegir carpeta",
@@ -274,9 +275,9 @@
       },
       "list": {
         "title": "Respaldos disponibles",
-        "description": "Revisa snapshots generados y restaura o elimina elementos cuando sea necesario.",
+        "description": "Revisa los respaldos guardados y restaura o elimina los que ya no necesites.",
         "loading": "Actualizando lista de respaldos...",
-        "empty": "No se encontraron respaldos en la carpeta seleccionada.",
+        "empty": "Aun no hay respaldos aqui. Ejecuta uno para crear tu primer punto de restauracion.",
         "columns": {
           "date": "Fecha",
           "file": "Archivo",
@@ -285,7 +286,7 @@
       },
       "restoreAlert": {
         "title": "Restaurar respaldo",
-        "description": "La base de datos local sera reemplazada por \"{{fileName}}\". Deseas continuar?",
+        "description": "Restaurar \"{{fileName}}\" reemplazara tus datos actuales por esa copia guardada. Continuar?",
         "actions": {
           "restore": "Restaurar",
           "cancel": "Cancelar"
@@ -293,7 +294,7 @@
       },
       "deleteAlert": {
         "title": "Eliminar respaldo",
-        "description": "El archivo \"{{fileName}}\" se eliminara permanentemente. Deseas continuar?",
+        "description": "Eliminaras \"{{fileName}}\" de tu carpeta de respaldos y ya no podras restaurarlo despues.",
         "actions": {
           "delete": "Eliminar",
           "cancel": "Cancelar"
@@ -304,8 +305,8 @@
       "title": "Sincronizacion",
       "overview": {
         "title": "Sincronizacion con carpeta externa",
-        "description": "Usa una carpeta que ya sincronizas por tu cuenta, como iCloud Drive, Dropbox, OneDrive, Syncthing, un NAS o una unidad USB.",
-        "warning": "La sincronizacion usa una carpeta gestionada fuera de la app. Boring Balance no sube datos a servidores propios y nunca ejecuta la base de datos activa dentro de la carpeta sincronizada.",
+        "description": "Usa una carpeta que ya mantengas sincronizada entre dispositivos, como una nube, un NAS o una unidad USB.",
+        "warning": "Elige una carpeta de sincronizacion de confianza. La app sigue trabajando desde tu dispositivo y usa la carpeta compartida solo para intercambiar copias de forma segura.",
         "enabled": "Activar sync",
         "chooseFolder": "Elegir carpeta raiz",
         "selectedFolder": "Carpeta raiz seleccionada",
@@ -313,13 +314,13 @@
         "repoPath": "Carpeta sync de la app",
         "notConnected": "Aun sin conectar",
         "enableHints": {
-          "turnOnFirst": "Activa primero Activar sync. Despues elige la carpeta raiz donde la app creara o encontrara sus archivos de sync.",
-          "ready": "La configuracion de sync esta abierta. Elige la carpeta raiz donde la app debe crear o encontrar sus archivos de sync."
+          "turnOnFirst": "Activa la sincronizacion primero y despues elige la carpeta que quieras usar entre dispositivos.",
+          "ready": "La sincronizacion esta lista para conectarse. Elige la carpeta que quieres usar en este dispositivo."
         }
       },
       "setup": {
         "title": "Conectar una carpeta de sync",
-        "description": "Configura una carpeta sync compartida en tres pasos: elige la carpeta raiz y luego crea un espacio nuevo o conectate a uno que ya exista.",
+        "description": "Elige la carpeta compartida y luego crea un nuevo espacio de sincronizacion o conectate a uno existente.",
         "steps": {
           "rootFolder": {
             "title": "1. Elegir una carpeta raiz",
@@ -346,16 +347,16 @@
           "repoPathPending": "La carpeta sync de la app aparecera aqui cuando se revise la carpeta raiz.",
           "waitingForFolder": "Elige una carpeta raiz para continuar."
         },
-        "actionHelp": "Crear inicia un espacio sync nuevo desde este dispositivo. Conectar se une a un espacio sync que ya existe en la carpeta raiz seleccionada."
+        "actionHelp": "Crear inicia la sincronizacion desde este dispositivo. Conectar se une a un espacio que ya creo otro dispositivo."
       },
-      "disabledInfo": "Activa Activar sync para empezar la configuracion. Despues elige una carpeta raiz donde Boring Balance creara o conectara sus archivos de sync.",
+      "disabledInfo": "Activa la sincronizacion para elegir una carpeta compartida y conectar este dispositivo.",
       "autoSync": {
         "title": "Sync automatico",
-        "description": "Elige cuando la app debe revisar cambios remotos y cuando debe publicar cambios locales. Un intervalo en 0 apaga ese temporizador.",
+        "description": "Define cada cuanto la app revisa cambios nuevos y cada cuanto comparte tus cambios mas recientes.",
         "autoPullIntervalMin": "Intervalo de pull",
         "autoPushIntervalMin": "Intervalo de push",
         "autoPushOnQuit": "Hacer push al cerrar",
-        "autoPushOnQuitHint": "Si esta activado, la app publica el ultimo snapshot local antes de cerrarse.",
+        "autoPushOnQuitHint": "Si esta activado, la app comparte tus cambios mas recientes antes de cerrarse.",
         "retentionCountPerDevice": "Snapshots por dispositivo",
         "intervalOptions": {
           "off": "Desactivado",
@@ -368,16 +369,16 @@
       },
       "manual": {
         "title": "Sync manual",
-        "description": "Usa estos botones cuando prefieras controlar el sync manualmente en lugar de esperar a los temporizadores automaticos.",
+        "description": "Usa estas acciones cuando quieras revisar o compartir cambios de inmediato.",
         "tooltips": {
-          "syncNow": "Primero revisa si la carpeta compartida tiene datos mas nuevos y despues publica este dispositivo si hace falta.",
-          "pullNow": "Descarga el snapshot sync mas nuevo desde la carpeta compartida cuando es mas reciente que este dispositivo.",
-          "pushNow": "Publica los datos actuales de este dispositivo en la carpeta compartida cuando los cambios locales son mas nuevos."
+          "syncNow": "Primero revisa si hay datos compartidos mas nuevos y despues comparte este dispositivo si hace falta.",
+          "pullNow": "Trae datos compartidos mas nuevos sin enviar los cambios de este dispositivo.",
+          "pushNow": "Comparte los cambios mas recientes de este dispositivo sin revisar primero si hay datos mas nuevos."
         },
         "hints": {
-          "syncNow": "Sincronizar ahora ejecuta el flujo completo y seguro: primero revisa cambios remotos y despues publica cambios locales si hace falta.",
-          "pullNow": "Hacer pull solo lee desde la carpeta compartida y restaura un snapshot mas nuevo en este dispositivo.",
-          "pushNow": "Hacer push solo escribe el ultimo snapshot de este dispositivo en la carpeta compartida."
+          "syncNow": "Sincronizar ahora hace la comprobacion completa mas segura: busca cambios compartidos y despues comparte los tuyos si hace falta.",
+          "pullNow": "Hacer pull solo trae datos compartidos mas nuevos a este dispositivo.",
+          "pushNow": "Hacer push solo comparte los cambios actuales de este dispositivo en la carpeta compartida."
         }
       },
       "actions": {
@@ -387,7 +388,7 @@
       },
       "status": {
         "title": "Estado",
-        "description": "Revisa el estado actual del sync y las fechas de los ultimos pull y push.",
+        "description": "Consulta el estado actual del sync y cuando este dispositivo hizo pull o push por ultima vez.",
         "columns": {
           "item": "Elemento",
           "value": "Valor"
@@ -412,11 +413,11 @@
         "conflictTitle": "Conflicto detectado",
         "localCopyPath": "Copia local guardada en",
         "remoteSnapshotPath": "Snapshot remoto restaurado desde",
-        "conflictHint": "Conservamos una copia local y restauramos el snapshot remoto."
+        "conflictHint": "Se guardo tu copia local y se abrio la copia compartida para que puedas revisar la diferencia."
       },
       "attachAlert": {
         "title": "Conectar espacio de sync existente",
-        "description": "Conectar puede reemplazar la base de datos local de este dispositivo si la carpeta compartida tiene datos mas nuevos o pertenece a otro historial de sync. Deseas continuar?",
+        "description": "Conectarte puede reemplazar los datos actuales de este dispositivo si la carpeta compartida es mas reciente. Deseas continuar?",
         "actions": {
           "attach": "Conectar",
           "cancel": "Cancelar"
@@ -426,12 +427,12 @@
     "exportImport": {
       "export": {
         "title": "Exportar",
-        "description": "Exporta transacciones y transferencias a un archivo de Excel.",
+        "description": "Exporta transacciones y transferencias a un archivo de Excel para revisarlo, compartirlo o guardarlo.",
         "lastExportLabel": "Ultima exportacion"
       },
       "import": {
         "title": "Importar",
-        "placeholder": "Las herramientas de importacion estaran disponibles en una proxima actualizacion."
+        "placeholder": "Las herramientas de importacion aun no estan disponibles. Mientras tanto, usa la exportacion para tener una copia portable."
       },
       "controls": {
         "exportExcel": "Exportar a Excel",
@@ -459,6 +460,8 @@
         "summaryTitle": "Patrimonio neto",
         "receivablesPayablesTitle": "Por cobrar y por pagar",
         "allocationTitle": "Asignacion",
+        "description": "Ve tu patrimonio neto actual, como cambio desde el mes pasado y como influyen los cobros y pagos pendientes.",
+        "allocationDescription": "Ve que cuentas componen tu patrimonio neto para detectar concentracion de un vistazo.",
         "descriptionDailyAverage": "Prom. patrimonio neto/dia (MTD): {{value}}/dia",
         "tooltips": {
           "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
@@ -470,12 +473,12 @@
         "receivables": "Por cobrar",
         "payables": "Por pagar",
         "totalAfterRP": "Tras C&P",
-        "emptyDistribution": "No hay datos de distribucion por cuenta."
+        "emptyDistribution": "Aun no hay saldos para repartir. Agrega o actualiza cuentas para ver la asignacion."
       },
       "monthlyTotals": {
         "title": "Ingresos, gastos y flujo neto de caja",
         "segmentTitle": "Ingresos y gastos",
-        "descriptionCurrentYear": "Año actual: {{year}}",
+        "descriptionCurrentYear": "Compara ingresos, gastos y flujo neto de caja mes a mes durante {{year}}.",
         "loading": "Cargando analitica...",
         "loadFailedWithError": "Error al cargar la analitica: {{error}}",
         "empty": "No hay datos de analitica disponibles para los filtros seleccionados.",
@@ -487,15 +490,15 @@
       },
       "activity": {
         "title": "Actividad",
-        "latestTransactions": "Ultimos {{count}} movimientos",
-        "latestTransfers": "Ultimos {{count}} transferencias",
+        "latestTransactions": "Ultimos {{count}} movimientos de este mes para revisar rapido ingresos y gastos recientes.",
+        "latestTransfers": "Ultimas {{count}} transferencias de este mes para verificar dinero movido entre cuentas.",
         "loadFailed": "No se pudo cargar la actividad."
       },
       "recentTransactions": {
         "title": "Ultimos movimientos",
         "description": "Ultimos {{count}} movimientos de este mes",
         "loadFailed": "No se pudieron cargar los movimientos.",
-        "empty": "No hay movimientos recientes.",
+        "empty": "Aun no hay movimientos este mes. Agrega uno para empezar a llenar tu actividad.",
         "toggleSettled": "Cambiar liquidado",
         "tooltips": {
           "settled": "Liquidado",
@@ -510,10 +513,10 @@
       },
       "moneyFlowSankey": {
         "title": "Flujo de dinero",
-        "description": "Flujo de {{month}}",
+        "description": "{{month}} de un vistazo: mira de donde vino el dinero, a donde fue y que quedo.",
         "loading": "Cargando flujo de dinero...",
         "loadFailedWithError": "Error al cargar el flujo de dinero: {{error}}",
-        "empty": "No hay datos de flujo de dinero para este mes.",
+        "empty": "Aun no hay flujo de dinero para este mes. Agrega movimientos para ver como se movio el dinero.",
         "tooltips": {
           "actualNetCashflow": "Flujo neto de caja real"
         },
@@ -540,13 +543,13 @@
     },
     "averageMode": {
       "label": "Usar meses transcurridos para promedios",
-      "hint": "Por defecto los promedios se calculan sobre 12 meses. Si está activado, se usan solo de enero al mes actual (incluido) y solo los importes de esos meses."
+      "hint": "Activalo para comparar solo con los meses que ya pasaron, en lugar de promediar todo el ano."
     },
     "sectionYear": "Año {{year}}",
     "moneyFlowOptions": {
       "showAllocationTargets": {
         "label": "Mostrar flujos de ahorros, inversión y cripto",
-        "hint": "Oculta estos destinos para enfocarte solo en ingresos y gastos."
+        "hint": "Ocultalo para enfocarte en ingresos y gastos principales, o muestralo para incluir ahorros e inversiones."
       }
     },
     "metrics": {
@@ -556,16 +559,57 @@
     "cards": {
       "moneyFlow": {
         "titleYear": "Flujo de dinero del año: {{year}}",
-        "empty": "No hay datos de flujo de dinero disponibles para el año seleccionado."
+        "empty": "Aun no hay flujo de dinero para este ano. Agrega movimientos para ver como se movio a lo largo del ano."
       },
       "monthlyTrend": {
         "title": "{{label}} por mes",
-        "description": "Total de {{label}} por mes"
+        "description": "Mira cuando {{label}} sube, baja o se mantiene estable durante el ano."
       },
       "monthlyByCategory": {
         "title": "{{label}} por categoría",
-        "description": "{{label}} mensuales divididos por categoría",
+        "description": "Compara como se reparte {{label}} cada mes entre categorias.",
         "summaryTitle": "Totales y promedios por categoría"
+      }
+    }
+  },
+  "compare": {
+    "loadingTitle": "Preparando comparacion",
+    "loadingDescription": "Reuniendo ambos meses para compararlos lado a lado.",
+    "loadFailedWithError": "Error al cargar la comparacion: {{error}}",
+    "empty": "Aun no hay datos para comparar estos meses. Registra actividad en ambos meses y vuelve aqui.",
+    "selectors": {
+      "left": {
+        "title": "Mes 1"
+      },
+      "right": {
+        "title": "Mes 2"
+      },
+      "year": "Ano",
+      "month": "Mes"
+    },
+    "metrics": {
+      "delta": "Diferencia"
+    },
+    "cards": {
+      "summary": {
+        "title": "Resumen de comparacion",
+        "description": "Compara ingresos, gastos y flujo neto de caja lado a lado para ver que mes cambio mas."
+      },
+      "radar": {
+        "title": "Comparacion radar",
+        "description": "Mira que categorias de gasto crecieron, bajaron o se mantuvieron parecidas entre los dos meses.",
+        "empty": "No hay categorias de gasto disponibles para la comparacion radar."
+      },
+      "dailyCalendar": {
+        "title": "Calendario diario de gastos",
+        "description": "Mira que dias concentraron mas gasto en cada mes usando una sola escala.",
+        "panelHint": "Gastos diarios (misma escala)",
+        "empty": "No hay datos diarios de gasto para los meses seleccionados."
+      },
+      "expensesByCategory": {
+        "title": "Gastos por categoria",
+        "description": "Revisa cada categoria lado a lado, incluida la diferencia entre ambos meses.",
+        "empty": "No hay totales de gasto por categoria para los meses seleccionados."
       }
     }
   },
@@ -604,8 +648,8 @@
   },
   "accounts": {
     "table": {
-      "description": "Configuracion de cuentas",
-      "emptyMessage": "No se encontraron cuentas.",
+      "description": "Configura las cuentas que guardan tu dinero o deudas para mantener ordenados los saldos y traspasos.",
+      "emptyMessage": "Aun no hay cuentas. Agrega la primera para empezar a seguir saldos y transferencias.",
       "actions": {
         "add": "Agregar cuenta",
         "edit": "Editar cuenta",
@@ -620,7 +664,7 @@
     "dialog": {
       "add": {
         "title": "Agregar cuenta",
-        "description": "Crea una nueva cuenta con ajustes visuales.",
+        "description": "Crea una cuenta que puedas usar en movimientos, transferencias y patrimonio neto.",
         "placeholders": {
           "name": "Nombre de cuenta",
           "description": "Descripcion de cuenta"
@@ -641,7 +685,7 @@
       },
       "edit": {
         "title": "Editar cuenta",
-        "description": "Actualiza la configuracion de la cuenta.",
+        "description": "Actualiza como se ve esta cuenta y donde la usas dentro de la app.",
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
@@ -654,7 +698,7 @@
     },
     "archiveAlert": {
       "title": "Archivar cuenta?",
-      "description": "Estas seguro de que quieres archivar \"{{name}}\"? Tras confirmar, esta cuenta ya no se podra seleccionar para datos nuevos. Los datos existentes con esta cuenta seguiran mostrandola hasta que edites esos registros.",
+      "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la cuenta.",
       "actions": {
         "cancel": "Cancelar",
         "archive": "Archivar"
@@ -663,8 +707,8 @@
   },
   "categories": {
     "table": {
-      "description": "Configuracion de categorias",
-      "emptyMessage": "No se encontraron categorias.",
+      "description": "Organiza los movimientos en categorias para que reportes, presupuestos y comparaciones tengan sentido.",
+      "emptyMessage": "Aun no hay categorias. Agrega la primera para organizar gastos e ingresos.",
       "actions": {
         "add": "Agregar categoria",
         "edit": "Editar categoria",
@@ -679,7 +723,7 @@
     "dialog": {
       "add": {
         "title": "Agregar categoria",
-        "description": "Crea una nueva categoria con ajustes visuales y tipo.",
+        "description": "Crea una categoria para etiquetar movimientos y agruparlos en reportes.",
         "placeholders": {
           "name": "Nombre de categoria",
           "description": "Descripcion de categoria"
@@ -700,7 +744,7 @@
       },
       "edit": {
         "title": "Editar categoria",
-        "description": "Actualiza la configuracion de la categoria.",
+        "description": "Actualiza la etiqueta, el tipo o el marcador visual de esta categoria.",
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
@@ -713,7 +757,7 @@
     },
     "archiveAlert": {
       "title": "Archivar categoria?",
-      "description": "Estas seguro de que quieres archivar \"{{name}}\"? Tras confirmar, esta categoria ya no se podra seleccionar para datos nuevos. Los datos existentes con esta categoria seguiran mostrandola hasta que edites esos registros.",
+      "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la categoria.",
       "actions": {
         "cancel": "Cancelar",
         "archive": "Archivar"
@@ -726,8 +770,8 @@
       "analysis": "Analisis de presupuesto"
     },
     "table": {
-      "description": "Configuracion de presupuestos por categoria",
-      "emptyMessage": "No se encontraron presupuestos.",
+      "description": "Define objetivos de gasto por categoria para comparar tu plan con el gasto real.",
+      "emptyMessage": "Aun no hay presupuestos. Agrega el primero para empezar a seguir objetivos por categoria.",
       "unknownCategory": "Categoria desconocida",
       "actions": {
         "add": "Agregar presupuesto",
@@ -738,7 +782,7 @@
     "dialog": {
       "add": {
         "title": "Agregar presupuesto",
-        "description": "Crea un presupuesto activo para {{year}}.",
+        "description": "Crea un objetivo de gasto para {{year}} y compara luego el gasto real contra ese limite.",
         "actions": {
           "cancel": "Cancelar",
           "create": "Crear presupuesto"
@@ -754,7 +798,7 @@
       },
       "edit": {
         "title": "Editar presupuesto",
-        "description": "Actualiza la configuracion del presupuesto para {{year}}.",
+        "description": "Actualiza este objetivo de categoria para {{year}} cuando cambie tu plan.",
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
@@ -767,7 +811,7 @@
     },
     "deleteAlert": {
       "title": "Eliminar presupuesto?",
-      "description": "Estas seguro de que quieres eliminar el presupuesto de \"{{category}}\"?",
+      "description": "Elimina el presupuesto de \"{{category}}\". Podras volver a crearlo mas adelante si lo necesitas.",
       "actions": {
         "cancel": "Cancelar",
         "delete": "Eliminar"
@@ -777,7 +821,7 @@
       "title": "Analisis de presupuesto",
       "description": "Compara los objetivos de presupuesto con los gastos reales por categoria para el ano seleccionado.",
       "loading": "Cargando analisis de presupuesto...",
-      "empty": "No hay datos de analisis de presupuesto para {{year}}.",
+      "empty": "Aun no hay analisis de presupuesto para {{year}}. Agrega presupuestos y movimientos relacionados para comparar plan y realidad.",
       "series": {
         "budget": "Presupuesto",
         "expenses": "Gastos"
@@ -790,7 +834,7 @@
       },
       "chart": {
         "title": "Presupuesto vs gastos por categoria",
-        "description": "Comparacion horizontal entre importe de presupuesto y total de gastos para cada categoria con presupuesto."
+        "description": "Mira que categorias van bien, cuales estan cerca del limite y cuales ya se pasaron."
       },
       "errors": {
         "loadFailedWithError": "No se pudo cargar el analisis de presupuesto: {{error}}"
@@ -806,8 +850,8 @@
       "summary": "{{start}}-{{end}} de {{total}}"
     },
     "table": {
-      "description": "Historial de movimientos",
-      "emptyMessage": "No se encontraron movimientos.",
+      "description": "Revisa los ingresos y gastos que afectan saldos, presupuestos y flujo neto de caja.",
+      "emptyMessage": "Aun no hay movimientos. Agrega uno para empezar a seguir gastos, ingresos y flujo neto de caja.",
       "actions": {
         "add": "Agregar movimiento",
         "filter": "Filtrar movimientos",
@@ -818,16 +862,16 @@
     },
     "filters": {
       "title": "Filtrar movimientos",
-      "description": "Aplica uno o mas filtros opcionales para reducir la lista de movimientos.",
+      "description": "Reduce la lista segun fechas, categorias, cuentas o importes para revisar solo lo que necesitas.",
       "empty": {
-        "category": "No se encontraron categorias.",
-        "account": "No se encontraron cuentas."
+        "category": "Aun no hay categorias. Agrega una antes de filtrar movimientos.",
+        "account": "Aun no hay cuentas. Agrega una antes de filtrar movimientos."
       }
     },
     "dialog": {
       "add": {
         "title": "Agregar movimiento",
-        "description": "Crea un nuevo movimiento.",
+        "description": "Registra un ingreso o un gasto para que aparezca en saldos, presupuestos y reportes.",
         "actions": {
           "cancel": "Cancelar",
           "create": "Crear movimiento"
@@ -845,7 +889,7 @@
       },
       "edit": {
         "title": "Editar movimiento",
-        "description": "Actualiza los detalles del movimiento.",
+        "description": "Actualiza los detalles de este ingreso o gasto.",
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
@@ -858,7 +902,7 @@
     },
     "deleteAlert": {
       "title": "Eliminar movimiento?",
-      "description": "Estas seguro de que quieres eliminar este movimiento? Esta accion no se puede deshacer.",
+      "description": "Elimina este movimiento de tu historial. Esta accion no se puede deshacer.",
       "actions": {
         "cancel": "Cancelar",
         "delete": "Eliminar"
@@ -866,7 +910,7 @@
     },
     "duplicateAlert": {
       "title": "Duplicar movimiento?",
-      "description": "Estas seguro de que quieres duplicar este movimiento?",
+      "description": "Crea una copia de este movimiento para editarla sin volver a escribirlo todo.",
       "actions": {
         "cancel": "Cancelar",
         "duplicate": "Duplicar"
@@ -875,8 +919,8 @@
     "transfers": {
       "title": "Transferencias",
       "table": {
-        "description": "Movimientos de dinero entre tus cuentas.",
-        "emptyMessage": "No se encontraron transferencias.",
+        "description": "Sigue el dinero que mueves entre tus propias cuentas. Las transferencias cambian donde esta el dinero, no tu gasto total.",
+        "emptyMessage": "Aun no hay transferencias. Agrega una cuando muevas dinero entre tus propias cuentas.",
         "actions": {
           "add": "Agregar transferencia",
           "filter": "Filtrar transferencias",
@@ -887,7 +931,7 @@
       "dialog": {
         "add": {
           "title": "Agregar transferencia",
-          "description": "Mueve dinero entre dos cuentas.",
+          "description": "Mueve dinero entre dos de tus cuentas sin afectar ingresos ni gastos.",
           "actions": {
             "cancel": "Cancelar",
             "create": "Crear transferencia"
@@ -906,7 +950,7 @@
         },
         "edit": {
           "title": "Editar transferencia",
-          "description": "Actualiza los detalles de la transferencia.",
+          "description": "Actualiza esta transferencia para mantener precisa la historia de movimientos entre cuentas.",
           "actions": {
             "cancel": "Cancelar",
             "save": "Guardar cambios"
@@ -919,7 +963,7 @@
       },
       "deleteAlert": {
         "title": "Eliminar transferencia?",
-        "description": "Estas seguro de que quieres eliminar esta transferencia? Esta accion no se puede deshacer.",
+        "description": "Elimina esta transferencia de tu historial. Esta accion no se puede deshacer.",
         "actions": {
           "cancel": "Cancelar",
           "delete": "Eliminar"
@@ -927,9 +971,9 @@
       },
       "filters": {
         "title": "Filtrar transferencias",
-        "description": "Aplica uno o mas filtros opcionales para reducir la lista de transferencias.",
+        "description": "Reduce la lista de transferencias por fechas, importes o cuentas para revisar solo lo necesario.",
         "empty": {
-          "account": "No se encontraron cuentas."
+          "account": "Aun no hay cuentas. Agrega una antes de filtrar transferencias."
         }
       }
     }
@@ -1057,8 +1101,8 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Gestiona planes recurrentes que generan futuros movimientos y transferencias.",
-      "emptyMessage": "No se encontraron eventos recurrentes.",
+      "description": "Planifica movimientos y transferencias repetidos para llevar mejor tu actividad rutinaria.",
+      "emptyMessage": "Aun no hay eventos recurrentes. Agrega uno para automatizar movimientos o transferencias repetidas.",
       "columns": {
         "title": "Titulo",
         "startDate": "Fecha de inicio",
@@ -1105,7 +1149,7 @@
     "dialog": {
       "add": {
         "title": "Agregar evento recurrente",
-        "description": "Crea un plan recurrente para un movimiento o una transferencia. Al confirmar, se crearan de inmediato los elementos programados.",
+        "description": "Crea una regla repetida para que la app agregue por ti los proximos movimientos o transferencias.",
         "actions": {
           "cancel": "Cancelar",
           "create": "Crear evento recurrente"
@@ -1135,7 +1179,7 @@
       },
       "edit": {
         "title": "Editar evento recurrente",
-        "description": "Actualiza la configuracion del plan recurrente. Los cambios de plantilla tambien se aplican a los elementos ya creados por este plan.",
+        "description": "Actualiza esta regla y manten alineados los proximos elementos planificados.",
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
@@ -1160,16 +1204,16 @@
           "frequencyInterval": "1"
         },
         "tooltips": {
-          "scheduleLockedAfterCreate": "Despues de crear el evento recurrente, la configuracion de programacion no se puede cambiar."
+          "scheduleLockedAfterCreate": "Despues de crearlo, la programacion queda fija para que las fechas generadas sigan siendo predecibles."
         }
       }
     },
     "deleteAlert": {
       "title": "Eliminar evento recurrente?",
-      "description": "Seguro que quieres eliminar \"{{title}}\"?",
+      "description": "Elimina \"{{title}}\" y deja de crear elementos futuros desde esta regla.",
       "options": {
         "deleteLinkedItems": "Eliminar tambien los elementos vinculados ya creados por este plan",
-        "deleteLinkedItemsHint": "Esto elimina movimientos/transferencias generados conectados a este evento recurrente."
+        "deleteLinkedItemsHint": "Esto tambien elimina los movimientos o transferencias que ya se crearon desde esta regla."
       },
       "actions": {
         "cancel": "Cancelar",
@@ -1178,7 +1222,7 @@
     },
     "runConfirm": {
       "title": "Ejecutar evento recurrente?",
-      "description": "Confirma para generar ahora los elementos programados faltantes de \"{{title}}\".",
+      "description": "Genera ahora los elementos programados que falten para \"{{title}}\".",
       "actions": {
         "cancel": "Cancelar",
         "run": "Ejecutar ahora"
