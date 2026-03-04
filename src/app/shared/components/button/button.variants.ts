@@ -22,9 +22,9 @@ export const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
       },
       zSize: {
-        default: 'h-9 px-4 py-2 data-icon-only:size-9 data-icon-only:p-0',
-        sm: 'h-8 rounded-md gap-1.5 px-3 data-icon-only:size-8 data-icon-only:p-0',
-        lg: 'h-10 rounded-md px-6 data-icon-only:size-10 data-icon-only:p-0',
+        default: 'h-10 px-4 py-2 data-icon-only:size-10 data-icon-only:p-0',
+        sm: 'h-10 rounded-md gap-1.5 px-3.5 data-icon-only:size-10 data-icon-only:p-0',
+        lg: 'h-11 rounded-md px-6 data-icon-only:size-11 data-icon-only:p-0',
       },
       zShape: {
         default: 'rounded-md',

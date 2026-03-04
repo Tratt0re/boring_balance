@@ -36,7 +36,7 @@ export class ZardIconComponent {
   protected readonly icon = computed(() => {
     const type = this.zType();
     if (typeof type === 'string') {
-      return ZARD_ICONS[type];
+      return ZARD_ICONS[type] ?? ZARD_ICONS.circle;
     }
 
     return type;

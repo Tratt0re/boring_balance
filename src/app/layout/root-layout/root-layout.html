@@ -1,5 +1,7 @@
-<z-layout class="h-full overflow-hidden">
-  <app-header></app-header>
+<z-layout class="h-full overflow-hidden" [style.--app-shell-header-offset]="headerOffset()">
+  @if (isFullscreen()) {
+    <app-header></app-header>
+  }
 
   <z-layout class="relative min-h-0 flex-1" zDirection="horizontal">
     @if (showSidebarOverlay()) {

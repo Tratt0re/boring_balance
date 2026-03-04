@@ -52,9 +52,9 @@ export class ZardSegmentedItemComponent {
   selector: 'z-segmented',
   standalone: true,
   template: `
-    <div [class]="classes()" role="tablist" [attr.aria-label]="zAriaLabel()">
+    <div [class]="classes()" role="group" [attr.aria-label]="zAriaLabel()">
       <span
-        class="pointer-events-none absolute top-1 bottom-1 left-0 rounded-sm bg-background shadow-sm transition-[transform,width,opacity] duration-200 ease-out"
+        class="pointer-events-none absolute top-1 bottom-1 left-0 rounded-sm bg-background shadow-sm transition-[transform,opacity] duration-200 ease-out"
         [style.width]="activeIndicatorState().width"
         [style.transform]="activeIndicatorState().transform"
         [class.opacity-0]="!activeIndicatorState().visible"
@@ -64,13 +64,12 @@ export class ZardSegmentedItemComponent {
         <button
           #segmentButton
           type="button"
-          role="tab"
           [class]="getItemClasses(option.value)"
           [disabled]="option.disabled || zDisabled()"
-          [attr.aria-selected]="isSelected(option.value)"
-          [attr.aria-controls]="option.value + '-panel'"
-          [attr.id]="option.value + '-tab'"
+          [attr.aria-pressed]="isSelected(option.value)"
+          [attr.tabindex]="tabIndexFor(option.value)"
           (click)="selectOption(option.value)"
+          (keydown)="onItemKeydown($event, option.value)"
         >
           {{ option.label }}
         </button>
@@ -178,6 +177,10 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
     return this.selectedValue() === value;
   }
 
+  protected tabIndexFor(value: string): number {
+    return this.activeIndex() >= 0 && this.resolvedOptions()[this.activeIndex()]?.value === value ? 0 : -1;
+  }
+
   protected selectOption(value: string) {
     if (this.zDisabled()) return;
 
@@ -188,6 +191,34 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
     this.onChange(value);
     this.onTouched();
     this.zChange.emit(value);
+  }
+
+  protected onItemKeydown(event: KeyboardEvent, value: string): void {
+    const currentIndex = this.resolvedOptions().findIndex((option) => option.value === value);
+    if (currentIndex < 0) {
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        event.preventDefault();
+        this.moveSelection(currentIndex, 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        event.preventDefault();
+        this.moveSelection(currentIndex, -1);
+        break;
+      case 'Home':
+        event.preventDefault();
+        this.focusAndSelectFirstEnabled();
+        break;
+      case 'End':
+        event.preventDefault();
+        this.focusAndSelectLastEnabled();
+        break;
+    }
   }
 
   @HostListener('window:resize')
@@ -210,5 +241,59 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
 
   setDisabledState(_isDisabled: boolean): void {
     // Handled by zDisabled input
+  }
+
+  private activeIndex(): number {
+    const selectedIndex = this.selectedIndex();
+    const options = this.resolvedOptions();
+
+    if (selectedIndex >= 0 && !options[selectedIndex]?.disabled) {
+      return selectedIndex;
+    }
+
+    return options.findIndex((option) => !option.disabled);
+  }
+
+  private moveSelection(startIndex: number, direction: 1 | -1): void {
+    const options = this.resolvedOptions();
+    if (options.length === 0) {
+      return;
+    }
+
+    let nextIndex = startIndex;
+    for (let iteration = 0; iteration < options.length; iteration++) {
+      nextIndex = (nextIndex + direction + options.length) % options.length;
+      if (!options[nextIndex]?.disabled) {
+        this.focusAndSelectIndex(nextIndex);
+        return;
+      }
+    }
+  }
+
+  private focusAndSelectFirstEnabled(): void {
+    const nextIndex = this.resolvedOptions().findIndex((option) => !option.disabled);
+    if (nextIndex >= 0) {
+      this.focusAndSelectIndex(nextIndex);
+    }
+  }
+
+  private focusAndSelectLastEnabled(): void {
+    const options = this.resolvedOptions();
+    for (let index = options.length - 1; index >= 0; index--) {
+      if (!options[index]?.disabled) {
+        this.focusAndSelectIndex(index);
+        return;
+      }
+    }
+  }
+
+  private focusAndSelectIndex(index: number): void {
+    const option = this.resolvedOptions()[index];
+    if (!option || option.disabled) {
+      return;
+    }
+
+    this.selectOption(option.value);
+    this.segmentButtons()[index]?.nativeElement.focus();
   }
 }
