@@ -52,15 +52,20 @@ interface SelectSingleVisual {
 }
 
 const COMPACT_MODE_WIDTH_THRESHOLD = 100;
+let nextSelectInstanceId = 0;
 
 @Component({
   selector: 'z-select, [z-select]',
   imports: [OverlayModule, ZardBadgeComponent, ZardIconComponent],
   template: `
     <button
+      #triggerButton
       type="button"
       role="combobox"
-      aria-controls="dropdown"
+      [attr.id]="triggerId()"
+      [attr.aria-controls]="popupId()"
+      [attr.aria-labelledby]="ariaLabelledBy()"
+      [attr.aria-label]="ariaLabel()"
       [class]="triggerClasses()"
       [disabled]="zDisabled()"
       [attr.aria-expanded]="isOpen()"
@@ -103,9 +108,10 @@ const COMPACT_MODE_WIDTH_THRESHOLD = 100;
 
     <ng-template #dropdownTemplate>
       <div
-        id="dropdown"
+        [attr.id]="popupId()"
         [class]="contentClasses()"
         role="listbox"
+        [attr.aria-labelledby]="triggerId()"
         [attr.data-state]="'open'"
         (keydown.{arrowdown,arrowup,enter,space,escape,home,end}.prevent)="onDropdownKeydown($event)"
         tabindex="-1"
@@ -140,12 +146,18 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   private readonly overlayPositionBuilder = inject(OverlayPositionBuilder);
   private readonly viewContainerRef = inject(ViewContainerRef);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly instanceId = ++nextSelectInstanceId;
 
   readonly dropdownTemplate = viewChild.required<TemplateRef<void>>('dropdownTemplate');
+  readonly triggerButton = viewChild.required<ElementRef<HTMLButtonElement>>('triggerButton');
   readonly selectItems = contentChildren(ZardSelectItemComponent);
 
   private overlayRef?: OverlayRef;
   private portal?: TemplatePortal;
+  private readonly triggerIdValue = signal(`z-select-${this.instanceId}`);
+  private readonly popupIdValue = signal(`z-select-${this.instanceId}-listbox`);
+  private readonly externalLabelId = signal<string | null>(null);
+  private readonly hostAriaLabel = signal<string | null>(null);
 
   readonly class = input<ClassValue>('');
   readonly zDisabled = input(false, { transform });
@@ -164,6 +176,27 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   readonly focusedIndex = signal<number>(-1);
   protected readonly isFocus = signal(false);
   protected readonly isCompact = signal(false);
+  protected readonly triggerId = computed(() => this.triggerIdValue());
+  protected readonly popupId = computed(() => this.popupIdValue());
+  protected readonly ariaLabelledBy = computed(() => this.externalLabelId());
+  protected readonly ariaLabel = computed(() => {
+    if (this.externalLabelId()) {
+      return null;
+    }
+
+    const explicitAriaLabel = this.hostAriaLabel()?.trim();
+    if (explicitAriaLabel) {
+      return explicitAriaLabel;
+    }
+
+    const manualLabel = this.zLabel().trim();
+    if (manualLabel.length > 0) {
+      return manualLabel;
+    }
+
+    const placeholder = this.zPlaceholder().trim();
+    return placeholder.length > 0 ? placeholder : 'Select an option';
+  });
 
   protected onFocus(): void {
     if (this.isCompact()) {
@@ -238,6 +271,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   );
 
   ngAfterContentInit() {
+    this.syncAccessibilityBindings();
     this.syncSelectItems();
   }
 
@@ -379,6 +413,19 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
       item.zSize.set(this.zSize());
       item.zMode.set(shouldUseCompactMode ? 'compact' : 'normal');
     });
+  }
+
+  private syncAccessibilityBindings(): void {
+    const hostElement = this.elementRef.nativeElement;
+    const hostId = hostElement.getAttribute('id')?.trim();
+
+    if (hostId) {
+      this.triggerIdValue.set(`${hostId}-trigger`);
+      this.popupIdValue.set(`${hostId}-listbox`);
+    }
+
+    this.hostAriaLabel.set(hostElement.getAttribute('aria-label'));
+    this.externalLabelId.set(this.findExternalLabelId(hostId));
   }
 
   private provideLabelForSingleSelectMode(selectedValue: string): string[] {
@@ -630,12 +677,12 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
     for (let index = 0; index < items.length; index++) {
       const item = items[index];
       if (index === focusedIndex) {
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('data-focused', 'true');
         item.focus();
-        item.setAttribute('aria-selected', 'true');
-        item.setAttribute('data-selected', 'true');
       } else {
-        item.removeAttribute('aria-selected');
-        item.removeAttribute('data-selected');
+        item.setAttribute('tabindex', '-1');
+        item.removeAttribute('data-focused');
       }
     }
   }
@@ -650,10 +697,7 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
   }
 
   private focusButton() {
-    const button = this.elementRef.nativeElement.querySelector('button');
-    if (button) {
-      button.focus();
-    }
+    this.triggerButton().nativeElement.focus();
   }
 
   private focusSelectedItem() {
@@ -700,5 +744,22 @@ export class ZardSelectComponent implements ControlValueAccessor, AfterContentIn
 
   setDisabledState(): void {
     // The disabled state is handled by the disabled input
+  }
+
+  private findExternalLabelId(hostId?: string): string | null {
+    if (!hostId || !isPlatformBrowser(this.platformId)) {
+      return null;
+    }
+
+    const matchingLabel = Array.from(document.querySelectorAll('label')).find(label => label.htmlFor === hostId);
+    if (!matchingLabel) {
+      return null;
+    }
+
+    if (!matchingLabel.id) {
+      matchingLabel.id = `${hostId}-label`;
+    }
+
+    return matchingLabel.id;
   }
 }

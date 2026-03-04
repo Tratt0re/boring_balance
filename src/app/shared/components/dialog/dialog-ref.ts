@@ -64,6 +64,8 @@ export class ZardDialogRef<T = any, R = any, U = any> {
         this.overlayRef.dispose();
       }
 
+      this.containerInstance.restoreFocus();
+
       if (!this.destroy$.closed) {
         this.destroy$.next();
         this.destroy$.complete();

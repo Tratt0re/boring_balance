@@ -29,8 +29,6 @@ function initMainWindow(isDev) {
     minHeight: 500,
     show: false,
     autoHideMenuBar: true,
-    titleBarStyle: isMac ? 'hiddenInset' : 'hidden',
-    ...(isMac ? {} : { titleBarOverlay: true }),
     webPreferences: {
       preload: resolvePreloadPath(),
       nodeIntegration: false,
@@ -41,12 +39,34 @@ function initMainWindow(isDev) {
   });
 }
 
+function emitFullscreenState(mainWindow) {
+  if (mainWindow.isDestroyed() || mainWindow.webContents.isDestroyed()) {
+    return;
+  }
+
+  mainWindow.webContents.send('window:fullscreenChanged', {
+    isFullscreen: mainWindow.isFullScreen(),
+  });
+}
+
 function registerWindowLifecycle(mainWindow) {
   openWindows.add(mainWindow);
 
   // mainWindow.on('focus', () => {});
   // mainWindow.on('blur', () => {});
   // mainWindow.on('close', (event) => {});
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    emitFullscreenState(mainWindow);
+  });
+
+  mainWindow.on('enter-full-screen', () => {
+    emitFullscreenState(mainWindow);
+  });
+
+  mainWindow.on('leave-full-screen', () => {
+    emitFullscreenState(mainWindow);
+  });
 
   mainWindow.on('closed', () => {
     openWindows.delete(mainWindow);

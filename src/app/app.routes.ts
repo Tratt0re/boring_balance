@@ -1,26 +1,47 @@
 import { Routes } from '@angular/router';
 
-import { AccountsPage } from '@/pages/accounts-page/accounts-page';
-import { BreakdownPage } from '@/pages/breakdown-page/breakdown-page';
-import { ComparePage } from '@/pages/compare-page/compare-page';
-import { CategoriesPage } from '@/pages/categories-page/categories-page';
-import { BudgetPage } from '@/pages/budget-page/budget-page';
-import { OverviewPage } from '@/pages/overview-page/overview-page';
-import { RecurringEventsPage } from '@/pages/recurring-events-page/recurring-events-page';
-import { SettingsPage } from '@/pages/settings/settings.page';
-import { TransactionPage } from '@/pages/transaction-page/transaction-page';
-
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', component: OverviewPage },
-  { path: 'transactions', component: TransactionPage },
-  { path: 'breakdown', component: BreakdownPage },
-  { path: 'compare', component: ComparePage },
-  { path: 'accounts', component: AccountsPage },
-  { path: 'budget', component: BudgetPage },
-  { path: 'categories', component: CategoriesPage },
-  { path: 'recurring-events', component: RecurringEventsPage },
+  {
+    path: '',
+    pathMatch: 'full',
+    loadComponent: () => import('./pages/overview-page/overview-page').then((module) => module.OverviewPage),
+  },
+  {
+    path: 'transactions',
+    loadComponent: () =>
+      import('./pages/transaction-page/transaction-page').then((module) => module.TransactionPage),
+  },
+  {
+    path: 'breakdown',
+    loadComponent: () => import('./pages/breakdown-page/breakdown-page').then((module) => module.BreakdownPage),
+  },
+  {
+    path: 'compare',
+    loadComponent: () => import('./pages/compare-page/compare-page').then((module) => module.ComparePage),
+  },
+  {
+    path: 'accounts',
+    loadComponent: () => import('./pages/accounts-page/accounts-page').then((module) => module.AccountsPage),
+  },
+  {
+    path: 'budget',
+    loadComponent: () => import('./pages/budget-page/budget-page').then((module) => module.BudgetPage),
+  },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('./pages/categories-page/categories-page').then((module) => module.CategoriesPage),
+  },
+  {
+    path: 'recurring-events',
+    loadComponent: () =>
+      import('./pages/recurring-events-page/recurring-events-page').then((module) => module.RecurringEventsPage),
+  },
   { path: 'settings', pathMatch: 'full', redirectTo: 'settings/general' },
-  { path: 'settings/:section', component: SettingsPage },
+  {
+    path: 'settings/:section',
+    loadComponent: () => import('./pages/settings/settings.page').then((module) => module.SettingsPage),
+  },
   { path: 'data-backups', pathMatch: 'full', redirectTo: 'settings/backups' },
   { path: 'about', pathMatch: 'full', redirectTo: 'settings/about' },
   { path: '**', redirectTo: '' },

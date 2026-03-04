@@ -20,9 +20,9 @@ export const selectTriggerVariants = cva(
   {
     variants: {
       zSize: {
-        sm: 'min-h-8 py-1 text-xs px-2',
-        default: 'min-h-9 py-1.5 px-3 text-sm',
-        lg: 'min-h-10 py-2 text-base px-4',
+        sm: 'min-h-10 px-2.5 py-2 text-xs',
+        default: 'min-h-10 px-3 py-2 text-sm',
+        lg: 'min-h-11 px-4 py-2.5 text-base',
       },
     },
     defaultVariants: {
@@ -34,13 +34,13 @@ export const selectContentVariants = cva(
   'z-9999 min-w-full scrollbar-hide overflow-y-auto rounded-md border bg-popover text-popover-foreground shadow-lg animate-in fade-in-0 zoom-in-95',
 );
 export const selectItemVariants = cva(
-  'relative flex min-w-full cursor-pointer text-nowrap items-center gap-2 rounded-sm mb-0.5 outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-selected:bg-accent data-selected:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 data-disabled:cursor-not-allowed data-disabled:hover:bg-transparent data-disabled:hover:text-current [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  'relative mb-0.5 flex min-w-full cursor-pointer items-center gap-2 rounded-sm text-nowrap outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-[focused=true]:bg-accent data-[focused=true]:text-accent-foreground data-selected:bg-accent data-selected:text-accent-foreground data-disabled:pointer-events-none data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-transparent data-disabled:hover:text-current [&_svg:not([class*="text-"])]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
   {
     variants: {
       zSize: {
-        sm: 'min-h-8 py-1 text-xs',
-        default: 'min-h-9 py-1.5 text-sm',
-        lg: 'min-h-10 py-2 text-base',
+        sm: 'min-h-10 py-2 text-xs',
+        default: 'min-h-10 py-2 text-sm',
+        lg: 'min-h-11 py-2.5 text-base',
       },
       zMode: {
         normal: 'pr-8 pl-2',

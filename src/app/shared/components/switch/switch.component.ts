@@ -16,7 +16,12 @@ import type { ClassValue } from 'clsx';
 import { ZardIdDirective } from '@/shared/core';
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
-import { switchVariants, type ZardSwitchSizeVariants, type ZardSwitchTypeVariants } from './switch.variants';
+import {
+  switchTrackVariants,
+  switchVariants,
+  type ZardSwitchSizeVariants,
+  type ZardSwitchTypeVariants,
+} from './switch.variants';
 
 type OnTouchedType = () => void;
 type OnChangeType = (value: boolean) => void;
@@ -25,7 +30,7 @@ type OnChangeType = (value: boolean) => void;
   selector: 'z-switch',
   imports: [ZardIdDirective],
   template: `
-    <span class="flex items-center space-x-2" zardId="switch" #z="zardId">
+    <span class="inline-flex min-h-11 items-center gap-2" zardId="switch" #z="zardId">
       <button
         [id]="zId() || z.id()"
         type="button"
@@ -37,10 +42,17 @@ type OnChangeType = (value: boolean) => void;
         (click)="onSwitchChange()"
       >
         <span
+          [class]="trackClasses()"
+          [attr.data-type]="zType()"
           [attr.data-size]="zSize()"
           [attr.data-state]="status()"
-          class="bg-background pointer-events-none block h-5 w-5 rounded-full shadow-lg ring-0 transition-transform data-[size=lg]:h-6 data-[size=lg]:w-6 data-[size=sm]:h-4 data-[size=sm]:w-4 data-[state=checked]:translate-x-5 data-[size=lg]:data-[state=checked]:translate-x-6 data-[size=sm]:data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[size=lg]:data-[state=unchecked]:translate-x-0 data-[size=sm]:data-[state=unchecked]:translate-x-0"
-        ></span>
+        >
+          <span
+            [attr.data-size]="zSize()"
+            [attr.data-state]="status()"
+            class="bg-background pointer-events-none block h-5 w-5 rounded-full shadow-lg ring-0 transition-transform data-[size=lg]:h-6 data-[size=lg]:w-6 data-[size=sm]:h-4 data-[size=sm]:w-4 data-[state=checked]:translate-x-5 data-[size=lg]:data-[state=checked]:translate-x-6 data-[size=sm]:data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[size=lg]:data-[state=unchecked]:translate-x-0 data-[size=sm]:data-[state=unchecked]:translate-x-0"
+          ></span>
+        </span>
       </button>
 
       <label
@@ -76,6 +88,9 @@ export class ZardSwitchComponent implements ControlValueAccessor {
   protected readonly status = computed(() => (this.zChecked() ? 'checked' : 'unchecked'));
   protected readonly classes = computed(() =>
     mergeClasses(switchVariants({ zType: this.zType(), zSize: this.zSize() }), this.class()),
+  );
+  protected readonly trackClasses = computed(() =>
+    mergeClasses(switchTrackVariants({ zType: this.zType(), zSize: this.zSize() })),
   );
 
   protected readonly formDisabled = signal(false);
