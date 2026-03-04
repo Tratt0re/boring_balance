@@ -119,10 +119,17 @@ function remove(payload) {
   return { changed };
 }
 
+function getLatestByAccount(payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  const account_id = normalizePositiveInteger(body.account_id, 'payload.account_id');
+  return accountValuationsModel.getLatestByAccount(account_id);
+}
+
 module.exports = {
   create,
   get,
   list,
   update,
   remove,
+  getLatestByAccount,
 };

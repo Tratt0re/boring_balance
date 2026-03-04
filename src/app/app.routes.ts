@@ -44,5 +44,12 @@ export const routes: Routes = [
   },
   { path: 'data-backups', pathMatch: 'full', redirectTo: 'settings/backups' },
   { path: 'about', pathMatch: 'full', redirectTo: 'settings/about' },
+  {
+    path: 'account-valuations/:accountId',
+    loadComponent: () =>
+      import('./pages/account-valuations-page/account-valuations-page').then(
+        (module) => module.AccountValuationsPage,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

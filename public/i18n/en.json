@@ -1337,5 +1337,86 @@
       "loadFailedWithError": "Failed to load recurring events: {{error}}",
       "loadUnexpected": "Unexpected error while loading recurring events."
     }
+  },
+  "accountValuations": {
+    "page": {
+      "title": "Account Valuations"
+    },
+    "table": {
+      "description": "History of valuation snapshots for this account.",
+      "emptyMessage": "No valuation snapshots yet. Add your first snapshot to start tracking.",
+      "columns": {
+        "date": "Date",
+        "value": "Value",
+        "change": "Change"
+      },
+      "actions": {
+        "viewHistory": "View valuation history",
+        "add": "Add snapshot",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "header": {
+      "currentValue": "Current value",
+      "change": "Change",
+      "changePct": "Change %",
+      "accountBalance": "Account balance",
+      "lastSnapshot": "Latest snapshot",
+      "changeVsBalance": "Change vs balance",
+      "noSnapshots": "Add your first snapshot to compare against your account balance."
+    },
+    "chart": {
+      "title": "Value over time",
+      "description": "Trend of saved valuation snapshots for this account.",
+      "seriesName": "Value"
+    },
+    "dialog": {
+      "fields": {
+        "value": "Value",
+        "date": "Date"
+      },
+      "add": {
+        "title": "Add snapshot",
+        "description": "Record the current value of your account at a specific date.",
+        "actions": {
+          "create": "Add snapshot",
+          "cancel": "Cancel"
+        },
+        "errors": {
+          "fixValidation": "Please fix the errors above before saving.",
+          "createFailed": "Failed to create the snapshot. Please try again.",
+          "valueRequired": "Value is required.",
+          "valueInvalid": "Value must be a valid positive number.",
+          "dateRequired": "Date is required."
+        }
+      },
+      "edit": {
+        "title": "Edit snapshot",
+        "description": "Update the value or date of this valuation snapshot.",
+        "actions": {
+          "save": "Save changes",
+          "cancel": "Cancel"
+        },
+        "errors": {
+          "fixValidation": "Please fix the errors above before saving.",
+          "updateFailed": "Failed to update the snapshot. Please try again."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Delete snapshot",
+      "description": "Are you sure you want to delete this valuation snapshot? This action cannot be undone.",
+      "actions": {
+        "delete": "Delete",
+        "cancel": "Cancel"
+      }
+    },
+    "toasts": {
+      "createSuccess": "Snapshot added successfully.",
+      "updateSuccess": "Snapshot updated successfully.",
+      "deleteSuccess": "Snapshot deleted successfully.",
+      "deleteError": "Failed to delete the snapshot."
+    }
   }
 }

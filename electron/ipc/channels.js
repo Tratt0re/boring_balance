@@ -8,11 +8,12 @@ const CHANNELS = Object.freeze({
     upsert: 'db:app-meta:upsert',
   }),
   accountValuations: Object.freeze({
-    create: 'db:account-valuations:create',
-    get:    'db:account-valuations:get',
-    list:   'db:account-valuations:list',
-    update: 'db:account-valuations:update',
-    remove: 'db:account-valuations:remove',
+    create:               'db:account-valuations:create',
+    get:                  'db:account-valuations:get',
+    list:                 'db:account-valuations:list',
+    update:               'db:account-valuations:update',
+    remove:               'db:account-valuations:remove',
+    getLatestByAccount:   'db:account-valuations:get-latest-by-account',
   }),
   accounts: Object.freeze({
     create: 'db:accounts:create',

@@ -1,0 +1,42 @@
+<form class="grid gap-4 pb-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium" for="valuation-value">
+      {{ 'accountValuations.dialog.fields.value' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <input
+      id="valuation-value"
+      z-input
+      type="number"
+      formControlName="value"
+      step="0.01"
+      min="0"
+      aria-required="true"
+      [attr.aria-invalid]="visibleValueErrorKey() ? 'true' : null"
+      [attr.placeholder]="numberFormatService.amountPlaceholder()"
+    />
+    @if (visibleValueErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="mb-1.5 block text-sm font-medium">
+      {{ 'accountValuations.dialog.fields.date' | translate }}
+      <span class="text-destructive">*</span>
+    </label>
+    <z-date-picker
+      zIconPosition="right"
+      formControlName="date"
+      [placeholder]="'common.placeholders.pickDate' | translate"
+      [attr.aria-invalid]="visibleDateErrorKey() ? 'true' : null"
+    />
+    @if (visibleDateErrorKey(); as currentError) {
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+    }
+  </div>
+
+  @if (errorKey(); as currentError) {
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+  }
+</form>

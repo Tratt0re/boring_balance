@@ -1,5 +1,6 @@
 import { Component, input, output, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 
 import { SidebarToggleComponent } from '@/components/sidebar-toggle/sidebar-toggle.component';
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -12,6 +13,8 @@ import type {
   ToolbarAction,
   ToolbarItemAction,
   ToolbarItemNavigation,
+  ToolbarTitleBreadcrumbItem,
+  ToolbarTitleMode,
   ToolbarSelectItem,
 } from '@/services/toolbar-context.service';
 
@@ -21,6 +24,7 @@ import type {
     HeaderComponent,
     SidebarToggleComponent,
     TranslatePipe,
+    RouterLink,
     ZardButtonComponent,
     ZardDividerComponent,
     ZardIconComponent,
@@ -34,6 +38,8 @@ import type {
 export class Toolbar {
   readonly sidebarCollapsed = input(false);
   readonly title = input<string | null>(null);
+  readonly titleMode = input<ToolbarTitleMode>('default');
+  readonly titleBreadcrumbs = input<readonly ToolbarTitleBreadcrumbItem[]>([]);
   readonly itemActions = input<readonly ToolbarItemAction[]>([]);
   readonly itemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly sidebarToggle = output<void>();
@@ -77,6 +83,14 @@ export class Toolbar {
 
   protected hasItemNavigation(): boolean {
     return this.itemNavigation() !== null;
+  }
+
+  protected hasTitleBreadcrumbs(): boolean {
+    return this.titleMode() === 'breadcrumb' && this.titleBreadcrumbs().length > 0;
+  }
+
+  protected isBreadcrumbLabelTranslated(item: ToolbarTitleBreadcrumbItem): boolean {
+    return item.translate !== false;
   }
 
   protected isToolbarItemDisabled(item: { disabled?: boolean | (() => boolean) }): boolean {

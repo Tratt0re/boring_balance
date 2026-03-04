@@ -1337,5 +1337,86 @@
       "loadFailedWithError": "Impossibile caricare gli eventi ricorrenti: {{error}}",
       "loadUnexpected": "Errore imprevisto durante il caricamento degli eventi ricorrenti."
     }
+  },
+  "accountValuations": {
+    "page": {
+      "title": "Valutazioni conto"
+    },
+    "table": {
+      "description": "Storico delle istantanee di valutazione per questo conto.",
+      "emptyMessage": "Nessuna istantanea di valutazione ancora. Aggiungi la prima per iniziare a monitorare.",
+      "columns": {
+        "date": "Data",
+        "value": "Valore",
+        "change": "Variazione"
+      },
+      "actions": {
+        "viewHistory": "Vedi storico valutazioni",
+        "add": "Aggiungi istantanea",
+        "edit": "Modifica",
+        "delete": "Elimina"
+      }
+    },
+    "header": {
+      "currentValue": "Valore attuale",
+      "change": "Variazione",
+      "changePct": "Variazione %",
+      "accountBalance": "Saldo conto",
+      "lastSnapshot": "Ultima istantanea",
+      "changeVsBalance": "Variazione vs saldo",
+      "noSnapshots": "Aggiungi la prima istantanea per confrontarla con il saldo del conto."
+    },
+    "chart": {
+      "title": "Valore nel tempo",
+      "description": "Andamento delle istantanee di valutazione salvate per questo conto.",
+      "seriesName": "Valore"
+    },
+    "dialog": {
+      "fields": {
+        "value": "Valore",
+        "date": "Data"
+      },
+      "add": {
+        "title": "Aggiungi istantanea",
+        "description": "Registra il valore attuale del conto in una data specifica.",
+        "actions": {
+          "create": "Aggiungi istantanea",
+          "cancel": "Annulla"
+        },
+        "errors": {
+          "fixValidation": "Correggi gli errori sopra prima di salvare.",
+          "createFailed": "Impossibile creare l'istantanea. Riprova.",
+          "valueRequired": "Il valore è obbligatorio.",
+          "valueInvalid": "Il valore deve essere un numero positivo valido.",
+          "dateRequired": "La data è obbligatoria."
+        }
+      },
+      "edit": {
+        "title": "Modifica istantanea",
+        "description": "Aggiorna il valore o la data di questa istantanea di valutazione.",
+        "actions": {
+          "save": "Salva modifiche",
+          "cancel": "Annulla"
+        },
+        "errors": {
+          "fixValidation": "Correggi gli errori sopra prima di salvare.",
+          "updateFailed": "Impossibile aggiornare l'istantanea. Riprova."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Elimina istantanea",
+      "description": "Sei sicuro di voler eliminare questa istantanea di valutazione? Questa azione non può essere annullata.",
+      "actions": {
+        "delete": "Elimina",
+        "cancel": "Annulla"
+      }
+    },
+    "toasts": {
+      "createSuccess": "Istantanea aggiunta con successo.",
+      "updateSuccess": "Istantanea aggiornata con successo.",
+      "deleteSuccess": "Istantanea eliminata con successo.",
+      "deleteError": "Impossibile eliminare l'istantanea."
+    }
   }
 }

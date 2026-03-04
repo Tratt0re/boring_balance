@@ -23,11 +23,12 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.appMeta.remove]: appMetaController.remove,
   [CHANNELS.appMeta.upsert]: appMetaController.upsert,
 
-  [CHANNELS.accountValuations.create]: accountValuationsController.create,
-  [CHANNELS.accountValuations.get]:    accountValuationsController.get,
-  [CHANNELS.accountValuations.list]:   accountValuationsController.list,
-  [CHANNELS.accountValuations.update]: accountValuationsController.update,
-  [CHANNELS.accountValuations.remove]: accountValuationsController.remove,
+  [CHANNELS.accountValuations.create]:             accountValuationsController.create,
+  [CHANNELS.accountValuations.get]:                accountValuationsController.get,
+  [CHANNELS.accountValuations.list]:               accountValuationsController.list,
+  [CHANNELS.accountValuations.update]:             accountValuationsController.update,
+  [CHANNELS.accountValuations.remove]:             accountValuationsController.remove,
+  [CHANNELS.accountValuations.getLatestByAccount]: accountValuationsController.getLatestByAccount,
 
   [CHANNELS.accounts.create]: accountsController.create,
   [CHANNELS.accounts.get]: accountsController.get,
