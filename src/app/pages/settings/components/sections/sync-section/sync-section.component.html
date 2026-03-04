@@ -294,16 +294,31 @@
         {{ 'dataBackups.sync.status.description' | translate }}
       </p>
 
-      <div class="mt-4">
-        <app-data-table
-          [data]="statusRows()"
-          [structure]="statusTableStructure"
-          [showEmpty]="false"
-          [hoverable]="false"
-          [selectable]="false"
-          [hasActionColumn]="false"
-          [showPagination]="false"
-        ></app-data-table>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.sync.status.rows.lastPull' | translate }}
+          </p>
+          <p class="mt-1 text-sm font-medium">
+            {{ formatLastPullTimestamp(state().lastPullAtMs) }}
+          </p>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.sync.status.rows.current' | translate }}
+          </p>
+          <p class="mt-1 text-sm font-medium">{{ statusLabel(state().status) }}</p>
+        </div>
+
+        <div class="rounded-md border border-border/60 bg-muted/40 p-3">
+          <p class="text-xs uppercase tracking-wide text-muted-foreground">
+            {{ 'dataBackups.sync.status.rows.lastPush' | translate }}
+          </p>
+          <p class="mt-1 text-sm font-medium">
+            {{ formatTimestamp(state().lastPushAtMs) }}
+          </p>
+        </div>
       </div>
 
       @if (showLastError()) {

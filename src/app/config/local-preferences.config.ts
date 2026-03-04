@@ -7,6 +7,7 @@ export enum LocalPreferenceKey {
   ONBOARDING_COMPLETED = 'onboarding_completed',
   TRANSACTIONS_TABLE_STATE = 'transactions_table_state',
   TRANSFERS_TABLE_STATE = 'transfers_table_state',
+  SYNC_STATE = 'sync_state',
 }
 
 export type ThemePreference = 'light' | 'dark' | 'system';

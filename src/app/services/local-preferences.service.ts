@@ -126,6 +126,14 @@ export class LocalPreferencesService {
     this.setJson(LocalPreferenceKey.TRANSFERS_TABLE_STATE, value);
   }
 
+  getSyncState<T>(): T | null {
+    return this.getJson<T>(LocalPreferenceKey.SYNC_STATE);
+  }
+
+  setSyncState(value: unknown): void {
+    this.setJson(LocalPreferenceKey.SYNC_STATE, value);
+  }
+
   private getText(key: LocalPreferenceKey): string | undefined {
     if (!this.isBrowser) {
       return undefined;

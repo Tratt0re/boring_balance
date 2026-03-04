@@ -3,7 +3,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import type * as DTO from '@/dtos';
 import {
   SYNC_INTERVAL_OPTIONS,
@@ -25,12 +24,6 @@ interface SelectOption {
   readonly label: string;
 }
 
-interface StatusRow {
-  readonly id: string;
-  readonly label: string;
-  readonly value: string;
-}
-
 const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
   { value: '0', label: 'dataBackups.sync.autoSync.intervalOptions.off' },
   { value: '5', label: 'dataBackups.sync.autoSync.intervalOptions.minutes5' },
@@ -40,23 +33,9 @@ const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
   { value: '60', label: 'dataBackups.sync.autoSync.intervalOptions.minutes60' },
 ] as const;
 
-const SYNC_STATUS_TABLE_STRUCTURE: readonly TableDataItem[] = [
-  {
-    columnName: 'dataBackups.sync.status.columns.item',
-    columnKey: 'label',
-    type: 'string',
-  },
-  {
-    columnName: 'dataBackups.sync.status.columns.value',
-    columnKey: 'value',
-    type: 'string',
-  },
-] as const;
-
 @Component({
   selector: 'app-sync-section',
   imports: [
-    AppDataTableComponent,
     TranslatePipe,
     ZardButtonComponent,
     ZardLoaderComponent,
@@ -108,7 +87,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly setupModeEnabled = signal(false);
 
   protected readonly intervalOptions = SYNC_INTERVAL_SELECT_OPTIONS;
-  protected readonly statusTableStructure = SYNC_STATUS_TABLE_STRUCTURE;
   protected readonly syncModeEnabled = computed(() => this.settings().enabled || this.setupModeEnabled());
 
   protected readonly autoPullIntervalValue = computed(() =>
@@ -149,23 +127,6 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly showLastError = computed(
     () => Boolean(this.state().lastError) && this.state().status !== 'conflict',
   );
-  protected readonly statusRows = computed<readonly StatusRow[]>(() => [
-    {
-      id: 'current-status',
-      label: 'dataBackups.sync.status.rows.current',
-      value: this.statusLabel(this.state().status),
-    },
-    {
-      id: 'last-pull',
-      label: 'dataBackups.sync.status.rows.lastPull',
-      value: this.formatLastPullTimestamp(this.state().lastPullAtMs),
-    },
-    {
-      id: 'last-push',
-      label: 'dataBackups.sync.status.rows.lastPush',
-      value: this.formatTimestamp(this.state().lastPushAtMs),
-    },
-  ]);
 
   ngOnInit(): void {
     void firstValueFrom(this.syncService.initialize());
@@ -405,7 +366,7 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
       : SYNC_INTERVAL_OPTIONS[0];
   }
 
-  private formatLastPullTimestamp(value: number | null): string {
+  protected formatLastPullTimestamp(value: number | null): string {
     const normalizedValue = this.normalizeTimestampValue(value);
     if (normalizedValue === null) {
       return this.translateService.instant('dataBackups.sync.status.values.noLastPull');
@@ -414,7 +375,7 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
     return this.formatTimestamp(normalizedValue);
   }
 
-  private formatTimestamp(value: number | null): string {
+  protected formatTimestamp(value: number | null): string {
     const normalizedValue = this.normalizeTimestampValue(value);
     if (normalizedValue === null) {
       return this.translateService.instant('dataBackups.sync.status.values.never');

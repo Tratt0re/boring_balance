@@ -853,6 +853,8 @@ async function performPull(settings, options = {}) {
 
 async function performPush(settings, options = {}) {
   const currentSettings = normalizeSettingsFromStore(settings);
+  const forceSnapshot = options.forceSnapshot === true;
+  const forceIndexUpdate = options.forceIndexUpdate === true;
   let currentIndexLatest = null;
 
   try {
@@ -906,7 +908,7 @@ async function performPush(settings, options = {}) {
       return conflictResult;
     }
 
-    if (!hasLocalChangesSinceLastPublish(localMeta, currentSettings.lastPublishedCounter)) {
+    if (!forceSnapshot && !hasLocalChangesSinceLastPublish(localMeta, currentSettings.lastPublishedCounter)) {
       const persistedSettings = persistSettingsPatch({ lastError: null });
       setSuccessState({
         remoteLatest: normalizeRemoteLatest(currentIndexLatest),
@@ -936,7 +938,11 @@ async function performPush(settings, options = {}) {
     };
     let indexUpdated = false;
 
-    if (syncModel.isLocalNewerThanIndex(localMeta, currentIndexLatest)) {
+    const shouldUpdateIndex = forceIndexUpdate
+      ? !syncModel.isRemoteNewer(currentIndexLatest, localMeta)
+      : syncModel.isLocalNewerThanIndex(localMeta, currentIndexLatest);
+
+    if (shouldUpdateIndex) {
       syncModel.writeIndexAtomic(syncPaths.indexPath, {
         schema_version: syncModel.SYNC_SCHEMA_VERSION,
         updated_at_ms: Date.now(),
@@ -1143,7 +1149,10 @@ async function pullNow() {
 async function pushNow() {
   return runSyncTask(async () => {
     setRunningState();
-    return performPush(readSyncSettings());
+    return performPush(readSyncSettings(), {
+      forceSnapshot: true,
+      forceIndexUpdate: true,
+    });
   });
 }
 

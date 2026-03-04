@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { ensureRequiredAppMeta } = require('./schema');
 
 const MIGRATIONS_DIR = path.join(__dirname, 'migrations');
 
@@ -26,6 +27,8 @@ function runMigrations(database) {
     database.exec(sql);
     console.log('[electron] Applied migration ->', path.basename(migrationFilePath));
   }
+
+  ensureRequiredAppMeta(database);
 }
 
 module.exports = {

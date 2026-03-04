@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -16,6 +16,7 @@ import { toast } from 'ngx-sonner';
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import {
   SYNC_INTERVAL_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
@@ -33,8 +34,9 @@ import {
   providedIn: 'root',
 })
 export class SyncService extends BaseIpcService<APIChannel.SYNC> {
+  private readonly localPreferencesService = inject(LocalPreferencesService);
   private readonly settingsSubject = new BehaviorSubject<SyncSettingsDto>(SYNC_SETTINGS_DEFAULTS);
-  private readonly stateSubject = new BehaviorSubject<SyncStateDto>(SYNC_STATE_DEFAULTS);
+  private readonly stateSubject = new BehaviorSubject<SyncStateDto>(this.readPersistedState());
   private readonly settingsLoadingSubject = new BehaviorSubject(false);
   private readonly stateLoadingSubject = new BehaviorSubject(false);
   private readonly repoStatusLoadingSubject = new BehaviorSubject(false);
@@ -116,9 +118,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     this.stateLoadingSubject.next(true);
 
     return from(this.ipcClient.getState()).pipe(
-      map((state) => this.normalizeState(state)),
+      map((state) => this.normalizeState(state, this.stateSubject.value)),
       tap((state) => {
-        this.stateSubject.next(state);
+        this.setState(state);
       }),
       catchError((error) => {
         toast.error(this.toErrorMessage(error, 'Failed to load sync state.'));
@@ -279,7 +281,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
 
     this.eventsBound = true;
     onIpcEvent('sync:stateChanged', (payload) => {
-      this.stateSubject.next(this.normalizeState(payload as DTO.SyncStateDto));
+      this.setState(payload as DTO.SyncStateDto);
     });
 
     onIpcEvent('sync:pullCompleted', (payload) => {
@@ -308,7 +310,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       const conflictInfo = this.normalizeConflictInfo(payload as DTO.SyncConflictInfoDto | null);
       const currentState = this.stateSubject.value;
 
-      this.stateSubject.next({
+      this.setState({
         ...currentState,
         status: 'conflict',
         conflictInfo,
@@ -376,21 +378,31 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     };
   }
 
-  private normalizeState(value: DTO.SyncStateDto): SyncStateDto {
+  private normalizeState(
+    value: DTO.SyncStateDto | null | undefined,
+    fallbackState: SyncStateDto = SYNC_STATE_DEFAULTS,
+  ): SyncStateDto {
     const status = value?.status;
     const normalizedStatus =
       status === 'idle' || status === 'running' || status === 'ok' || status === 'error' || status === 'conflict'
         ? status
         : SYNC_STATE_DEFAULTS.status;
+    const preservePreviousStatus = normalizedStatus === 'idle' && fallbackState.status !== 'idle';
+    const effectiveStatus = preservePreviousStatus ? fallbackState.status : normalizedStatus;
+    const normalizedLastError =
+      typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null;
 
     return {
-      status: normalizedStatus,
-      lastPullAtMs: this.normalizeIntegerOrNull(value?.lastPullAtMs),
-      lastPushAtMs: this.normalizeIntegerOrNull(value?.lastPushAtMs),
+      status: effectiveStatus,
+      lastPullAtMs: this.normalizeIntegerOrNull(value?.lastPullAtMs) ?? fallbackState.lastPullAtMs,
+      lastPushAtMs: this.normalizeIntegerOrNull(value?.lastPushAtMs) ?? fallbackState.lastPushAtMs,
       lastError:
-        typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null,
-      remoteLatest: this.normalizeRemoteLatest(value?.remoteLatest ?? null),
-      conflictInfo: this.normalizeConflictInfo(value?.conflictInfo ?? null),
+        normalizedLastError
+        ?? (effectiveStatus === 'error' || effectiveStatus === 'conflict' ? fallbackState.lastError : null),
+      remoteLatest: this.normalizeRemoteLatest(value?.remoteLatest ?? null) ?? fallbackState.remoteLatest,
+      conflictInfo:
+        this.normalizeConflictInfo(value?.conflictInfo ?? null)
+        ?? (effectiveStatus === 'conflict' ? fallbackState.conflictInfo : null),
     };
   }
 
@@ -545,6 +557,16 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private normalizeIntegerOrNull(value: unknown): number | null {
     const normalizedValue = Number(value);
     return Number.isInteger(normalizedValue) ? normalizedValue : null;
+  }
+
+  private readPersistedState(): SyncStateDto {
+    return this.normalizeState(this.localPreferencesService.getSyncState<DTO.SyncStateDto>());
+  }
+
+  private setState(value: DTO.SyncStateDto | SyncStateDto): void {
+    const nextState = this.normalizeState(value, this.stateSubject.value);
+    this.stateSubject.next(nextState);
+    this.localPreferencesService.setSyncState(nextState);
   }
 
   private extractErrorFromPayload(payload: unknown, fallbackMessage: string): string {

@@ -1,4 +1,9 @@
 const IDENTIFIER_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
+const APP_META_TABLE_NAME = 'app_meta';
+const APP_META_CHANGE_COUNTER_KEY = 'change_counter';
+const APP_META_LAST_WRITE_MS_KEY = 'last_write_ms';
+const APP_META_SCHEMA_VERSION_KEY = 'schema_version';
+const APP_META_SCHEMA_VERSION = 1;
 
 /**
  * Validates that a value is a safe SQL identifier (table/column name).
@@ -24,6 +29,54 @@ function assertIdentifier(value, label) {
 function quoteIdentifier(identifier) {
   assertIdentifier(identifier, 'identifier');
   return `"${identifier}"`;
+}
+
+function upsertAppMetaValue(database, key, value) {
+  database
+    .prepare(
+      `INSERT INTO ${quoteIdentifier(APP_META_TABLE_NAME)} (${quoteIdentifier('key')}, ${quoteIdentifier('value')})
+       VALUES (?, ?)
+       ON CONFLICT(${quoteIdentifier('key')}) DO UPDATE SET ${quoteIdentifier('value')} = excluded.${quoteIdentifier('value')}`,
+    )
+    .run(key, String(value));
+}
+
+function insertOrIgnoreAppMetaValue(database, key, value) {
+  database
+    .prepare(
+      `INSERT OR IGNORE INTO ${quoteIdentifier(APP_META_TABLE_NAME)} (${quoteIdentifier('key')}, ${quoteIdentifier('value')})
+       VALUES (?, ?)`,
+    )
+    .run(key, String(value));
+}
+
+function touchDatabaseWriteMeta(database, tableName, changedRows) {
+  if (tableName === APP_META_TABLE_NAME || !Number.isInteger(changedRows) || changedRows <= 0) {
+    return;
+  }
+
+  try {
+    const changeCounterRow = database
+      .prepare(
+        `SELECT ${quoteIdentifier('value')} AS ${quoteIdentifier('value')}
+         FROM ${quoteIdentifier(APP_META_TABLE_NAME)}
+         WHERE ${quoteIdentifier('key')} = ?`,
+      )
+      .get(APP_META_CHANGE_COUNTER_KEY);
+    const currentChangeCounter = Number(changeCounterRow?.value);
+    const nextChangeCounter =
+      (Number.isInteger(currentChangeCounter) && currentChangeCounter >= 0 ? currentChangeCounter : 0) + changedRows;
+
+    upsertAppMetaValue(database, APP_META_CHANGE_COUNTER_KEY, nextChangeCounter);
+    upsertAppMetaValue(database, APP_META_LAST_WRITE_MS_KEY, Date.now());
+    insertOrIgnoreAppMetaValue(database, APP_META_SCHEMA_VERSION_KEY, APP_META_SCHEMA_VERSION);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes(`no such table: ${APP_META_TABLE_NAME}`)) {
+      return;
+    }
+
+    throw error;
+  }
 }
 
 function isPlainObject(value) {
@@ -262,6 +315,7 @@ function insertRow(database, tableName, row) {
 
   const sql = `INSERT INTO ${quoteIdentifier(tableName)} (${columnsSql}) VALUES (${placeholdersSql})`;
   const result = database.prepare(sql).run(values);
+  touchDatabaseWriteMeta(database, tableName, result.changes);
 
   return result.lastInsertRowid;
 }
@@ -390,6 +444,7 @@ function updateRows(database, tableName, changes, where) {
   const sql = `UPDATE ${quoteIdentifier(tableName)} SET ${setSql}${clause}`;
 
   const result = database.prepare(sql).run([...changeValues, ...params]);
+  touchDatabaseWriteMeta(database, tableName, result.changes);
   return result.changes;
 }
 
@@ -408,6 +463,7 @@ function deleteRows(database, tableName, where) {
   const { clause, params } = buildWhereClause(where);
   const sql = `DELETE FROM ${quoteIdentifier(tableName)}${clause}`;
   const result = database.prepare(sql).run(params);
+  touchDatabaseWriteMeta(database, tableName, result.changes);
 
   return result.changes;
 }

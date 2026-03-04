@@ -273,16 +273,16 @@
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--muted-foreground);
-  border-radius: 5px;
+  border-radius: 999px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 5px;
+  border-radius: 999px;
   background: var(--muted);
 }
