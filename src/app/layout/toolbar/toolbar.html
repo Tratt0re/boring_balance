@@ -3,7 +3,41 @@
     <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (toggle)="onSidebarToggle()"></app-sidebar-toggle>
 
     <div class="flex min-w-0 items-center">
-      @if (!hasItemNavigation() && title(); as title) {
+      @if (!hasItemNavigation() && hasTitleBreadcrumbs()) {
+        <div class="flex min-w-0 items-center gap-2">
+          <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
+
+          <nav [attr.aria-label]="'breadcrumb.ariaLabel' | translate" class="min-w-0">
+            <ol class="flex items-center gap-2 overflow-hidden text-sm text-muted-foreground">
+              @for (item of titleBreadcrumbs(); track item.path ?? item.label; let isLast = $last) {
+                <li class="flex min-w-0 items-center gap-2">
+                  @if (item.path && !isLast) {
+                    <a [routerLink]="item.path" class="truncate transition-colors hover:text-foreground">
+                      @if (isBreadcrumbLabelTranslated(item)) {
+                        {{ item.label | translate }}
+                      } @else {
+                        {{ item.label }}
+                      }
+                    </a>
+                  } @else {
+                    <span class="truncate font-medium text-foreground">
+                      @if (isBreadcrumbLabelTranslated(item)) {
+                        {{ item.label | translate }}
+                      } @else {
+                        {{ item.label }}
+                      }
+                    </span>
+                  }
+
+                  @if (!isLast) {
+                    <z-icon zType="chevron-right" class="size-4"></z-icon>
+                  }
+                </li>
+              }
+            </ol>
+          </nav>
+        </div>
+      } @else if (!hasItemNavigation() && title(); as title) {
         <div class="flex min-w-0 items-center gap-2">
           <z-divider zOrientation="vertical" zSpacing="sm" class="h-6"></z-divider>
           <h1 class="truncate text-lg font-semibold tracking-tight">{{ title | translate }}</h1>

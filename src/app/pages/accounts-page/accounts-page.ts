@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
@@ -21,6 +22,11 @@ import {
 const isAccountReadonly = (row: object): boolean => {
   const account = row as AccountTableRow;
   return account.locked || account.archived;
+};
+
+const isValuationAccount = (row: object): boolean => {
+  const account = row as AccountTableRow;
+  return account.type === 'brokerage' || account.type === 'crypto';
 };
 
 interface AccountTableRow {
@@ -83,6 +89,7 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
 const createAccountTableStructure = (
   onEditAction: (row: object) => void | Promise<void>,
   onArchiveAction: (row: object) => void | Promise<void>,
+  onViewValuationsAction: (row: object) => void | Promise<void>,
 ): readonly TableDataItem[] =>
   [
     ...ACCOUNT_TABLE_COLUMNS,
@@ -91,6 +98,14 @@ const createAccountTableStructure = (
       maxWidth: ACCOUNT_COLUMN_WIDTH.action,
       showLabel: false,
       actionItems: [
+        {
+          id: 'view-valuations',
+          icon: 'chart-line',
+          label: 'accountValuations.table.actions.viewHistory',
+          buttonType: 'ghost',
+          visible: isValuationAccount,
+          action: onViewValuationsAction,
+        },
         {
           id: 'edit',
           icon: 'pencil',
@@ -143,6 +158,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   protected readonly accountTableStructure = createAccountTableStructure(
     (row) => this.onEditAccount(row),
     (row) => this.onArchiveAccount(row),
+    (row) => this.onViewValuations(row),
   );
 
   private readonly toolbarActions: readonly ToolbarAction[] = [
@@ -158,6 +174,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
+    private readonly router: Router,
     private readonly accountsService: AccountsService,
     private readonly toolbarContextService: ToolbarContextService,
     private readonly alertDialogService: ZardAlertDialogService,
@@ -213,6 +230,11 @@ export class AccountsPage implements OnInit, OnDestroy {
       locked: account.locked,
       archived: account.archived,
     };
+  }
+
+  private onViewValuations(row: object): void {
+    const account = row as AccountTableRow;
+    void this.router.navigate(['/account-valuations', account.id]);
   }
 
   private onEditAccount(row: object): void {

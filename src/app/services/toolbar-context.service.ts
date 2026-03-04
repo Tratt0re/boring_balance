@@ -14,6 +14,13 @@ type ToolbarSegmentedChangeHandler = (value: string) => void | Promise<void>;
 type ToolbarSelectChangeHandler = (value: string) => void | Promise<void>;
 type ToolbarDynamicString = string | (() => string);
 type ToolbarItemDisabled = boolean | (() => boolean);
+export type ToolbarTitleMode = 'default' | 'breadcrumb';
+
+export interface ToolbarTitleBreadcrumbItem {
+  readonly label: string;
+  readonly path?: string;
+  readonly translate?: boolean;
+}
 
 export interface ToolbarSegmentedOption {
   readonly value: string;
@@ -68,6 +75,8 @@ export interface ToolbarAction {
 
 export interface ToolbarContextConfig {
   readonly title?: string | null;
+  readonly titleMode?: ToolbarTitleMode;
+  readonly titleBreadcrumbs?: readonly ToolbarTitleBreadcrumbItem[];
   readonly itemActions?: readonly ToolbarItemAction[];
   readonly itemNavigation?: ToolbarItemNavigation | null;
   /**
@@ -82,6 +91,8 @@ export interface ToolbarContextConfig {
 
 interface NormalizedToolbarContextConfig {
   readonly title: string | null;
+  readonly titleMode: ToolbarTitleMode;
+  readonly titleBreadcrumbs: readonly ToolbarTitleBreadcrumbItem[];
   readonly itemActions: readonly ToolbarItemAction[];
   readonly itemNavigation: ToolbarItemNavigation | null;
 }
@@ -89,12 +100,16 @@ interface NormalizedToolbarContextConfig {
 @Injectable({ providedIn: 'root' })
 export class ToolbarContextService {
   private readonly titleState = signal<string | null>(null);
+  private readonly titleModeState = signal<ToolbarTitleMode>('default');
+  private readonly titleBreadcrumbsState = signal<readonly ToolbarTitleBreadcrumbItem[]>([]);
   private readonly itemActionsState = signal<readonly ToolbarItemAction[]>([]);
   private readonly itemNavigationState = signal<ToolbarItemNavigation | null>(null);
   private nextContextId = 1;
   private activeContextId: number | null = null;
 
   readonly title = this.titleState.asReadonly();
+  readonly titleMode = this.titleModeState.asReadonly();
+  readonly titleBreadcrumbs = this.titleBreadcrumbsState.asReadonly();
   readonly itemActions = this.itemActionsState.asReadonly();
   readonly itemNavigation = this.itemNavigationState.asReadonly();
   /**
@@ -120,6 +135,8 @@ export class ToolbarContextService {
     const normalizedConfig = this.normalizeConfig(config);
 
     this.titleState.set(normalizedConfig.title ?? null);
+    this.titleModeState.set(normalizedConfig.titleMode);
+    this.titleBreadcrumbsState.set([...(normalizedConfig.titleBreadcrumbs ?? [])]);
     this.itemActionsState.set([...(normalizedConfig.itemActions ?? [])]);
     this.itemNavigationState.set(normalizedConfig.itemNavigation ?? null);
 
@@ -130,6 +147,8 @@ export class ToolbarContextService {
 
       this.activeContextId = null;
       this.titleState.set(null);
+      this.titleModeState.set('default');
+      this.titleBreadcrumbsState.set([]);
       this.itemActionsState.set([]);
       this.itemNavigationState.set(null);
     };
@@ -139,6 +158,8 @@ export class ToolbarContextService {
     if (this.isToolbarActionsConfig(config)) {
       return {
         title: null,
+        titleMode: 'default',
+        titleBreadcrumbs: [],
         itemActions: config,
         itemNavigation: null,
       };
@@ -155,8 +176,15 @@ export class ToolbarContextService {
       console.warn('[toolbar] Only one `itemNavigation` is supported. Extra segmented items are ignored.');
     }
 
+    const titleMode = contextConfig.titleMode ?? 'default';
+    const titleBreadcrumbs = this.normalizeTitleBreadcrumbs(contextConfig.titleBreadcrumbs);
+    const resolvedTitleMode: ToolbarTitleMode =
+      titleMode === 'breadcrumb' && titleBreadcrumbs.length > 0 ? 'breadcrumb' : 'default';
+
     return {
       title: contextConfig.title ?? null,
+      titleMode: resolvedTitleMode,
+      titleBreadcrumbs,
       itemActions: contextConfig.itemActions ?? [...(contextConfig.actions ?? []), ...legacyItemActions],
       itemNavigation: contextConfig.itemNavigation ?? legacyItemNavigations[0] ?? null,
     };
@@ -178,5 +206,21 @@ export class ToolbarContextService {
 
   private isToolbarNavigationItem(item: ToolbarItem): item is ToolbarItemNavigation {
     return item.type === 'segmented';
+  }
+
+  private normalizeTitleBreadcrumbs(
+    items: readonly ToolbarTitleBreadcrumbItem[] | undefined,
+  ): readonly ToolbarTitleBreadcrumbItem[] {
+    if (!items || items.length === 0) {
+      return [];
+    }
+
+    return items
+      .filter((item) => item.label.trim().length > 0)
+      .map((item) => ({
+        label: item.label,
+        path: item.path && item.path.trim().length > 0 ? item.path : undefined,
+        translate: item.translate ?? true,
+      }));
   }
 }

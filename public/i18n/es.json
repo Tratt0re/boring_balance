@@ -1267,5 +1267,86 @@
       "loadFailedWithError": "No se pudieron cargar los eventos recurrentes: {{error}}",
       "loadUnexpected": "Error inesperado al cargar los eventos recurrentes."
     }
+  },
+  "accountValuations": {
+    "page": {
+      "title": "Valoraciones de cuenta"
+    },
+    "table": {
+      "description": "Historial de instantáneas de valoración para esta cuenta.",
+      "emptyMessage": "Todavía no hay instantáneas de valoración. Añade la primera para empezar a hacer seguimiento.",
+      "columns": {
+        "date": "Fecha",
+        "value": "Valor",
+        "change": "Variación"
+      },
+      "actions": {
+        "viewHistory": "Ver historial de valoraciones",
+        "add": "Añadir instantánea",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      }
+    },
+    "header": {
+      "currentValue": "Valor actual",
+      "change": "Variación",
+      "changePct": "Variación %",
+      "accountBalance": "Saldo de la cuenta",
+      "lastSnapshot": "Última instantánea",
+      "changeVsBalance": "Variación vs saldo",
+      "noSnapshots": "Añade la primera instantánea para compararla con el saldo de la cuenta."
+    },
+    "chart": {
+      "title": "Valor en el tiempo",
+      "description": "Evolución de las instantáneas de valoración guardadas para esta cuenta.",
+      "seriesName": "Valor"
+    },
+    "dialog": {
+      "fields": {
+        "value": "Valor",
+        "date": "Fecha"
+      },
+      "add": {
+        "title": "Añadir instantánea",
+        "description": "Registra el valor actual de tu cuenta en una fecha específica.",
+        "actions": {
+          "create": "Añadir instantánea",
+          "cancel": "Cancelar"
+        },
+        "errors": {
+          "fixValidation": "Corrige los errores anteriores antes de guardar.",
+          "createFailed": "No se pudo crear la instantánea. Inténtalo de nuevo.",
+          "valueRequired": "El valor es obligatorio.",
+          "valueInvalid": "El valor debe ser un número positivo válido.",
+          "dateRequired": "La fecha es obligatoria."
+        }
+      },
+      "edit": {
+        "title": "Editar instantánea",
+        "description": "Actualiza el valor o la fecha de esta instantánea de valoración.",
+        "actions": {
+          "save": "Guardar cambios",
+          "cancel": "Cancelar"
+        },
+        "errors": {
+          "fixValidation": "Corrige los errores anteriores antes de guardar.",
+          "updateFailed": "No se pudo actualizar la instantánea. Inténtalo de nuevo."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminar instantánea",
+      "description": "¿Estás seguro de que quieres eliminar esta instantánea de valoración? Esta acción no se puede deshacer.",
+      "actions": {
+        "delete": "Eliminar",
+        "cancel": "Cancelar"
+      }
+    },
+    "toasts": {
+      "createSuccess": "Instantánea añadida correctamente.",
+      "updateSuccess": "Instantánea actualizada correctamente.",
+      "deleteSuccess": "Instantánea eliminada correctamente.",
+      "deleteError": "No se pudo eliminar la instantánea."
+    }
   }
 }

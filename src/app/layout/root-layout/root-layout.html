@@ -33,6 +33,8 @@
       <app-toolbar
         [sidebarCollapsed]="sidebarCollapsed()"
         [title]="toolbarTitle()"
+        [titleMode]="toolbarTitleMode()"
+        [titleBreadcrumbs]="toolbarTitleBreadcrumbs()"
         [itemActions]="toolbarItemActions()"
         [itemNavigation]="toolbarItemNavigation()"
         (sidebarToggle)="toggleSidebar()"

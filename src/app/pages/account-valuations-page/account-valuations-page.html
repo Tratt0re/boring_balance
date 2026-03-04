@@ -1,0 +1,119 @@
+<section class="flex min-h-full flex-col gap-4">
+  @if (isLoading()) {
+    <z-skeleton class="h-28 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+    <z-skeleton class="h-12 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+  } @else if (loadError(); as loadError) {
+    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ loadError }}
+    </div>
+  } @else {
+    <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out space-y-4">
+      <div class="rounded-lg border border-border/60 bg-card p-4 sm:p-5">
+        <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          <div class="flex min-w-0 items-center gap-2.5">
+            <div
+              class="flex size-9 shrink-0 items-center justify-center"
+              [style.background-color]="accountIconColorHex() + '20'"
+              [style.color]="accountIconColorHex()"
+            >
+              <z-icon [zType]="accountIcon()" class="size-9" />
+            </div>
+            <h2 class="truncate text-xl font-semibold tracking-tight">
+              {{ accountName() ?? ('accountValuations.page.title' | translate) }}
+            </h2>
+          </div>
+
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 xl:min-w-[32rem]">
+            <div class="rounded-md bg-muted/40 p-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'accountValuations.header.accountBalance' | translate }}
+              </p>
+              <p class="mt-1 text-lg font-semibold tabular-nums tracking-tight">
+                {{ formatCurrency(transactionBalanceAmount()) }}
+              </p>
+            </div>
+
+            @if (hasData()) {
+              <div class="rounded-md bg-muted/40 p-3">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'accountValuations.header.lastSnapshot' | translate }}
+                </p>
+                <p class="mt-1 text-lg font-semibold tabular-nums tracking-tight">
+                  {{ formatCurrency(latestValueAmount()) }}
+                </p>
+              </div>
+
+              <div class="rounded-md bg-muted/40 p-3">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'accountValuations.header.changeVsBalance' | translate }}
+                </p>
+                @if (deltaCents() !== null) {
+                  <p
+                    class="mt-1 text-lg font-semibold tabular-nums tracking-tight"
+                    [class.text-success]="deltaAmount() > 0"
+                    [class.text-destructive]="deltaAmount() < 0"
+                  >
+                    {{ formatSignedCurrency(deltaAmount()) }}
+                  </p>
+                  @if (deltaPct() !== null) {
+                    <p
+                      class="text-xs tabular-nums"
+                      [class.text-success]="deltaPct()! > 0"
+                      [class.text-destructive]="deltaPct()! < 0"
+                    >
+                      {{ formatPercent(deltaPct()!) }}
+                    </p>
+                  }
+                } @else {
+                  <p class="mt-1 text-lg font-semibold tracking-tight text-muted-foreground">—</p>
+                }
+              </div>
+            } @else {
+              <div
+                class="rounded-lg border border-dashed border-border/70 bg-muted/35 p-3 sm:col-span-2"
+              >
+                <p class="text-sm text-muted-foreground">
+                  {{ 'accountValuations.header.noSnapshots' | translate }}
+                </p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (hasChartData()) {
+        <app-base-card
+          [zTitle]="'accountValuations.chart.title' | translate"
+          [zDescription]="'accountValuations.chart.description' | translate"
+        >
+          <app-line-chart
+            [labels]="chartLabels()"
+            [series]="chartSeries()"
+            [height]="'14rem'"
+            [showLegend]="false"
+            [valueAxisCurrencyCode]="currencyCode()"
+            [showPointsOnHoverOnly]="false"
+            [pointSize]="5"
+          />
+        </app-base-card>
+      }
+
+      <app-data-table
+        [data]="valuations()"
+        [structure]="valuationTableStructure"
+        [title]="'accountValuations.page.title'"
+        description="accountValuations.table.description"
+        emptyMessage="accountValuations.table.emptyMessage"
+        [appearance]="'default'"
+        [showEmpty]="true"
+        [hoverable]="true"
+        [selectable]="false"
+        [hasActionColumn]="false"
+        [showPagination]="false"
+        [currencyCode]="currencyCode()"
+      ></app-data-table>
+    </div>
+  }
+</section>

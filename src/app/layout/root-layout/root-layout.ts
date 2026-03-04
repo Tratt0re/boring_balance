@@ -33,6 +33,8 @@ export class RootLayout implements OnInit, OnDestroy {
   protected readonly headerOffset = computed(() => (this.isFullscreen() ? '2rem' : '0rem'));
   protected readonly showSidebarOverlay = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
   protected readonly toolbarTitle = this.toolbarContextService.title;
+  protected readonly toolbarTitleMode = this.toolbarContextService.titleMode;
+  protected readonly toolbarTitleBreadcrumbs = this.toolbarContextService.titleBreadcrumbs;
   protected readonly toolbarItemActions = this.toolbarContextService.itemActions;
   protected readonly toolbarItemNavigation = this.toolbarContextService.itemNavigation;
 
