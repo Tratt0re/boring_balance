@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -29,6 +29,7 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
     OverviewActivityPanelComponent,
   ],
   templateUrl: './overview-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewPage implements OnInit, OnDestroy {
   @ViewChild(OverviewNetWorthCardComponent) private overviewNetWorthCardComponent?: OverviewNetWorthCardComponent;

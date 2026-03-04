@@ -58,6 +58,8 @@
   --chart-expense: var(--negative-transaction-color);
   --chart-net-cashflow: oklch(0.72 0.18 305);
   --chart-prior-balance: oklch(0.72 0.18 85);
+  --warning: oklch(0.60 0.16 68);
+  --success: oklch(0.55 0.17 145);
 }
 
 .dark {
@@ -114,6 +116,8 @@
   --chart-expense: var(--negative-transaction-color);
   --chart-net-cashflow: oklch(0.78 0.16 305);
   --chart-prior-balance: oklch(0.78 0.16 85);
+  --warning: oklch(0.75 0.15 68);
+  --success: oklch(0.72 0.15 145);
 }
 
 @theme inline {
@@ -175,6 +179,8 @@
   --color-system-app-11: var(--system-app-color-11);
   --color-positive-transaction: var(--positive-transaction-color);
   --color-negative-transaction: var(--negative-transaction-color);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
 }
 
 @layer base {

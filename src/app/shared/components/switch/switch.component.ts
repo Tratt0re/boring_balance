@@ -37,6 +37,7 @@ type OnChangeType = (value: boolean) => void;
         role="switch"
         [attr.data-state]="status()"
         [attr.aria-checked]="zChecked()"
+        [attr.aria-label]="zAriaLabel() || null"
         [class]="classes()"
         [disabled]="zDisabled() || formDisabled()"
         (click)="onSwitchChange()"
@@ -59,7 +60,7 @@ type OnChangeType = (value: boolean) => void;
         class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         [for]="zId() || z.id()"
       >
-        <ng-content><span class="sr-only">toggle switch</span></ng-content>
+        <ng-content />
       </label>
     </span>
   `,
@@ -78,6 +79,7 @@ export class ZardSwitchComponent implements ControlValueAccessor {
   readonly class = input<ClassValue>('');
   readonly zChecked = model<boolean>(true);
   readonly zId = input<string>('');
+  readonly zAriaLabel = input<string>('');
   readonly zSize = input<ZardSwitchSizeVariants>('default');
   readonly zType = input<ZardSwitchTypeVariants>('default');
   readonly zDisabled = input(false, { transform: booleanAttribute });

@@ -24,24 +24,24 @@ export const APP_CHART_THEME_COLOR_TOKENS = [
 export type AppChartThemeColor = (typeof APP_CHART_THEME_COLOR_TOKENS)[number];
 
 const APP_CHART_FALLBACK_COLORS: Record<AppChartThemeColor, string> = {
-  'chart-1': '#ef4444',
-  'chart-2': '#0ea5e9',
-  'chart-3': '#2563eb',
-  'chart-4': '#f59e0b',
-  'chart-5': '#22c55e',
-  'chart-6': '#d946ef',
-  'chart-7': '#06b6d4',
-  'chart-8': '#84cc16',
-  'chart-income': '#22c55e',
-  'chart-expense': '#ef4444',
-  'chart-net-cashflow': '#2563eb',
-  'chart-prior-balance': '#d4a017',
+  'chart-1': 'oklch(0.66 0.23 25)',
+  'chart-2': 'oklch(0.74 0.2 55)',
+  'chart-3': 'oklch(0.84 0.17 95)',
+  'chart-4': 'oklch(0.78 0.19 145)',
+  'chart-5': 'oklch(0.73 0.16 195)',
+  'chart-6': 'oklch(0.69 0.17 235)',
+  'chart-7': 'oklch(0.66 0.18 275)',
+  'chart-8': 'oklch(0.69 0.2 320)',
+  'chart-income': 'oklch(0.72 0.18 260)',
+  'chart-expense': 'oklch(0.72 0.18 25)',
+  'chart-net-cashflow': 'oklch(0.72 0.18 305)',
+  'chart-prior-balance': 'oklch(0.72 0.18 85)',
 } as const;
 
-const DEFAULT_MUTED_FOREGROUND = '#6b7280';
-const DEFAULT_FOREGROUND = '#111827';
-const DEFAULT_BORDER = '#e5e7eb';
-const DEFAULT_BACKGROUND = '#ffffff';
+const DEFAULT_MUTED_FOREGROUND = 'oklch(0.556 0 0)';
+const DEFAULT_FOREGROUND = 'oklch(0.145 0 0)';
+const DEFAULT_BORDER = 'oklch(0.922 0 0)';
+const DEFAULT_BACKGROUND = 'oklch(1 0 0)';
 const DEFAULT_FONT_FAMILY = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
 let chartColorContext: CanvasRenderingContext2D | null | undefined;

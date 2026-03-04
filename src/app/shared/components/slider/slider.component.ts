@@ -110,6 +110,7 @@ export class ZSliderRangeComponent {
       [attr.aria-valuemin]="min()"
       [attr.aria-valuemax]="max()"
       [attr.aria-valuenow]="value()"
+      [attr.aria-label]="ariaLabel() || null"
       [attr.aria-disabled]="disabled() ? true : null"
       [class]="classes()"
       tabindex="0"
@@ -130,6 +131,7 @@ export class ZSliderThumbComponent {
   readonly disabled = input(false);
   readonly percent = input(0);
   readonly offset = input(0);
+  readonly ariaLabel = input<string>('');
 
   readonly orientation = input<'horizontal' | 'vertical'>('horizontal');
   readonly class = input<ClassValue>('');
@@ -172,6 +174,7 @@ export class ZSliderThumbComponent {
         [min]="zMin()"
         [max]="zMax()"
         [disabled]="disabled()"
+        [ariaLabel]="zAriaLabel()"
         (keydown.{home,end,arrowleft,arrowright,arrowdown,arrowup}.prevent)="handleKeydown($event)"
       />
     </span>
@@ -202,6 +205,7 @@ export class ZardSliderComponent implements ControlValueAccessor, AfterViewInit,
   readonly zDisabled = input(false, { transform: booleanAttribute });
 
   readonly zOrientation = input<'horizontal' | 'vertical'>('horizontal');
+  readonly zAriaLabel = input<string>('');
   readonly class = input<ClassValue>('');
 
   readonly zSlideIndexChange = output<number>();

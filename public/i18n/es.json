@@ -108,7 +108,8 @@
         "outsideMonth": "Fuera del mes",
         "disabled": "Deshabilitado"
       }
-    }
+    },
+    "skipToContent": "Saltar al contenido principal"
   },
   "nav": {
     "sections": {

@@ -28,6 +28,7 @@ type OnChangeType = (value: string) => void;
   ],
   host: {
     '[class]': 'classes()',
+    '[attr.aria-invalid]': "zStatus() === 'error' ? 'true' : null",
     '(input)': 'updateValue($event.target)',
     '(focus)': 'onFocus()',
     '(blur)': 'onBlur()',

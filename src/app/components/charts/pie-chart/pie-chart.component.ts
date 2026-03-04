@@ -22,6 +22,8 @@ import {
   type AppChartThemeColor,
 } from '../chart-theme';
 
+const CHART_LABEL_FONT_SIZE = 12;
+
 export interface AppPieChartItem {
   readonly name: string;
   readonly value: number;
@@ -123,7 +125,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
               position: useOutsideLabel ? ('outside' as const) : ('inside' as const),
               color: useOutsideLabel ? foreground : '#ffffff',
               formatter: labelFormatter,
-              fontSize: 12,
+              fontSize: CHART_LABEL_FONT_SIZE,
               fontFamily,
               fontWeight: useOutsideLabel ? 400 : 600,
               textShadowColor: useOutsideLabel ? 'transparent' : 'rgba(0,0,0,0.28)',

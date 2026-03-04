@@ -56,7 +56,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
             (click)="slidePrevious()"
             aria-label="Previous slide"
           >
-            <z-icon zType="chevron-left" class="size-4" />
+            <z-icon zType="chevron-left" class="size-4" aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -67,7 +67,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
             (click)="slideNext()"
             aria-label="Next slide"
           >
-            <z-icon zType="chevron-right" class="size-4" />
+            <z-icon zType="chevron-right" class="size-4" aria-hidden="true" />
           </button>
         } @else if (controls === 'dot') {
           <div class="mt-2 flex justify-center gap-1">

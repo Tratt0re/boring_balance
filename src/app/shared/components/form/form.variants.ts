@@ -7,7 +7,7 @@ export const formLabelVariants = cva(
   {
     variants: {
       zRequired: {
-        true: "after:content-['*'] after:ml-0.5 after:text-red-500",
+        true: "after:content-['*'] after:ml-0.5 after:text-destructive",
       },
     },
   },
@@ -19,9 +19,9 @@ export const formMessageVariants = cva('text-sm', {
   variants: {
     zType: {
       default: 'text-muted-foreground',
-      error: 'text-red-500',
-      success: 'text-green-500',
-      warning: 'text-yellow-500',
+      error: 'text-destructive',
+      success: 'text-success',
+      warning: 'text-warning',
     },
   },
   defaultVariants: {

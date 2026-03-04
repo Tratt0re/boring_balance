@@ -34,15 +34,13 @@ export class ZardFormFieldComponent {
     <div class="relative">
       <ng-content />
     </div>
-    @if (errorMessage() || helpText()) {
-      <div class="mt-1.5 min-h-5">
-        @if (errorMessage()) {
-          <p class="text-sm text-red-500">{{ errorMessage() }}</p>
-        } @else if (helpText()) {
-          <p class="text-muted-foreground text-sm">{{ helpText() }}</p>
-        }
-      </div>
-    }
+    <div class="mt-1.5 min-h-5" role="status" aria-live="polite" aria-atomic="true">
+      @if (errorMessage()) {
+        <p class="text-sm text-destructive">{{ errorMessage() }}</p>
+      } @else if (helpText()) {
+        <p class="text-muted-foreground text-sm">{{ helpText() }}</p>
+      }
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

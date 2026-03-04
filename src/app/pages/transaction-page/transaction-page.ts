@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 
 import type { ToolbarItemNavigation } from '@/services/toolbar-context.service';
 import { TransfersTableSectionComponent } from './sections/transfers-table-section/transfers-table-section.component';
@@ -13,6 +13,7 @@ type TransactionsPageView = 'common' | 'transfers';
     TransfersTableSectionComponent,
   ],
   templateUrl: './transaction-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionPage {
   protected readonly activeView = signal<TransactionsPageView>('common');
