@@ -1,0 +1,65 @@
+<div
+  class="grid grid-cols-[1fr_auto] gap-x-3 rounded-md border border-border/60 bg-background/70 p-2.5 transition-opacity"
+  [class.opacity-60]="isPending()"
+>
+  <!-- Content: 3 stacked rows -->
+  <div class="min-w-0 flex flex-col gap-1.5">
+
+    <!-- Row 1: Category | Account -->
+    <div class="flex min-w-0 items-center gap-2">
+      <z-badge zType="secondary" zShape="pill" class="min-w-0 shrink gap-1.5">
+        <z-icon
+          [zType]="row().categoryIcon"
+          class="size-3.5 shrink-0 text-(--app-transaction-list-category-icon-color)"
+          [style.--app-transaction-list-category-icon-color]="row().categoryColorHex"
+        />
+        <span class="truncate">{{ row().categoryName | translate }}</span>
+      </z-badge>
+
+      <p class="inline-flex min-w-0 shrink items-center gap-1.5 text-xs text-muted-foreground">
+        <z-icon
+          [zType]="row().accountIcon"
+          class="size-3 shrink-0 text-(--app-transaction-list-account-icon-color) opacity-80"
+          [style.--app-transaction-list-account-icon-color]="row().accountColorHex"
+        />
+        <span class="truncate">{{ row().accountName }}</span>
+      </p>
+    </div>
+
+    <!-- Row 2: Date -->
+    <span class="text-xs text-muted-foreground">{{ formatActivityDate(row().occurredAt) }}</span>
+
+    <!-- Row 3: Amount -->
+    <span class="inline-flex items-center gap-1">
+      @if (amountTrendIcon(row().amount); as amountIcon) {
+        <z-icon
+          [zType]="amountIcon"
+          class="size-3.5 text-(--app-data-table-currency-trend-color)"
+          [style.--app-data-table-currency-trend-color]="amountTrendIconColor(row().amount)"
+        />
+      }
+      <span class="text-sm font-semibold">{{ formatAmount(row().amount) }}</span>
+    </span>
+
+  </div>
+
+  <!-- Right column: description icon at top, toggle at bottom -->
+  <div class="flex flex-col justify-between items-end">
+    <z-icon
+      [zType]="descriptionIndicatorIcon"
+      class="size-3.5 shrink-0 text-muted-foreground"
+      [class.invisible]="!row().description"
+      [class.pointer-events-none]="!row().description"
+      [zTooltip]="row().description || null"
+    />
+
+    <z-switch
+      [zChecked]="row().settled"
+      [zDisabled]="isPending()"
+      [zTooltip]="settledStatusTooltip(row().settled)"
+      [zAriaLabel]="settledToggleActionLabel(row().settled)"
+      (zCheckedChange)="settledChange.emit($event)"
+    >
+    </z-switch>
+  </div>
+</div>

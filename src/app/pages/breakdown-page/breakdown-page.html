@@ -1,71 +1,54 @@
 <section class="flex min-h-full flex-col">
-  <div
-    class="overflow-hidden transition-all duration-200 ease-out"
-    [class.max-h-64]="showOptionsCard()"
-    [class.opacity-100]="showOptionsCard()"
-    [class.mb-6]="showOptionsCard()"
-    [class.pointer-events-none]="!showOptionsCard()"
-    [class.max-h-0]="!showOptionsCard()"
-    [class.opacity-0]="!showOptionsCard()"
-    [class.mb-0]="!showOptionsCard()"
-    [attr.aria-hidden]="showOptionsCard() ? null : 'true'"
-  >
+  <div class="overflow-hidden transition-all duration-200 ease-out" [class.max-h-64]="showOptionsCard()"
+    [class.opacity-100]="showOptionsCard()" [class.mb-6]="showOptionsCard()"
+    [class.pointer-events-none]="!showOptionsCard()" [class.max-h-0]="!showOptionsCard()"
+    [class.opacity-0]="!showOptionsCard()" [class.mb-0]="!showOptionsCard()"
+    [attr.aria-hidden]="showOptionsCard() ? null : 'true'">
     <div class="rounded-lg border border-border/60 bg-card p-3">
       @if (activeSectionView() === 'money-flow') {
-        <z-switch
-          [zChecked]="showMoneyFlowAllocationTargets()"
-          [zDisabled]="!showOptionsCard()"
-          (zCheckedChange)="showMoneyFlowAllocationTargets.set($event)"
-        >
+      <z-switch [zChecked]="showMoneyFlowAllocationTargets()" [zDisabled]="!showOptionsCard()"
+        (zCheckedChange)="showMoneyFlowAllocationTargets.set($event)">
+        <span #labelContent>
           {{ 'breakdown.moneyFlowOptions.showAllocationTargets.label' | translate }}
-        </z-switch>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'breakdown.moneyFlowOptions.showAllocationTargets.hint' | translate }}
-        </p>
+        </span>
+      </z-switch>
+      <p class="mt-2 text-xs text-muted-foreground">
+        {{ 'breakdown.moneyFlowOptions.showAllocationTargets.hint' | translate }}
+      </p>
       } @else {
-        <z-switch
-          [zChecked]="useElapsedMonthsAverage()"
-          [zDisabled]="!showOptionsCard()"
-          (zCheckedChange)="useElapsedMonthsAverage.set($event)"
-        >
+      <z-switch [zChecked]="useElapsedMonthsAverage()" [zDisabled]="!showOptionsCard()"
+        (zCheckedChange)="useElapsedMonthsAverage.set($event)" class="gap-2">
+        <span #labelContent>
           {{ 'breakdown.averageMode.label' | translate }}
-        </z-switch>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'breakdown.averageMode.hint' | translate }}
-        </p>
+        </span>
+      </z-switch>
+      <p class="mt-2 text-xs text-muted-foreground">
+        {{ 'breakdown.averageMode.hint' | translate }}
+      </p>
       }
     </div>
   </div>
 
   @if (activeSectionView() === 'money-flow') {
-    <div class="animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out flex min-h-0 flex-1">
-      <app-money-flow-breakdown-section
-        [year]="currentCalendarYear()"
-        [isSmallScreen]="isSmallScreen()"
-        [showAllocationTargets]="showMoneyFlowAllocationTargets()"
-      ></app-money-flow-breakdown-section>
-    </div>
+  <div class="animate-in fade-in-0 slide-in-from-top-2 duration-200 ease-out flex min-h-0 flex-1">
+    <app-money-flow-breakdown-section [year]="currentCalendarYear()" [isSmallScreen]="isSmallScreen()"
+      [showAllocationTargets]="showMoneyFlowAllocationTargets()"></app-money-flow-breakdown-section>
+  </div>
   }
 
   @if (activeSectionView() === 'expense') {
-    <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out">
-      <app-category-breakdown-section
-        [categoryType]="'expense'"
-        [year]="currentCalendarYear()"
-        [isSmallScreen]="isSmallScreen()"
-        [useElapsedMonthsAverage]="effectiveUseElapsedMonthsAverage()"
-      ></app-category-breakdown-section>
-    </div>
+  <div class="animate-in fade-in-0 slide-in-from-left-2 duration-200 ease-out">
+    <app-category-breakdown-section [categoryType]="'expense'" [year]="currentCalendarYear()"
+      [isSmallScreen]="isSmallScreen()"
+      [useElapsedMonthsAverage]="effectiveUseElapsedMonthsAverage()"></app-category-breakdown-section>
+  </div>
   }
 
   @if (activeSectionView() === 'income') {
-    <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out">
-      <app-category-breakdown-section
-        [categoryType]="'income'"
-        [year]="currentCalendarYear()"
-        [isSmallScreen]="isSmallScreen()"
-        [useElapsedMonthsAverage]="effectiveUseElapsedMonthsAverage()"
-      ></app-category-breakdown-section>
-    </div>
+  <div class="animate-in fade-in-0 slide-in-from-right-2 duration-200 ease-out">
+    <app-category-breakdown-section [categoryType]="'income'" [year]="currentCalendarYear()"
+      [isSmallScreen]="isSmallScreen()"
+      [useElapsedMonthsAverage]="effectiveUseElapsedMonthsAverage()"></app-category-breakdown-section>
+  </div>
   }
 </section>

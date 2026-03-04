@@ -10,7 +10,9 @@ import { ZardSwitchComponent } from '@/shared/components/switch';
   template: `
     <div class="rounded-md border p-3">
       <z-switch [zChecked]="deleteLinkedItems()" (zCheckedChange)="deleteLinkedItems.set($event)">
-        {{ 'recurringEvents.deleteAlert.options.deleteLinkedItems' | translate }}
+        <span #labelContent>
+          {{ 'recurringEvents.deleteAlert.options.deleteLinkedItems' | translate }}
+        </span>
       </z-switch>
       <p class="mt-2 text-xs text-muted-foreground">
         {{ 'recurringEvents.deleteAlert.options.deleteLinkedItemsHint' | translate }}

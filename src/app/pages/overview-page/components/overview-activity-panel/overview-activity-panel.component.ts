@@ -4,12 +4,13 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  TemplateRef,
   computed,
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
-import { MessageSquareText } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -32,52 +33,21 @@ import {
 } from '@/pages/transaction-page/components/upsert-transfer-dialog/upsert-transfer-dialog.component';
 import { AccountsService } from '@/services/accounts.service';
 import { CategoriesService } from '@/services/categories.service';
-import { NumberFormatService } from '@/services/number-format.service';
 import { TransactionsService } from '@/services/transactions.service';
 import { type ZardDialogRef, ZardDialogService } from '@/shared/components/dialog';
-import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent } from '@/shared/components/button';
-import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
+import { type ZardIcon } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import {
   ZardSegmentedComponent,
   ZardSegmentedItemComponent,
 } from '@/shared/components/segmented';
-import { ZardSwitchComponent } from '@/shared/components/switch';
-import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { toMonthRangeTimestamps } from '../overview-cards.utils';
+import { ActivityTransactionRowComponent } from './activity-transaction-row.component';
+import { ActivityTransferRowComponent } from './activity-transfer-row.component';
+import type { ActivityTransactionRow, ActivityTransferRow } from './activity-row.types';
 
 type OverviewActivityTab = 'transactions' | 'transfers';
-
-interface OverviewActivityTransactionRow {
-  readonly id: number;
-  readonly occurredAt: number;
-  readonly amount: number;
-  readonly settled: boolean;
-  readonly accountName: string;
-  readonly accountIcon: ZardIcon;
-  readonly accountColorHex: string;
-  readonly categoryName: string;
-  readonly categoryIcon: ZardIcon;
-  readonly categoryColorHex: string;
-  readonly description: string | null;
-}
-
-interface OverviewActivityTransferRow {
-  readonly transferId: string;
-  readonly occurredAt: number;
-  readonly amount: number;
-  readonly settled: boolean;
-  readonly fromAccountId: number;
-  readonly toAccountId: number;
-  readonly fromAccountName: string;
-  readonly fromAccountIcon: ZardIcon;
-  readonly fromAccountColorHex: string;
-  readonly toAccountName: string;
-  readonly toAccountIcon: ZardIcon;
-  readonly toAccountColorHex: string;
-  readonly description: string | null;
-}
 
 const DEFAULT_TAB: OverviewActivityTab = 'transactions';
 const MAX_ACTIVITY_ITEMS = 10;
@@ -92,17 +62,15 @@ const DEFAULT_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?
 @Component({
   selector: 'app-overview-activity-panel',
   imports: [
+    ActivityTransactionRowComponent,
+    ActivityTransferRowComponent,
     AppBaseCardComponent,
     RouterLink,
     TranslatePipe,
-    ZardBadgeComponent,
     ZardButtonComponent,
-    ZardIconComponent,
     ZardLoaderComponent,
     ZardSegmentedComponent,
     ZardSegmentedItemComponent,
-    ZardSwitchComponent,
-    ...ZardTooltipImports,
   ],
   templateUrl: './overview-activity-panel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,14 +88,15 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);
 
+  protected readonly cardTitleTpl = viewChild.required<TemplateRef<void>>('titleTpl');
+
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly activeTab = signal<OverviewActivityTab>(DEFAULT_TAB);
-  protected readonly transactionRows = signal<readonly OverviewActivityTransactionRow[]>([]);
-  protected readonly transferRows = signal<readonly OverviewActivityTransferRow[]>([]);
+  protected readonly transactionRows = signal<readonly ActivityTransactionRow[]>([]);
+  protected readonly transferRows = signal<readonly ActivityTransferRow[]>([]);
   protected readonly pendingTransactionSettledIds = signal<ReadonlySet<number>>(new Set<number>());
   protected readonly pendingTransferSettledIds = signal<ReadonlySet<string>>(new Set<string>());
-  protected readonly descriptionIndicatorIcon = MessageSquareText;
   protected readonly activityItemLimit = computed(() => Math.min(MAX_ACTIVITY_ITEMS, this.normalizeLimit(this.limit())));
   protected readonly titleKey = 'overview.cards.activity.title';
   protected readonly descriptionKey = computed(() =>
@@ -145,7 +114,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
     private readonly dialogService: ZardDialogService,
-    private readonly numberFormatService: NumberFormatService,
     private readonly transactionsService: TransactionsService,
     private readonly translateService: TranslateService,
   ) {}
@@ -191,54 +159,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
 
   protected isTransferSettledUpdatePending(transferId: string): boolean {
     return this.pendingTransferSettledIds().has(transferId);
-  }
-
-  protected settledStatusTooltip(settled: boolean): string {
-    return this.translate(
-      settled
-        ? 'overview.cards.recentTransactions.tooltips.settled'
-        : 'overview.cards.recentTransactions.tooltips.unsettled',
-    );
-  }
-
-  protected settledToggleActionLabel(settled: boolean): string {
-    return this.translate(
-      settled
-        ? 'overview.cards.recentTransactions.tooltips.unsettled'
-        : 'overview.cards.recentTransactions.tooltips.settle',
-    );
-  }
-
-  protected amountTrendIcon(amount: number): 'arrow-up' | 'arrow-down' | null {
-    if (!Number.isFinite(amount) || amount === 0) {
-      return null;
-    }
-
-    return amount > 0 ? 'arrow-up' : 'arrow-down';
-  }
-
-  protected amountTrendIconColor(amount: number): string | null {
-    if (!Number.isFinite(amount) || amount === 0) {
-      return null;
-    }
-
-    return amount > 0 ? 'var(--positive-transaction-color)' : 'var(--negative-transaction-color)';
-  }
-
-  protected formatActivityDate(timestampMs: number): string {
-    const date = new Date(timestampMs);
-    const now = new Date();
-    const sameYear = date.getFullYear() === now.getFullYear();
-
-    return new Intl.DateTimeFormat(this.resolveLocale(), {
-      day: '2-digit',
-      month: 'short',
-      ...(sameYear ? {} : { year: 'numeric' }),
-    }).format(date);
-  }
-
-  protected formatAmount(amount: number): string {
-    return this.numberFormatService.formatCurrency(amount);
   }
 
   protected async onTransactionSettledChange(rowId: number, nextSettled: boolean): Promise<void> {
@@ -616,10 +536,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
     return APP_COLOR_HEX_BY_VALUE.get(colorKey) ?? `var(--${colorKey})`;
   }
 
-  private resolveLocale(): string {
-    const currentLanguage = this.translateService.currentLang?.trim();
-    return currentLanguage && currentLanguage.length > 0 ? currentLanguage : 'en';
-  }
 
   private translate(key: string, params?: Record<string, unknown>): string {
     const translated = this.translateService.instant(key, params);

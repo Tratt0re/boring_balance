@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  contentChild,
+  ElementRef,
   forwardRef,
   input,
   model,
@@ -30,7 +32,8 @@ type OnChangeType = (value: boolean) => void;
   selector: 'z-switch',
   imports: [ZardIdDirective],
   template: `
-    <span class="inline-flex min-h-11 items-center gap-2" zardId="switch" #z="zardId">
+    <span class="inline-flex min-h-11 items-center" zardId="switch" #z="zardId"
+    [class.gap-2]="hasLabel()">
       <button
         [id]="zId() || z.id()"
         type="button"
@@ -83,6 +86,9 @@ export class ZardSwitchComponent implements ControlValueAccessor {
   readonly zSize = input<ZardSwitchSizeVariants>('default');
   readonly zType = input<ZardSwitchTypeVariants>('default');
   readonly zDisabled = input(false, { transform: booleanAttribute });
+
+  protected readonly labelContent = contentChild<ElementRef>('labelContent');
+  protected readonly hasLabel = computed(() => !!this.labelContent());
 
   private onChange: OnChangeType = noopFn;
   private onTouched: OnTouchedType = noopFn;

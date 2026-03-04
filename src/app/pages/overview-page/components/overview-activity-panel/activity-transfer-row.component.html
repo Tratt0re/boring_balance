@@ -1,0 +1,58 @@
+<div
+  class="grid grid-cols-[1fr_auto] gap-x-3 rounded-md border border-border/60 bg-background/70 p-2.5 transition-opacity"
+  [class.opacity-60]="isPending()"
+>
+  <!-- Content: 3 stacked rows -->
+  <div class="min-w-0 flex flex-col gap-1.5">
+
+    <!-- Row 1: From → To accounts -->
+    <div class="flex min-w-0 items-center gap-2 text-sm font-medium">
+      <span class="inline-flex min-w-0 shrink items-center gap-1.5">
+        <z-icon
+          [zType]="row().fromAccountIcon"
+          class="size-3.5 shrink-0 text-(--app-transfer-list-account-icon-color)"
+          [style.--app-transfer-list-account-icon-color]="row().fromAccountColorHex"
+        />
+        <span class="truncate">{{ row().fromAccountName }}</span>
+      </span>
+
+      <span class="shrink-0 text-xs text-muted-foreground">→</span>
+
+      <span class="inline-flex min-w-0 shrink items-center gap-1.5">
+        <z-icon
+          [zType]="row().toAccountIcon"
+          class="size-3.5 shrink-0 text-(--app-transfer-list-account-icon-color)"
+          [style.--app-transfer-list-account-icon-color]="row().toAccountColorHex"
+        />
+        <span class="truncate">{{ row().toAccountName }}</span>
+      </span>
+    </div>
+
+    <!-- Row 2: Date -->
+    <span class="text-xs text-muted-foreground">{{ formatActivityDate(row().occurredAt) }}</span>
+
+    <!-- Row 3: Amount -->
+    <span class="text-sm font-semibold">{{ formatAmount(row().amount) }}</span>
+
+  </div>
+
+  <!-- Right column: description icon at top, toggle at bottom -->
+  <div class="flex flex-col justify-between items-end">
+    <z-icon
+      [zType]="descriptionIndicatorIcon"
+      class="size-3.5 shrink-0 text-muted-foreground"
+      [class.invisible]="!row().description"
+      [class.pointer-events-none]="!row().description"
+      [zTooltip]="row().description || null"
+    />
+
+    <z-switch
+      [zChecked]="row().settled"
+      [zDisabled]="isPending()"
+      [zTooltip]="settledStatusTooltip(row().settled)"
+      [zAriaLabel]="settledToggleActionLabel(row().settled)"
+      (zCheckedChange)="settledChange.emit($event)"
+    >
+    </z-switch>
+  </div>
+</div>

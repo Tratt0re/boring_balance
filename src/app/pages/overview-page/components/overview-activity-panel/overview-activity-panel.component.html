@@ -1,7 +1,18 @@
+<ng-template #titleTpl>
+  <div class="flex w-full items-center justify-between gap-2">
+    <span>{{ titleKey | translate }}</span>
+    @if (activeTab() === 'transactions') {
+      <a z-button zType="link" zSize="sm" [routerLink]="['/transactions']" class="h-auto p-0 text-xs font-normal">
+        {{ 'overview.cards.recentTransactions.actions.goToTransactionsPage' | translate }}
+      </a>
+    }
+  </div>
+</ng-template>
+
 <app-base-card
   [style.height.%]="100"
   [style.minHeight.%]="100"
-  [zTitle]="titleKey | translate"
+  [zTitle]="cardTitleTpl()"
   [zDescription]="descriptionKey() | translate: { count: activityItemLimit() }"
   [zBodyFill]="true"
 >
@@ -28,158 +39,43 @@
 
       @if (activeTab() === 'transactions') {
         @if (transactionRows().length === 0) {
-          <div class="flex flex-1 items-center justify-center rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
+          <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
             <p class="text-sm text-muted-foreground">{{ 'overview.cards.recentTransactions.empty' | translate }}</p>
+            <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
+              + {{ quickActionLabelKey() | translate }}
+            </button>
           </div>
         } @else {
           <div class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-1">
             @for (row of transactionRows(); track row.id) {
-              <div
-                class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 rounded-md border border-border/60 bg-background/70 p-2.5 transition-opacity"
-                [class.opacity-60]="isTransactionSettledUpdatePending(row.id)"
-              >
-                <z-switch
-                  class="justify-self-start self-center"
-                  [zChecked]="row.settled"
-                  [zDisabled]="isTransactionSettledUpdatePending(row.id)"
-                  [zTooltip]="settledStatusTooltip(row.settled)"
-                  (zCheckedChange)="onTransactionSettledChange(row.id, $event)"
-                >
-                  <span class="sr-only">{{ settledToggleActionLabel(row.settled) }}</span>
-                </z-switch>
-
-                <div class="min-w-0 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1">
-                  <div class="min-w-0 flex items-center gap-2">
-                    <z-badge zType="secondary" zShape="pill" class="max-w-full gap-1.5 align-top">
-                      <z-icon
-                        [zType]="row.categoryIcon"
-                        class="size-3.5 shrink-0 text-(--app-transaction-list-category-icon-color)"
-                        [style.--app-transaction-list-category-icon-color]="row.categoryColorHex"
-                      />
-                      <span class="truncate">{{ row.categoryName | translate }}</span>
-                    </z-badge>
-
-                    @if (row.description; as description) {
-                      <button
-                        z-button
-                        zType="ghost"
-                        zSize="sm"
-                        class="size-7 shrink-0 p-0 text-muted-foreground hover:text-foreground"
-                        [zTooltip]="description"
-                        [attr.aria-label]="description"
-                      >
-                        <z-icon [zType]="descriptionIndicatorIcon" class="size-3.5" />
-                      </button>
-                    }
-                  </div>
-
-                  <p class="text-right text-xs text-muted-foreground">
-                    {{ formatActivityDate(row.occurredAt) }}
-                  </p>
-
-                  <span class="inline-flex min-w-0 items-center gap-1.5 text-left">
-                    @if (amountTrendIcon(row.amount); as amountIcon) {
-                      <z-icon
-                        [zType]="amountIcon"
-                        class="size-3.5 shrink-0 text-(--app-data-table-currency-trend-color)"
-                        [style.--app-data-table-currency-trend-color]="amountTrendIconColor(row.amount)"
-                      />
-                    }
-                    <span class="truncate text-sm font-semibold">
-                      {{ formatAmount(row.amount) }}
-                    </span>
-                  </span>
-
-                  <p class="inline-flex min-w-0 items-center justify-end gap-1.5 text-right text-xs text-muted-foreground">
-                    <z-icon
-                      [zType]="row.accountIcon"
-                      class="size-3.5 shrink-0 text-(--app-transaction-list-account-icon-color) opacity-90"
-                      [style.--app-transaction-list-account-icon-color]="row.accountColorHex"
-                    />
-                    <span class="truncate">{{ row.accountName }}</span>
-                  </p>
-                </div>
-              </div>
+              <app-activity-transaction-row
+                [row]="row"
+                [isPending]="isTransactionSettledUpdatePending(row.id)"
+                (settledChange)="onTransactionSettledChange(row.id, $event)"
+              />
             }
           </div>
         }
       } @else {
         @if (transferRows().length === 0) {
-          <div class="flex flex-1 items-center justify-center rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
+          <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
             <p class="text-sm text-muted-foreground">{{ 'transactions.transfers.table.emptyMessage' | translate }}</p>
+            <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
+              + {{ quickActionLabelKey() | translate }}
+            </button>
           </div>
         } @else {
           <div class="flex-1 min-h-0 space-y-2 overflow-y-auto pr-1">
             @for (row of transferRows(); track row.transferId) {
-              <div
-                class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 rounded-md border border-border/60 bg-background/70 p-2.5 transition-opacity"
-                [class.opacity-60]="isTransferSettledUpdatePending(row.transferId)"
-              >
-                <z-switch
-                  class="justify-self-start self-center"
-                  [zChecked]="row.settled"
-                  [zDisabled]="isTransferSettledUpdatePending(row.transferId)"
-                  [zTooltip]="settledStatusTooltip(row.settled)"
-                  (zCheckedChange)="onTransferSettledChange(row.transferId, $event)"
-                >
-                  <span class="sr-only">{{ settledToggleActionLabel(row.settled) }}</span>
-                </z-switch>
-
-                <div class="min-w-0 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-1">
-                  <div class="min-w-0 flex items-center gap-2 text-sm font-medium">
-                    <span class="inline-flex min-w-0 items-center gap-1.5">
-                      <z-icon
-                        [zType]="row.fromAccountIcon"
-                        class="size-3.5 shrink-0 text-(--app-transfer-list-account-icon-color)"
-                        [style.--app-transfer-list-account-icon-color]="row.fromAccountColorHex"
-                      />
-                      <span class="truncate">{{ row.fromAccountName }}</span>
-                    </span>
-                    <span class="shrink-0 text-xs text-muted-foreground">-></span>
-                    <span class="inline-flex min-w-0 items-center gap-1.5">
-                      <z-icon
-                        [zType]="row.toAccountIcon"
-                        class="size-3.5 shrink-0 text-(--app-transfer-list-account-icon-color)"
-                        [style.--app-transfer-list-account-icon-color]="row.toAccountColorHex"
-                      />
-                      <span class="truncate">{{ row.toAccountName }}</span>
-                    </span>
-                  </div>
-
-                  <p class="text-right text-xs text-muted-foreground">
-                    {{ formatActivityDate(row.occurredAt) }}
-                  </p>
-
-                  <span class="truncate text-sm font-semibold">
-                    {{ formatAmount(row.amount) }}
-                  </span>
-
-                  <div class="flex items-center justify-end">
-                    @if (row.description; as description) {
-                      <button
-                        z-button
-                        zType="ghost"
-                        zSize="sm"
-                        class="size-7 shrink-0 p-0 text-muted-foreground hover:text-foreground"
-                        [zTooltip]="description"
-                        [attr.aria-label]="description"
-                      >
-                        <z-icon [zType]="descriptionIndicatorIcon" class="size-3.5" />
-                      </button>
-                    }
-                  </div>
-                </div>
-              </div>
+              <app-activity-transfer-row
+                [row]="row"
+                [isPending]="isTransferSettledUpdatePending(row.transferId)"
+                (settledChange)="onTransferSettledChange(row.transferId, $event)"
+              />
             }
           </div>
         }
       }
     </div>
-  }
-
-  @if (activeTab() === 'transactions') {
-    <a card-footer z-button zType="secondary" zSize="sm" [routerLink]="['/transactions']" class="w-full justify-center">
-      {{ 'overview.cards.recentTransactions.actions.goToTransactionsPage' | translate }}
-    </a>
   }
 </app-base-card>

@@ -1,12 +1,12 @@
 <div class="space-y-5">
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
-    <div class="rounded-md border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+    <div class="rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
       {{ 'settings.general.intro' | translate }}
     </div>
 
     <div class="mt-4 grid gap-4 lg:grid-cols-2">
       <div>
-        <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="settings-theme">
+        <label class="mb-1 block text-sm font-medium" for="settings-theme">
           {{ 'settings.general.cards.theme.fieldLabel' | translate }}
         </label>
         <z-select
@@ -28,7 +28,7 @@
       </div>
 
       <div>
-        <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="settings-language">
+        <label class="mb-1 block text-sm font-medium" for="settings-language">
           {{ 'settings.general.cards.language.fieldLabel' | translate }}
         </label>
         <z-select
@@ -59,7 +59,7 @@
 
     <div class="mt-4 grid gap-4 lg:grid-cols-2">
       <div>
-        <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="settings-currency">
+        <label class="mb-1 block text-sm font-medium" for="settings-currency">
           {{ 'settings.general.cards.currency.fieldLabel' | translate }}
         </label>
         <z-select
@@ -81,7 +81,7 @@
       </div>
 
       <div>
-        <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="settings-number-format">
+        <label class="mb-1 block text-sm font-medium" for="settings-number-format">
           {{ 'settings.general.cards.numberFormat.fieldLabel' | translate }}
         </label>
         <z-select
@@ -101,7 +101,7 @@
 
     @if (selectedCurrencyOption() === customCurrencyValue) {
       <div class="mt-4 max-w-sm border-t border-border/60 pt-4">
-        <label class="mb-1 block text-xs uppercase tracking-wide text-muted-foreground" for="settings-currency-custom">
+        <label class="mb-1 block text-sm font-medium" for="settings-currency-custom">
           {{ 'settings.general.cards.currency.customLabel' | translate }}
         </label>
         <input

@@ -70,7 +70,11 @@
             <p class="text-xs uppercase tracking-wide text-muted-foreground">
               {{ 'budgets.analysis.metrics.delta' | translate }}
             </p>
-            <p class="mt-1 text-lg font-semibold tracking-tight">
+            <p
+              class="mt-1 text-lg font-semibold tracking-tight"
+              [class.text-success]="analysisDeltaAmount() > 0"
+              [class.text-destructive]="analysisDeltaAmount() < 0"
+            >
               {{ formatSignedCurrency(analysisDeltaAmount()) }}
             </p>
           </div>
@@ -93,7 +97,7 @@
             {{ 'budgets.analysis.errors.loadFailedWithError' | translate : { error: analysisErrorMessage } }}
           </div>
         } @else if (!analysisHasData()) {
-          <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+          <div class="rounded-md bg-muted/40 p-4 text-sm text-muted-foreground">
             {{ 'budgets.analysis.empty' | translate : { year: analysisYear() } }}
           </div>
         } @else {

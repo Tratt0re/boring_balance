@@ -231,9 +231,9 @@
                             <z-switch
                               [zChecked]="getEditableChecked(row, column)"
                               [zDisabled]="isEditableDisabled(column, row)"
+                              [zAriaLabel]="column.columnName | translate"
                               (zCheckedChange)="onEditableSwitchChange($event, row, column)"
                             >
-                              <span class="sr-only">{{ column.columnName | translate }}</span>
                             </z-switch>
                           }
 
