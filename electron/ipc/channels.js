@@ -7,6 +7,13 @@ const CHANNELS = Object.freeze({
     remove: 'db:app-meta:remove',
     upsert: 'db:app-meta:upsert',
   }),
+  accountValuations: Object.freeze({
+    create: 'db:account-valuations:create',
+    get:    'db:account-valuations:get',
+    list:   'db:account-valuations:list',
+    update: 'db:account-valuations:update',
+    remove: 'db:account-valuations:remove',
+  }),
   accounts: Object.freeze({
     create: 'db:accounts:create',
     get: 'db:accounts:get',

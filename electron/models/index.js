@@ -1,5 +1,6 @@
 const appMetaModel = require('./app-meta.model');
 const accountsModel = require('./accounts.model');
+const accountValuationsModel = require('./account-valuations.model');
 const categoriesModel = require('./categories.model');
 const budgetsModel = require('./budgets.model');
 const analyticsModel = require('./analytics.model');
@@ -13,6 +14,7 @@ const { transactionsModel, transfersModel } = require('./transactions');
 module.exports = {
   appMetaModel,
   accountsModel,
+  accountValuationsModel,
   categoriesModel,
   budgetsModel,
   analyticsModel,
