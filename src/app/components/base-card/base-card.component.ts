@@ -15,6 +15,7 @@ import {
   baseCardBodyVariants,
   baseCardFooterVariants,
   baseCardHeaderVariants,
+  baseCardTitleVariants,
   baseCardVariants,
 } from './base-card.variants';
 import { ZardIdDirective, ZardStringTemplateOutletDirective } from '@/shared/core';
@@ -45,6 +46,7 @@ export class AppBaseCardComponent {
   readonly class = input<ClassValue>('');
   readonly zFooterBorder = input(false, { transform: booleanAttribute });
   readonly zHeaderBorder = input(false, { transform: booleanAttribute });
+  readonly zHeaderVariant = input<'default' | 'segmented'>('default');
   readonly zBodyFill = input(false, { transform: booleanAttribute });
   readonly zDescription = input<string | TemplateRef<void>>();
   readonly zTitle = input<string | TemplateRef<void>>();
@@ -67,6 +69,9 @@ export class AppBaseCardComponent {
     mergeClasses(baseCardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
   );
   protected readonly headerClasses = computed(() =>
-    mergeClasses(baseCardHeaderVariants(), this.zHeaderBorder() ? 'border-b' : ''),
+    mergeClasses(baseCardHeaderVariants({ variant: this.zHeaderVariant() }), this.zHeaderBorder() ? 'border-b' : ''),
+  );
+  protected readonly titleClasses = computed(() =>
+    mergeClasses(baseCardTitleVariants({ variant: this.zHeaderVariant() })),
   );
 }

@@ -6,12 +6,17 @@ import {
   SimpleChanges,
   computed,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
-import type { AnalyticsNetWorthByAccountResponse } from '@/dtos';
+import type {
+  AnalyticsNetWorthByAccountResponse,
+  AnalyticsNetWorthByAccountRowDto,
+  AnalyticsNetWorthSnapshotsDto,
+} from '@/dtos';
 import { AnalyticsService } from '@/services/analytics.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
@@ -19,6 +24,14 @@ import { ZardLoaderComponent } from '@/shared/components/loader';
 import { toMonthRangeTimestamps } from '../overview-cards.utils';
 
 const AMOUNT_CENTS_DIVISOR = 100;
+const EMPTY_SNAPSHOT_RECENCY: AnalyticsNetWorthSnapshotsDto = {
+  hasSnapshots: false,
+  latestSnapshotAtMs: null,
+  daysSinceLatestSnapshot: null,
+  isOutdated: false,
+};
+const LIQUID_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings']);
+const INVESTMENT_ACCOUNT_TYPES = new Set(['brokerage', 'crypto']);
 
 @Component({
   selector: 'app-overview-net-worth-card',
@@ -37,14 +50,24 @@ const AMOUNT_CENTS_DIVISOR = 100;
 export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
+  readonly snapshotsChange = output<AnalyticsNetWorthSnapshotsDto>();
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly totalNetWorthCents = signal(0);
+  protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
+  protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
   protected readonly totalNetWorthPreviousMonthTotalCents = signal(0);
   protected readonly totalNetWorthPreviousMonthDeltaCents = signal(0);
+  protected readonly totalLiquidAssetsCents = signal(0);
+  protected readonly totalInvestmentsCents = signal(0);
   protected readonly totalReceivablesCents = signal(0);
   protected readonly totalPayablesCents = signal(0);
+  protected readonly showSnapshotAsOfCaption = computed(() =>
+    this.netWorthMode() === 'valued'
+    && this.snapshotRecency().hasSnapshots
+    && this.snapshotRecency().daysSinceLatestSnapshot !== null,
+  );
   protected readonly totalNetWorthPreviousMonthDeltaPercent = computed(() => {
     const previousTotalCents = this.totalNetWorthPreviousMonthTotalCents();
     const deltaCents = this.totalNetWorthPreviousMonthDeltaCents();
@@ -138,8 +161,13 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
     } catch (error) {
       console.error('[overview-net-worth-card] Failed to load net worth card data:', error);
       this.totalNetWorthCents.set(0);
+      this.netWorthMode.set('ledger');
+      this.snapshotRecency.set(EMPTY_SNAPSHOT_RECENCY);
+      this.snapshotsChange.emit(EMPTY_SNAPSHOT_RECENCY);
       this.totalNetWorthPreviousMonthTotalCents.set(0);
       this.totalNetWorthPreviousMonthDeltaCents.set(0);
+      this.totalLiquidAssetsCents.set(0);
+      this.totalInvestmentsCents.set(0);
       this.totalReceivablesCents.set(0);
       this.totalPayablesCents.set(0);
       this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading summary cards.');
@@ -149,10 +177,67 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   }
 
   private applyNetWorthResponse(netWorthResponse: AnalyticsNetWorthByAccountResponse): void {
-    const totalNetWorthCents = netWorthResponse.rows.reduce((total, row) => total + Number(row.net_worth_cents ?? 0), 0);
+    const totalNetWorthFromRowsCents = netWorthResponse.rows.reduce(
+      (total, row) => total + Number(row.net_worth_cents ?? 0),
+      0,
+    );
+    const totalNetWorthCents = Number(netWorthResponse.netWorthCents ?? totalNetWorthFromRowsCents);
+    const netWorthMode = netWorthResponse.netWorthMode === 'valued' ? 'valued' : 'ledger';
+    const useValuedBalances = netWorthMode === 'valued';
+    const liquidAssetsCentsFallback = this.sumRowsByAccountTypes(
+      netWorthResponse.rows,
+      LIQUID_ACCOUNT_TYPES,
+      useValuedBalances,
+    );
+    const investmentsCentsFallback = this.sumRowsByAccountTypes(
+      netWorthResponse.rows,
+      INVESTMENT_ACCOUNT_TYPES,
+      useValuedBalances,
+    );
+    const liquidAssetsCents = Number(netWorthResponse.liquidAssetsCents ?? liquidAssetsCentsFallback);
+    const investmentsCents = Number(netWorthResponse.investmentsCents ?? investmentsCentsFallback);
+    const snapshots = netWorthResponse.snapshots ?? EMPTY_SNAPSHOT_RECENCY;
+    const normalizedDaysSinceLatestSnapshot = snapshots.daysSinceLatestSnapshot === null
+      ? null
+      : Number(snapshots.daysSinceLatestSnapshot);
     const previousMonthDeltaCents = Number(netWorthResponse.totals?.previous_month_delta_cents ?? 0);
-    this.totalNetWorthCents.set(totalNetWorthCents);
+    this.totalNetWorthCents.set(Number.isFinite(totalNetWorthCents) ? totalNetWorthCents : totalNetWorthFromRowsCents);
+    this.netWorthMode.set(netWorthMode);
+    const normalizedSnapshotRecency: AnalyticsNetWorthSnapshotsDto = {
+      hasSnapshots: snapshots.hasSnapshots === true,
+      latestSnapshotAtMs: snapshots.latestSnapshotAtMs === null ? null : Number(snapshots.latestSnapshotAtMs),
+      daysSinceLatestSnapshot: normalizedDaysSinceLatestSnapshot !== null && Number.isFinite(normalizedDaysSinceLatestSnapshot)
+        ? normalizedDaysSinceLatestSnapshot
+        : null,
+      isOutdated: snapshots.isOutdated === true,
+    };
+    this.snapshotRecency.set(normalizedSnapshotRecency);
+    this.snapshotsChange.emit(normalizedSnapshotRecency);
     this.totalNetWorthPreviousMonthTotalCents.set(Number(netWorthResponse.totals?.previous_month_total_cents ?? 0));
     this.totalNetWorthPreviousMonthDeltaCents.set(Number.isFinite(previousMonthDeltaCents) ? previousMonthDeltaCents : 0);
+    this.totalLiquidAssetsCents.set(Number.isFinite(liquidAssetsCents) ? liquidAssetsCents : liquidAssetsCentsFallback);
+    this.totalInvestmentsCents.set(Number.isFinite(investmentsCents) ? investmentsCents : investmentsCentsFallback);
+  }
+
+  private sumRowsByAccountTypes(
+    rows: readonly AnalyticsNetWorthByAccountRowDto[],
+    accountTypes: ReadonlySet<string>,
+    useValuedBalances: boolean,
+  ): number {
+    return rows.reduce((totalCents, row) => {
+      if (!accountTypes.has(String(row.account_type ?? ''))) {
+        return totalCents;
+      }
+
+      const ledgerCents = Number(row.net_worth_cents ?? 0);
+      const valuedCents = row.net_worth_valued_cents === null || row.net_worth_valued_cents === undefined
+        ? ledgerCents
+        : Number(row.net_worth_valued_cents);
+      const effectiveCents = useValuedBalances && Number.isFinite(valuedCents)
+        ? valuedCents
+        : ledgerCents;
+
+      return totalCents + (Number.isFinite(effectiveCents) ? effectiveCents : 0);
+    }, 0);
   }
 }

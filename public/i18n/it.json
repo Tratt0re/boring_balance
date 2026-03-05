@@ -519,6 +519,12 @@
     "toolbar": {
       "reload": "Ricarica"
     },
+    "banners": {
+      "snapshotsOutdated": {
+        "title": "Le istantanee potrebbero essere obsolete",
+        "body": "La tua ultima istantanea risale a {{days}} giorni fa. Aggiorna le istantanee per mantenere accurato il Patrimonio netto."
+      }
+    },
     "errors": {
       "summaryLoad": "Impossibile caricare i dati di riepilogo."
     },
@@ -537,9 +543,21 @@
         "tooltips": {
           "averageDailyChangePositive": "Il tuo patrimonio netto totale sta aumentando in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
           "averageDailyChangeNegative": "Il tuo patrimonio netto totale sta diminuendo in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
-          "averageDailyChangeNeutral": "Il tuo patrimonio netto totale non varia in media al giorno questo mese (rispetto alla fine del mese scorso)."
+          "averageDailyChangeNeutral": "Il tuo patrimonio netto totale non varia in media al giorno questo mese (rispetto alla fine del mese scorso).",
+          "current": "Attuale"
         },
         "total": "Totale",
+        "withValuations": "Con valutazioni",
+        "liquidAssets": "Asset liquidi",
+        "investments": "Investimenti",
+        "snapshotBased": {
+          "today": "Istantanee aggiornate oggi",
+          "daysAgo": "Basato sulle istantanee ({{days}} giorni fa)"
+        },
+        "valuationsOutdated": {
+          "title": "Le valutazioni potrebbero essere obsolete",
+          "body": "La tua ultima istantanea di valutazione risale a {{days}} giorni fa. Aggiorna le istantanee per mantenere accurato 'Con valutazioni'."
+        },
         "deltaVsPreviousMonth": "vs mese precedente",
         "receivables": "Crediti",
         "payables": "Debiti",

@@ -2,6 +2,8 @@ function pad2(value) {
   return String(value).padStart(2, '0');
 }
 
+const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
 function normalizeDateFormat(value) {
   if (value === undefined) {
     return 'DD-MM-YYYY';
@@ -37,6 +39,17 @@ function formatUnixTimestampMillisecondsToDate(unixTimestampMilliseconds, option
   return `${day}-${month}-${year}`;
 }
 
+function elapsedDaysBetweenUnixTimestampMilliseconds(startUnixTimestampMilliseconds, endUnixTimestampMilliseconds) {
+  const normalizedStart = Number(startUnixTimestampMilliseconds);
+  const normalizedEnd = Number(endUnixTimestampMilliseconds);
+  if (!Number.isFinite(normalizedStart) || !Number.isFinite(normalizedEnd)) {
+    throw new Error('startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be finite numbers.');
+  }
+
+  return Math.floor((normalizedEnd - normalizedStart) / MILLISECONDS_PER_DAY);
+}
+
 module.exports = {
+  elapsedDaysBetweenUnixTimestampMilliseconds,
   formatUnixTimestampMillisecondsToDate,
 };

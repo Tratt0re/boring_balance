@@ -519,6 +519,12 @@
     "toolbar": {
       "reload": "Reload"
     },
+    "banners": {
+      "snapshotsOutdated": {
+        "title": "Snapshots may be outdated",
+        "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."
+      }
+    },
     "errors": {
       "summaryLoad": "Unable to load summary data."
     },
@@ -537,9 +543,21 @@
         "tooltips": {
           "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
           "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month)."
+          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
+          "current": "Current"
         },
         "total": "Total",
+        "withValuations": "With valuations",
+        "liquidAssets": "Liquid assets",
+        "investments": "Investments",
+        "snapshotBased": {
+          "today": "Snapshots updated today",
+          "daysAgo": "Based on snapshots ({{days}} days ago)"
+        },
+        "valuationsOutdated": {
+          "title": "Valuations may be outdated",
+          "body": "Your latest valuation snapshot is {{days}} days old. Update snapshots to keep 'With valuations' accurate."
+        },
         "deltaVsPreviousMonth": "vs previous month",
         "receivables": "Receivables",
         "payables": "Payables",

@@ -1,34 +1,46 @@
-<section class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_22.5rem] lg:items-start">
-  <div class="grid min-w-0 grid-cols-1 gap-5 lg:col-span-2 lg:flex lg:h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:flex-col lg:overflow-y-auto lg:pr-1">
-    <div class="grid min-w-0 grid-cols-1 gap-5 lg:shrink-0 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-stretch">
-      <app-overview-net-worth-card
-        class="min-w-0"
-        [year]="currentCalendarYear"
-        [monthIndex]="currentCalendarMonthIndex"
-      ></app-overview-net-worth-card>
+<div class="space-y-5">
+  @if (showSnapshotsOutdatedBanner()) {
+    <div class="rounded-md border border-warning/25 bg-warning/10 p-3 text-sm text-warning">
+      <p class="font-medium">{{ 'overview.banners.snapshotsOutdated.title' | translate }}</p>
+      <p class="mt-1">
+        {{ 'overview.banners.snapshotsOutdated.body' | translate: { days: snapshotRecency().daysSinceLatestSnapshot } }}
+      </p>
+    </div>
+  }
 
-      <app-overview-allocation-card
-        class="min-w-0"
+  <section class="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_22.5rem] lg:items-start">
+    <div class="grid min-w-0 grid-cols-1 gap-5 lg:col-span-2 lg:flex lg:h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:flex-col lg:overflow-y-auto lg:pr-1">
+      <div class="grid min-w-0 grid-cols-1 gap-5 lg:shrink-0 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] lg:items-stretch">
+        <app-overview-net-worth-card
+          class="min-w-0"
+          [year]="currentCalendarYear"
+          [monthIndex]="currentCalendarMonthIndex"
+          (snapshotsChange)="onNetWorthSnapshotsChange($event)"
+        ></app-overview-net-worth-card>
+
+        <app-overview-allocation-card
+          class="min-w-0"
+          [year]="currentCalendarYear"
+          [monthIndex]="currentCalendarMonthIndex"
+          [isSmallScreen]="isSingleColumnLayout()"
+          [groupSmallSegments]="false"
+        ></app-overview-allocation-card>
+      </div>
+
+      <app-overview-cashflow-card
+        class="min-w-0 lg:min-h-104 lg:flex-1"
         [year]="currentCalendarYear"
         [monthIndex]="currentCalendarMonthIndex"
         [isSmallScreen]="isSingleColumnLayout()"
-        [groupSmallSegments]="false"
-      ></app-overview-allocation-card>
+      ></app-overview-cashflow-card>
     </div>
 
-    <app-overview-cashflow-card
-      class="min-w-0 lg:min-h-104 lg:flex-1"
+    <app-overview-activity-panel
+      class="min-h-0 lg:sticky lg:top-0 lg:self-start lg:h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:overflow-hidden"
       [year]="currentCalendarYear"
       [monthIndex]="currentCalendarMonthIndex"
-      [isSmallScreen]="isSingleColumnLayout()"
-    ></app-overview-cashflow-card>
-  </div>
-
-  <app-overview-activity-panel
-    class="min-h-0 lg:sticky lg:top-0 lg:self-start lg:h-[calc(100dvh-(7.5rem+var(--app-shell-header-offset)))] lg:overflow-hidden"
-    [year]="currentCalendarYear"
-    [monthIndex]="currentCalendarMonthIndex"
-    [limit]="recentActivityLimit"
-    (activityChanged)="onOverviewActivityChanged()"
-  ></app-overview-activity-panel>
-</section>
+      [limit]="recentActivityLimit"
+      (activityChanged)="onOverviewActivityChanged()"
+    ></app-overview-activity-panel>
+  </section>
+</div>

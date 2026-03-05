@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, computed, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
+import type { AnalyticsNetWorthSnapshotsDto } from '@/dtos';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { OverviewActivityPanelComponent } from './components/overview-activity-panel/overview-activity-panel.component';
 import { OverviewAllocationCardComponent } from './components/overview-allocation-card/overview-allocation-card.component';
@@ -11,6 +12,12 @@ import { OverviewNetWorthCardComponent } from './components/overview-net-worth-c
 const OVERVIEW_ACTIVITY_CHANGE_RELOAD_DELAY_MS = 180;
 const RECENT_ACTIVITY_DEFAULT_LIMIT = 10;
 const OVERVIEW_SINGLE_COLUMN_BREAKPOINT_PX = 1024;
+const EMPTY_SNAPSHOT_RECENCY: AnalyticsNetWorthSnapshotsDto = {
+  hasSnapshots: false,
+  latestSnapshotAtMs: null,
+  daysSinceLatestSnapshot: null,
+  isOutdated: false,
+};
 
 function detectOverviewSingleColumnLayoutViewport(): boolean {
   if (typeof window === 'undefined') {
@@ -23,6 +30,7 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
 @Component({
   selector: 'app-overview-page',
   imports: [
+    TranslatePipe,
     OverviewNetWorthCardComponent,
     OverviewAllocationCardComponent,
     OverviewCashflowCardComponent,
@@ -42,6 +50,12 @@ export class OverviewPage implements OnInit, OnDestroy {
   private readonly currentDateReference = new Date();
 
   protected readonly isSingleColumnLayout = signal(false);
+  protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
+  protected readonly showSnapshotsOutdatedBanner = computed(() =>
+    this.snapshotRecency().hasSnapshots
+    && this.snapshotRecency().isOutdated
+    && this.snapshotRecency().daysSinceLatestSnapshot !== null,
+  );
   protected readonly currentCalendarYear = this.currentDateReference.getFullYear();
   protected readonly currentCalendarMonthIndex = this.currentDateReference.getMonth();
   protected readonly recentActivityLimit = RECENT_ACTIVITY_DEFAULT_LIMIT;
@@ -86,6 +100,10 @@ export class OverviewPage implements OnInit, OnDestroy {
       void this.overviewAllocationCardComponent?.reload();
       void this.overviewCashflowCardComponent?.reload();
     }, OVERVIEW_ACTIVITY_CHANGE_RELOAD_DELAY_MS);
+  }
+
+  protected onNetWorthSnapshotsChange(snapshotRecency: AnalyticsNetWorthSnapshotsDto): void {
+    this.snapshotRecency.set(snapshotRecency);
   }
 
   private activateToolbarActions(): void {

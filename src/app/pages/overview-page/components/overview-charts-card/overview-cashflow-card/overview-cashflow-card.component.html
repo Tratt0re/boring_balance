@@ -1,23 +1,24 @@
+<ng-template #cardSegmentedTitleTpl>
+  <z-segmented zSize="sm" [zFull]="true" [zDefaultValue]="activeView()" (zChange)="onViewChange($event)">
+    <z-segmented-item
+      value="incomeExpenses"
+      [label]="'overview.cards.monthlyTotals.segmentTitle' | translate"
+    ></z-segmented-item>
+    <z-segmented-item
+      value="moneyFlow"
+      [label]="'overview.cards.moneyFlowSankey.title' | translate"
+    ></z-segmented-item>
+  </z-segmented>
+</ng-template>
+
 <app-base-card
   [style.height.%]="100"
-  [zTitle]="cardTitleKey() | translate"
+  [zTitle]="cardSegmentedTitle()"
+  [zHeaderVariant]="'segmented'"
   [zBodyFill]="true"
 >
   <div class="flex h-full min-h-0 flex-col gap-4">
-    <div class="shrink-0">
-      <z-segmented zSize="sm" [zFull]="true" [zDefaultValue]="activeView()" (zChange)="onViewChange($event)">
-        <z-segmented-item
-          value="incomeExpenses"
-          [label]="'overview.cards.monthlyTotals.segmentTitle' | translate"
-        ></z-segmented-item>
-        <z-segmented-item
-          value="moneyFlow"
-          [label]="'overview.cards.moneyFlowSankey.title' | translate"
-        ></z-segmented-item>
-      </z-segmented>
-    </div>
-
-    <div class="grid min-w-0 flex-1 min-h-[20rem] overflow-hidden">
+    <div class="grid min-w-0 flex-1 min-h-80 overflow-hidden">
       <app-overview-monthly-totals-card
         class="col-start-1 row-start-1 h-full min-h-0 min-w-0 w-full max-w-full overflow-hidden transition-opacity duration-300 ease-out"
         [class.opacity-0]="activeView() !== 'incomeExpenses'"
