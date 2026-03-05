@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, input, signal, viewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
@@ -34,17 +34,13 @@ export class OverviewCashflowCardComponent {
   private overviewMonthlyTotalsCardComponent?: OverviewMonthlyTotalsCardComponent;
   @ViewChild(OverviewMoneyFlowSankeyCardComponent)
   private overviewMoneyFlowSankeyCardComponent?: OverviewMoneyFlowSankeyCardComponent;
+  protected readonly cardSegmentedTitle = viewChild.required<TemplateRef<void>>('cardSegmentedTitleTpl');
 
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
   readonly isSmallScreen = input(false);
 
   protected readonly activeView = signal<OverviewCashflowView>(DEFAULT_VIEW);
-  protected readonly cardTitleKey = computed(() =>
-    this.activeView() === 'incomeExpenses'
-      ? 'overview.cards.monthlyTotals.title'
-      : 'overview.cards.moneyFlowSankey.title',
-  );
 
   async reload(): Promise<void> {
     await Promise.all([

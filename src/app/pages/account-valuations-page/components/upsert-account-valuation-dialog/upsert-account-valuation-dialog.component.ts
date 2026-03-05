@@ -158,8 +158,8 @@ export class UpsertAccountValuationDialogComponent {
       return null;
     }
 
-    const parsed = this.numberFormatService.parse(`${value}`);
-    if (parsed === null || !Number.isFinite(parsed) || parsed < 0) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 0) {
       return null;
     }
 

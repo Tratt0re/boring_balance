@@ -449,6 +449,12 @@
     "toolbar": {
       "reload": "Recargar"
     },
+    "banners": {
+      "snapshotsOutdated": {
+        "title": "Las instantaneas pueden estar desactualizadas",
+        "body": "Tu ultima instantanea tiene {{days}} dias. Actualiza las instantaneas para mantener preciso el Patrimonio neto."
+      }
+    },
     "errors": {
       "summaryLoad": "No se pudieron cargar los datos de resumen."
     },
@@ -467,9 +473,21 @@
         "tooltips": {
           "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
           "averageDailyChangeNegative": "Tu patrimonio neto total esta disminuyendo en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
-          "averageDailyChangeNeutral": "Tu patrimonio neto total no presenta cambios promedio por dia este mes (vs el cierre del mes anterior)."
+          "averageDailyChangeNeutral": "Tu patrimonio neto total no presenta cambios promedio por dia este mes (vs el cierre del mes anterior).",
+          "current": "Actual"
         },
         "total": "Total",
+        "withValuations": "Con valoraciones",
+        "liquidAssets": "Assets liquidos",
+        "investments": "Inversiones",
+        "snapshotBased": {
+          "today": "Instantaneas actualizadas hoy",
+          "daysAgo": "Basado en instantaneas (hace {{days}} dias)"
+        },
+        "valuationsOutdated": {
+          "title": "Las valoraciones pueden estar desactualizadas",
+          "body": "Tu ultima instantanea de valoracion tiene {{days}} dias. Actualiza las instantaneas para mantener preciso 'Con valoraciones'."
+        },
         "deltaVsPreviousMonth": "vs mes anterior",
         "receivables": "Por cobrar",
         "payables": "Por pagar",

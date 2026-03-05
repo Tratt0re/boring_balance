@@ -1,4 +1,5 @@
 const { getDatabase, selectDistinctYearsFromUnixTimestampColumn, selectRows } = require('../database');
+const { elapsedDaysBetweenUnixTimestampMilliseconds } = require('../utils/date-utils');
 const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 const { normalizeRowsTags } = require('./transactions/tags');
 
@@ -14,6 +15,9 @@ const TRANSFER_ORDER = [
   { column: 'occurred_at', direction: 'ASC' },
   { column: 'id', direction: 'ASC' },
 ];
+const SNAPSHOT_OUTDATED_DAYS_THRESHOLD = 7;
+const LIQUID_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings']);
+const INVESTMENT_ACCOUNT_TYPES = new Set(['brokerage', 'crypto']);
 
 function toMonthKey(unixTimestampMilliseconds) {
   const date = new Date(Number(unixTimestampMilliseconds));
@@ -199,6 +203,49 @@ function buildTransfersWhere(filters = {}) {
 
 function selectTransfers(database, where, orderBy = TRANSFER_ORDER) {
   return selectRows(database, 'transfers', where, { orderBy });
+}
+
+function selectLatestValuationByAccountIds(database, accountIds = []) {
+  const normalizedAccountIds = Array.from(new Set(
+    accountIds
+      .map((accountId) => Number(accountId))
+      .filter((accountId) => Number.isInteger(accountId) && accountId > 0),
+  ));
+  if (normalizedAccountIds.length === 0) {
+    return [];
+  }
+
+  const placeholdersSql = normalizedAccountIds.map(() => '?').join(', ');
+  const sql = `
+    SELECT
+      latest.account_id AS account_id,
+      latest.latest_valued_at AS valued_at,
+      valuation.value_cents AS value_cents
+    FROM (
+      SELECT
+        account_id AS account_id,
+        MAX(valued_at) AS latest_valued_at
+      FROM account_valuations
+      WHERE account_id IN (${placeholdersSql})
+      GROUP BY account_id
+    ) AS latest
+    INNER JOIN account_valuations AS valuation
+      ON valuation.account_id = latest.account_id
+      AND valuation.valued_at = latest.latest_valued_at
+  `;
+
+  return database.prepare(sql).all(normalizedAccountIds);
+}
+
+function selectLatestSnapshotTimestampMs(database) {
+  const row = database.prepare(`
+    SELECT
+      MAX(valued_at) AS latest_snapshot_at_ms
+    FROM account_valuations
+  `).get();
+  const latestSnapshotAtMs = Number(row?.latest_snapshot_at_ms);
+
+  return Number.isFinite(latestSnapshotAtMs) ? latestSnapshotAtMs : null;
 }
 
 function normalizeBucketsToTargetTotalCents(buckets, targetTotalCents) {
@@ -431,6 +478,51 @@ function netWorthByAccount(filters = {}) {
 
   const accountsToReport = filterContext.hasAccountFilter ? filterContext.filteredAccounts : filterContext.accounts;
   const sortedAccounts = [...accountsToReport].sort((left, right) => Number(left.id) - Number(right.id));
+  const latestSnapshotAtMs = selectLatestSnapshotTimestampMs(database);
+  const hasSnapshots = latestSnapshotAtMs !== null;
+  const daysSinceLatestSnapshot = hasSnapshots
+    ? elapsedDaysBetweenUnixTimestampMilliseconds(latestSnapshotAtMs, Date.now())
+    : null;
+  const latestValuationByAccountRows = selectLatestValuationByAccountIds(
+    database,
+    sortedAccounts.map((account) => Number(account.id)),
+  );
+  const latestValuationValueByAccountId = new Map(
+    latestValuationByAccountRows.map((row) => [Number(row.account_id), Number(row.value_cents)]),
+  );
+  const valuedBalanceByAccountId = new Map();
+  let netWorthValuedCents = null;
+  let valuedTotalCents = 0;
+  let liquidAssetsCents = 0;
+  let investmentsCents = 0;
+
+  for (const account of sortedAccounts) {
+    const accountId = Number(account.id);
+    const accountLedgerBalanceCents = Number(netWorthByAccountId.get(accountId) ?? 0);
+    const latestSnapshotValueCents = latestValuationValueByAccountId.get(accountId);
+    const accountValuedBalanceCents = latestSnapshotValueCents === undefined
+      ? accountLedgerBalanceCents
+      : latestSnapshotValueCents;
+    valuedBalanceByAccountId.set(accountId, accountValuedBalanceCents);
+
+    if (hasSnapshots) {
+      valuedTotalCents += accountValuedBalanceCents;
+    }
+
+    const accountNetWorthCents = hasSnapshots ? accountValuedBalanceCents : accountLedgerBalanceCents;
+    if (LIQUID_ACCOUNT_TYPES.has(account.type)) {
+      liquidAssetsCents += accountNetWorthCents;
+    }
+    if (INVESTMENT_ACCOUNT_TYPES.has(account.type)) {
+      investmentsCents += accountNetWorthCents;
+    }
+  }
+
+  if (hasSnapshots) {
+    netWorthValuedCents = valuedTotalCents;
+  }
+
+  const netWorthCents = hasSnapshots ? valuedTotalCents : currentTotalCents;
 
   return {
     rows: sortedAccounts.map((account) => {
@@ -441,12 +533,29 @@ function netWorthByAccount(filters = {}) {
         account_name: account.name,
         account_type: account.type,
         net_worth_cents: netWorthByAccountId.get(accountId) ?? 0,
+        net_worth_valued_cents: hasSnapshots
+          ? (valuedBalanceByAccountId.get(accountId) ?? (netWorthByAccountId.get(accountId) ?? 0))
+          : null,
       };
     }),
     totals: {
       current_total_cents: currentTotalCents,
       previous_month_total_cents: previousMonthTotalCents,
       previous_month_delta_cents: currentTotalCents - previousMonthTotalCents,
+    },
+    netWorthLedgerCents: currentTotalCents,
+    netWorthValuedCents,
+    netWorthCents,
+    netWorthMode: hasSnapshots ? 'valued' : 'ledger',
+    liquidAssetsCents,
+    investmentsCents,
+    snapshots: {
+      hasSnapshots,
+      latestSnapshotAtMs,
+      daysSinceLatestSnapshot,
+      isOutdated: hasSnapshots
+        && daysSinceLatestSnapshot !== null
+        && daysSinceLatestSnapshot > SNAPSHOT_OUTDATED_DAYS_THRESHOLD,
     },
   };
 }

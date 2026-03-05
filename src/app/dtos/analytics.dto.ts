@@ -52,6 +52,14 @@ export interface AnalyticsNetWorthByAccountRowDto {
   readonly account_name: string;
   readonly account_type: AccountType;
   readonly net_worth_cents: number;
+  readonly net_worth_valued_cents?: number | null;
+}
+
+export interface AnalyticsNetWorthSnapshotsDto {
+  readonly hasSnapshots: boolean;
+  readonly latestSnapshotAtMs: UnixTimestampMilliseconds | null;
+  readonly daysSinceLatestSnapshot: number | null;
+  readonly isOutdated: boolean;
 }
 
 export interface AnalyticsNetWorthByAccountResponseDto {
@@ -61,6 +69,13 @@ export interface AnalyticsNetWorthByAccountResponseDto {
     readonly previous_month_total_cents: number;
     readonly previous_month_delta_cents: number;
   };
+  readonly netWorthCents: number;
+  readonly netWorthMode: 'valued' | 'ledger';
+  readonly netWorthLedgerCents: number;
+  readonly netWorthValuedCents: number | null;
+  readonly liquidAssetsCents: number;
+  readonly investmentsCents: number;
+  readonly snapshots: AnalyticsNetWorthSnapshotsDto;
 }
 
 export interface AnalyticsCategoryByMonthRowDto {

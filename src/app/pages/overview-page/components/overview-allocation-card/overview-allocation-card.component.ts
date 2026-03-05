@@ -34,7 +34,10 @@ const ALLOCATION_PIE_CHART_HEIGHT_MOBILE = '15rem';
 interface NetWorthDistributionEntry {
   readonly accountId: number;
   readonly accountName: string;
+  readonly accountType: string;
   readonly netWorthCents: number;
+  readonly netWorthLedgerCents: number;
+  readonly netWorthValuedCents: number | null;
   readonly absoluteCents: number;
 }
 
@@ -160,15 +163,30 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
   }
 
   private applyNetWorthResponse(netWorthResponse: AnalyticsNetWorthByAccountResponse): void {
+    const useValuedMode = netWorthResponse.netWorthMode === 'valued';
     const distributionEntries: NetWorthDistributionEntry[] = netWorthResponse.rows
       .map((row) => {
-        const netWorthCents = Number(row.net_worth_cents ?? 0);
+        const netWorthLedgerCents = Number(row.net_worth_cents ?? 0);
+        const valuedCents = row.net_worth_valued_cents;
+        const netWorthValuedCents = valuedCents === null || valuedCents === undefined
+          ? null
+          : Number(valuedCents);
+        const netWorthCents = useValuedMode
+          ? (netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
+              ? netWorthValuedCents
+              : netWorthLedgerCents)
+          : netWorthLedgerCents;
         const absoluteCents = Math.abs(netWorthCents);
 
         return {
           accountId: Number(row.account_id),
           accountName: row.account_name,
+          accountType: String(row.account_type ?? ''),
           netWorthCents,
+          netWorthLedgerCents,
+          netWorthValuedCents: netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
+            ? netWorthValuedCents
+            : null,
           absoluteCents,
         };
       })
@@ -197,6 +215,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
       value: toPercent(entry.absoluteCents, totalAbsoluteCents),
       color: this.accountColorHexById.get(entry.accountId),
       tooltipValueText: this.formatCurrencyFromCents(entry.netWorthCents),
+      tooltipDetails: this.buildValuationTooltipDetails(entry),
     }));
 
     if (minorEntries.length > 0) {
@@ -221,6 +240,21 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
   private formatCurrencyFromCents(amountCents: number): string {
     const amount = amountCents / AMOUNT_CENTS_DIVISOR;
     return this.numberFormatService.formatCurrency(amount);
+  }
+
+  private buildValuationTooltipDetails(entry: NetWorthDistributionEntry): readonly string[] | undefined {
+    if (!this.isValuationTooltipAccountType(entry.accountType) || entry.netWorthValuedCents === null) {
+      return undefined;
+    }
+
+    return [
+      `${this.translate('overview.cards.netWorth.tooltips.current')}: ${this.formatCurrencyFromCents(entry.netWorthLedgerCents)}`,
+      `${this.translate('overview.cards.netWorth.withValuations')}: ${this.formatCurrencyFromCents(entry.netWorthValuedCents)}`,
+    ];
+  }
+
+  private isValuationTooltipAccountType(accountType: string): boolean {
+    return accountType === 'brokerage' || accountType === 'crypto';
   }
 
   private translate(key: string, params?: Record<string, unknown>): string {
