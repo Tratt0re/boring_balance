@@ -7,6 +7,7 @@ const {
   ensurePlainObject,
   extractId,
   normalizeFiltersListPayload,
+  normalizeEnum,
   normalizeInteger,
   normalizeOptionalBooleanFlag,
   normalizeOptionalString,
@@ -14,8 +15,10 @@ const {
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
   pickDefined,
-  requireString,
   resolvePaginationWindow,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('./utils');
 
 const PLAN_TYPES = new Set(['transaction', 'transfer']);
@@ -40,9 +43,6 @@ const TRANSFER_TEMPLATE_FIELDS = new Set([
   'settled',
 ]);
 
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 const TITLE_MAX_LENGTH = 100;
 const DESCRIPTION_MAX_LENGTH = 75;
 
@@ -85,35 +85,12 @@ function buildPlanRunExecutors() {
   };
 }
 
-function normalizePlanType(value, label) {
-  const normalizedValue = requireString(value, label, { allowEmpty: false });
-  if (!PLAN_TYPES.has(normalizedValue)) {
-    throw new Error(`${label} must be one of: transaction, transfer.`);
-  }
-
-  return normalizedValue;
-}
-
-function normalizeMonthPolicy(value, label) {
-  const normalizedValue = requireString(value, label, { allowEmpty: false });
-  if (!MONTH_POLICIES.has(normalizedValue)) {
-    throw new Error(`${label} must be one of: clip, skip, last_day, first_day.`);
-  }
-
-  return normalizedValue;
-}
-
 function normalizeFrequencyRule(value, label) {
   const frequency = ensurePlainObject(value, label);
   assertAllowedKeys(frequency, RULE_FREQUENCY_FIELDS, label);
 
-  const unit = requireString(frequency.unit, `${label}.unit`, { allowEmpty: false });
-  if (!FREQUENCY_UNITS.has(unit)) {
-    throw new Error(`${label}.unit must be one of: day, week, month, year.`);
-  }
-
   return {
-    unit,
+    unit: normalizeEnum(frequency.unit, `${label}.unit`, FREQUENCY_UNITS),
     interval: normalizePositiveInteger(frequency.interval, `${label}.interval`),
   };
 }
@@ -124,7 +101,7 @@ function normalizeRuleJson(value, label) {
 
   const frequency = normalizeFrequencyRule(rule.frequency, `${label}.frequency`);
   const monthPolicy =
-    rule.month_policy === undefined ? undefined : normalizeMonthPolicy(rule.month_policy, `${label}.month_policy`);
+    rule.month_policy === undefined ? undefined : normalizeEnum(rule.month_policy, `${label}.month_policy`, MONTH_POLICIES);
 
   if (monthPolicy !== undefined && frequency.unit !== 'month' && frequency.unit !== 'year') {
     throw new Error(`${label}.month_policy is only supported when frequency.unit is "month" or "year".`);
@@ -218,7 +195,7 @@ function normalizeListPayload(payload) {
   });
 
   const normalizedFilters = pickDefined({
-    type: filters.type === undefined ? undefined : normalizePlanType(filters.type, 'payload.filters.type'),
+    type: filters.type === undefined ? undefined : normalizeEnum(filters.type, 'payload.filters.type', PLAN_TYPES),
   });
 
   return {
@@ -231,7 +208,7 @@ function create(payload) {
   const body = ensurePlainObject(payload, 'payload');
   assertAllowedKeys(body, PLAN_CREATE_FIELDS, 'payload');
 
-  const type = normalizePlanType(body.type, 'payload.type');
+  const type = normalizeEnum(body.type, 'payload.type', PLAN_TYPES);
   const row = {
     title: requireString(body.title, 'payload.title', { allowEmpty: false, maxLength: TITLE_MAX_LENGTH }),
     type,
@@ -297,7 +274,7 @@ function update(payload) {
 
   let type;
   if (changesInput.type !== undefined) {
-    const normalizedType = normalizePlanType(changesInput.type, 'payload.changes.type');
+    const normalizedType = normalizeEnum(changesInput.type, 'payload.changes.type', PLAN_TYPES);
     if (normalizedType !== existingRow.type) {
       throw new Error('payload.changes.type cannot be updated.');
     }
@@ -358,19 +335,16 @@ function remove(payload) {
 }
 
 function run(payload) {
+  let id;
   if (typeof payload === 'number' || typeof payload === 'string') {
-    return planItemsModel.run(extractId(payload), {
-      ...buildPlanRunExecutors(),
-    });
+    id = extractId(payload);
+  } else {
+    const body = ensurePlainObject(payload, 'payload');
+    assertAllowedKeys(body, PLAN_RUN_FIELDS, 'payload');
+    id = extractId({ id: body.id });
   }
 
-  const body = ensurePlainObject(payload, 'payload');
-  assertAllowedKeys(body, PLAN_RUN_FIELDS, 'payload');
-
-  const id = extractId({ id: body.id });
-  return planItemsModel.run(id, {
-    ...buildPlanRunExecutors(),
-  });
+  return planItemsModel.run(id, buildPlanRunExecutors());
 }
 
 function deletePlannedItems(payload) {

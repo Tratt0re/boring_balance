@@ -1,4 +1,5 @@
 const { analyticsModel } = require('../models');
+const { ALLOWED_ACCOUNT_TYPES, ALLOWED_CATEGORY_TYPES } = require('./constants');
 const {
   assertAllowedKeys,
   ensurePlainObject,
@@ -25,8 +26,6 @@ const FILTER_FIELDS = new Set([
 const COMPARE_MONTH_PAYLOAD_FIELDS = new Set(['left', 'right']);
 const COMPARE_MONTH_SELECTION_FIELDS = new Set(['year', 'month_index']);
 const BUDGET_VS_EXPENSES_BY_CATEGORY_BY_YEAR_PAYLOAD_FIELDS = new Set(['year']);
-const ALLOWED_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings', 'brokerage', 'crypto', 'credit']);
-const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
 const MIN_COMPARE_YEAR = 1970;
 const MAX_COMPARE_YEAR = 9999;
 

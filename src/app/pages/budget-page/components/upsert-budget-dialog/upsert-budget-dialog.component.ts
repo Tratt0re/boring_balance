@@ -7,6 +7,7 @@ import type { EditableOptionItem } from '@/components/data-table';
 import type { BudgetCreateDto, BudgetUpdateDto } from '@/dtos';
 import { amountToCents } from '@/models/common.model';
 import { NumberFormatService } from '@/services/number-format.service';
+import { editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -41,7 +42,7 @@ export class UpsertBudgetDialogComponent {
   private readonly data = inject<UpsertBudgetDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialBudget = this.data?.budget;
 
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.categoryOptions);
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
   protected readonly descriptionMaxLength = BUDGET_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
@@ -137,7 +138,7 @@ export class UpsertBudgetDialogComponent {
 
     const values = this.form.getRawValue();
 
-    const categoryId = this.toPositiveInteger(values.categoryId);
+    const categoryId = toPositiveInteger(values.categoryId);
     if (categoryId === null) {
       this.errorKey.set('budgets.dialog.add.errors.categoryRequired');
       return null;
@@ -153,7 +154,7 @@ export class UpsertBudgetDialogComponent {
     return {
       categoryId,
       amountCents,
-      description: this.normalizeNullableString(values.description),
+      description: normalizeNullableString(values.description),
     };
   }
 
@@ -166,7 +167,7 @@ export class UpsertBudgetDialogComponent {
   }
 
   private getCategoryError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'budgets.dialog.add.errors.categoryRequired' : null;
+    return toPositiveInteger(value) === null ? 'budgets.dialog.add.errors.categoryRequired' : null;
   }
 
   private getAmountError(value: string): string | null {
@@ -179,19 +180,6 @@ export class UpsertBudgetDialogComponent {
 
   private getDescriptionError(value: string): string | null {
     return value.length > BUDGET_DESCRIPTION_MAX_LENGTH ? 'budgets.dialog.add.errors.descriptionMaxLength' : null;
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
-      return null;
-    }
-
-    return parsed;
   }
 
   private toAmountCents(value: unknown): number | null {
@@ -208,26 +196,9 @@ export class UpsertBudgetDialogComponent {
     return amountCents > 0 ? amountCents : null;
   }
 
-  private normalizeNullableString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const text = `${value}`.trim();
-    return text.length > 0 ? text : null;
-  }
-
   private clearSubmitError(): void {
     if (this.errorKey()) {
       this.errorKey.set(null);
     }
-  }
-
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
-    return (options ?? []).map((option) => ({
-      value: `${option.value}`,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 }

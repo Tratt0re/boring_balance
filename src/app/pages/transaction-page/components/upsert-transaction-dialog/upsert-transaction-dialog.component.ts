@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
 import { NumberFormatService } from '@/services/number-format.service';
+import { dateToUnixMs, editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -57,8 +58,8 @@ export class UpsertTransactionDialogComponent {
   private readonly data = inject<UpsertTransactionDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransaction = this.data?.transaction;
 
-  protected readonly accountOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.accountOptions);
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.categoryOptions);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
   protected readonly descriptionMaxLength = TRANSACTION_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
@@ -195,13 +196,13 @@ export class UpsertTransactionDialogComponent {
 
     const values = this.form.getRawValue();
 
-    const occurredAt = this.toOccurredAt(values.occurredAt);
+    const occurredAt = dateToUnixMs(values.occurredAt);
     if (occurredAt === null) {
       this.errorKey.set('transactions.dialog.add.errors.dateRequired');
       return null;
     }
 
-    const accountId = this.toPositiveInteger(values.accountId);
+    const accountId = toPositiveInteger(values.accountId);
     if (accountId === null) {
       this.errorKey.set('transactions.dialog.add.errors.accountRequired');
       return null;
@@ -213,7 +214,7 @@ export class UpsertTransactionDialogComponent {
       return null;
     }
 
-    const categoryId = this.toPositiveInteger(values.categoryId);
+    const categoryId = toPositiveInteger(values.categoryId);
     if (categoryId === null) {
       this.errorKey.set('transactions.dialog.add.errors.categoryRequired');
       return null;
@@ -226,16 +227,16 @@ export class UpsertTransactionDialogComponent {
       accountId,
       amount,
       categoryId,
-      description: this.normalizeNullableString(values.description),
+      description: normalizeNullableString(values.description),
     };
   }
 
   private getOccurredAtError(value: Date | null): string | null {
-    return this.toOccurredAt(value) === null ? 'transactions.dialog.add.errors.dateRequired' : null;
+    return dateToUnixMs(value) === null ? 'transactions.dialog.add.errors.dateRequired' : null;
   }
 
   private getAccountIdError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.accountRequired' : null;
+    return toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.accountRequired' : null;
   }
 
   private getAmountError(value: string): string | null {
@@ -247,34 +248,13 @@ export class UpsertTransactionDialogComponent {
   }
 
   private getCategoryIdError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.categoryRequired' : null;
+    return toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.categoryRequired' : null;
   }
 
   private getDescriptionError(value: string): string | null {
     return value.length > TRANSACTION_DESCRIPTION_MAX_LENGTH
       ? 'transactions.dialog.add.errors.descriptionMaxLength'
       : null;
-  }
-
-  private toOccurredAt(value: Date | null): number | null {
-    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
-      return null;
-    }
-
-    return value.getTime();
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
-      return null;
-    }
-
-    return parsed;
   }
 
   private toAmount(value: unknown): number | null {
@@ -290,26 +270,9 @@ export class UpsertTransactionDialogComponent {
     return parsed;
   }
 
-  private normalizeNullableString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const text = `${value}`.trim();
-    return text.length > 0 ? text : null;
-  }
-
   private clearSubmitError(): void {
     if (this.errorKey()) {
       this.errorKey.set(null);
     }
-  }
-
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
-    return (options ?? []).map((option) => ({
-      value: `${option.value}`,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 }

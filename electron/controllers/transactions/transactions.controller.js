@@ -1,4 +1,5 @@
 const { transactionsModel } = require('../../models');
+const { ALLOWED_CATEGORY_TYPES } = require('../constants');
 const {
   assertAllowedKeys,
   ensureHasKeys,
@@ -10,14 +11,16 @@ const {
   normalizeInternalPlanItemId,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
-  normalizeOptionalAmountFilterToCents,
-  normalizeOptionalBooleanFlag,
   normalizeOptionalEnumArray,
   normalizeOptionalIdArray,
   normalizeOptionalString,
   normalizePositiveInteger,
+  normalizeDateAmountSettledFilters,
   pickDefined,
   requireString,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('../utils');
 
 const TRANSACTION_FIELDS = new Set([
@@ -30,6 +33,7 @@ const TRANSACTION_FIELDS = new Set([
   'transfer_id',
   'settled',
 ]);
+
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const LIST_FILTER_FIELDS = new Set([
   'date_from',
@@ -41,10 +45,6 @@ const LIST_FILTER_FIELDS = new Set([
   'accounts',
   'settled',
 ]);
-const ALLOWED_CATEGORY_TYPES = new Set(['income', 'expense', 'exclude']);
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 const DESCRIPTION_MAX_LENGTH = 75;
 
 function normalizeOptionalTags(value, label) {
@@ -121,30 +121,16 @@ function normalizeListFilters(payload) {
   });
 
   return {
-    filters: (() => {
-      const normalizedFilters = pickDefined({
-        date_from:
-          filters.date_from === undefined
-            ? undefined
-            : normalizeUnixTimestampMilliseconds(filters.date_from, 'payload.filters.date_from'),
-        date_to:
-          filters.date_to === undefined
-            ? undefined
-            : normalizeUnixTimestampMilliseconds(filters.date_to, 'payload.filters.date_to'),
-        amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, 'payload.filters.amount_from'),
-        amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, 'payload.filters.amount_to'),
-        category_types: normalizeOptionalEnumArray(
-          filters.category_types,
-          'payload.filters.category_types',
-          ALLOWED_CATEGORY_TYPES,
-        ),
-        categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
-        accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
-        settled: normalizeOptionalBooleanFlag(filters.settled, 'payload.filters.settled'),
-      });
-
-      return normalizedFilters;
-    })(),
+    filters: pickDefined({
+      ...normalizeDateAmountSettledFilters(filters),
+      category_types: normalizeOptionalEnumArray(
+        filters.category_types,
+        'payload.filters.category_types',
+        ALLOWED_CATEGORY_TYPES,
+      ),
+      categories: normalizeOptionalIdArray(filters.categories, 'payload.filters.categories'),
+      accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
+    }),
     pagination,
   };
 }

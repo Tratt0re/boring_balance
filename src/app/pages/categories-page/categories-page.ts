@@ -14,6 +14,14 @@ import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+  getTargetPageAfterCreate,
+  translateMaybe,
+} from '@/shared/utils';
+import {
   UpsertCategoryDialogComponent,
   type UpsertCategoryDialogData,
 } from './components/upsert-category-dialog/upsert-category-dialog.component';
@@ -87,43 +95,35 @@ const createCategoryTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...CATEGORY_TABLE_COLUMNS,
-    {
-      minWidth: CATEGORY_COLUMN_WIDTH.action,
-      maxWidth: CATEGORY_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'categories.table.actions.edit',
-          buttonType: 'ghost',
-          disabled: isCategoryReadonly,
-          action: onEditAction,
-        },
-        {
-          id: 'archive',
-          icon: 'archive',
-          label: 'categories.table.actions.archive',
-          buttonType: 'ghost',
-          disabled: isCategoryReadonly,
-          action: onArchiveAction,
-        },
-        {
-          id: 'readonly-lock',
-          icon: 'lock',
-          label: 'categories.table.actions.locked',
-          buttonType: 'ghost',
-          visible: isCategoryReadonly,
-          disabled: () => true,
-          showWhenDisabled: true,
-          action: () => undefined,
-        },
-      ],
-    },
+    createActionColumn(CATEGORY_COLUMN_WIDTH.action, [
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'categories.table.actions.edit',
+        buttonType: 'ghost',
+        disabled: isCategoryReadonly,
+        action: onEditAction,
+      },
+      {
+        id: 'archive',
+        icon: 'archive',
+        label: 'categories.table.actions.archive',
+        buttonType: 'ghost',
+        disabled: isCategoryReadonly,
+        action: onArchiveAction,
+      },
+      {
+        id: 'readonly-lock',
+        icon: 'lock',
+        label: 'categories.table.actions.locked',
+        buttonType: 'ghost',
+        visible: isCategoryReadonly,
+        disabled: () => true,
+        showWhenDisabled: true,
+        action: () => undefined,
+      },
+    ]),
   ] as const;
-
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 @Component({
   selector: 'app-categories-page',
@@ -138,7 +138,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
   protected readonly categoryRowClass = (row: object): string =>
     isCategoryReadonly(row) ? 'bg-primary-foreground' : '';
   protected readonly categoryTableStructure = createCategoryTableStructure(
@@ -267,7 +267,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
       return;
     }
 
-    const translatedCategoryName = this.translateMaybe(category.name);
+    const translatedCategoryName = translateMaybe(this.translateService, category.name);
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('categories.archiveAlert.title'),
       zDescription: this.translateService.instant('categories.archiveAlert.description', {
@@ -282,11 +282,6 @@ export class CategoriesPage implements OnInit, OnDestroy {
         void this.archiveCategory(category.id);
       },
     });
-  }
-
-  private translateMaybe(value: string): string {
-    const translated = this.translateService.instant(value);
-    return translated !== value ? translated : value;
   }
 
   private openAddCategoryDialog(): void {
@@ -415,8 +410,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
         return;
       }
 
-      const nextTotal = this.total() + 1;
-      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      const targetPage = getTargetPageAfterCreate(this.total(), this.pageSize());
       this.page.set(targetPage);
       await this.loadCategories(targetPage);
       dialogRef.close(created);

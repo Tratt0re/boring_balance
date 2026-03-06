@@ -3,8 +3,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { APP_COLOR_KEY_SET, APP_COLOR_OPTIONS, APP_ICON_KEY_SET, APP_ICON_OPTIONS } from '@/config/visual-options.config';
+import { APP_COLOR_OPTIONS, APP_ICON_OPTIONS, normalizeColorKey, normalizeIconKey } from '@/config/visual-options.config';
 import type { CategoryCreateDto, CategoryType, CategoryUpdateDto } from '@/dtos';
+import { normalizeNullableString, normalizeRequiredString } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -134,7 +135,7 @@ export class UpsertCategoryDialogComponent {
     }
 
     const values = this.form.getRawValue();
-    const name = this.normalizeRequiredString(values.name);
+    const name = normalizeRequiredString(values.name);
     if (!name) {
       this.errorKey.set('categories.dialog.add.errors.nameRequired');
       return null;
@@ -149,9 +150,9 @@ export class UpsertCategoryDialogComponent {
     this.errorKey.set(null);
     return {
       name,
-      description: this.normalizeNullableString(values.description),
-      color_key: this.normalizeColor(values.colorKey),
-      icon: this.normalizeIcon(values.icon),
+      description: normalizeNullableString(values.description),
+      color_key: normalizeColorKey(values.colorKey),
+      icon: normalizeIconKey(values.icon),
       type,
     };
   }
@@ -195,38 +196,6 @@ export class UpsertCategoryDialogComponent {
     }
 
     return null;
-  }
-
-  private normalizeRequiredString(value: unknown): string | null {
-    const normalized = this.normalizeNullableString(value);
-    return normalized && normalized.length > 0 ? normalized : null;
-  }
-
-  private normalizeNullableString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const text = `${value}`.trim();
-    return text.length > 0 ? text : null;
-  }
-
-  private normalizeColor(value: unknown): string | null {
-    const color = this.normalizeNullableString(value);
-    if (!color) {
-      return null;
-    }
-
-    return APP_COLOR_KEY_SET.has(color) ? color : null;
-  }
-
-  private normalizeIcon(value: unknown): string | null {
-    const icon = this.normalizeNullableString(value);
-    if (!icon) {
-      return null;
-    }
-
-    return APP_ICON_KEY_SET.has(icon) ? icon : null;
   }
 
   private isCategoryType(value: unknown): value is CategoryType {

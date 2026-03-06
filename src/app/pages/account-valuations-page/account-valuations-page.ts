@@ -9,7 +9,7 @@ import { AppLineChartComponent, type AppLineChartSeries } from '@/components/cha
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type { AccountValuationCreateDto, AccountValuationUpdateDto } from '@/dtos';
-import { AccountValuationModel } from '@/models';
+import { AccountValuationModel, centsToAmount } from '@/models';
 import { AccountValuationsService } from '@/services/account-valuations.service';
 import { AccountsService } from '@/services/accounts.service';
 import { AnalyticsService } from '@/services/analytics.service';
@@ -21,13 +21,15 @@ import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialo
 import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+} from '@/shared/utils';
+import {
   UpsertAccountValuationDialogComponent,
   type UpsertAccountValuationDialogData,
 } from './components/upsert-account-valuation-dialog/upsert-account-valuation-dialog.component';
-
-const AMOUNT_CENTS_DIVISOR = 100;
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 interface ValuationTableRow {
   readonly id: number;
@@ -79,27 +81,22 @@ const createValuationTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...VALUATION_TABLE_COLUMNS,
-    {
-      minWidth: VALUATION_COLUMN_WIDTH.action,
-      maxWidth: VALUATION_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'accountValuations.table.actions.edit',
-          buttonType: 'ghost',
-          action: onEditAction,
-        },
-        {
-          id: 'delete',
-          icon: 'trash',
-          label: 'accountValuations.table.actions.delete',
-          buttonType: 'ghost',
-          action: onDeleteAction,
-        },
-      ],
-    },
+    createActionColumn(VALUATION_COLUMN_WIDTH.action, [
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'accountValuations.table.actions.edit',
+        buttonType: 'ghost',
+        action: onEditAction,
+      },
+      {
+        id: 'delete',
+        icon: 'trash',
+        label: 'accountValuations.table.actions.delete',
+        buttonType: 'ghost',
+        action: onDeleteAction,
+      },
+    ]),
   ] as const;
 
 @Component({
@@ -130,7 +127,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
 
   protected readonly transactionBalanceCents = signal<number | null>(null);
   protected readonly latestValueCents = signal<number | null>(null);
@@ -151,7 +148,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     return [
       {
         name: this.translateService.instant('accountValuations.chart.seriesName'),
-        data: rows.map((v) => this.toAmount(v.valueCents)),
+        data: rows.map((v) => centsToAmount(v.valueCents)),
         color: 'var(--chart-income)',
         smooth: true,
         showArea: true,
@@ -297,7 +294,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
         valuedAt: row.valuedAt,
         dateFormatted: this.formatDate(row.valuedAt),
         valueCents: row.valueCents,
-        valueFormatted: this.formatCurrency(this.toAmount(row.valueCents)),
+        valueFormatted: this.formatCurrency(centsToAmount(row.valueCents)),
         deltaFormatted: this.formatDeltaString(deltaCents, txBalanceCents),
         deltaCents,
       };
@@ -336,15 +333,15 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   }
 
   protected transactionBalanceAmount(): number {
-    return this.toAmount(this.transactionBalanceCents() ?? 0);
+    return centsToAmount(this.transactionBalanceCents() ?? 0);
   }
 
   protected latestValueAmount(): number {
-    return this.toAmount(this.latestValueCents() ?? 0);
+    return centsToAmount(this.latestValueCents() ?? 0);
   }
 
   protected deltaAmount(): number {
-    return this.toAmount(this.deltaCents() ?? 0);
+    return centsToAmount(this.deltaCents() ?? 0);
   }
 
   private formatDeltaString(deltaCents: number | null, referenceCents: number | null): string {
@@ -352,7 +349,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       return '—';
     }
 
-    const deltaAmount = this.toAmount(deltaCents);
+    const deltaAmount = centsToAmount(deltaCents);
     const signed = this.formatSignedCurrency(deltaAmount);
 
     if (referenceCents !== null && referenceCents !== 0) {
@@ -365,10 +362,6 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
   private formatDate(unixMs: number): string {
     return this.datePipe.transform(new Date(unixMs), 'MMM d, yyyy') ?? '';
-  }
-
-  private toAmount(cents: number): number {
-    return cents / AMOUNT_CENTS_DIVISOR;
   }
 
   private onEditValuation(row: object): void {

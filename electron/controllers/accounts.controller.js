@@ -1,20 +1,24 @@
 const { accountsModel } = require('../models');
+const { ALLOWED_ACCOUNT_TYPES } = require('./constants');
 const {
   assertAllowedKeys,
   ensureHasKeys,
   ensureNonEmptyObject,
   ensurePlainObject,
+  executeWhereOptionsListQuery,
   extractId,
   nowUnixTimestampMilliseconds,
+  normalizeEnum,
   normalizeOptionalBooleanFlag,
   normalizeOptionalString,
   normalizeWhereOptionsListPayload,
   pickDefined,
   requireString,
-  resolvePaginationWindow,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('./utils');
 
-const ALLOWED_ACCOUNT_TYPES = new Set(['cash', 'bank', 'savings', 'brokerage', 'crypto', 'credit']);
 const ACCOUNT_FIELDS = new Set([
   'name',
   'type',
@@ -25,19 +29,7 @@ const ACCOUNT_FIELDS = new Set([
   'archived',
 ]);
 const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'all']);
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 const DESCRIPTION_MAX_LENGTH = 50;
-
-function normalizeAccountType(value, label) {
-  const normalizedType = requireString(value, label, { allowEmpty: false });
-  if (!ALLOWED_ACCOUNT_TYPES.has(normalizedType)) {
-    throw new Error(`${label} must be one of: cash, bank, savings, brokerage, crypto, credit.`);
-  }
-
-  return normalizedType;
-}
 
 function normalizeAccountChanges(value, label, options = {}) {
   const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
@@ -49,7 +41,7 @@ function normalizeAccountChanges(value, label, options = {}) {
         ? undefined
         : requireString(changesInput.name, `${label}.name`, { allowEmpty: false }),
     type:
-      changesInput.type === undefined ? undefined : normalizeAccountType(changesInput.type, `${label}.type`),
+      changesInput.type === undefined ? undefined : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_ACCOUNT_TYPES),
     description: normalizeOptionalString(changesInput.description, `${label}.description`, {
       maxLength: DESCRIPTION_MAX_LENGTH,
     }),
@@ -96,33 +88,8 @@ function list(payload) {
     maxPageSize: MAX_PAGE_SIZE,
   });
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
-  const total = accountsModel.count(where);
 
-  if (all) {
-    const rows = accountsModel.list(where, listOptions);
-    const pageSize = rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE;
-
-    return {
-      rows,
-      total,
-      page: DEFAULT_PAGE,
-      page_size: pageSize,
-    };
-  }
-
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
-  const rows = accountsModel.list(where, {
-    ...listOptions,
-    limit: pagination.page_size,
-    offset,
-  });
-
-  return {
-    rows,
-    total,
-    page,
-    page_size: pagination.page_size,
-  };
+  return executeWhereOptionsListQuery(accountsModel, { where, listOptions, pagination, all });
 }
 
 function update(payload) {

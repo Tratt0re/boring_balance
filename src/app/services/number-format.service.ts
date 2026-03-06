@@ -54,6 +54,19 @@ export class NumberFormatService {
     return parseLocalizedNumber(value, this.currencyFormatStyle(), options);
   }
 
+  formatSignedCurrency(
+    value: number,
+    symbol: CurrencySymbol = this.currencySymbol(),
+    options: AppNumberFormatOptions = {},
+  ): string {
+    if (value === 0) {
+      return this.formatCurrency(0, symbol, options);
+    }
+
+    const sign = value > 0 ? '+' : '-';
+    return `${sign}${this.formatCurrency(Math.abs(value), symbol, options)}`;
+  }
+
   normalizeCurrencySymbol(value: unknown): CurrencySymbol {
     return normalizeCurrencySymbol(value);
   }

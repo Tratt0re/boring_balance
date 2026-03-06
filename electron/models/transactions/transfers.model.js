@@ -3,6 +3,7 @@ const { randomUUID } = require('node:crypto');
 const { createBaseModel } = require('../base-model');
 const { DEFAULT_PAGE, resolvePaginationWindow } = require('../pagination');
 const { TRANSFER_CATEGORY_ID } = require('./constants');
+const { buildDateRangeFilter } = require('../query-utils');
 const { EMPTY_TAGS_JSON, normalizeRowTags } = require('./tags');
 
 const transactionsBaseModel = createBaseModel('transactions');
@@ -23,27 +24,19 @@ function normalizeTransferRows(rows) {
 
 function buildFilteredTransferWhereClause(filters = {}) {
   const where = {};
-  const occurredAtFilter = {};
+
+  const occurredAtFilter = buildDateRangeFilter(filters.date_from, filters.date_to);
+  if (occurredAtFilter) {
+    where.occurred_at = occurredAtFilter;
+  }
+
   const amountCentsFilter = {};
-
-  if (filters.date_from !== undefined) {
-    occurredAtFilter.gte = filters.date_from;
-  }
-
-  if (filters.date_to !== undefined) {
-    occurredAtFilter.lte = filters.date_to;
-  }
-
   if (filters.amount_from !== undefined) {
     amountCentsFilter.gte = filters.amount_from;
   }
 
   if (filters.amount_to !== undefined) {
     amountCentsFilter.lte = filters.amount_to;
-  }
-
-  if (Object.keys(occurredAtFilter).length > 0) {
-    where.occurred_at = occurredAtFilter;
   }
 
   if (Object.keys(amountCentsFilter).length > 0) {

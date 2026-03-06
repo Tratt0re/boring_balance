@@ -15,6 +15,13 @@ import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+  getTargetPageAfterCreate,
+} from '@/shared/utils';
+import {
   UpsertAccountDialogComponent,
   type UpsertAccountDialogData,
 } from './components/upsert-account-dialog/upsert-account-dialog.component';
@@ -93,51 +100,43 @@ const createAccountTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...ACCOUNT_TABLE_COLUMNS,
-    {
-      minWidth: ACCOUNT_COLUMN_WIDTH.action,
-      maxWidth: ACCOUNT_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'view-valuations',
-          icon: 'chart-line',
-          label: 'accountValuations.table.actions.viewHistory',
-          buttonType: 'ghost',
-          visible: isValuationAccount,
-          action: onViewValuationsAction,
-        },
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'accounts.table.actions.edit',
-          buttonType: 'ghost',
-          disabled: isAccountReadonly,
-          action: onEditAction,
-        },
-        {
-          id: 'archive',
-          icon: 'archive',
-          label: 'accounts.table.actions.archive',
-          buttonType: 'ghost',
-          disabled: isAccountReadonly,
-          action: onArchiveAction,
-        },
-        {
-          id: 'readonly-lock',
-          icon: 'lock',
-          label: 'accounts.table.actions.locked',
-          buttonType: 'ghost',
-          visible: isAccountReadonly,
-          disabled: () => true,
-          showWhenDisabled: true,
-          action: () => undefined,
-        },
-      ],
-    },
+    createActionColumn(ACCOUNT_COLUMN_WIDTH.action, [
+      {
+        id: 'view-valuations',
+        icon: 'chart-line',
+        label: 'accountValuations.table.actions.viewHistory',
+        buttonType: 'ghost',
+        visible: isValuationAccount,
+        action: onViewValuationsAction,
+      },
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'accounts.table.actions.edit',
+        buttonType: 'ghost',
+        disabled: isAccountReadonly,
+        action: onEditAction,
+      },
+      {
+        id: 'archive',
+        icon: 'archive',
+        label: 'accounts.table.actions.archive',
+        buttonType: 'ghost',
+        disabled: isAccountReadonly,
+        action: onArchiveAction,
+      },
+      {
+        id: 'readonly-lock',
+        icon: 'lock',
+        label: 'accounts.table.actions.locked',
+        buttonType: 'ghost',
+        visible: isAccountReadonly,
+        disabled: () => true,
+        showWhenDisabled: true,
+        action: () => undefined,
+      },
+    ]),
   ] as const;
-
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 @Component({
   selector: 'app-accounts-page',
@@ -152,7 +151,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
   protected readonly accountRowClass = (row: object): string =>
     isAccountReadonly(row) ? 'bg-primary-foreground' : '';
   protected readonly accountTableStructure = createAccountTableStructure(
@@ -432,8 +431,7 @@ export class AccountsPage implements OnInit, OnDestroy {
         return;
       }
 
-      const nextTotal = this.total() + 1;
-      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      const targetPage = getTargetPageAfterCreate(this.total(), this.pageSize());
       this.page.set(targetPage);
       await this.loadAccounts(targetPage);
       dialogRef.close(created);

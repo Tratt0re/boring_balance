@@ -3,22 +3,9 @@ const { DEFAULT_PAGE, resolvePaginationWindow } = require('../pagination');
 const { getDatabase, selectRows } = require('../../database');
 const { TRANSFER_CATEGORY_ID } = require('./constants');
 const { normalizeRowTags, normalizeRowsTags } = require('./tags');
+const { buildDateRangeFilter } = require('../query-utils');
 
 const transactionsBaseModel = createBaseModel('transactions');
-
-function buildOccurredAtFilter(filters = {}) {
-  const occurredAtFilter = {};
-
-  if (filters.date_from !== undefined) {
-    occurredAtFilter.gte = filters.date_from;
-  }
-
-  if (filters.date_to !== undefined) {
-    occurredAtFilter.lte = filters.date_to;
-  }
-
-  return Object.keys(occurredAtFilter).length === 0 ? undefined : occurredAtFilter;
-}
 
 function buildAmountCentsFilter(filters = {}) {
   const amountCentsFilter = {};
@@ -59,7 +46,7 @@ function buildListWhere(filters = {}) {
     category_id: { ne: TRANSFER_CATEGORY_ID },
   };
 
-  const occurredAtFilter = buildOccurredAtFilter(filters);
+  const occurredAtFilter = buildDateRangeFilter(filters.date_from, filters.date_to);
   if (occurredAtFilter) {
     where.occurred_at = occurredAtFilter;
   }

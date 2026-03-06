@@ -81,7 +81,7 @@ export class ZardDialogOptions<T, U> {
       }
 
       @if (config.zTitle || config.zDescription) {
-        <header class="flex shrink-0 flex-col space-y-1.5 pr-10 text-center sm:text-left">
+        <header class="flex shrink-0 flex-col space-y-1.5 pr-10 text-center sm:text-left pb-2">
           @if (config.zTitle) {
             <h4
               data-testid="z-title"
@@ -113,7 +113,7 @@ export class ZardDialogOptions<T, U> {
       </main>
 
       @if (!config.zHideFooter) {
-        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2">
+        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2">
           @if (config.zCancelText !== null) {
             <button type="button" data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
               @if (config.zCancelIcon) {

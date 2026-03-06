@@ -1,3 +1,7 @@
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 10;
+const MAX_PAGE_SIZE = 250;
+
 /**
  * Ensures a value is a plain object (not null and not an array).
  *
@@ -86,6 +90,24 @@ function normalizeOptionalString(value, label, options = {}) {
   }
 
   return requireString(value, label, options);
+}
+
+/**
+ * Validates and normalizes a required string against an allowed values set.
+ *
+ * @param {unknown} value - Input value.
+ * @param {string} label - Field label used in error messages.
+ * @param {Set<string>} allowedSet - Set of accepted string values.
+ * @returns {string} Normalized string value.
+ * @throws {Error} If value is not a string or not in the allowed set.
+ */
+function normalizeEnum(value, label, allowedSet) {
+  const normalizedValue = requireString(value, label, { allowEmpty: false });
+  if (!allowedSet.has(normalizedValue)) {
+    throw new Error(`${label} must be one of: ${Array.from(allowedSet).join(', ')}.`);
+  }
+
+  return normalizedValue;
 }
 
 /**
@@ -617,10 +639,60 @@ function nowUnixTimestampMilliseconds() {
   return Date.now();
 }
 
+/**
+ * Executes a paginated or "all" list query against a model using pre-parsed
+ * where/listOptions/pagination from normalizeWhereOptionsListPayload.
+ *
+ * @param {{ count: Function, list: Function }} model - Model exposing count() and list().
+ * @param {{ where: object, listOptions: object, pagination: object, all: boolean }} params
+ * @returns {{ rows: unknown[], total: number, page: number, page_size: number }}
+ */
+function executeWhereOptionsListQuery(model, { where, listOptions, pagination, all }) {
+  const total = model.count(where);
+
+  if (all) {
+    const rows = model.list(where, listOptions);
+    return { rows, total, page: DEFAULT_PAGE, page_size: rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE };
+  }
+
+  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
+  const rows = model.list(where, { ...listOptions, limit: pagination.page_size, offset });
+
+  return { rows, total, page, page_size: pagination.page_size };
+}
+
+/**
+ * Normalizes the common date, amount, and settled filter fields shared by
+ * transactions and transfers list endpoints.
+ *
+ * @param {Record<string, unknown>} filters - Raw filter input (already key-validated by caller).
+ * @param {string} [prefix='payload.filters'] - Label prefix for error messages.
+ * @returns {Record<string, unknown>} Normalized filter fields (undefined values included for pickDefined).
+ */
+function normalizeDateAmountSettledFilters(filters, prefix = 'payload.filters') {
+  return {
+    date_from:
+      filters.date_from === undefined
+        ? undefined
+        : normalizeUnixTimestampMilliseconds(filters.date_from, `${prefix}.date_from`),
+    date_to:
+      filters.date_to === undefined
+        ? undefined
+        : normalizeUnixTimestampMilliseconds(filters.date_to, `${prefix}.date_to`),
+    amount_from: normalizeOptionalAmountFilterToCents(filters.amount_from, `${prefix}.amount_from`),
+    amount_to: normalizeOptionalAmountFilterToCents(filters.amount_to, `${prefix}.amount_to`),
+    settled: normalizeOptionalBooleanFlag(filters.settled, `${prefix}.settled`),
+  };
+}
+
 module.exports = {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
   assertAllowedKeys,
   ensureHasKeys,
   ensureNonEmptyObject,
+  executeWhereOptionsListQuery,
   ensurePlainObject,
   extractId,
   extractListPayload,
@@ -628,7 +700,9 @@ module.exports = {
   extractString,
   normalizeAmountToCents,
   normalizeBooleanFlag,
+  normalizeEnum,
   normalizeCalendarYear,
+  normalizeDateAmountSettledFilters,
   normalizeFiltersListPayload,
   normalizeInternalPlanItemId,
   normalizeInteger,

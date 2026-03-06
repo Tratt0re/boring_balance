@@ -16,6 +16,7 @@ import type {
 } from '@/dtos';
 import { amountToCents } from '@/models';
 import { NumberFormatService } from '@/services/number-format.service';
+import { dateToUnixMs, editableOptionsToCombobox, normalizeRequiredString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -110,8 +111,8 @@ export class UpsertPlanItemDialogComponent {
   protected readonly frequencyUnitOptions = PLAN_ITEM_FREQUENCY_UNIT_OPTIONS;
   protected readonly monthPolicyOptions = PLAN_ITEM_MONTH_POLICY_OPTIONS;
   protected readonly descriptionMaxLength = PLAN_ITEM_DESCRIPTION_MAX_LENGTH;
-  protected readonly accountOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.accountOptions);
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.categoryOptions);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
 
   protected readonly form = new FormGroup({
     title: new FormControl(this.initialPlanItem?.title ?? '', { nonNullable: true }),
@@ -431,7 +432,7 @@ export class UpsertPlanItemDialogComponent {
 
     const values = this.form.getRawValue();
 
-    const title = this.normalizeRequiredString(values.title);
+    const title = normalizeRequiredString(values.title);
     if (!title) {
       this.errorKey.set('recurringEvents.dialog.add.errors.titleRequired');
       return null;
@@ -443,19 +444,19 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    const startDate = this.toTimestamp(values.startDate);
+    const startDate = dateToUnixMs(values.startDate);
     if (startDate === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.startDateRequired');
       return null;
     }
 
-    const count = this.toPositiveInteger(values.count);
+    const count = toPositiveInteger(values.count);
     if (count === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.countInvalid');
       return null;
     }
 
-    const frequencyInterval = this.toPositiveInteger(values.frequencyInterval);
+    const frequencyInterval = toPositiveInteger(values.frequencyInterval);
     if (frequencyInterval === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.frequencyIntervalInvalid');
       return null;
@@ -492,13 +493,13 @@ export class UpsertPlanItemDialogComponent {
     } as const;
 
     if (type === 'transaction') {
-      const accountId = this.toPositiveInteger(values.accountId);
+      const accountId = toPositiveInteger(values.accountId);
       if (accountId === null) {
         this.errorKey.set('recurringEvents.dialog.add.errors.accountRequired');
         return null;
       }
 
-      const categoryId = this.toPositiveInteger(values.categoryId);
+      const categoryId = toPositiveInteger(values.categoryId);
       if (categoryId === null) {
         this.errorKey.set('recurringEvents.dialog.add.errors.categoryRequired');
         return null;
@@ -517,13 +518,13 @@ export class UpsertPlanItemDialogComponent {
       };
     }
 
-    const fromAccountId = this.toPositiveInteger(values.fromAccountId);
+    const fromAccountId = toPositiveInteger(values.fromAccountId);
     if (fromAccountId === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.fromAccountRequired');
       return null;
     }
 
-    const toAccountId = this.toPositiveInteger(values.toAccountId);
+    const toAccountId = toPositiveInteger(values.toAccountId);
     if (toAccountId === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.toAccountRequired');
       return null;
@@ -600,7 +601,7 @@ export class UpsertPlanItemDialogComponent {
   }
 
   private getStartDateError(value: Date | null): string | null {
-    return this.toTimestamp(value) === null ? 'recurringEvents.dialog.add.errors.startDateRequired' : null;
+    return dateToUnixMs(value) === null ? 'recurringEvents.dialog.add.errors.startDateRequired' : null;
   }
 
   private getCountError(value: string): string | null {
@@ -608,7 +609,7 @@ export class UpsertPlanItemDialogComponent {
       return 'recurringEvents.dialog.add.errors.countRequired';
     }
 
-    return this.toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.countInvalid' : null;
+    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.countInvalid' : null;
   }
 
   private getFrequencyIntervalError(value: string): string | null {
@@ -616,7 +617,7 @@ export class UpsertPlanItemDialogComponent {
       return 'recurringEvents.dialog.add.errors.frequencyIntervalRequired';
     }
 
-    return this.toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.frequencyIntervalInvalid' : null;
+    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.frequencyIntervalInvalid' : null;
   }
 
   private getFrequencyUnitError(value: unknown): string | null {
@@ -626,24 +627,24 @@ export class UpsertPlanItemDialogComponent {
   }
 
   private getAccountIdError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.accountRequired' : null;
+    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.accountRequired' : null;
   }
 
   private getCategoryIdError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.categoryRequired' : null;
+    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.categoryRequired' : null;
   }
 
   private getFromAccountError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.fromAccountRequired' : null;
+    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.fromAccountRequired' : null;
   }
 
   private getToAccountError(value: unknown, fromAccountValue: unknown): string | null {
-    const toAccountId = this.toPositiveInteger(value);
+    const toAccountId = toPositiveInteger(value);
     if (toAccountId === null) {
       return 'recurringEvents.dialog.add.errors.toAccountRequired';
     }
 
-    const fromAccountId = this.toPositiveInteger(fromAccountValue);
+    const fromAccountId = toPositiveInteger(fromAccountValue);
     if (fromAccountId !== null && fromAccountId === toAccountId) {
       return 'recurringEvents.dialog.add.errors.accountsMustDiffer';
     }
@@ -670,42 +671,12 @@ export class UpsertPlanItemDialogComponent {
       : null;
   }
 
-  private normalizeRequiredString(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const normalized = `${value}`.trim();
-    return normalized.length > 0 ? normalized : null;
-  }
-
   private normalizeTemplateDescription(value: unknown): string {
     if (value === null || value === undefined) {
       return '';
     }
 
     return `${value}`.trim();
-  }
-
-  private toTimestamp(value: Date | null): number | null {
-    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
-      return null;
-    }
-
-    return value.getTime();
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
-      return null;
-    }
-
-    return parsed;
   }
 
   private toPositiveAmount(value: unknown): number | null {
@@ -754,13 +725,5 @@ export class UpsertPlanItemDialogComponent {
     if (this.errorKey()) {
       this.errorKey.set(null);
     }
-  }
-
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
-    return (options ?? []).map((option) => ({
-      value: `${option.value}`,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 }

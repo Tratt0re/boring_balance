@@ -1,5 +1,6 @@
 const { getDatabase, selectDistinctYearsFromUnixTimestampColumn, selectRows } = require('../database');
-const { elapsedDaysBetweenUnixTimestampMilliseconds } = require('../utils/date-utils');
+const { elapsedDaysBetweenUnixTimestampMilliseconds, formatUnixTimestampMillisecondsToDate } = require('../utils/date-utils');
+const { buildDateRangeFilter } = require('./query-utils');
 const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 const { normalizeRowsTags } = require('./transactions/tags');
 
@@ -24,14 +25,6 @@ function toMonthKey(unixTimestampMilliseconds) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   return `${year}-${month}`;
-}
-
-function toDateKey(unixTimestampMilliseconds) {
-  const date = new Date(Number(unixTimestampMilliseconds));
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
 }
 
 function toMonthRangeFromSelection(selection) {
@@ -135,17 +128,8 @@ function resolveFilterContext(database, filters = {}) {
 function buildTransactionsWhere(filters = {}, filterContext, options = {}) {
   const where = {};
 
-  if (filters.date_from !== undefined || filters.date_to !== undefined) {
-    const occurredAtFilter = {};
-
-    if (filters.date_from !== undefined) {
-      occurredAtFilter.gte = filters.date_from;
-    }
-
-    if (filters.date_to !== undefined) {
-      occurredAtFilter.lte = filters.date_to;
-    }
-
+  const occurredAtFilter = buildDateRangeFilter(filters.date_from, filters.date_to);
+  if (occurredAtFilter) {
     where.occurred_at = occurredAtFilter;
   }
 
@@ -180,17 +164,8 @@ function selectTransactions(database, where, orderBy = TRANSACTION_ASC_ORDER) {
 function buildTransfersWhere(filters = {}) {
   const where = {};
 
-  if (filters.date_from !== undefined || filters.date_to !== undefined) {
-    const occurredAtFilter = {};
-
-    if (filters.date_from !== undefined) {
-      occurredAtFilter.gte = filters.date_from;
-    }
-
-    if (filters.date_to !== undefined) {
-      occurredAtFilter.lte = filters.date_to;
-    }
-
+  const occurredAtFilter = buildDateRangeFilter(filters.date_from, filters.date_to);
+  if (occurredAtFilter) {
     where.occurred_at = occurredAtFilter;
   }
 
@@ -650,7 +625,7 @@ function dailyTotalsByDate(filters = {}) {
       continue;
     }
 
-    const date = toDateKey(row.occurred_at);
+    const date = formatUnixTimestampMillisecondsToDate(row.occurred_at, { format: 'YYYY-MM-DD' });
     const currentDate = totalsByDate.get(date) ?? {
       date,
       expenses_cents: 0,
@@ -671,7 +646,7 @@ function dailyTotalsByDate(filters = {}) {
   return Array.from(totalsByDate.values()).sort((left, right) => left.date.localeCompare(right.date));
 }
 
-function expensesByCategoryByMonth(filters = {}) {
+function transactionsByCategoryAndMonth(filters, categoryType) {
   const database = getDatabase();
   const filterContext = resolveFilterContext(database, filters);
   const rows = selectTransactions(
@@ -681,22 +656,16 @@ function expensesByCategoryByMonth(filters = {}) {
   );
 
   return {
-    rows: aggregateByCategoryAndMonth(rows, filterContext, 'expense'),
+    rows: aggregateByCategoryAndMonth(rows, filterContext, categoryType),
   };
 }
 
-function incomesByCategoryByMonth(filters = {}) {
-  const database = getDatabase();
-  const filterContext = resolveFilterContext(database, filters);
-  const rows = selectTransactions(
-    database,
-    buildTransactionsWhere(filters, filterContext, { excludeTransfers: true }),
-    TRANSACTION_ASC_ORDER,
-  );
+function expensesByCategoryByMonth(filters = {}) {
+  return transactionsByCategoryAndMonth(filters, 'expense');
+}
 
-  return {
-    rows: aggregateByCategoryAndMonth(rows, filterContext, 'income'),
-  };
+function incomesByCategoryByMonth(filters = {}) {
+  return transactionsByCategoryAndMonth(filters, 'income');
 }
 
 function moneyFlowSankeyByMonth(filters = {}) {

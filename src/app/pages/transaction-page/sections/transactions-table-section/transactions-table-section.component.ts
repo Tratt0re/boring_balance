@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input,
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import {
-  type ActionItem,
   AppDataTableComponent,
   type EditableOptionItem,
   type EditableValueChangeEvent,
@@ -38,10 +37,14 @@ import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
+import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+} from '@/shared/utils';
 
 const TRANSFER_CATEGORY_ID = 2;
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 const TRANSACTION_FILTER_FIELD = {
   dateFrom: 'dateFrom',
   dateTo: 'dateTo',
@@ -216,34 +219,29 @@ const createTransactionTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...TRANSACTION_TABLE_COLUMNS,
-    {
-      minWidth: TRANSACTION_COLUMN_WIDTH.action,
-      maxWidth: TRANSACTION_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'transactions.table.actions.edit',
-          buttonType: 'ghost',
-          action: onEditAction,
-        },
-        {
-          id: 'duplicate',
-          icon: 'copy',
-          label: 'transactions.table.actions.duplicate',
-          buttonType: 'ghost',
-          action: onDuplicateAction,
-        },
-        {
-          id: 'delete',
-          icon: 'trash',
-          label: 'transactions.table.actions.delete',
-          buttonType: 'ghost',
-          action: onDeleteAction,
-        },
-      ] as const satisfies readonly ActionItem[],
-    },
+    createActionColumn(TRANSACTION_COLUMN_WIDTH.action, [
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'transactions.table.actions.edit',
+        buttonType: 'ghost',
+        action: onEditAction,
+      },
+      {
+        id: 'duplicate',
+        icon: 'copy',
+        label: 'transactions.table.actions.duplicate',
+        buttonType: 'ghost',
+        action: onDuplicateAction,
+      },
+      {
+        id: 'delete',
+        icon: 'trash',
+        label: 'transactions.table.actions.delete',
+        buttonType: 'ghost',
+        action: onDeleteAction,
+      },
+    ]),
   ] as const;
 
 @Component({
@@ -262,7 +260,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);

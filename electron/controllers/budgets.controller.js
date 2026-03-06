@@ -4,6 +4,7 @@ const {
   ensureHasKeys,
   ensureNonEmptyObject,
   ensurePlainObject,
+  executeWhereOptionsListQuery,
   extractId,
   nowUnixTimestampMilliseconds,
   normalizeOptionalBooleanFlag,
@@ -11,14 +12,13 @@ const {
   normalizePositiveInteger,
   normalizeWhereOptionsListPayload,
   pickDefined,
-  resolvePaginationWindow,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('./utils');
 
 const BUDGET_FIELDS = new Set(['category_id', 'amount_cents', 'include_children', 'description', 'archived']);
 const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'all']);
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 const DESCRIPTION_MAX_LENGTH = 75;
 
 function normalizeBudgetChanges(value, label, options = {}) {
@@ -78,33 +78,8 @@ function list(payload) {
     maxPageSize: MAX_PAGE_SIZE,
   });
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
-  const total = budgetsModel.count(where);
 
-  if (all) {
-    const rows = budgetsModel.list(where, listOptions);
-    const pageSize = rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE;
-
-    return {
-      rows,
-      total,
-      page: DEFAULT_PAGE,
-      page_size: pageSize,
-    };
-  }
-
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
-  const rows = budgetsModel.list(where, {
-    ...listOptions,
-    limit: pagination.page_size,
-    offset,
-  });
-
-  return {
-    rows,
-    total,
-    page,
-    page_size: pagination.page_size,
-  };
+  return executeWhereOptionsListQuery(budgetsModel, { where, listOptions, pagination, all });
 }
 
 function update(payload) {

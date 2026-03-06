@@ -1,22 +1,26 @@
 const { categoriesModel } = require('../models');
 const { TRANSFER_CATEGORY_ID } = require('../models/transactions/constants');
+const { ALLOWED_CATEGORY_TYPES: ALLOWED_TYPES } = require('./constants');
 const {
   assertAllowedKeys,
   ensureHasKeys,
   ensureNonEmptyObject,
   ensurePlainObject,
+  executeWhereOptionsListQuery,
   extractId,
   nowUnixTimestampMilliseconds,
+  normalizeEnum,
   normalizeOptionalBooleanFlag,
   normalizeOptionalInteger,
   normalizeOptionalString,
   normalizeWhereOptionsListPayload,
   pickDefined,
   requireString,
-  resolvePaginationWindow,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('./utils');
 
-const ALLOWED_TYPES = new Set(['income', 'expense', 'exclude']);
 const CATEGORY_FIELDS = new Set([
   'name',
   'parent_id',
@@ -28,9 +32,6 @@ const CATEGORY_FIELDS = new Set([
   'archived',
 ]);
 const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'all']);
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 const DESCRIPTION_MAX_LENGTH = 50;
 
 function mergeSystemCategoryFilter(where = {}) {
@@ -65,15 +66,6 @@ function mergeSystemCategoryFilter(where = {}) {
   return nextWhere;
 }
 
-function normalizeCategoryType(value, label) {
-  const normalizedType = requireString(value, label, { allowEmpty: false });
-  if (!ALLOWED_TYPES.has(normalizedType)) {
-    throw new Error(`${label} must be one of: income, expense, exclude.`);
-  }
-
-  return normalizedType;
-}
-
 function normalizeCategoryChanges(value, label, options = {}) {
   const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
   assertAllowedKeys(changesInput, CATEGORY_FIELDS, label);
@@ -90,7 +82,7 @@ function normalizeCategoryChanges(value, label, options = {}) {
     color_key: normalizeOptionalString(changesInput.color_key, `${label}.color_key`),
     icon: normalizeOptionalString(changesInput.icon, `${label}.icon`),
     type:
-      changesInput.type === undefined ? undefined : normalizeCategoryType(changesInput.type, `${label}.type`),
+      changesInput.type === undefined ? undefined : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_TYPES),
     locked: normalizeOptionalBooleanFlag(changesInput.locked, `${label}.locked`),
     archived: normalizeOptionalBooleanFlag(changesInput.archived, `${label}.archived`),
   });
@@ -133,33 +125,8 @@ function list(payload) {
   });
   const effectiveWhere = mergeSystemCategoryFilter(where);
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
-  const total = categoriesModel.count(effectiveWhere);
 
-  if (all) {
-    const rows = categoriesModel.list(effectiveWhere, listOptions);
-    const pageSize = rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE;
-
-    return {
-      rows,
-      total,
-      page: DEFAULT_PAGE,
-      page_size: pageSize,
-    };
-  }
-
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
-  const rows = categoriesModel.list(effectiveWhere, {
-    ...listOptions,
-    limit: pagination.page_size,
-    offset,
-  });
-
-  return {
-    rows,
-    total,
-    page,
-    page_size: pagination.page_size,
-  };
+  return executeWhereOptionsListQuery(categoriesModel, { where: effectiveWhere, listOptions, pagination, all });
 }
 
 function update(payload) {

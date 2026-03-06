@@ -32,14 +32,20 @@ import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialo
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
 import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+  getTargetPageAfterCreate,
+  toEditableOptionIcon,
+  translateMaybe,
+} from '@/shared/utils';
+import {
   UpsertBudgetDialogComponent,
   type UpsertBudgetDialogData,
 } from './components/upsert-budget-dialog/upsert-budget-dialog.component';
 
 type BudgetSectionView = 'setup' | 'analysis';
-
-const toEditableOptionIcon = (value: string | null): EditableOptionItem['icon'] =>
-  value ? (value as EditableOptionItem['icon']) : undefined;
 
 interface BudgetCategoryLookup {
   readonly name: string;
@@ -118,31 +124,24 @@ const createBudgetTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...BUDGET_TABLE_COLUMNS,
-    {
-      minWidth: BUDGET_COLUMN_WIDTH.action,
-      maxWidth: BUDGET_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'budgets.table.actions.edit',
-          buttonType: 'ghost',
-          action: onEditAction,
-        },
-        {
-          id: 'delete',
-          icon: 'trash',
-          label: 'budgets.table.actions.delete',
-          buttonType: 'ghost',
-          action: onDeleteAction,
-        },
-      ],
-    },
+    createActionColumn(BUDGET_COLUMN_WIDTH.action, [
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'budgets.table.actions.edit',
+        buttonType: 'ghost',
+        action: onEditAction,
+      },
+      {
+        id: 'delete',
+        icon: 'trash',
+        label: 'budgets.table.actions.delete',
+        buttonType: 'ghost',
+        action: onDeleteAction,
+      },
+    ]),
   ] as const;
 
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 const MIN_YEAR = 1970;
 const MAX_YEAR = 9999;
 const AMOUNT_CENTS_DIVISOR = 100;
@@ -179,7 +178,7 @@ export class BudgetPage implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
   protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
   protected readonly budgetTableStructure = createBudgetTableStructure(
     (row) => this.onEditBudget(row),
@@ -440,7 +439,7 @@ export class BudgetPage implements OnInit, OnDestroy {
   private toBudgetTableRow(budget: BudgetModel): BudgetTableRow {
     const categoryLookup = this.categoryLookupById.get(budget.categoryId);
     const categoryName = categoryLookup
-      ? this.translateMaybe(categoryLookup.name)
+      ? translateMaybe(this.translateService, categoryLookup.name)
       : this.translateService.instant('budgets.table.unknownCategory');
     const budgetYear = new Date(budget.createdAt).getFullYear();
 
@@ -734,8 +733,7 @@ export class BudgetPage implements OnInit, OnDestroy {
         return;
       }
 
-      const nextTotal = this.total() + 1;
-      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      const targetPage = getTargetPageAfterCreate(this.total(), this.pageSize());
       this.page.set(targetPage);
       await this.loadBudgets(targetPage);
       await this.loadBudgetYears();
@@ -839,8 +837,4 @@ export class BudgetPage implements OnInit, OnDestroy {
     return Number(amountCents ?? 0) / AMOUNT_CENTS_DIVISOR;
   }
 
-  private translateMaybe(value: string): string {
-    const translated = this.translateService.instant(value);
-    return translated !== value ? translated : value;
-  }
 }

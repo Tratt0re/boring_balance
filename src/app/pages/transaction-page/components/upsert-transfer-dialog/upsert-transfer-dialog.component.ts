@@ -6,6 +6,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateTransferDto, TransactionUpdateTransferDto } from '@/dtos';
 import { NumberFormatService } from '@/services/number-format.service';
+import { dateToUnixMs, editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -48,7 +49,7 @@ export class UpsertTransferDialogComponent {
   private readonly data = inject<UpsertTransferDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransfer = this.data?.transfer;
 
-  protected readonly accountOptions: readonly ZardComboboxOption[] = this.toDialogOptions(this.data?.accountOptions);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
   protected readonly descriptionMaxLength = TRANSFER_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
@@ -212,19 +213,19 @@ export class UpsertTransferDialogComponent {
 
     const values = this.form.getRawValue();
 
-    const occurredAt = this.toOccurredAt(values.occurredAt);
+    const occurredAt = dateToUnixMs(values.occurredAt);
     if (occurredAt === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.dateRequired');
       return null;
     }
 
-    const fromAccountId = this.toPositiveInteger(values.fromAccountId);
+    const fromAccountId = toPositiveInteger(values.fromAccountId);
     if (fromAccountId === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.fromAccountRequired');
       return null;
     }
 
-    const toAccountId = this.toPositiveInteger(values.toAccountId);
+    const toAccountId = toPositiveInteger(values.toAccountId);
     if (toAccountId === null) {
       this.errorKey.set('transactions.transfers.dialog.add.errors.toAccountRequired');
       return null;
@@ -248,7 +249,7 @@ export class UpsertTransferDialogComponent {
       fromAccountId,
       toAccountId,
       amount,
-      description: this.toDescription(values.description),
+      description: normalizeNullableString(values.description),
     };
   }
 
@@ -263,20 +264,20 @@ export class UpsertTransferDialogComponent {
   }
 
   private getOccurredAtError(value: Date | null): string | null {
-    return this.toOccurredAt(value) === null ? 'transactions.transfers.dialog.add.errors.dateRequired' : null;
+    return dateToUnixMs(value) === null ? 'transactions.transfers.dialog.add.errors.dateRequired' : null;
   }
 
   private getFromAccountError(value: unknown): string | null {
-    return this.toPositiveInteger(value) === null ? 'transactions.transfers.dialog.add.errors.fromAccountRequired' : null;
+    return toPositiveInteger(value) === null ? 'transactions.transfers.dialog.add.errors.fromAccountRequired' : null;
   }
 
   private getToAccountError(value: unknown, fromAccountValue: unknown): string | null {
-    const toAccountId = this.toPositiveInteger(value);
+    const toAccountId = toPositiveInteger(value);
     if (toAccountId === null) {
       return 'transactions.transfers.dialog.add.errors.toAccountRequired';
     }
 
-    const fromAccountId = this.toPositiveInteger(fromAccountValue);
+    const fromAccountId = toPositiveInteger(fromAccountValue);
     if (fromAccountId !== null && fromAccountId === toAccountId) {
       return 'transactions.transfers.dialog.add.errors.accountsMustDiffer';
     }
@@ -298,27 +299,6 @@ export class UpsertTransferDialogComponent {
       : null;
   }
 
-  private toOccurredAt(value: Date | null): number | null {
-    if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
-      return null;
-    }
-
-    return value.getTime();
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || !Number.isInteger(parsed) || parsed <= 0) {
-      return null;
-    }
-
-    return parsed;
-  }
-
   private toAmount(value: unknown): number | null {
     if (value === null || value === undefined || `${value}`.trim().length === 0) {
       return null;
@@ -332,26 +312,9 @@ export class UpsertTransferDialogComponent {
     return parsed;
   }
 
-  private toDescription(value: unknown): string | null {
-    if (value === null || value === undefined) {
-      return null;
-    }
-
-    const normalizedValue = `${value}`.trim();
-    return normalizedValue.length === 0 ? null : normalizedValue;
-  }
-
   private clearSubmitError(): void {
     if (this.errorKey()) {
       this.errorKey.set(null);
     }
-  }
-
-  private toDialogOptions(options: readonly EditableOptionItem[] | undefined): readonly ZardComboboxOption[] {
-    return (options ?? []).map((option) => ({
-      value: `${option.value}`,
-      label: this.translateService.instant(option.label),
-      icon: option.icon,
-    }));
   }
 }

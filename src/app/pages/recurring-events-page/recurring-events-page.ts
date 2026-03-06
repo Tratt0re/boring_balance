@@ -17,6 +17,16 @@ import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-co
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
+import {
+  DEFAULT_PAGE_SIZE,
+  PAGE_SIZE_OPTIONS,
+  computePageCount,
+  createActionColumn,
+  getTargetPageAfterCreate,
+  getTargetPageAfterDelete,
+  toEditableOptionIcon,
+  translateMaybe,
+} from '@/shared/utils';
 import { DeleteRecurringEventAlertContentComponent } from './components/delete-recurring-event-alert-content/delete-recurring-event-alert-content.component';
 import {
   RecurringEventRunResultAlertContentComponent,
@@ -106,34 +116,23 @@ const createRecurringEventTableStructure = (
 ): readonly TableDataItem[] =>
   [
     ...RECURRING_EVENT_TABLE_COLUMNS,
-    {
-      minWidth: RECURRING_EVENT_COLUMN_WIDTH.action,
-      maxWidth: RECURRING_EVENT_COLUMN_WIDTH.action,
-      showLabel: false,
-      actionItems: [
-        {
-          id: 'edit',
-          icon: 'pencil',
-          label: 'recurringEvents.table.actions.edit',
-          buttonType: 'ghost',
-          action: onEditAction,
-        },
-        {
-          id: 'delete',
-          icon: 'trash',
-          label: 'recurringEvents.table.actions.delete',
-          buttonType: 'ghost',
-          action: onDeleteAction,
-        },
-      ],
-    },
+    createActionColumn(RECURRING_EVENT_COLUMN_WIDTH.action, [
+      {
+        id: 'edit',
+        icon: 'pencil',
+        label: 'recurringEvents.table.actions.edit',
+        buttonType: 'ghost',
+        action: onEditAction,
+      },
+      {
+        id: 'delete',
+        icon: 'trash',
+        label: 'recurringEvents.table.actions.delete',
+        buttonType: 'ghost',
+        action: onDeleteAction,
+      },
+    ]),
   ] as const;
-
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
-
-const toEditableOptionIcon = (value: string | null): EditableOptionItem['icon'] =>
-  value ? (value as EditableOptionItem['icon']) : undefined;
 
 function isPlanItemCreateAndRunResult(
   value: Awaited<ReturnType<PlanItemsService['create']>>,
@@ -154,7 +153,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
   protected readonly recurringEventTableStructure = createRecurringEventTableStructure(
     (row) => this.onEditRecurringEvent(row),
     (row) => this.onDeleteRecurringEvent(row),
@@ -396,7 +395,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       return this.translateService.instant('recurringEvents.table.template.unknownAccount');
     }
 
-    return this.translateMaybe(name);
+    return translateMaybe(this.translateService, name);
   }
 
   private lookupCategoryName(categoryId: number): string {
@@ -405,12 +404,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       return this.translateService.instant('recurringEvents.table.template.unknownCategory');
     }
 
-    return this.translateMaybe(name);
-  }
-
-  private translateMaybe(value: string): string {
-    const translated = this.translateService.instant(value);
-    return translated !== value ? translated : value;
+    return translateMaybe(this.translateService, name);
   }
 
   private onEditRecurringEvent(row: object): void {
@@ -569,8 +563,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       }
 
       const createdRow = isPlanItemCreateAndRunResult(created) ? created.row : created;
-      const nextTotal = this.total() + 1;
-      const targetPage = Math.max(1, Math.ceil(nextTotal / this.pageSize()));
+      const targetPage = getTargetPageAfterCreate(this.total(), this.pageSize());
       this.page.set(targetPage);
       await this.loadRecurringEvents(targetPage);
       dialogRef.close(createdRow);
@@ -629,9 +622,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       });
 
       if (result.changed > 0) {
-        const nextTotal = Math.max(0, this.total() - 1);
-        const maxPage = Math.max(1, Math.ceil(Math.max(1, nextTotal) / this.pageSize()));
-        const targetPage = Math.min(this.page(), maxPage);
+        const targetPage = getTargetPageAfterDelete(this.total(), this.page(), this.pageSize());
         this.page.set(targetPage);
         await this.loadRecurringEvents(targetPage);
         return;

@@ -114,3 +114,25 @@ export const APP_ICON_OPTIONS: readonly AppVisualOption[] = [
 export const APP_ICON_KEY_SET = new Set(
   APP_ICON_OPTIONS.map((option) => option.value).filter((value) => value.length > 0),
 );
+
+/**
+ * Validates and returns a color key if it belongs to the allowed set, otherwise null.
+ */
+export function normalizeColorKey(value: unknown): string | null {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    return null;
+  }
+
+  return APP_COLOR_KEY_SET.has(value) ? value : null;
+}
+
+/**
+ * Validates and returns an icon key if it belongs to the allowed set, otherwise null.
+ */
+export function normalizeIconKey(value: unknown): string | null {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    return null;
+  }
+
+  return APP_ICON_KEY_SET.has(value) ? value : null;
+}

@@ -6,6 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import type { AccountValuationCreateDto, AccountValuationUpdateDto } from '@/dtos';
 import { amountToCents, centsToAmount } from '@/models/common.model';
 import { NumberFormatService } from '@/services/number-format.service';
+import { dateToUnixMs } from '@/shared/utils/dialog-form-utils';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -124,7 +125,7 @@ export class UpsertAccountValuationDialogComponent {
       return null;
     }
 
-    const valuedAt = this.toUnixMs(raw.date);
+    const valuedAt = dateToUnixMs(raw.date);
     if (valuedAt === null) {
       this.errorKey.set('accountValuations.dialog.add.errors.dateRequired');
       return null;
@@ -164,14 +165,6 @@ export class UpsertAccountValuationDialogComponent {
     }
 
     return amountToCents(parsed);
-  }
-
-  private toUnixMs(date: Date | null): number | null {
-    if (!date || !(date instanceof Date) || !Number.isFinite(date.getTime())) {
-      return null;
-    }
-
-    return date.getTime();
   }
 
   private clearSubmitError(): void {

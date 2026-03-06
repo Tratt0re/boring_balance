@@ -3,6 +3,7 @@ const {
   assertAllowedKeys,
   ensureNonEmptyObject,
   ensurePlainObject,
+  executeWhereOptionsListQuery,
   extractId,
   nowUnixTimestampMilliseconds,
   normalizeOptionalString,
@@ -11,15 +12,14 @@ const {
   normalizePositiveInteger,
   normalizeNonNegativeInteger,
   normalizeUnixTimestampMilliseconds,
-  resolvePaginationWindow,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  MAX_PAGE_SIZE,
 } = require('./utils');
 
 const ALLOWED_SOURCES = new Set(['manual', 'api', 'import']);
 const VALUATION_FIELDS = new Set(['valued_at', 'value_cents', 'source']);
 const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'all']);
-const DEFAULT_PAGE = 1;
-const DEFAULT_PAGE_SIZE = 10;
-const MAX_PAGE_SIZE = 250;
 
 function normalizeSource(value, label) {
   const normalized = normalizeOptionalString(value, label);
@@ -61,30 +61,9 @@ function list(payload) {
     defaultPageSize: DEFAULT_PAGE_SIZE,
     maxPageSize: MAX_PAGE_SIZE,
   });
-  const listOptions = {
-    ...options,
-    orderBy: 'valued_at',
-    orderDirection: 'DESC',
-  };
-  const { limit: _l, offset: _o, ...countOptions } = listOptions;
-  void countOptions;
+  const { limit: _l, offset: _o, ...listOptions } = { ...options, orderBy: 'valued_at', orderDirection: 'DESC' };
 
-  const total = accountValuationsModel.count(where);
-
-  if (all) {
-    const rows = accountValuationsModel.list(where, listOptions);
-    const pageSize = rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE;
-    return { rows, total, page: DEFAULT_PAGE, page_size: pageSize };
-  }
-
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
-  const rows = accountValuationsModel.list(where, {
-    ...listOptions,
-    limit: pagination.page_size,
-    offset,
-  });
-
-  return { rows, total, page, page_size: pagination.page_size };
+  return executeWhereOptionsListQuery(accountValuationsModel, { where, listOptions, pagination, all });
 }
 
 function update(payload) {
