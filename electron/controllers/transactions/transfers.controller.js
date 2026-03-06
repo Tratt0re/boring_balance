@@ -9,6 +9,7 @@ const {
   normalizeDateAmountSettledFilters,
   normalizeOptionalIdArray,
   normalizeOptionalString,
+  normalizeOptionalBooleanFlag,
   normalizeUnixTimestampMilliseconds,
   nowUnixTimestampMilliseconds,
   normalizePositiveInteger,

@@ -1,6 +1,7 @@
 const { planItemsModel } = require('../models');
 const { transactionsController, transfersController } = require('./transactions');
 const {
+  requireString,
   assertAllowedKeys,
   ensureHasKeys,
   ensureNonEmptyObject,

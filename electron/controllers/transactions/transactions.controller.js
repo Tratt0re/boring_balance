@@ -14,6 +14,7 @@ const {
   normalizeOptionalEnumArray,
   normalizeOptionalIdArray,
   normalizeOptionalString,
+  normalizeOptionalBooleanFlag,
   normalizePositiveInteger,
   normalizeDateAmountSettledFilters,
   pickDefined,
