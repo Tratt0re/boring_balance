@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import {
   AppDataTableComponent,
@@ -1142,14 +1143,20 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       if (result.row) {
         const updatedRow = this.toTransactionRow(result.row);
         this.rows.update((rows) => rows.map((row) => (row.id === id ? updatedRow : row)));
+        toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
+        return;
       }
+
+      toast.error(this.translateService.instant('transactions.toasts.updateError'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to update transaction:', error);
+      toast.error(this.translateService.instant('transactions.toasts.updateError'));
       await this.reloadTransactionsPage();
     }
   }
@@ -1166,16 +1173,23 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       if (result.row) {
         await this.reloadTransactionsPage();
         dialogRef.close(result.row);
+        toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        dialogRef.close({ id, changes });
+        toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
+        return;
       }
+
       dialogRef.close({ id, changes });
+      toast.error(this.translateService.instant('transactions.toasts.updateError'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to update transaction from dialog:', error);
       dialogContent.setSubmitError('transactions.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('transactions.toasts.updateError'));
     }
   }
 
@@ -1188,15 +1202,18 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       const created = await this.transactionsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('transactions.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('transactions.toasts.createError'));
         return;
       }
 
       this.page.set(1);
       await this.reloadTransactionsPage();
       dialogRef.close(created);
+      toast.success(this.translateService.instant('transactions.toasts.createSuccess'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to create transaction:', error);
       dialogContent.setSubmitError('transactions.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('transactions.toasts.createError'));
     }
   }
 
@@ -1204,6 +1221,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     try {
       const sourceTransaction = await this.transactionsService.get({ id });
       if (!sourceTransaction) {
+        toast.error(this.translateService.instant('transactions.toasts.duplicateError'));
         return;
       }
 
@@ -1218,12 +1236,15 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       });
 
       if (!createdTransaction) {
+        toast.error(this.translateService.instant('transactions.toasts.duplicateError'));
         return;
       }
 
       await this.reloadTransactionsPage();
+      toast.success(this.translateService.instant('transactions.toasts.duplicateSuccess'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to duplicate transaction:', error);
+      toast.error(this.translateService.instant('transactions.toasts.duplicateError'));
       await this.reloadTransactionsPage();
     }
   }
@@ -1233,12 +1254,15 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       const result = await this.transactionsService.remove({ id });
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        toast.success(this.translateService.instant('transactions.toasts.deleteSuccess'));
         return;
       }
 
       await this.reloadTransactionsPage();
+      toast.error(this.translateService.instant('transactions.toasts.deleteError'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to delete transaction:', error);
+      toast.error(this.translateService.instant('transactions.toasts.deleteError'));
       await this.reloadTransactionsPage();
     }
   }

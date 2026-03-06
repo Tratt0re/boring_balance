@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import {
   AppDataTableComponent,
@@ -559,6 +560,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       const created = await this.planItemsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('recurringEvents.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('recurringEvents.toasts.createError'));
         return;
       }
 
@@ -567,6 +569,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       this.page.set(targetPage);
       await this.loadRecurringEvents(targetPage);
       dialogRef.close(createdRow);
+      toast.success(this.translateService.instant('recurringEvents.toasts.createSuccess'));
 
       if (isPlanItemCreateAndRunResult(created)) {
         this.openRunResultAlert(created.run, 'recurringEvents.createResult.title');
@@ -574,6 +577,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('[recurring-events-page] Failed to create recurring event:', error);
       dialogContent.setSubmitError('recurringEvents.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('recurringEvents.toasts.createError'));
     }
   }
 
@@ -597,6 +601,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         this.planItemById.set(nextPlanItems);
         dialogRef.close(result.row);
         this.openUpdateResultAlert(result.row.title);
+        toast.success(this.translateService.instant('recurringEvents.toasts.updateSuccess'));
         return;
       }
 
@@ -604,13 +609,16 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         await this.loadRecurringEvents();
         dialogRef.close(null);
         this.openUpdateResultAlert();
+        toast.success(this.translateService.instant('recurringEvents.toasts.updateSuccess'));
         return;
       }
 
       dialogContent.setSubmitError('recurringEvents.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('recurringEvents.toasts.updateError'));
     } catch (error) {
       console.error('[recurring-events-page] Failed to update recurring event:', error);
       dialogContent.setSubmitError('recurringEvents.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('recurringEvents.toasts.updateError'));
     }
   }
 
@@ -625,12 +633,15 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         const targetPage = getTargetPageAfterDelete(this.total(), this.page(), this.pageSize());
         this.page.set(targetPage);
         await this.loadRecurringEvents(targetPage);
+        toast.success(this.translateService.instant('recurringEvents.toasts.deleteSuccess'));
         return;
       }
 
       await this.loadRecurringEvents();
+      toast.error(this.translateService.instant('recurringEvents.toasts.deleteError'));
     } catch (error) {
       console.error('[recurring-events-page] Failed to delete recurring event:', error);
+      toast.error(this.translateService.instant('recurringEvents.toasts.deleteError'));
       await this.loadRecurringEvents();
     }
   }

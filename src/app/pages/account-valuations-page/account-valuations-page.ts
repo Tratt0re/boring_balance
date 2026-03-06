@@ -481,9 +481,11 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       }
 
       dialogContent.setSubmitError('accountValuations.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('accountValuations.toasts.updateError'));
     } catch (error) {
       console.error('[account-valuations-page] Failed to update valuation:', error);
       dialogContent.setSubmitError('accountValuations.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('accountValuations.toasts.updateError'));
     }
   }
 
@@ -496,6 +498,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       const created = await this.accountValuationsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('accountValuations.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('accountValuations.toasts.createError'));
         return;
       }
 
@@ -506,6 +509,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('[account-valuations-page] Failed to create valuation:', error);
       dialogContent.setSubmitError('accountValuations.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('accountValuations.toasts.createError'));
     }
   }
 
@@ -519,6 +523,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       }
 
       await this.reloadValuations();
+      toast.error(this.translateService.instant('accountValuations.toasts.deleteError'));
     } catch (error) {
       console.error('[account-valuations-page] Failed to delete valuation:', error);
       toast.error(this.translateService.instant('accountValuations.toasts.deleteError'));

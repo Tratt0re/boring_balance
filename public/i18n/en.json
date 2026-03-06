@@ -803,6 +803,14 @@
         "cancel": "Cancel",
         "archive": "Archive"
       }
+    },
+    "toasts": {
+      "createSuccess": "Account created successfully.",
+      "createError": "Failed to create account.",
+      "updateSuccess": "Account updated successfully.",
+      "updateError": "Failed to update account.",
+      "archiveSuccess": "Account archived successfully.",
+      "archiveError": "Failed to archive account."
     }
   },
   "categories": {
@@ -862,6 +870,14 @@
         "cancel": "Cancel",
         "archive": "Archive"
       }
+    },
+    "toasts": {
+      "createSuccess": "Category created successfully.",
+      "createError": "Failed to create category.",
+      "updateSuccess": "Category updated successfully.",
+      "updateError": "Failed to update category.",
+      "archiveSuccess": "Category archived successfully.",
+      "archiveError": "Failed to archive category."
     }
   },
   "budgets": {
@@ -916,6 +932,14 @@
         "cancel": "Cancel",
         "delete": "Delete"
       }
+    },
+    "toasts": {
+      "createSuccess": "Budget created successfully.",
+      "createError": "Failed to create budget.",
+      "updateSuccess": "Budget updated successfully.",
+      "updateError": "Failed to update budget.",
+      "deleteSuccess": "Budget deleted successfully.",
+      "deleteError": "Failed to delete budget."
     },
     "analysis": {
       "title": "Budget analysis",
@@ -1008,6 +1032,14 @@
         "empty": {
           "account": "No accounts yet. Add an account before filtering transfers."
         }
+      },
+      "toasts": {
+        "createSuccess": "Transfer created successfully.",
+        "createError": "Failed to create transfer.",
+        "updateSuccess": "Transfer updated successfully.",
+        "updateError": "Failed to update transfer.",
+        "deleteSuccess": "Transfer deleted successfully.",
+        "deleteError": "Failed to delete transfer."
       }
     },
     "table": {
@@ -1076,6 +1108,16 @@
         "cancel": "Cancel",
         "duplicate": "Duplicate"
       }
+    },
+    "toasts": {
+      "createSuccess": "Transaction created successfully.",
+      "createError": "Failed to create transaction.",
+      "updateSuccess": "Transaction updated successfully.",
+      "updateError": "Failed to update transaction.",
+      "deleteSuccess": "Transaction deleted successfully.",
+      "deleteError": "Failed to delete transaction.",
+      "duplicateSuccess": "Transaction duplicated successfully.",
+      "duplicateError": "Failed to duplicate transaction."
     }
   },
   "options": {
@@ -1362,6 +1404,14 @@
       },
       "fallbackError": "Unexpected error"
     },
+    "toasts": {
+      "createSuccess": "Recurring event created successfully.",
+      "createError": "Failed to create recurring event.",
+      "updateSuccess": "Recurring event updated successfully.",
+      "updateError": "Failed to update recurring event.",
+      "deleteSuccess": "Recurring event deleted successfully.",
+      "deleteError": "Failed to delete recurring event."
+    },
     "errors": {
       "loadFailedWithError": "Failed to load recurring events: {{error}}",
       "loadUnexpected": "Unexpected error while loading recurring events."
@@ -1443,7 +1493,9 @@
     },
     "toasts": {
       "createSuccess": "Snapshot added successfully.",
+      "createError": "Failed to add the snapshot.",
       "updateSuccess": "Snapshot updated successfully.",
+      "updateError": "Failed to update the snapshot.",
       "deleteSuccess": "Snapshot deleted successfully.",
       "deleteError": "Failed to delete the snapshot."
     }

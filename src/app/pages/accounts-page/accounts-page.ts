@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import {
@@ -382,19 +383,23 @@ export class AccountsPage implements OnInit, OnDestroy {
         const nextAccounts = this.accounts().map((row) => (row.id === id ? this.toAccountTableRow(result.row!) : row));
         this.accounts.set(nextAccounts);
         dialogRef.close(result.row);
+        toast.success(this.translateService.instant('accounts.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.loadAccounts();
         dialogRef.close(null);
+        toast.success(this.translateService.instant('accounts.toasts.updateSuccess'));
         return;
       }
 
       dialogContent.setSubmitError('accounts.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('accounts.toasts.updateError'));
     } catch (error) {
       console.error('[accounts-page] Failed to update account:', error);
       dialogContent.setSubmitError('accounts.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('accounts.toasts.updateError'));
     }
   }
 
@@ -409,12 +414,15 @@ export class AccountsPage implements OnInit, OnDestroy {
 
       if ((result.row && result.row.archived) || result.changed > 0) {
         await this.loadAccounts();
+        toast.success(this.translateService.instant('accounts.toasts.archiveSuccess'));
         return;
       }
 
       await this.loadAccounts();
+      toast.error(this.translateService.instant('accounts.toasts.archiveError'));
     } catch (error) {
       console.error('[accounts-page] Failed to archive account:', error);
+      toast.error(this.translateService.instant('accounts.toasts.archiveError'));
       await this.loadAccounts();
     }
   }
@@ -428,6 +436,7 @@ export class AccountsPage implements OnInit, OnDestroy {
       const created = await this.accountsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('accounts.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('accounts.toasts.createError'));
         return;
       }
 
@@ -435,9 +444,11 @@ export class AccountsPage implements OnInit, OnDestroy {
       this.page.set(targetPage);
       await this.loadAccounts(targetPage);
       dialogRef.close(created);
+      toast.success(this.translateService.instant('accounts.toasts.createSuccess'));
     } catch (error) {
       console.error('[accounts-page] Failed to create account:', error);
       dialogContent.setSubmitError('accounts.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('accounts.toasts.createError'));
     }
   }
 }

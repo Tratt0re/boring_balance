@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { type EditableOptionItem } from '@/components/data-table';
@@ -187,11 +188,13 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         );
       }
       this.activityChanged.emit();
+      toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
     } catch (error) {
       console.error('[overview-activity-panel] Failed to update transaction settled state:', error);
       this.transactionRows.update((rows) =>
         rows.map((row) => (row.id === rowId ? { ...row, settled: previousSettled } : row)),
       );
+      toast.error(this.translateService.instant('transactions.toasts.updateError'));
     } finally {
       this.setPendingTransactionSettled(rowId, false);
     }
@@ -231,11 +234,13 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         ),
       );
       this.activityChanged.emit();
+      toast.success(this.translateService.instant('transactions.transfers.toasts.updateSuccess'));
     } catch (error) {
       console.error('[overview-activity-panel] Failed to update transfer settled state:', error);
       this.transferRows.update((rows) =>
         rows.map((row) => (row.transferId === transferId ? { ...row, settled: previousSettled } : row)),
       );
+      toast.error(this.translateService.instant('transactions.transfers.toasts.updateError'));
     } finally {
       this.setPendingTransferSettled(transferId, false);
     }
@@ -422,15 +427,18 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       const created = await this.transactionsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('transactions.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('transactions.toasts.createError'));
         return;
       }
 
       await this.loadActivity();
       dialogRef.close(created);
       this.activityChanged.emit();
+      toast.success(this.translateService.instant('transactions.toasts.createSuccess'));
     } catch (error) {
       console.error('[overview-activity-panel] Failed to create transaction:', error);
       dialogContent.setSubmitError('transactions.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('transactions.toasts.createError'));
     }
   }
 
@@ -480,9 +488,11 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       await this.loadActivity();
       dialogRef.close(created);
       this.activityChanged.emit();
+      toast.success(this.translateService.instant('transactions.transfers.toasts.createSuccess'));
     } catch (error) {
       console.error('[overview-activity-panel] Failed to create transfer:', error);
       dialogContent.setSubmitError('transactions.transfers.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('transactions.transfers.toasts.createError'));
     }
   }
 

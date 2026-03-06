@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppBarChartComponent, type AppBarChartSeries } from '@/components/charts';
@@ -688,19 +689,23 @@ export class BudgetPage implements OnInit, OnDestroy {
           rows.map((row) => (row.id === id ? this.toBudgetTableRow(result.row!) : row)),
         );
         dialogRef.close(result.row);
+        toast.success(this.translateService.instant('budgets.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.loadBudgets();
         dialogRef.close(null);
+        toast.success(this.translateService.instant('budgets.toasts.updateSuccess'));
         return;
       }
 
       dialogContent.setSubmitError('budgets.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('budgets.toasts.updateError'));
     } catch (error) {
       console.error('[budget-page] Failed to update budget:', error);
       dialogContent.setSubmitError('budgets.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('budgets.toasts.updateError'));
     }
   }
 
@@ -710,13 +715,16 @@ export class BudgetPage implements OnInit, OnDestroy {
       if (result.changed > 0) {
         await this.loadBudgets();
         await this.loadBudgetYears();
+        toast.success(this.translateService.instant('budgets.toasts.deleteSuccess'));
         return;
       }
 
       await this.loadBudgets();
       await this.loadBudgetYears();
+      toast.error(this.translateService.instant('budgets.toasts.deleteError'));
     } catch (error) {
       console.error('[budget-page] Failed to delete budget:', error);
+      toast.error(this.translateService.instant('budgets.toasts.deleteError'));
       await this.loadBudgets();
     }
   }
@@ -730,6 +738,7 @@ export class BudgetPage implements OnInit, OnDestroy {
       const created = await this.budgetsService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('budgets.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('budgets.toasts.createError'));
         return;
       }
 
@@ -738,9 +747,11 @@ export class BudgetPage implements OnInit, OnDestroy {
       await this.loadBudgets(targetPage);
       await this.loadBudgetYears();
       dialogRef.close(created);
+      toast.success(this.translateService.instant('budgets.toasts.createSuccess'));
     } catch (error) {
       console.error('[budget-page] Failed to create budget:', error);
       dialogContent.setSubmitError('budgets.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('budgets.toasts.createError'));
     }
   }
 

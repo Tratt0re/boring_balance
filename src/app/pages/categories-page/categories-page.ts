@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
 import {
@@ -361,19 +362,23 @@ export class CategoriesPage implements OnInit, OnDestroy {
           rows.map((row) => (row.id === id ? this.toCategoryTableRow(result.row!) : row)),
         );
         dialogRef.close(result.row);
+        toast.success(this.translateService.instant('categories.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.loadCategories();
         dialogRef.close(null);
+        toast.success(this.translateService.instant('categories.toasts.updateSuccess'));
         return;
       }
 
       dialogContent.setSubmitError('categories.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('categories.toasts.updateError'));
     } catch (error) {
       console.error('[categories-page] Failed to update category:', error);
       dialogContent.setSubmitError('categories.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('categories.toasts.updateError'));
     }
   }
 
@@ -388,12 +393,15 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
       if ((result.row && result.row.archived) || result.changed > 0) {
         await this.loadCategories();
+        toast.success(this.translateService.instant('categories.toasts.archiveSuccess'));
         return;
       }
 
       await this.loadCategories();
+      toast.error(this.translateService.instant('categories.toasts.archiveError'));
     } catch (error) {
       console.error('[categories-page] Failed to archive category:', error);
+      toast.error(this.translateService.instant('categories.toasts.archiveError'));
       await this.loadCategories();
     }
   }
@@ -407,6 +415,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
       const created = await this.categoriesService.create(payload);
       if (!created) {
         dialogContent.setSubmitError('categories.dialog.add.errors.createFailed');
+        toast.error(this.translateService.instant('categories.toasts.createError'));
         return;
       }
 
@@ -414,9 +423,11 @@ export class CategoriesPage implements OnInit, OnDestroy {
       this.page.set(targetPage);
       await this.loadCategories(targetPage);
       dialogRef.close(created);
+      toast.success(this.translateService.instant('categories.toasts.createSuccess'));
     } catch (error) {
       console.error('[categories-page] Failed to create category:', error);
       dialogContent.setSubmitError('categories.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('categories.toasts.createError'));
     }
   }
 }

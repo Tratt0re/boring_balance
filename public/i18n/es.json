@@ -733,6 +733,14 @@
         "cancel": "Cancelar",
         "archive": "Archivar"
       }
+    },
+    "toasts": {
+      "createSuccess": "Cuenta creada correctamente.",
+      "createError": "No se pudo crear la cuenta.",
+      "updateSuccess": "Cuenta actualizada correctamente.",
+      "updateError": "No se pudo actualizar la cuenta.",
+      "archiveSuccess": "Cuenta archivada correctamente.",
+      "archiveError": "No se pudo archivar la cuenta."
     }
   },
   "categories": {
@@ -792,6 +800,14 @@
         "cancel": "Cancelar",
         "archive": "Archivar"
       }
+    },
+    "toasts": {
+      "createSuccess": "Categoria creada correctamente.",
+      "createError": "No se pudo crear la categoria.",
+      "updateSuccess": "Categoria actualizada correctamente.",
+      "updateError": "No se pudo actualizar la categoria.",
+      "archiveSuccess": "Categoria archivada correctamente.",
+      "archiveError": "No se pudo archivar la categoria."
     }
   },
   "budgets": {
@@ -846,6 +862,14 @@
         "cancel": "Cancelar",
         "delete": "Eliminar"
       }
+    },
+    "toasts": {
+      "createSuccess": "Presupuesto creado correctamente.",
+      "createError": "No se pudo crear el presupuesto.",
+      "updateSuccess": "Presupuesto actualizado correctamente.",
+      "updateError": "No se pudo actualizar el presupuesto.",
+      "deleteSuccess": "Presupuesto eliminado correctamente.",
+      "deleteError": "No se pudo eliminar el presupuesto."
     },
     "analysis": {
       "title": "Analisis de presupuesto",
@@ -1005,7 +1029,25 @@
         "empty": {
           "account": "Aun no hay cuentas. Agrega una antes de filtrar transferencias."
         }
+      },
+      "toasts": {
+        "createSuccess": "Transferencia creada correctamente.",
+        "createError": "No se pudo crear la transferencia.",
+        "updateSuccess": "Transferencia actualizada correctamente.",
+        "updateError": "No se pudo actualizar la transferencia.",
+        "deleteSuccess": "Transferencia eliminada correctamente.",
+        "deleteError": "No se pudo eliminar la transferencia."
       }
+    },
+    "toasts": {
+      "createSuccess": "Movimiento creado correctamente.",
+      "createError": "No se pudo crear el movimiento.",
+      "updateSuccess": "Movimiento actualizado correctamente.",
+      "updateError": "No se pudo actualizar el movimiento.",
+      "deleteSuccess": "Movimiento eliminado correctamente.",
+      "deleteError": "No se pudo eliminar el movimiento.",
+      "duplicateSuccess": "Movimiento duplicado correctamente.",
+      "duplicateError": "No se pudo duplicar el movimiento."
     }
   },
   "options": {
@@ -1292,6 +1334,14 @@
       },
       "fallbackError": "Error inesperado"
     },
+    "toasts": {
+      "createSuccess": "Evento recurrente creado correctamente.",
+      "createError": "No se pudo crear el evento recurrente.",
+      "updateSuccess": "Evento recurrente actualizado correctamente.",
+      "updateError": "No se pudo actualizar el evento recurrente.",
+      "deleteSuccess": "Evento recurrente eliminado correctamente.",
+      "deleteError": "No se pudo eliminar el evento recurrente."
+    },
     "errors": {
       "loadFailedWithError": "No se pudieron cargar los eventos recurrentes: {{error}}",
       "loadUnexpected": "Error inesperado al cargar los eventos recurrentes."
@@ -1373,7 +1423,9 @@
     },
     "toasts": {
       "createSuccess": "Instantánea añadida correctamente.",
+      "createError": "No se pudo añadir la instantánea.",
       "updateSuccess": "Instantánea actualizada correctamente.",
+      "updateError": "No se pudo actualizar la instantánea.",
       "deleteSuccess": "Instantánea eliminada correctamente.",
       "deleteError": "No se pudo eliminar la instantánea."
     }

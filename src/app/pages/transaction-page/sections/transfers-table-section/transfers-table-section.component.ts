@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { toast } from 'ngx-sonner';
 
 import {
   type ActionItem,
@@ -916,8 +917,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.transfers.update((rows) =>
         rows.map((row) => (row.transferId === transfer.transferId ? result.transfer : row)),
       );
+      toast.success(this.translateService.instant('transactions.transfers.toasts.updateSuccess'));
     } catch (error) {
       console.error('[transfers-table-section] Failed to update transfer settled:', error);
+      toast.error(this.translateService.instant('transactions.transfers.toasts.updateError'));
       await this.reloadTransfersPage();
     }
   }
@@ -933,9 +936,11 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.persistTableState();
       await this.reloadTransfersPage();
       dialogRef.close(created);
+      toast.success(this.translateService.instant('transactions.transfers.toasts.createSuccess'));
     } catch (error) {
       console.error('[transfers-table-section] Failed to create transfer:', error);
       dialogContent.setSubmitError('transactions.transfers.dialog.add.errors.createFailed');
+      toast.error(this.translateService.instant('transactions.transfers.toasts.createError'));
     }
   }
 
@@ -948,9 +953,11 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       const updated = await this.transactionsService.updateTransfer(payload);
       await this.reloadTransfersPage();
       dialogRef.close(updated);
+      toast.success(this.translateService.instant('transactions.transfers.toasts.updateSuccess'));
     } catch (error) {
       console.error('[transfers-table-section] Failed to update transfer:', error);
       dialogContent.setSubmitError('transactions.transfers.dialog.edit.errors.updateFailed');
+      toast.error(this.translateService.instant('transactions.transfers.toasts.updateError'));
     }
   }
 
@@ -959,12 +966,15 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       const result = await this.transactionsService.deleteTransfer({ transfer_id: transferId });
       if (result.changed > 0) {
         await this.reloadTransfersPage();
+        toast.success(this.translateService.instant('transactions.transfers.toasts.deleteSuccess'));
         return;
       }
 
       await this.reloadTransfersPage();
+      toast.error(this.translateService.instant('transactions.transfers.toasts.deleteError'));
     } catch (error) {
       console.error('[transfers-table-section] Failed to delete transfer:', error);
+      toast.error(this.translateService.instant('transactions.transfers.toasts.deleteError'));
       await this.reloadTransfersPage();
     }
   }
