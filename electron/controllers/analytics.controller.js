@@ -15,6 +15,7 @@ const FILTER_FIELDS = new Set([
   'to',
   'date_from',
   'date_to',
+  'useValuation',
   'account_ids',
   'account_types',
   'category_ids',
@@ -71,6 +72,7 @@ function normalizePayloadFilters(payload) {
   return pickDefined({
     date_from: dateFrom,
     date_to: dateTo,
+    useValuation: normalizeOptionalBooleanFlag(filtersInput.useValuation, `${filtersLabel}.useValuation`),
     account_ids: normalizeOptionalIdArray(filtersInput.account_ids, `${filtersLabel}.account_ids`, { dedupe: true }),
     account_types: normalizeOptionalEnumArray(
       filtersInput.account_types,

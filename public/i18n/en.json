@@ -167,6 +167,15 @@
           "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         },
+        "dashboardValuationMode": {
+          "title": "Dashboard net worth mode",
+          "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
+          "fieldLabel": "Dashboard calculations",
+          "options": {
+            "include": "Include valuations",
+            "exclude": "Ledger balances only"
+          }
+        },
         "currency": {
           "title": "Currency symbol",
           "description": "Select the symbol you want to see next to balances, transactions, and reports.",
@@ -544,11 +553,13 @@
           "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
           "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
           "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
-          "current": "Current"
+          "current": "Current",
+          "ledgerBalance": "Ledger Balance",
+          "marketValue": "Market Value"
         },
         "total": "Total",
         "withValuations": "With valuations",
-        "liquidAssets": "Liquid assets",
+        "liquidAssets": "Liquidity",
         "investments": "Investments",
         "snapshotBased": {
           "today": "Snapshots updated today",

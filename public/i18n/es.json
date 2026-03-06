@@ -167,6 +167,15 @@
           "description": "Elige el idioma de la navegacion, las etiquetas y los mensajes de toda la app.",
           "fieldLabel": "Idioma de la app"
         },
+        "dashboardValuationMode": {
+          "title": "Modo de patrimonio en el panel",
+          "description": "Elige si el patrimonio y la asignacion de la Vista general deben incluir instantaneas de valoracion cuando existan. Si lo desactivas, esas tarjetas usan solo saldos contables de movimientos.",
+          "fieldLabel": "Calculo del panel",
+          "options": {
+            "include": "Incluir valoraciones",
+            "exclude": "Solo saldos contables"
+          }
+        },
         "currency": {
           "title": "Simbolo de moneda",
           "description": "Selecciona el simbolo que quieres ver junto a balances, movimientos y reportes.",
@@ -474,11 +483,13 @@
           "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
           "averageDailyChangeNegative": "Tu patrimonio neto total esta disminuyendo en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
           "averageDailyChangeNeutral": "Tu patrimonio neto total no presenta cambios promedio por dia este mes (vs el cierre del mes anterior).",
-          "current": "Actual"
+          "current": "Actual",
+          "ledgerBalance": "Saldo contable",
+          "marketValue": "Valor de mercado"
         },
         "total": "Total",
         "withValuations": "Con valoraciones",
-        "liquidAssets": "Assets liquidos",
+        "liquidAssets": "liquidez",
         "investments": "Inversiones",
         "snapshotBased": {
           "today": "Instantaneas actualizadas hoy",

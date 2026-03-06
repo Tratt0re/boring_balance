@@ -205,12 +205,16 @@ function selectTransfers(database, where, orderBy = TRANSFER_ORDER) {
   return selectRows(database, 'transfers', where, { orderBy });
 }
 
-function selectLatestValuationByAccountIds(database, accountIds = []) {
-  const normalizedAccountIds = Array.from(new Set(
+function normalizeAccountIds(accountIds = []) {
+  return Array.from(new Set(
     accountIds
       .map((accountId) => Number(accountId))
       .filter((accountId) => Number.isInteger(accountId) && accountId > 0),
   ));
+}
+
+function selectLatestValuationByAccountIds(database, accountIds = []) {
+  const normalizedAccountIds = normalizeAccountIds(accountIds);
   if (normalizedAccountIds.length === 0) {
     return [];
   }
@@ -237,15 +241,48 @@ function selectLatestValuationByAccountIds(database, accountIds = []) {
   return database.prepare(sql).all(normalizedAccountIds);
 }
 
-function selectLatestSnapshotTimestampMs(database) {
-  const row = database.prepare(`
-    SELECT
-      MAX(valued_at) AS latest_snapshot_at_ms
-    FROM account_valuations
-  `).get();
+function selectLatestSnapshotTimestampMs(database, accountIds) {
+  let row;
+  if (accountIds === undefined) {
+    row = database.prepare(`
+      SELECT
+        MAX(valued_at) AS latest_snapshot_at_ms
+      FROM account_valuations
+    `).get();
+  } else {
+    const normalizedAccountIds = normalizeAccountIds(accountIds);
+    if (normalizedAccountIds.length === 0) {
+      return null;
+    }
+
+    const placeholdersSql = normalizedAccountIds.map(() => '?').join(', ');
+    row = database.prepare(`
+      SELECT
+        MAX(valued_at) AS latest_snapshot_at_ms
+      FROM account_valuations
+      WHERE account_id IN (${placeholdersSql})
+    `).get(normalizedAccountIds);
+  }
+
   const latestSnapshotAtMs = Number(row?.latest_snapshot_at_ms);
 
   return Number.isFinite(latestSnapshotAtMs) ? latestSnapshotAtMs : null;
+}
+
+function resolveUseValuationFlag(filters = {}) {
+  if (filters.useValuation === undefined) {
+    return true;
+  }
+
+  if (filters.useValuation === true || filters.useValuation === 1) {
+    return true;
+  }
+
+  if (filters.useValuation === false || filters.useValuation === 0) {
+    return false;
+  }
+
+  return Number(filters.useValuation) === 1;
 }
 
 function normalizeBucketsToTargetTotalCents(buckets, targetTotalCents) {
@@ -430,6 +467,7 @@ function receivablesPayables(filters = {}) {
 
 function netWorthByAccount(filters = {}) {
   const effectiveFilters = filters.settled === undefined ? { ...filters, settled: 1 } : filters;
+  const useValuation = resolveUseValuationFlag(effectiveFilters);
   const database = getDatabase();
   const filterContext = resolveFilterContext(database, effectiveFilters);
   const rows = selectTransactions(database, buildTransactionsWhere(effectiveFilters, filterContext), TRANSACTION_ASC_ORDER);
@@ -443,53 +481,20 @@ function netWorthByAccount(filters = {}) {
     currentTotalCents += amountCents;
   }
 
-  const referenceTimestampMs = Number(
-    effectiveFilters.date_to === undefined ? Date.now() : effectiveFilters.date_to,
-  );
-  const referenceDate = new Date(referenceTimestampMs);
-  const previousMonthEndTimestamp = Number.isFinite(referenceDate.getTime())
-    ? new Date(
-        referenceDate.getFullYear(),
-        referenceDate.getMonth(),
-        0,
-        23,
-        59,
-        59,
-        999,
-      ).getTime()
-    : null;
-  let previousMonthTotalCents = 0;
-
-  if (previousMonthEndTimestamp !== null) {
-    const previousMonthFilters = {
-      ...effectiveFilters,
-      date_to: previousMonthEndTimestamp,
-    };
-    const previousMonthRows = selectTransactions(
-      database,
-      buildTransactionsWhere(previousMonthFilters, filterContext),
-      TRANSACTION_ASC_ORDER,
-    );
-
-    for (const row of previousMonthRows) {
-      previousMonthTotalCents += Number(row.amount_cents ?? 0);
-    }
-  }
-
   const accountsToReport = filterContext.hasAccountFilter ? filterContext.filteredAccounts : filterContext.accounts;
   const sortedAccounts = [...accountsToReport].sort((left, right) => Number(left.id) - Number(right.id));
-  const latestSnapshotAtMs = selectLatestSnapshotTimestampMs(database);
-  const hasSnapshots = latestSnapshotAtMs !== null;
+  const sortedAccountIds = sortedAccounts.map((account) => Number(account.id));
+  const latestSnapshotAtMs = useValuation ? selectLatestSnapshotTimestampMs(database, sortedAccountIds) : null;
+  const hasSnapshots = useValuation && latestSnapshotAtMs !== null;
   const daysSinceLatestSnapshot = hasSnapshots
     ? elapsedDaysBetweenUnixTimestampMilliseconds(latestSnapshotAtMs, Date.now())
     : null;
-  const latestValuationByAccountRows = selectLatestValuationByAccountIds(
-    database,
-    sortedAccounts.map((account) => Number(account.id)),
-  );
-  const latestValuationValueByAccountId = new Map(
-    latestValuationByAccountRows.map((row) => [Number(row.account_id), Number(row.value_cents)]),
-  );
+  const latestValuationValueByAccountId = hasSnapshots
+    ? new Map(selectLatestValuationByAccountIds(
+      database,
+      sortedAccountIds,
+    ).map((row) => [Number(row.account_id), Number(row.value_cents)]))
+    : new Map();
   const valuedBalanceByAccountId = new Map();
   let netWorthValuedCents = null;
   let valuedTotalCents = 0;
@@ -538,11 +543,6 @@ function netWorthByAccount(filters = {}) {
           : null,
       };
     }),
-    totals: {
-      current_total_cents: currentTotalCents,
-      previous_month_total_cents: previousMonthTotalCents,
-      previous_month_delta_cents: currentTotalCents - previousMonthTotalCents,
-    },
     netWorthLedgerCents: currentTotalCents,
     netWorthValuedCents,
     netWorthCents,
@@ -826,6 +826,7 @@ function buildCompareMonthSnapshot(selection) {
   };
   const netWorth = netWorthByAccount({
     date_to: period.to,
+    useValuation: true,
   });
   const expensesByCategory = expensesByCategoryByMonth(monthFilters);
   const incomesByCategory = incomesByCategoryByMonth(monthFilters);

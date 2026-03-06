@@ -23,11 +23,15 @@ export class LocalPreferencesService {
   private readonly currencyFormatStyleSignal = signal<CurrencyFormatStyle>(
     LOCAL_PREFERENCE_DEFAULTS.currencyFormatStyle,
   );
+  private readonly dashboardUseValuationSignal = signal<boolean>(
+    LOCAL_PREFERENCE_DEFAULTS.dashboardUseValuation,
+  );
 
   readonly themePreference = this.themePreferenceSignal.asReadonly();
   readonly languagePreference = this.languagePreferenceSignal.asReadonly();
   readonly currencyPreference = this.currencyPreferenceSignal.asReadonly();
   readonly currencyFormatStylePreference = this.currencyFormatStyleSignal.asReadonly();
+  readonly dashboardUseValuationPreference = this.dashboardUseValuationSignal.asReadonly();
 
   init(): void {
     if (!this.isBrowser) {
@@ -39,6 +43,7 @@ export class LocalPreferencesService {
     this.setLanguage(this.getLanguage());
     this.setCurrency(this.getCurrency());
     this.setCurrencyFormatStyle(this.getCurrencyFormatStyle());
+    this.setDashboardUseValuation(this.getDashboardUseValuation());
     this.setOnboardingCompleted(this.getOnboardingCompleted());
   }
 
@@ -99,6 +104,24 @@ export class LocalPreferencesService {
     const normalizedCurrencyFormatStyle = normalizeCurrencyFormatStyle(currencyFormatStyle);
     this.currencyFormatStyleSignal.set(normalizedCurrencyFormatStyle);
     this.setText(LocalPreferenceKey.CURRENCY_FORMAT_STYLE, normalizedCurrencyFormatStyle);
+  }
+
+  getDashboardUseValuation(): boolean {
+    const value = this.getText(LocalPreferenceKey.DASHBOARD_USE_VALUATION);
+    if (value === '1' || value === 'true') {
+      return true;
+    }
+    if (value === '0' || value === 'false') {
+      return false;
+    }
+
+    return LOCAL_PREFERENCE_DEFAULTS.dashboardUseValuation;
+  }
+
+  setDashboardUseValuation(useValuation: boolean): void {
+    const normalizedUseValuation = useValuation === false ? false : true;
+    this.dashboardUseValuationSignal.set(normalizedUseValuation);
+    this.setText(LocalPreferenceKey.DASHBOARD_USE_VALUATION, normalizedUseValuation ? '1' : '0');
   }
 
   getOnboardingCompleted(): boolean {

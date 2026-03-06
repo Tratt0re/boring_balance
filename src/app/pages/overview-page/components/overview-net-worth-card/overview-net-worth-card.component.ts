@@ -18,8 +18,8 @@ import type {
   AnalyticsNetWorthSnapshotsDto,
 } from '@/dtos';
 import { AnalyticsService } from '@/services/analytics.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
-import { type ZardIcon, ZardIconComponent } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import { toMonthRangeTimestamps } from '../overview-cards.utils';
 
@@ -38,7 +38,6 @@ const INVESTMENT_ACCOUNT_TYPES = new Set(['brokerage', 'crypto']);
   imports: [
     AppBaseCardComponent,
     TranslatePipe,
-    ZardIconComponent,
     ZardLoaderComponent,
   ],
   templateUrl: './overview-net-worth-card.component.html',
@@ -57,8 +56,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   protected readonly totalNetWorthCents = signal(0);
   protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
   protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
-  protected readonly totalNetWorthPreviousMonthTotalCents = signal(0);
-  protected readonly totalNetWorthPreviousMonthDeltaCents = signal(0);
   protected readonly totalLiquidAssetsCents = signal(0);
   protected readonly totalInvestmentsCents = signal(0);
   protected readonly totalReceivablesCents = signal(0);
@@ -68,45 +65,13 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
     && this.snapshotRecency().hasSnapshots
     && this.snapshotRecency().daysSinceLatestSnapshot !== null,
   );
-  protected readonly totalNetWorthPreviousMonthDeltaPercent = computed(() => {
-    const previousTotalCents = this.totalNetWorthPreviousMonthTotalCents();
-    const deltaCents = this.totalNetWorthPreviousMonthDeltaCents();
-    if (!Number.isFinite(previousTotalCents) || Math.abs(previousTotalCents) < 1) {
-      return 0;
-    }
-
-    return (deltaCents / Math.abs(previousTotalCents)) * 100;
-  });
-  protected readonly totalNetWorthPreviousMonthDeltaTrendIcon = computed<ZardIcon>(() => {
-    const deltaCents = this.totalNetWorthPreviousMonthDeltaCents();
-    if (deltaCents > 0) {
-      return 'arrow-up';
-    }
-
-    if (deltaCents < 0) {
-      return 'arrow-down';
-    }
-
-    return 'circle';
-  });
-  protected readonly totalNetWorthPreviousMonthDeltaColor = computed(() => {
-    const deltaCents = this.totalNetWorthPreviousMonthDeltaCents();
-    if (deltaCents > 0) {
-      return 'var(--chart-income)';
-    }
-
-    if (deltaCents < 0) {
-      return 'var(--chart-expense)';
-    }
-
-    return 'var(--muted-foreground)';
-  });
   protected readonly totalAfterReceivablesPayablesCents = computed(
     () => this.totalNetWorthCents() + this.totalReceivablesCents() - this.totalPayablesCents(),
   );
 
   constructor(
     private readonly analyticsService: AnalyticsService,
+    private readonly localPreferencesService: LocalPreferencesService,
     private readonly numberFormatService: NumberFormatService,
   ) {}
 
@@ -131,22 +96,15 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
     return this.numberFormatService.formatCurrency(amount);
   }
 
-  protected formatPercent(value: number): string {
-    const normalizedValue = Number.isFinite(value) ? Math.abs(value) : 0;
-    return this.numberFormatService.formatPercent(normalizedValue, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
   private async loadData(): Promise<void> {
     this.isLoading.set(true);
     this.loadError.set(null);
 
     try {
       const { from, to } = toMonthRangeTimestamps(this.year(), this.monthIndex());
+      const useValuation = this.localPreferencesService.dashboardUseValuationPreference();
       const [netWorthResponse, receivablesPayablesResponse] = await Promise.all([
-        this.analyticsService.netWorthByAccount(),
+        this.analyticsService.netWorthByAccount({ useValuation }),
         this.analyticsService.receivablesPayables({
           filters: {
             from,
@@ -164,8 +122,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       this.netWorthMode.set('ledger');
       this.snapshotRecency.set(EMPTY_SNAPSHOT_RECENCY);
       this.snapshotsChange.emit(EMPTY_SNAPSHOT_RECENCY);
-      this.totalNetWorthPreviousMonthTotalCents.set(0);
-      this.totalNetWorthPreviousMonthDeltaCents.set(0);
       this.totalLiquidAssetsCents.set(0);
       this.totalInvestmentsCents.set(0);
       this.totalReceivablesCents.set(0);
@@ -200,7 +156,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
     const normalizedDaysSinceLatestSnapshot = snapshots.daysSinceLatestSnapshot === null
       ? null
       : Number(snapshots.daysSinceLatestSnapshot);
-    const previousMonthDeltaCents = Number(netWorthResponse.totals?.previous_month_delta_cents ?? 0);
     this.totalNetWorthCents.set(Number.isFinite(totalNetWorthCents) ? totalNetWorthCents : totalNetWorthFromRowsCents);
     this.netWorthMode.set(netWorthMode);
     const normalizedSnapshotRecency: AnalyticsNetWorthSnapshotsDto = {
@@ -213,8 +168,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
     };
     this.snapshotRecency.set(normalizedSnapshotRecency);
     this.snapshotsChange.emit(normalizedSnapshotRecency);
-    this.totalNetWorthPreviousMonthTotalCents.set(Number(netWorthResponse.totals?.previous_month_total_cents ?? 0));
-    this.totalNetWorthPreviousMonthDeltaCents.set(Number.isFinite(previousMonthDeltaCents) ? previousMonthDeltaCents : 0);
     this.totalLiquidAssetsCents.set(Number.isFinite(liquidAssetsCents) ? liquidAssetsCents : liquidAssetsCentsFallback);
     this.totalInvestmentsCents.set(Number.isFinite(investmentsCents) ? investmentsCents : investmentsCentsFallback);
   }

@@ -46,7 +46,16 @@ function elapsedDaysBetweenUnixTimestampMilliseconds(startUnixTimestampMilliseco
     throw new Error('startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be finite numbers.');
   }
 
-  return Math.floor((normalizedEnd - normalizedStart) / MILLISECONDS_PER_DAY);
+  const startDate = new Date(normalizedStart);
+  const endDate = new Date(normalizedEnd);
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+    throw new Error('startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be valid Unix timestamps in milliseconds.');
+  }
+
+  const startDay = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const endDay = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  return Math.floor((endDay - startDay) / MILLISECONDS_PER_DAY);
 }
 
 module.exports = {

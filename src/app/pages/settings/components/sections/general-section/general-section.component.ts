@@ -15,6 +15,8 @@ const CUSTOM_CURRENCY_VALUE = '__custom__';
 const DEFAULT_CUSTOM_CURRENCY_SYMBOL = 'CHF';
 const COMMON_CURRENCY_SYMBOLS = ['€', '$', '£', '¥'] as const;
 const CURRENCY_FORMAT_STYLE_VALUES: readonly CurrencyFormatStyle[] = ['US', 'EU_DOT', 'EU_SPACE'] as const;
+const DASHBOARD_VALUATION_MODE_VALUES = ['include', 'exclude'] as const;
+type DashboardValuationMode = (typeof DASHBOARD_VALUATION_MODE_VALUES)[number];
 
 @Component({
   selector: 'app-general-section',
@@ -31,13 +33,18 @@ export class GeneralSectionComponent {
   protected readonly themeOptions = [EDarkModes.SYSTEM, EDarkModes.LIGHT, EDarkModes.DARK] as const;
   protected readonly commonCurrencySymbols = COMMON_CURRENCY_SYMBOLS;
   protected readonly currencyFormatStyleValues = CURRENCY_FORMAT_STYLE_VALUES;
+  protected readonly dashboardValuationModeValues = DASHBOARD_VALUATION_MODE_VALUES;
   protected readonly languages = this.i18nService.supportedLanguages;
   protected readonly selectedTheme = this.darkMode.currentTheme;
   protected readonly selectedLanguage = this.i18nService.language;
   protected readonly selectedCurrencySymbol = this.localPreferencesService.currencyPreference;
   protected readonly selectedCurrencyFormatStyle = this.localPreferencesService.currencyFormatStylePreference;
+  protected readonly selectedDashboardUseValuation = this.localPreferencesService.dashboardUseValuationPreference;
   protected readonly selectedCurrencyOption = computed(() =>
     this.isCommonCurrencySymbol(this.selectedCurrencySymbol()) ? this.selectedCurrencySymbol() : CUSTOM_CURRENCY_VALUE,
+  );
+  protected readonly selectedDashboardValuationMode = computed<DashboardValuationMode>(() =>
+    this.selectedDashboardUseValuation() ? 'include' : 'exclude',
   );
 
   protected getLanguageLabelKey(language: string): string {
@@ -58,6 +65,10 @@ export class GeneralSectionComponent {
 
   protected currencyFormatStyleLabelKey(style: CurrencyFormatStyle): string {
     return `settings.general.cards.numberFormat.options.${style}`;
+  }
+
+  protected dashboardValuationModeLabelKey(mode: DashboardValuationMode): string {
+    return `settings.general.cards.dashboardValuationMode.options.${mode}`;
   }
 
   protected onThemeChange(value: string | string[]): void {
@@ -118,6 +129,18 @@ export class GeneralSectionComponent {
       || selectedValue === 'EU_SPACE'
     ) {
       this.localPreferencesService.setCurrencyFormatStyle(selectedValue);
+    }
+  }
+
+  protected onDashboardValuationModeChange(value: string | string[]): void {
+    const selectedValue = this.asSingleValue(value);
+    if (selectedValue === 'include') {
+      this.localPreferencesService.setDashboardUseValuation(true);
+      return;
+    }
+
+    if (selectedValue === 'exclude') {
+      this.localPreferencesService.setDashboardUseValuation(false);
     }
   }
 

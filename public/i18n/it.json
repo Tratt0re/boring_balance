@@ -167,6 +167,15 @@
           "description": "Scegli la lingua usata in navigazione, etichette e messaggi in tutta l'app.",
           "fieldLabel": "Lingua app"
         },
+        "dashboardValuationMode": {
+          "title": "Modalita patrimonio dashboard",
+          "description": "Scegli se patrimonio netto e allocazione nella Panoramica devono includere le istantanee di valutazione quando disponibili. Se disattivi, queste card usano solo i saldi contabili dai movimenti.",
+          "fieldLabel": "Calcolo dashboard",
+          "options": {
+            "include": "Includi valutazioni",
+            "exclude": "Solo saldi contabili"
+          }
+        },
         "currency": {
           "title": "Simbolo valuta",
           "description": "Seleziona il simbolo che vuoi vedere accanto a saldi, movimenti e report.",
@@ -544,11 +553,13 @@
           "averageDailyChangePositive": "Il tuo patrimonio netto totale sta aumentando in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
           "averageDailyChangeNegative": "Il tuo patrimonio netto totale sta diminuendo in media di {{value}} al giorno questo mese (rispetto alla fine del mese scorso).",
           "averageDailyChangeNeutral": "Il tuo patrimonio netto totale non varia in media al giorno questo mese (rispetto alla fine del mese scorso).",
-          "current": "Attuale"
+          "current": "Attuale",
+          "ledgerBalance": "Saldo contabile",
+          "marketValue": "Valore di mercato"
         },
         "total": "Totale",
         "withValuations": "Con valutazioni",
-        "liquidAssets": "Asset liquidi",
+        "liquidAssets": "Liquidità",
         "investments": "Investimenti",
         "snapshotBased": {
           "today": "Istantanee aggiornate oggi",

@@ -8,6 +8,7 @@ export interface AnalyticsFiltersDto {
   readonly to?: UnixTimestampMilliseconds;
   readonly date_from?: UnixTimestampMilliseconds;
   readonly date_to?: UnixTimestampMilliseconds;
+  readonly useValuation?: BooleanFlagInput;
   readonly account_ids?: readonly RowId[];
   readonly account_types?: readonly AccountType[];
   readonly category_ids?: readonly RowId[];
@@ -64,11 +65,6 @@ export interface AnalyticsNetWorthSnapshotsDto {
 
 export interface AnalyticsNetWorthByAccountResponseDto {
   readonly rows: readonly AnalyticsNetWorthByAccountRowDto[];
-  readonly totals?: {
-    readonly current_total_cents: number;
-    readonly previous_month_total_cents: number;
-    readonly previous_month_delta_cents: number;
-  };
   readonly netWorthCents: number;
   readonly netWorthMode: 'valued' | 'ledger';
   readonly netWorthLedgerCents: number;

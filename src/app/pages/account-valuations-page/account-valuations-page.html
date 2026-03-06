@@ -111,8 +111,18 @@
         [hoverable]="true"
         [selectable]="false"
         [hasActionColumn]="false"
-        [showPagination]="false"
+        [showPagination]="true"
+        [currentPage]="page()"
+        [totalPages]="pageCount()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        [maxVisiblePages]="5"
+        [pageSizeLabel]="'common.pagination.rowsPerPage' | translate"
+        [showPageSizeSelector]="true"
+        [showTopPagination]="true"
         [currencyCode]="currencyCode()"
+        (pageChange)="onPageChange($event)"
+        (pageSizeChange)="onPageSizeChange($event)"
       ></app-data-table>
     </div>
   }

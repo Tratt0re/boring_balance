@@ -44,6 +44,24 @@
           {{ 'settings.general.cards.language.description' | translate }}
         </p>
       </div>
+
+      <div>
+        <label class="mb-1 block text-sm font-medium" for="settings-dashboard-valuation-mode">
+          {{ 'settings.general.cards.dashboardValuationMode.fieldLabel' | translate }}
+        </label>
+        <z-select
+          id="settings-dashboard-valuation-mode"
+          [zValue]="selectedDashboardValuationMode()"
+          (zSelectionChange)="onDashboardValuationModeChange($event)"
+        >
+          @for (mode of dashboardValuationModeValues; track mode) {
+            <z-select-item [zValue]="mode" [zLabel]="dashboardValuationModeLabelKey(mode) | translate" />
+          }
+        </z-select>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {{ 'settings.general.cards.dashboardValuationMode.description' | translate }}
+        </p>
+      </div>
     </div>
   </section>
 

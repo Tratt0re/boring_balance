@@ -26,6 +26,8 @@ import {
 } from './components/upsert-account-valuation-dialog/upsert-account-valuation-dialog.component';
 
 const AMOUNT_CENTS_DIVISOR = 100;
+const DEFAULT_PAGE_SIZE = 10;
+const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 
 interface ValuationTableRow {
   readonly id: number;
@@ -122,8 +124,13 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   protected readonly accountIconColorHex = computed(() => `var(--${this.accountColorKey()})`);
 
   protected readonly valuations = signal<readonly ValuationTableRow[]>([]);
+  protected readonly total = signal(0);
+  protected readonly page = signal(1);
+  protected readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
+  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
 
   protected readonly transactionBalanceCents = signal<number | null>(null);
   protected readonly latestValueCents = signal<number | null>(null);
@@ -132,12 +139,11 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
   protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
-  protected readonly chartLabels = computed<readonly string[]>(() =>
-    this.valuations().map((v) => v.dateFormatted),
-  );
+  protected readonly chartRows = computed<readonly ValuationTableRow[]>(() => [...this.valuations()].reverse());
+  protected readonly chartLabels = computed<readonly string[]>(() => this.chartRows().map((v) => v.dateFormatted));
 
   protected readonly chartSeries = computed<readonly AppLineChartSeries[]>(() => {
-    const rows = this.valuations();
+    const rows = this.chartRows();
     if (rows.length < 2) {
       return [];
     }
@@ -154,7 +160,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     ];
   });
 
-  protected readonly hasData = computed(() => this.valuations().length > 0);
+  protected readonly hasData = computed(() => this.total() > 0);
   protected readonly hasChartData = computed(() => this.valuations().length >= 2);
   protected readonly valuationTableStructure = createValuationTableStructure(
     (row) => this.onEditValuation(row),
@@ -217,18 +223,40 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     this.releaseToolbarActions = null;
   }
 
+  protected onPageChange(nextPage: number): void {
+    if (nextPage === this.page()) {
+      return;
+    }
+
+    void this.loadValuationsPage(nextPage).catch((error) => {
+      console.error('[account-valuations-page] Failed to change valuations page:', error);
+    });
+  }
+
+  protected onPageSizeChange(nextPageSize: number): void {
+    if (
+      !PAGE_SIZE_OPTIONS.includes(nextPageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ||
+      nextPageSize === this.pageSize()
+    ) {
+      return;
+    }
+
+    this.pageSize.set(nextPageSize);
+    void this.loadValuationsPage(1).catch((error) => {
+      console.error('[account-valuations-page] Failed to change valuations page size:', error);
+    });
+  }
+
   private async loadPageData(accountId: number): Promise<void> {
     this.isLoading.set(true);
     this.loadError.set(null);
 
     try {
-      const [account, netWorthResponse, listResult] = await Promise.all([
+      const [account, netWorthResponse] = await Promise.all([
         this.accountsService.get({ id: accountId }),
-        this.analyticsService.netWorthByAccount({ account_ids: [accountId] }),
-        this.accountValuationsService.list({
-          where: { account_id: accountId },
-          all: true,
-          options: { orderBy: 'valued_at', orderDirection: 'ASC' },
+        this.analyticsService.netWorthByAccount({
+          account_ids: [accountId],
+          useValuation: false,
         }),
       ]);
 
@@ -240,11 +268,11 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
       const accountNetWorthRow = netWorthResponse.rows.find((r) => r.account_id === accountId);
       this.transactionBalanceCents.set(accountNetWorthRow?.net_worth_cents ?? 0);
-
-      const sortedRows = [...listResult.rows].sort((a, b) => a.valuedAt - b.valuedAt);
-      this.applyValuations(sortedRows);
+      await this.loadValuationsPage(this.page());
     } catch (error) {
       this.valuations.set([]);
+      this.total.set(0);
+      this.page.set(1);
       this.transactionBalanceCents.set(null);
       this.latestValueCents.set(null);
       this.deltaCents.set(null);
@@ -258,10 +286,10 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     }
   }
 
-  private applyValuations(sortedRows: readonly AccountValuationModel[]): void {
+  private applyValuations(rows: readonly AccountValuationModel[]): void {
     const txBalanceCents = this.transactionBalanceCents();
 
-    const tableRows: ValuationTableRow[] = sortedRows.map((row) => {
+    const tableRows: ValuationTableRow[] = rows.map((row) => {
       const deltaCents = txBalanceCents !== null ? row.valueCents - txBalanceCents : null;
 
       return {
@@ -276,12 +304,15 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     });
 
     this.valuations.set(tableRows);
+  }
 
-    const latest = sortedRows[sortedRows.length - 1] ?? null;
-    this.latestValueCents.set(latest?.valueCents ?? null);
+  private applyLatestValuation(latestValuation: AccountValuationModel | null): void {
+    const txBalanceCents = this.transactionBalanceCents();
+    const latestValueCents = latestValuation?.valueCents ?? null;
+    this.latestValueCents.set(latestValueCents);
 
-    if (latest !== null && txBalanceCents !== null) {
-      const delta = latest.valueCents - txBalanceCents;
+    if (latestValueCents !== null && txBalanceCents !== null) {
+      const delta = latestValueCents - txBalanceCents;
       this.deltaCents.set(delta);
       this.deltaPct.set(txBalanceCents !== 0 ? (delta / txBalanceCents) * 100 : null);
     } else {
@@ -477,6 +508,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
       dialogRef.close(created);
       toast.success(this.translateService.instant('accountValuations.toasts.createSuccess'));
+      this.page.set(1);
       await this.reloadValuations();
     } catch (error) {
       console.error('[account-valuations-page] Failed to create valuation:', error);
@@ -502,21 +534,31 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   }
 
   private async reloadValuations(): Promise<void> {
+    try {
+      await this.loadValuationsPage(this.page());
+    } catch (error) {
+      console.error('[account-valuations-page] Failed to reload valuations:', error);
+    }
+  }
+
+  private async loadValuationsPage(page = this.page()): Promise<void> {
     if (!this.accountId) {
       return;
     }
 
-    try {
-      const listResult = await this.accountValuationsService.list({
+    const [latestValuation, listResult] = await Promise.all([
+      this.accountValuationsService.getLatestByAccount({ account_id: this.accountId }),
+      this.accountValuationsService.list({
         where: { account_id: this.accountId },
-        all: true,
-        options: { orderBy: 'valued_at', orderDirection: 'ASC' },
-      });
+        page,
+        page_size: this.pageSize(),
+        options: { orderBy: 'valued_at', orderDirection: 'DESC' },
+      }),
+    ]);
 
-      const sortedRows = [...listResult.rows].sort((a, b) => a.valuedAt - b.valuedAt);
-      this.applyValuations(sortedRows);
-    } catch (error) {
-      console.error('[account-valuations-page] Failed to reload valuations:', error);
-    }
+    this.applyLatestValuation(latestValuation);
+    this.applyValuations(listResult.rows);
+    this.total.set(listResult.total);
+    this.page.set(listResult.page);
   }
 }

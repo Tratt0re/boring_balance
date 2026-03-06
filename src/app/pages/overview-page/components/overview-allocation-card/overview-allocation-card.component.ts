@@ -19,6 +19,7 @@ import { DEFAULT_VISUAL_COLOR_KEY } from '@/config/visual-options.config';
 import type { AnalyticsNetWorthByAccountResponse } from '@/dtos';
 import { AccountsService } from '@/services/accounts.service';
 import { AnalyticsService } from '@/services/analytics.service';
+import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import {
@@ -76,6 +77,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
   constructor(
     private readonly analyticsService: AnalyticsService,
     private readonly accountsService: AccountsService,
+    private readonly localPreferencesService: LocalPreferencesService,
     private readonly numberFormatService: NumberFormatService,
     private readonly translateService: TranslateService,
   ) {
@@ -130,8 +132,9 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
     this.loadError.set(null);
 
     try {
+      const useValuation = this.localPreferencesService.dashboardUseValuationPreference();
       const [netWorthResponse, accounts] = await Promise.all([
-        this.analyticsService.netWorthByAccount(),
+        this.analyticsService.netWorthByAccount({ useValuation }),
         this.accountsService.listAll().catch((error) => {
           console.warn('[overview-allocation-card] Failed to load account colors for allocation chart:', error);
           return [];
@@ -248,8 +251,8 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
     }
 
     return [
-      `${this.translate('overview.cards.netWorth.tooltips.current')}: ${this.formatCurrencyFromCents(entry.netWorthLedgerCents)}`,
-      `${this.translate('overview.cards.netWorth.withValuations')}: ${this.formatCurrencyFromCents(entry.netWorthValuedCents)}`,
+      `${this.translate('overview.cards.netWorth.tooltips.ledgerBalance')}: ${this.formatCurrencyFromCents(entry.netWorthLedgerCents)}`,
+      `${this.translate('overview.cards.netWorth.tooltips.marketValue')}: ${this.formatCurrencyFromCents(entry.netWorthValuedCents)}`,
     ];
   }
 
