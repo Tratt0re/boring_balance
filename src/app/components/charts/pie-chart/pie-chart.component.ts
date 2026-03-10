@@ -81,7 +81,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
     const shouldScaleOnFocus = this.scaleOnFocus();
     const normalizedScaleSize = Math.max(0, this.scaleSize());
     const tooltipShowPercentage = this.tooltipShowPercentage();
-    const separatorColor = resolveChartCssColor('--card', '#ffffff');
+    const separatorColor = resolveChartCssColor('--card', resolveChartCssColor('--background', '#ffffff'));
     const labelStyle = 'font-weight: 300; opacity: 0.78;';
     const valueStyle = 'font-weight: 700;';
     const escapeHtml = (value: unknown): string =>
@@ -123,7 +123,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
           ? {
               show: true,
               position: useOutsideLabel ? ('outside' as const) : ('inside' as const),
-              color: useOutsideLabel ? foreground : '#ffffff',
+              color: useOutsideLabel ? foreground : resolveChartCssColor('--primary-foreground', '#ffffff'),
               formatter: labelFormatter,
               fontSize: CHART_LABEL_FONT_SIZE,
               fontFamily,

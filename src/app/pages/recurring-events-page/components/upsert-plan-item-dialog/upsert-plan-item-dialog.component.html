@@ -44,11 +44,11 @@
 
       <div class="grid gap-4 sm:grid-cols-2">
         <div>
-          <label class="mb-1.5 block text-sm font-medium">
+          <label class="mb-1.5 block text-sm font-medium" for="plan-item-start-date">
             {{ 'common.labels.startDate' | translate }}
             <span class="text-destructive">*</span>
           </label>
-          <z-date-picker zIconPosition="right" formControlName="startDate" [disabled]="isEditMode"
+          <z-date-picker zId="plan-item-start-date" zIconPosition="right" formControlName="startDate" [disabled]="isEditMode"
             [placeholder]="'common.placeholders.pickDate' | translate" />
           @if (visibleStartDateErrorKey(); as currentError) {
           <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>

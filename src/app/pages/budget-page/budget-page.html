@@ -6,7 +6,7 @@
         <z-skeleton class="h-60 w-full"></z-skeleton>
       } @else if (loadError(); as loadError) {
         <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-          Failed to load budgets: {{ loadError }}
+          {{ 'budgets.errors.loadFailed' | translate: { error: loadError } }}
         </div>
       } @else {
         <app-data-table
@@ -47,36 +47,22 @@
           </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:min-w-[32rem]">
-          <div class="rounded-lg border border-border/60 bg-card p-3">
-            <p class="text-xs uppercase tracking-wide text-muted-foreground">
-              {{ 'budgets.analysis.metrics.totalBudget' | translate }}
-            </p>
-            <p class="mt-1 text-lg font-semibold tracking-tight">
-              {{ formatCurrency(analysisBudgetTotalAmount()) }}
-            </p>
+        <div class="flex flex-col gap-2 lg:min-w-[24rem]">
+          <div class="flex items-center justify-between gap-6 text-sm">
+            <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.totalBudget' | translate }}</span>
+            <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrency(analysisBudgetTotalAmount()) }}</span>
           </div>
-
-          <div class="rounded-lg border border-border/60 bg-card p-3">
-            <p class="text-xs uppercase tracking-wide text-muted-foreground">
-              {{ 'budgets.analysis.metrics.totalExpenses' | translate }}
-            </p>
-            <p class="mt-1 text-lg font-semibold tracking-tight">
-              {{ formatCurrency(analysisExpensesTotalAmount()) }}
-            </p>
+          <div class="flex items-center justify-between gap-6 text-sm">
+            <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.totalExpenses' | translate }}</span>
+            <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrency(analysisExpensesTotalAmount()) }}</span>
           </div>
-
-          <div class="rounded-lg border border-border/60 bg-card p-3">
-            <p class="text-xs uppercase tracking-wide text-muted-foreground">
-              {{ 'budgets.analysis.metrics.delta' | translate }}
-            </p>
-            <p
-              class="mt-1 text-lg font-semibold tracking-tight"
+          <div class="flex items-center justify-between gap-6 text-sm border-t border-border/50 pt-2 mt-1">
+            <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.delta' | translate }}</span>
+            <span
+              class="font-semibold tabular-nums tracking-tight"
               [class.text-success]="analysisDeltaAmount() > 0"
               [class.text-destructive]="analysisDeltaAmount() < 0"
-            >
-              {{ formatSignedCurrency(analysisDeltaAmount()) }}
-            </p>
+            >{{ formatSignedCurrency(analysisDeltaAmount()) }}</span>
           </div>
         </div>
       </div>

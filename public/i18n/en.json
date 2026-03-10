@@ -811,6 +811,9 @@
       "updateError": "Failed to update account.",
       "archiveSuccess": "Account archived successfully.",
       "archiveError": "Failed to archive account."
+    },
+    "errors": {
+      "loadFailed": "Failed to load accounts: {{error}}"
     }
   },
   "categories": {
@@ -878,6 +881,9 @@
       "updateError": "Failed to update category.",
       "archiveSuccess": "Category archived successfully.",
       "archiveError": "Failed to archive category."
+    },
+    "errors": {
+      "loadFailed": "Failed to load categories: {{error}}"
     }
   },
   "budgets": {
@@ -963,6 +969,9 @@
       "errors": {
         "loadFailedWithError": "Failed to load budget analysis: {{error}}"
       }
+    },
+    "errors": {
+      "loadFailed": "Failed to load budgets: {{error}}"
     }
   },
   "transactions": {
@@ -1040,6 +1049,9 @@
         "updateError": "Failed to update transfer.",
         "deleteSuccess": "Transfer deleted successfully.",
         "deleteError": "Failed to delete transfer."
+      },
+      "errors": {
+        "loadFailed": "Failed to load transfers: {{error}}"
       }
     },
     "table": {
@@ -1118,6 +1130,9 @@
       "deleteError": "Failed to delete transaction.",
       "duplicateSuccess": "Transaction duplicated successfully.",
       "duplicateError": "Failed to duplicate transaction."
+    },
+    "errors": {
+      "loadFailed": "Failed to load transactions: {{error}}"
     }
   },
   "options": {

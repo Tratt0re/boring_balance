@@ -64,8 +64,9 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.icon' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium" for="account-icon">{{ 'common.labels.icon' | translate }}</label>
     <z-combobox
+      zId="account-icon"
       zWidth="full"
       formControlName="icon"
       [placeholder]="'common.placeholders.selectIcon' | translate"

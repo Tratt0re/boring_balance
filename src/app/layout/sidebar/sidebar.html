@@ -44,14 +44,7 @@
                 #routeLinkActive="routerLinkActive"
                 [zTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
                 zPosition="right"
-                [class]="
-                  'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
-                  (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
-                  ' ' +
-                  (routeLinkActive.isActive
-                    ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                    : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground')
-                "
+                [class]="navItemClasses(routeLinkActive.isActive)"
               >
                 <z-icon [zType]="item.icon" class="size-4 shrink-0" />
                 <span

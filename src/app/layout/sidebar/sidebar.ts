@@ -10,6 +10,7 @@ import {
   SidebarGroupLabelComponent,
 } from '@/shared/components/layout/sidebar.component';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type { MenuSectionConfig } from '@/config/menu.config';
 
@@ -85,6 +86,16 @@ export class Sidebar {
     if (this.isSmallScreen()) {
       this.sidebarCollapsedChange.emit(true);
     }
+  }
+
+  protected navItemClasses(isActive: boolean): string {
+    return mergeClasses(
+      'flex h-9 items-center rounded-md px-3 text-sm transition-colors',
+      this.sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3',
+      isActive
+        ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+        : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+    );
   }
 
   protected toggleSidebar(): void {

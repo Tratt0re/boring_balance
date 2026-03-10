@@ -9,23 +9,14 @@
       </p>
     </div>
 
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:min-w-[26rem]">
-      <div class="rounded-lg border border-border/60 bg-card p-3">
-        <p class="text-xs uppercase tracking-wide text-muted-foreground">
-          {{ 'breakdown.metrics.yearTotal' | translate }}
-        </p>
-        <p class="mt-1 text-lg font-semibold tracking-tight">
-          {{ formatCurrencyFromCents(yearTotalCents()) }}
-        </p>
+    <div class="flex flex-col gap-2 lg:min-w-[20rem]">
+      <div class="flex items-center justify-between gap-6 text-sm">
+        <span class="text-muted-foreground">{{ 'breakdown.metrics.yearTotal' | translate }}</span>
+        <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrencyFromCents(yearTotalCents()) }}</span>
       </div>
-
-      <div class="rounded-lg border border-border/60 bg-card p-3">
-        <p class="text-xs uppercase tracking-wide text-muted-foreground">
-          {{ 'breakdown.metrics.avgPerMonth' | translate }}
-        </p>
-        <p class="mt-1 text-lg font-semibold tracking-tight">
-          {{ formatCurrencyFromCents(avgMonthlyCents()) }}
-        </p>
+      <div class="flex items-center justify-between gap-6 text-sm">
+        <span class="text-muted-foreground">{{ 'breakdown.metrics.avgPerMonth' | translate }}</span>
+        <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrencyFromCents(avgMonthlyCents()) }}</span>
       </div>
     </div>
   </div>
