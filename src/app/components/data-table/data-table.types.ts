@@ -10,6 +10,7 @@ export type EditableCellType = 'input' | 'checkbox' | 'select' | 'combobox' | 's
 export type EditableInputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url';
 export type TableWidthValue = string | number;
 export type TableCurrencyIconMode = 'currency-trend' | 'transfer' | 'none';
+export type TableBadgeColorMode = 'badge' | 'icon';
 
 export interface TableDataStructureItem {
   readonly minWidth?: TableWidthValue;
@@ -23,6 +24,7 @@ export interface TableBadgeConfig {
   readonly shape?: ZardBadgeShapeVariants;
   readonly iconColumnKey?: string;
   readonly colorHexColumnKey?: string;
+  readonly colorMode?: TableBadgeColorMode;
   readonly fullWidth?: boolean;
 }
 

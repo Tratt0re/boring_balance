@@ -896,15 +896,26 @@ export class AppDataTableComponent {
       styles.push('display:flex;width:100%;');
     }
 
-    const colorColumnKey = column.badge?.colorHexColumnKey;
-    if (colorColumnKey) {
-      const colorValue = this.getRawValue(row, colorColumnKey);
-      if (typeof colorValue === 'string' && colorValue.trim().length > 0) {
-        styles.push(`background-color:${colorValue};border-color:${colorValue};color:#fff;`);
-      }
+    const colorValue = this.badgeColorHex(row, column);
+    const colorMode = column.badge?.colorMode ?? 'badge';
+    if (colorMode === 'badge' && colorValue) {
+      styles.push(`background-color:${colorValue};border-color:${colorValue};color:#fff;`);
     }
 
     return styles.length > 0 ? styles.join('') : null;
+  }
+
+  protected badgeIconInlineStyle(row: TableRow, column: ColumnDataItem): string | null {
+    if (!this.isBadgeColumn(column)) {
+      return null;
+    }
+
+    if ((column.badge?.colorMode ?? 'badge') !== 'icon') {
+      return null;
+    }
+
+    const colorValue = this.badgeColorHex(row, column);
+    return colorValue ? `color:${colorValue};` : null;
   }
 
   private sortDirectionForColumn(column: TableColumn): TableSortDirection | null {
@@ -997,6 +1008,16 @@ export class AppDataTableComponent {
     }
 
     return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ZardIcon) : null;
+  }
+
+  private badgeColorHex(row: TableRow, column: ColumnDataItem): string | null {
+    const colorColumnKey = column.badge?.colorHexColumnKey;
+    if (!colorColumnKey) {
+      return null;
+    }
+
+    const colorValue = this.getRawValue(row, colorColumnKey);
+    return typeof colorValue === 'string' && colorValue.trim().length > 0 ? colorValue : null;
   }
 
   private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {

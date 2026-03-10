@@ -1,6 +1,6 @@
 <div class="space-y-5">
   @if (showSnapshotsOutdatedBanner()) {
-    <div class="rounded-md border border-warning/25 bg-warning/10 p-3 text-sm text-warning">
+    <div role="alert" class="rounded-md border border-warning/25 bg-warning/10 p-3 text-sm text-warning">
       <p class="font-medium">{{ 'overview.banners.snapshotsOutdated.title' | translate }}</p>
       <p class="mt-1">
         {{ 'overview.banners.snapshotsOutdated.body' | translate: { days: snapshotRecency().daysSinceLatestSnapshot } }}

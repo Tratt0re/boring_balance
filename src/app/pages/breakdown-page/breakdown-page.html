@@ -1,31 +1,33 @@
 <section class="flex min-h-full flex-col">
-  <div class="overflow-hidden transition-all duration-200 ease-out" [class.max-h-64]="showOptionsCard()"
-    [class.opacity-100]="showOptionsCard()" [class.mb-6]="showOptionsCard()"
-    [class.pointer-events-none]="!showOptionsCard()" [class.max-h-0]="!showOptionsCard()"
-    [class.opacity-0]="!showOptionsCard()" [class.mb-0]="!showOptionsCard()"
-    [attr.aria-hidden]="showOptionsCard() ? null : 'true'">
-    <div class="rounded-lg border border-border/60 bg-card p-3">
-      @if (activeSectionView() === 'money-flow') {
-      <z-switch [zChecked]="showMoneyFlowAllocationTargets()" [zDisabled]="!showOptionsCard()"
-        (zCheckedChange)="showMoneyFlowAllocationTargets.set($event)">
-        <span #labelContent>
-          {{ 'breakdown.moneyFlowOptions.showAllocationTargets.label' | translate }}
-        </span>
-      </z-switch>
-      <p class="mt-2 text-xs text-muted-foreground">
-        {{ 'breakdown.moneyFlowOptions.showAllocationTargets.hint' | translate }}
-      </p>
-      } @else {
-      <z-switch [zChecked]="useElapsedMonthsAverage()" [zDisabled]="!showOptionsCard()"
-        (zCheckedChange)="useElapsedMonthsAverage.set($event)" class="gap-2">
-        <span #labelContent>
-          {{ 'breakdown.averageMode.label' | translate }}
-        </span>
-      </z-switch>
-      <p class="mt-2 text-xs text-muted-foreground">
-        {{ 'breakdown.averageMode.hint' | translate }}
-      </p>
-      }
+  <div
+    class="grid transition-[grid-template-rows,opacity] duration-200 ease-out"
+    [class]="showOptionsCard() ? 'grid-rows-[1fr] opacity-100 mb-6' : 'grid-rows-[0fr] opacity-0 pointer-events-none'"
+    [attr.aria-hidden]="showOptionsCard() ? null : 'true'"
+  >
+    <div class="overflow-hidden">
+      <div class="rounded-lg border border-border/60 bg-card p-3">
+        @if (activeSectionView() === 'money-flow') {
+        <z-switch [zChecked]="showMoneyFlowAllocationTargets()" [zDisabled]="!showOptionsCard()"
+          (zCheckedChange)="showMoneyFlowAllocationTargets.set($event)">
+          <span #labelContent>
+            {{ 'breakdown.moneyFlowOptions.showAllocationTargets.label' | translate }}
+          </span>
+        </z-switch>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {{ 'breakdown.moneyFlowOptions.showAllocationTargets.hint' | translate }}
+        </p>
+        } @else {
+        <z-switch [zChecked]="useElapsedMonthsAverage()" [zDisabled]="!showOptionsCard()"
+          (zCheckedChange)="useElapsedMonthsAverage.set($event)" class="gap-2">
+          <span #labelContent>
+            {{ 'breakdown.averageMode.label' | translate }}
+          </span>
+        </z-switch>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {{ 'breakdown.averageMode.hint' | translate }}
+        </p>
+        }
+      </div>
     </div>
   </div>
 

@@ -1,6 +1,7 @@
 {
   "common": {
     "actions": "Actions",
+    "titleBar": "Application title bar",
     "yes": "Yes",
     "no": "No",
     "labels": {
@@ -149,6 +150,7 @@
     },
     "general": {
       "intro": "These preferences update right away so the app matches how you read and review your finances.",
+      "appearanceGroupTitle": "Appearance",
       "currencyGroupTitle": "Currency",
       "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
       "cards": {

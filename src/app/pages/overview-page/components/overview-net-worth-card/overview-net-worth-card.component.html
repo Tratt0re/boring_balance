@@ -31,18 +31,18 @@
 
       <div class="space-y-2 border-b border-border/60 pb-3">
         <div class="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <span class="order-2 w-full text-muted-foreground sm:order-1 sm:w-auto">
+          <span class="w-full text-muted-foreground sm:w-auto">
             {{ 'overview.cards.netWorth.liquidAssets' | translate }}
           </span>
-          <span class="order-1 w-full font-medium money sm:order-2 sm:w-auto sm:text-right">
+          <span class="w-full font-medium money sm:w-auto sm:text-right">
             {{ formatCurrencyFromCents(totalLiquidAssetsCents()) }}
           </span>
         </div>
         <div class="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <span class="order-2 w-full text-muted-foreground sm:order-1 sm:w-auto">
+          <span class="w-full text-muted-foreground sm:w-auto">
             {{ 'overview.cards.netWorth.investments' | translate }}
           </span>
-          <span class="order-1 w-full font-medium money sm:order-2 sm:w-auto sm:text-right">
+          <span class="w-full font-medium money sm:w-auto sm:text-right">
             {{ formatCurrencyFromCents(totalInvestmentsCents()) }}
           </span>
         </div>

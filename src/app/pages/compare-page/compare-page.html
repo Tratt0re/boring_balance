@@ -36,7 +36,7 @@
       </div>
     </app-base-card>
   } @else if (loadError(); as loadErrorMessage) {
-    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
       {{ 'compare.loadFailedWithError' | translate : { error: loadErrorMessage } }}
     </div>
   } @else if (hasComparisonData()) {

@@ -5,7 +5,7 @@
         <z-skeleton class="h-12 w-full"></z-skeleton>
         <z-skeleton class="h-60 w-full"></z-skeleton>
       } @else if (loadError(); as loadError) {
-        <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+        <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
           {{ 'budgets.errors.loadFailed' | translate: { error: loadError } }}
         </div>
       } @else {
@@ -79,7 +79,7 @@
             </div>
           </div>
         } @else if (analysisError(); as analysisErrorMessage) {
-          <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+          <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
             {{ 'budgets.analysis.errors.loadFailedWithError' | translate : { error: analysisErrorMessage } }}
           </div>
         } @else if (!analysisHasData()) {

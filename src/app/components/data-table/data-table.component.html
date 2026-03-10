@@ -365,12 +365,27 @@
                         <z-badge
                           [zType]="column.badge?.type ?? 'secondary'"
                           [zShape]="column.badge?.shape ?? 'pill'"
+                          [class]="
+                            (column.badge?.colorMode ?? 'badge') === 'icon'
+                              ? 'max-w-full min-w-0 gap-1.5'
+                              : 'max-w-full'
+                          "
                           [attr.style]="badgeInlineStyle(row, column)"
                         >
                           @if (badgeIcon(row, column); as badgeIcon) {
-                            <z-icon [zType]="badgeIcon" class="size-3" />
+                            <z-icon
+                              [zType]="badgeIcon"
+                              [class]="
+                                (column.badge?.colorMode ?? 'badge') === 'icon'
+                                  ? 'size-3.5 shrink-0'
+                                  : 'size-3'
+                              "
+                              [attr.style]="badgeIconInlineStyle(row, column)"
+                            />
                           }
-                          {{ formatCellValue(row, column) }}
+                          <span [class]="(column.badge?.colorMode ?? 'badge') === 'icon' ? 'truncate' : ''">
+                            {{ formatCellValue(row, column) }}
+                          </span>
                         </z-badge>
                       } @else if (currencyCellIcon(row, column); as currencyCellIcon) {
                         <span class="inline-flex min-w-0 items-center gap-1.5">
