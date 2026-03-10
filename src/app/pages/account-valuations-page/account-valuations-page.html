@@ -30,7 +30,7 @@
               <p class="text-xs uppercase tracking-wide text-muted-foreground">
                 {{ 'accountValuations.header.accountBalance' | translate }}
               </p>
-              <p class="mt-1 text-lg font-semibold tabular-nums tracking-tight">
+              <p class="mt-1 text-lg font-semibold money tracking-tight">
                 {{ formatCurrency(transactionBalanceAmount()) }}
               </p>
             </div>
@@ -40,7 +40,7 @@
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'accountValuations.header.lastSnapshot' | translate }}
                 </p>
-                <p class="mt-1 text-lg font-semibold tabular-nums tracking-tight">
+                <p class="mt-1 text-lg font-semibold money tracking-tight">
                   {{ formatCurrency(latestValueAmount()) }}
                 </p>
               </div>
@@ -51,7 +51,7 @@
                 </p>
                 @if (deltaCents() !== null) {
                   <p
-                    class="mt-1 text-lg font-semibold tabular-nums tracking-tight"
+                    class="mt-1 text-lg font-semibold money tracking-tight"
                     [class.text-success]="deltaAmount() > 0"
                     [class.text-destructive]="deltaAmount() < 0"
                   >
@@ -59,7 +59,7 @@
                   </p>
                   @if (deltaPct() !== null) {
                     <p
-                      class="text-xs tabular-nums"
+                      class="text-xs money"
                       [class.text-success]="deltaPct()! > 0"
                       [class.text-destructive]="deltaPct()! < 0"
                     >

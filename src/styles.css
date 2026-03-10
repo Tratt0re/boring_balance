@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './styles/fonts.css';
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
@@ -121,6 +122,43 @@
 }
 
 @theme inline {
+  --font-sans:
+    'Manrope',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    system-ui,
+    sans-serif;
+  --font-mono:
+    'JetBrains Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+  --font-chart:
+    var(--font-sans),
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+  --font-chart-tooltip:
+    var(--font-mono),
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -197,7 +235,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-feature-settings: 'tnum' 1;
   }
 
@@ -250,6 +288,12 @@
       var(--negative-transaction-color) 21%,
       transparent
     ) !important;
+  }
+}
+
+@layer utilities {
+  .money {
+    @apply font-mono tabular-nums tracking-tight;
   }
 }
 

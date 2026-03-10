@@ -16,6 +16,7 @@ import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -78,6 +79,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
     this.numberFormatService.currencyFormatStyle();
     const { foreground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
     const sourceSeries = this.series();
     const sourceIndicators = this.indicators();
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
@@ -189,7 +191,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         formatter: (params: unknown) =>
           this.formatTooltip(params, normalizedIndicators, normalizedTooltipCurrencyCode),

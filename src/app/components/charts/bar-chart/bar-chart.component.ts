@@ -16,6 +16,7 @@ import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -81,6 +82,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
     this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
 
     const isHorizontal = this.orientation() === 'horizontal' || this.horizontal();
     const useStack = this.stacked();
@@ -117,7 +119,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
               borderColor: border,
               borderWidth: 1,
               color: tooltipForeground,
-              fontFamily,
+              fontFamily: tooltipFontFamily,
               ...(!usePercentValueAxis && currencyFormatter
                 ? {
                     formatter: (params: { axisDimension?: string; value?: unknown }) =>
@@ -135,7 +137,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
               borderColor: border,
               borderWidth: 1,
               color: tooltipForeground,
-              fontFamily,
+              fontFamily: tooltipFontFamily,
               ...(!usePercentValueAxis && currencyFormatter
                 ? {
                     formatter: (params: { axisDimension?: string; value?: unknown }) =>
@@ -222,7 +224,7 @@ export class AppBarChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         ...(tooltipTrigger === 'axis' ? { axisPointer } : {}),
         ...(!usePercentValueAxis && currencyFormatter

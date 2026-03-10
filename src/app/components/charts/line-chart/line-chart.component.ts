@@ -16,6 +16,7 @@ import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -88,6 +89,7 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
     this.numberFormatService.currencyFormatStyle();
     const { background, foreground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const renderPointsOnHoverOnly = this.showPointsOnHoverOnly();
@@ -205,7 +207,7 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         axisPointer: {
           type: 'cross',
@@ -214,7 +216,7 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
             borderColor: border,
             borderWidth: 1,
             color: tooltipForeground,
-            fontFamily,
+            fontFamily: tooltipFontFamily,
             ...(currencyFormatter
               ? {
                   formatter: (params: { axisDimension?: string; value?: unknown }) =>

@@ -7,7 +7,7 @@ import { formatCurrency } from '@/shared/utils/number-format';
   selector: 'app-currency-preview',
   template: `{{ previewValue() }}`,
   host: {
-    class: 'block text-sm font-medium',
+    class: 'block text-sm font-medium money',
   },
 })
 export class CurrencyPreviewComponent {

@@ -50,16 +50,16 @@
         <div class="flex flex-col gap-2 lg:min-w-[24rem]">
           <div class="flex items-center justify-between gap-6 text-sm">
             <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.totalBudget' | translate }}</span>
-            <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrency(analysisBudgetTotalAmount()) }}</span>
+            <span class="font-semibold money tracking-tight">{{ formatCurrency(analysisBudgetTotalAmount()) }}</span>
           </div>
           <div class="flex items-center justify-between gap-6 text-sm">
             <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.totalExpenses' | translate }}</span>
-            <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrency(analysisExpensesTotalAmount()) }}</span>
+            <span class="font-semibold money tracking-tight">{{ formatCurrency(analysisExpensesTotalAmount()) }}</span>
           </div>
           <div class="flex items-center justify-between gap-6 text-sm border-t border-border/50 pt-2 mt-1">
             <span class="text-muted-foreground">{{ 'budgets.analysis.metrics.delta' | translate }}</span>
             <span
-              class="font-semibold tabular-nums tracking-tight"
+              class="font-semibold money tracking-tight"
               [class.text-success]="analysisDeltaAmount() > 0"
               [class.text-destructive]="analysisDeltaAmount() < 0"
             >{{ formatSignedCurrency(analysisDeltaAmount()) }}</span>

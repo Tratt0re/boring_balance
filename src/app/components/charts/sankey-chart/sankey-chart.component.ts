@@ -16,6 +16,7 @@ import { NumberFormatService } from '@/services/number-format.service';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -76,6 +77,7 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
     this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
     const normalizedLineOpacity = Math.min(Math.max(this.lineOpacity(), 0), 1);
     const normalizedBlurOpacity = Math.min(Math.max(this.blurOpacity(), 0), 1);
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
@@ -186,7 +188,7 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         formatter: (params: {
           marker?: string;

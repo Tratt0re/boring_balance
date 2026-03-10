@@ -17,6 +17,7 @@ import {
   observeChartThemeChanges,
   resolveChartCssColor,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -69,6 +70,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
     this.numberFormatService.currencyFormatStyle();
     const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
     const showLegend = this.showLegend();
     const useRightLegend = showLegend && this.legendPosition() === 'right';
     const showLabels = this.showLabels();
@@ -190,7 +192,7 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         formatter: (params: {
           marker?: string;

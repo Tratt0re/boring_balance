@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import {
   observeChartThemeChanges,
   resolveChartFontFamily,
+  resolveChartTooltipFontFamily,
   resolveChartSeriesColor,
   resolveChartSurfaceColors,
   type AppChartThemeColor,
@@ -70,7 +71,8 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
     this.themeVersion();
     const { background, foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
-    const tooltipFontFamily = this.escapeHtml(fontFamily);
+    const tooltipFontFamily = resolveChartTooltipFontFamily();
+    const escapedTooltipFontFamily = this.escapeHtml(tooltipFontFamily);
     const points = this.data();
     const calendarData = points.map((item) => [item.date, item.value] as const);
     const values = points.map((item) => item.value);
@@ -167,15 +169,15 @@ export class AppCalendarChartComponent implements OnInit, OnDestroy {
         borderWidth: 1,
         textStyle: {
           color: tooltipForeground,
-          fontFamily,
+          fontFamily: tooltipFontFamily,
         },
         formatter: (params: { data?: readonly [string, number] }) => {
           const date = params.data?.[0] ?? '';
           const value = params.data?.[1] ?? 0;
           const safeDate = this.escapeHtml(this.formatCalendarTooltipDate(String(date), locale));
           return (
-            `<span style="font-family:${tooltipFontFamily};color:${mutedForeground};font-weight:400;">${safeDate}</span>: ` +
-            `<strong style="font-family:${tooltipFontFamily};color:${tooltipForeground};font-weight:700;">${value}</strong>`
+            `<span style="font-family:${escapedTooltipFontFamily};color:${mutedForeground};font-weight:400;">${safeDate}</span>: ` +
+            `<strong style="font-family:${escapedTooltipFontFamily};color:${tooltipForeground};font-weight:700;">${value}</strong>`
           );
         },
       },

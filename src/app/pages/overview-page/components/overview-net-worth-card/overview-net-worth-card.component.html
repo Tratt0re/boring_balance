@@ -15,7 +15,7 @@
         <p class="text-xs uppercase tracking-wide text-muted-foreground">
           {{ 'overview.cards.netWorth.total' | translate }}
         </p>
-        <p class="text-2xl font-semibold tracking-tight">
+        <p class="text-2xl font-semibold money tracking-tight">
           {{ formatCurrencyFromCents(totalNetWorthCents()) }}
         </p>
         @if (showSnapshotAsOfCaption()) {
@@ -34,7 +34,7 @@
           <span class="order-2 w-full text-muted-foreground sm:order-1 sm:w-auto">
             {{ 'overview.cards.netWorth.liquidAssets' | translate }}
           </span>
-          <span class="order-1 w-full font-medium sm:order-2 sm:w-auto sm:text-right">
+          <span class="order-1 w-full font-medium money sm:order-2 sm:w-auto sm:text-right">
             {{ formatCurrencyFromCents(totalLiquidAssetsCents()) }}
           </span>
         </div>
@@ -42,7 +42,7 @@
           <span class="order-2 w-full text-muted-foreground sm:order-1 sm:w-auto">
             {{ 'overview.cards.netWorth.investments' | translate }}
           </span>
-          <span class="order-1 w-full font-medium sm:order-2 sm:w-auto sm:text-right">
+          <span class="order-1 w-full font-medium money sm:order-2 sm:w-auto sm:text-right">
             {{ formatCurrencyFromCents(totalInvestmentsCents()) }}
           </span>
         </div>
@@ -54,7 +54,7 @@
             <span class="text-xs leading-tight text-muted-foreground">
               {{ 'overview.cards.netWorth.receivables' | translate }}
             </span>
-            <span class="text-xs leading-tight font-medium tabular-nums">
+            <span class="text-xs leading-tight font-medium money">
               {{ formatCurrencyFromCents(totalReceivablesCents()) }}
             </span>
           </div>
@@ -62,13 +62,13 @@
             <span class="text-xs leading-tight text-muted-foreground">
               {{ 'overview.cards.netWorth.payables' | translate }}
             </span>
-            <span class="text-xs leading-tight font-medium tabular-nums">
+            <span class="text-xs leading-tight font-medium money">
               {{ formatCurrencyFromCents(totalPayablesCents()) }}
             </span>
           </div>
           <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 pt-1">
             <span class="text-xs leading-tight text-muted-foreground">{{ 'overview.cards.netWorth.totalAfterRP' | translate }}</span>
-            <span class="text-sm leading-tight font-semibold tabular-nums">
+            <span class="text-sm leading-tight font-semibold money">
               {{ formatCurrencyFromCents(totalAfterReceivablesPayablesCents()) }}
             </span>
           </div>

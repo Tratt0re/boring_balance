@@ -114,6 +114,11 @@ export function resolveChartFontFamily(): string {
   }
 
   const rootStyles = window.getComputedStyle(document.documentElement);
+  const fromChartToken = rootStyles.getPropertyValue('--font-chart').trim();
+  if (fromChartToken.length > 0) {
+    return fromChartToken;
+  }
+
   const fromThemeToken = rootStyles.getPropertyValue('--font-sans').trim();
   if (fromThemeToken.length > 0) {
     return fromThemeToken;
@@ -129,6 +134,20 @@ export function resolveChartFontFamily(): string {
 
   const fromRootStyle = rootStyles.fontFamily.trim();
   return fromRootStyle.length > 0 ? fromRootStyle : DEFAULT_FONT_FAMILY;
+}
+
+export function resolveChartTooltipFontFamily(): string {
+  if (typeof window === 'undefined') {
+    return DEFAULT_FONT_FAMILY;
+  }
+
+  const rootStyles = window.getComputedStyle(document.documentElement);
+  const fromTooltipToken = rootStyles.getPropertyValue('--font-chart-tooltip').trim();
+  if (fromTooltipToken.length > 0) {
+    return fromTooltipToken;
+  }
+
+  return resolveChartFontFamily();
 }
 
 export function observeChartThemeChanges(onChange: () => void): MutationObserver | null {

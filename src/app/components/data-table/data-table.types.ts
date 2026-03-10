@@ -49,6 +49,8 @@ export interface ColumnDataItem extends TableDataStructureItem {
   readonly columnName: string;
   readonly columnKey: string;
   readonly type?: TableCellType;
+  // Forces monetary typography for preformatted money strings when type cannot be 'currency'.
+  readonly money?: boolean;
   readonly align?: TableCellAlign;
   readonly sortable?: boolean;
   readonly translate?: boolean;

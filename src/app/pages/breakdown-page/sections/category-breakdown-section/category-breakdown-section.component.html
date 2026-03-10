@@ -12,11 +12,11 @@
     <div class="flex flex-col gap-2 lg:min-w-[20rem]">
       <div class="flex items-center justify-between gap-6 text-sm">
         <span class="text-muted-foreground">{{ 'breakdown.metrics.yearTotal' | translate }}</span>
-        <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrencyFromCents(yearTotalCents()) }}</span>
+        <span class="font-semibold money tracking-tight">{{ formatCurrencyFromCents(yearTotalCents()) }}</span>
       </div>
       <div class="flex items-center justify-between gap-6 text-sm">
         <span class="text-muted-foreground">{{ 'breakdown.metrics.avgPerMonth' | translate }}</span>
-        <span class="font-semibold tabular-nums tracking-tight">{{ formatCurrencyFromCents(avgMonthlyCents()) }}</span>
+        <span class="font-semibold money tracking-tight">{{ formatCurrencyFromCents(avgMonthlyCents()) }}</span>
       </div>
     </div>
   </div>

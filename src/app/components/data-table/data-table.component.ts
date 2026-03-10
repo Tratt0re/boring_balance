@@ -436,7 +436,10 @@ export class AppDataTableComponent {
   }
 
   protected columnBodyCellClasses(column: TableColumn): ClassValue {
-    return this.columnAlignmentClasses(column);
+    return mergeClasses(
+      this.columnAlignmentClasses(column),
+      column.type === 'currency' || column.money ? 'money' : '',
+    );
   }
 
   protected onToggleRowChange(checked: boolean, row: TableRow): void {
