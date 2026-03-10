@@ -43,7 +43,6 @@
                 zSize="sm"
                 [zType]="tableAction.buttonType ?? 'default'"
                 [attr.aria-label]="tableAction.label | translate"
-                [attr.title]="tableAction.label | translate"
                 (click)="onTableActionClick(tableAction)"
               >
                 @if (tableAction.icon; as tableActionIcon) {
@@ -199,7 +198,6 @@
                             [zType]="actionItem.buttonType ?? 'ghost'"
                             [zDisabled]="isActionDisabled(actionItem, row)"
                             [attr.aria-label]="actionItem.label | translate"
-                            [attr.title]="actionItem.label | translate"
                             (click)="onActionClick(actionItem, row)"
                           >
                             <z-icon [zType]="actionItem.icon" class="size-4" />
@@ -409,7 +407,6 @@
                             [zType]="actionItem.buttonType ?? 'ghost'"
                             [zDisabled]="isActionDisabled(actionItem, row)"
                             [attr.aria-label]="actionItem.label | translate"
-                            [attr.title]="actionItem.label | translate"
                             (click)="onActionClick(actionItem, row)"
                           >
                             <z-icon [zType]="actionItem.icon" class="size-4" />

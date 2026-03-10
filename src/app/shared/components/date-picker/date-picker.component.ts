@@ -25,6 +25,7 @@ import { ZardCalendarComponent } from '@/shared/components/calendar/calendar.com
 import { ZardIconComponent } from '@/shared/components/icon/icon.component';
 import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover/popover.component';
 import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
+import { ZardIdDirective } from '@/shared/core';
 
 import { mergeClasses, transform } from '@/shared/utils/merge-classes';
 
@@ -36,12 +37,15 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
 
 @Component({
   selector: 'z-date-picker, [z-date-picker]',
-  imports: [ZardButtonComponent, ZardCalendarComponent, ZardPopoverComponent, ZardPopoverDirective, ZardIconComponent],
+  imports: [ZardButtonComponent, ZardCalendarComponent, ZardPopoverComponent, ZardPopoverDirective, ZardIconComponent, ZardIdDirective],
   standalone: true,
   template: `
     <button
       z-button
       type="button"
+      zardId="date-picker"
+      #z="zardId"
+      [id]="zId() || z.id()"
       [zType]="zType()"
       [zSize]="zSize()"
       [zDisabled]="disabled()"
@@ -115,6 +119,7 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   readonly popoverDirective = viewChild.required<ZardPopoverDirective>('popoverDirective');
   readonly calendar = viewChild.required<ZardCalendarComponent>('calendar');
 
+  readonly zId = input<string>('');
   readonly class = input<ClassValue>('');
   readonly zType = input<ZardButtonTypeVariants>('outline');
   readonly zSize = input<ZardButtonSizeVariants>('default');

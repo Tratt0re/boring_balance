@@ -22,6 +22,7 @@ import type { ClassValue } from 'clsx';
 
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent, type ZardButtonTypeVariants } from '@/shared/components/button';
+import { ZardIdDirective } from '@/shared/core';
 import { comboboxVariants, type ZardComboboxWidthVariants } from '@/shared/components/combobox/combobox.variants';
 import {
   ZardCommandComponent,
@@ -66,13 +67,17 @@ export interface ZardComboboxGroup {
     ZardPopoverComponent,
     ZardEmptyComponent,
     ZardIconComponent,
+    ZardIdDirective,
   ],
   template: `
     <button
       type="button"
       z-button
       zPopover
+      zardId="combobox"
+      #z="zardId"
       role="combobox"
+      [id]="zId() || z.id()"
       [zContent]="popoverContent"
       [zType]="buttonVariant()"
       [class]="buttonClasses()"
@@ -201,6 +206,7 @@ export interface ZardComboboxGroup {
 export class ZardComboboxComponent implements ControlValueAccessor {
   private readonly injector = inject(Injector);
 
+  readonly zId = input<string>('');
   readonly class = input<ClassValue>('');
   readonly buttonVariant = input<ZardButtonTypeVariants>('outline');
   readonly zButtonClass = input<ClassValue>('');

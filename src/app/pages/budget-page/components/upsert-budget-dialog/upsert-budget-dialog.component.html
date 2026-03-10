@@ -1,10 +1,11 @@
 <form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div class="sm:col-span-2">
-    <label class="mb-1.5 block text-sm font-medium">
+    <label class="mb-1.5 block text-sm font-medium" for="budget-category">
       {{ 'common.labels.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-combobox
+      zId="budget-category"
       zWidth="full"
       formControlName="categoryId"
       [placeholder]="'common.placeholders.selectCategory' | translate"

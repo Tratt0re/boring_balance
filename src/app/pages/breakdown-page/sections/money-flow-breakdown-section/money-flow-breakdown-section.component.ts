@@ -46,7 +46,7 @@ function toYearRangeTimestamps(year: number): { from: number; to: number } {
 }
 
 function resolveVisualColorHex(colorKey: string | null | undefined): string {
-  const fallbackColor = resolveChartCssColor(`--${DEFAULT_VISUAL_COLOR_KEY}`, '#9ca3af');
+  const fallbackColor = resolveChartCssColor(`--${DEFAULT_VISUAL_COLOR_KEY}`, resolveChartCssColor('--muted-foreground', '#9ca3af'));
   if (typeof colorKey !== 'string' || colorKey.trim().length === 0) {
     return fallbackColor;
   }

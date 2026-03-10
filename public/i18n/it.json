@@ -811,6 +811,9 @@
       "updateError": "Impossibile aggiornare il conto.",
       "archiveSuccess": "Conto archiviato con successo.",
       "archiveError": "Impossibile archiviare il conto."
+    },
+    "errors": {
+      "loadFailed": "Impossibile caricare i conti: {{error}}"
     }
   },
   "categories": {
@@ -878,6 +881,9 @@
       "updateError": "Impossibile aggiornare la categoria.",
       "archiveSuccess": "Categoria archiviata con successo.",
       "archiveError": "Impossibile archiviare la categoria."
+    },
+    "errors": {
+      "loadFailed": "Impossibile caricare le categorie: {{error}}"
     }
   },
   "budgets": {
@@ -963,6 +969,9 @@
       "errors": {
         "loadFailedWithError": "Caricamento analisi budget non riuscito: {{error}}"
       }
+    },
+    "errors": {
+      "loadFailed": "Impossibile caricare i budget: {{error}}"
     }
   },
   "transactions": {
@@ -1107,6 +1116,9 @@
         "updateError": "Impossibile aggiornare il trasferimento.",
         "deleteSuccess": "Trasferimento eliminato con successo.",
         "deleteError": "Impossibile eliminare il trasferimento."
+      },
+      "errors": {
+        "loadFailed": "Impossibile caricare i trasferimenti: {{error}}"
       }
     },
     "toasts": {
@@ -1118,6 +1130,9 @@
       "deleteError": "Impossibile eliminare il movimento.",
       "duplicateSuccess": "Movimento duplicato con successo.",
       "duplicateError": "Impossibile duplicare il movimento."
+    },
+    "errors": {
+      "loadFailed": "Impossibile caricare i movimenti: {{error}}"
     }
   },
   "options": {

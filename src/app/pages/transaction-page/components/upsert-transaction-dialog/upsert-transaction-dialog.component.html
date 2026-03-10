@@ -1,10 +1,10 @@
 <form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
   <div>
-    <label class="mb-1.5 block text-sm font-medium">
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-date">
       {{ 'common.labels.date' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-date-picker zIconPosition="right" formControlName="occurredAt"
+    <z-date-picker zId="transaction-date" zIconPosition="right" formControlName="occurredAt"
       [placeholder]="'common.placeholders.pickDate' | translate" />
     @if (visibleOccurredAtErrorKey(); as currentError) {
     <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
@@ -12,8 +12,8 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.settled' | translate }}</label>
-    <z-switch formControlName="settled">
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-settled">{{ 'common.labels.settled' | translate }}</label>
+    <z-switch zId="transaction-settled" formControlName="settled">
       <span #labelContent>
         {{ settledValue() ? ('common.yes' | translate) : ('common.no' | translate) }}
       </span>
@@ -21,11 +21,11 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-category">
       {{ 'common.labels.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-combobox zWidth="full" formControlName="categoryId"
+    <z-combobox zId="transaction-category" zWidth="full" formControlName="categoryId"
       [placeholder]="'common.placeholders.selectCategory' | translate"
       [searchPlaceholder]="'common.filters.placeholders.searchCategory' | translate"
       [options]="$any(categoryOptions)" />
@@ -35,11 +35,11 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-account">
       {{ 'common.labels.account' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-combobox zWidth="full" formControlName="accountId"
+    <z-combobox zId="transaction-account" zWidth="full" formControlName="accountId"
       [placeholder]="'common.placeholders.selectAccount' | translate"
       [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate" [options]="$any(accountOptions)" />
     @if (visibleAccountIdErrorKey(); as currentError) {

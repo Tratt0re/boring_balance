@@ -741,6 +741,9 @@
       "updateError": "No se pudo actualizar la cuenta.",
       "archiveSuccess": "Cuenta archivada correctamente.",
       "archiveError": "No se pudo archivar la cuenta."
+    },
+    "errors": {
+      "loadFailed": "No se pudieron cargar las cuentas: {{error}}"
     }
   },
   "categories": {
@@ -808,6 +811,9 @@
       "updateError": "No se pudo actualizar la categoria.",
       "archiveSuccess": "Categoria archivada correctamente.",
       "archiveError": "No se pudo archivar la categoria."
+    },
+    "errors": {
+      "loadFailed": "No se pudieron cargar las categorías: {{error}}"
     }
   },
   "budgets": {
@@ -893,6 +899,9 @@
       "errors": {
         "loadFailedWithError": "No se pudo cargar el analisis de presupuesto: {{error}}"
       }
+    },
+    "errors": {
+      "loadFailed": "No se pudieron cargar los presupuestos: {{error}}"
     }
   },
   "transactions": {
@@ -1037,6 +1046,9 @@
         "updateError": "No se pudo actualizar la transferencia.",
         "deleteSuccess": "Transferencia eliminada correctamente.",
         "deleteError": "No se pudo eliminar la transferencia."
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar las transferencias: {{error}}"
       }
     },
     "toasts": {
@@ -1048,6 +1060,9 @@
       "deleteError": "No se pudo eliminar el movimiento.",
       "duplicateSuccess": "Movimiento duplicado correctamente.",
       "duplicateError": "No se pudo duplicar el movimiento."
+    },
+    "errors": {
+      "loadFailed": "No se pudieron cargar los movimientos: {{error}}"
     }
   },
   "options": {
