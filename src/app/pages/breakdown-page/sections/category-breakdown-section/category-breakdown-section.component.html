@@ -30,7 +30,7 @@
         </div>
       </div>
     } @else if (loadError(); as loadErrorMessage) {
-      <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
         {{ 'overview.cards.monthlyTotals.loadFailedWithError' | translate : { error: loadErrorMessage } }}
       </div>
     } @else if (!hasData()) {
@@ -63,7 +63,7 @@
         </div>
       </div>
     } @else if (loadError(); as loadErrorMessage) {
-      <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
         {{ 'overview.cards.monthlyTotals.loadFailedWithError' | translate : { error: loadErrorMessage } }}
       </div>
     } @else if (!hasData()) {

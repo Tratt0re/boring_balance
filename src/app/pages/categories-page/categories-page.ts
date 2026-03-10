@@ -41,9 +41,16 @@ interface CategoryTableRow {
   readonly icon: string | null;
   readonly type: CategoryModel['type'];
   readonly typeLabel: string;
+  readonly typeColorHex: string | null;
   readonly locked: boolean;
   readonly archived: boolean;
 }
+
+const CATEGORY_TYPE_COLOR_HEX_BY_TYPE: Record<CategoryModel['type'], string | null> = {
+  income: 'var(--chart-income)',
+  expense: 'var(--chart-expense)',
+  exclude: null,
+};
 
 const CATEGORY_COLUMN_WIDTH = {
   name: '1/5',
@@ -66,6 +73,7 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
       icon: DEFAULT_VISUAL_ICON_KEY,
       iconColumnKey: 'icon',
       colorHexColumnKey: 'colorHex',
+      colorMode: 'icon',
     },
   },
   {
@@ -78,6 +86,7 @@ const CATEGORY_TABLE_COLUMNS: readonly TableDataItem[] = [
     badge: {
       shape: 'pill',
       type: 'secondary',
+      colorHexColumnKey: 'typeColorHex',
     },
   },
   {
@@ -210,6 +219,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
       icon: category.icon,
       type: category.type,
       typeLabel: `category.type.${category.type}`,
+      typeColorHex: CATEGORY_TYPE_COLOR_HEX_BY_TYPE[category.type],
       locked: category.locked,
       archived: category.archived,
     };

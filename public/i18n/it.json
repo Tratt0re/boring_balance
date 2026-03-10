@@ -1,6 +1,7 @@
 {
   "common": {
     "actions": "Azioni",
+    "titleBar": "Barra del titolo dell'applicazione",
     "yes": "Sì",
     "no": "No",
     "labels": {
@@ -149,6 +150,7 @@
     },
     "general": {
       "intro": "Queste preferenze si applicano subito, così l'app si adatta a come leggi e controlli le tue finanze.",
+      "appearanceGroupTitle": "Aspetto",
       "currencyGroupTitle": "Valuta",
       "currencyGroupDescription": "Scegli come visualizzare gli importi, così saldi, report e moduli restano facili da leggere.",
       "cards": {

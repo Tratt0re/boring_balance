@@ -22,16 +22,16 @@
           <z-sidebar-group class="gap-1">
             <z-sidebar-group-label
               [class]="
-                'overflow-hidden transition-[height,opacity,padding,color] duration-150 ease-in-out ' +
+                'grid overflow-hidden transition-[grid-template-rows,opacity] duration-150 ease-in-out ' +
                 (sidebarCollapsed()
                   ? (isClosingCollapseTransition()
-                    ? 'pointer-events-none h-0 px-0 py-0 opacity-100'
-                    : 'pointer-events-none h-0 px-0 py-0 opacity-0 text-transparent')
-                  : 'h-8 opacity-100')
+                    ? 'pointer-events-none grid-rows-[0fr] opacity-100'
+                    : 'pointer-events-none grid-rows-[0fr] opacity-0')
+                  : 'grid-rows-[1fr] opacity-100')
               "
               [attr.aria-hidden]="sidebarCollapsed()"
             >
-              {{ section.label | translate }}
+              <span class="overflow-hidden">{{ section.label | translate }}</span>
             </z-sidebar-group-label>
 
             @for (item of section.items; track item.path) {
@@ -44,13 +44,14 @@
                 #routeLinkActive="routerLinkActive"
                 [zTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
                 zPosition="right"
+                [attr.aria-label]="item.label | translate"
                 [class]="navItemClasses(routeLinkActive.isActive)"
               >
                 <z-icon [zType]="item.icon" class="size-4 shrink-0" />
                 <span
                   [class]="
-                    'truncate overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ' +
-                    (sidebarCollapsed() ? 'max-w-0 opacity-0' : 'max-w-40 opacity-100')
+                    'overflow-hidden whitespace-nowrap transition-[opacity,width] duration-200 ease-out ' +
+                    (sidebarCollapsed() ? 'w-0 opacity-0' : 'w-auto opacity-100')
                   "
                   [attr.aria-hidden]="sidebarCollapsed()"
                 >
@@ -68,16 +69,16 @@
             <z-sidebar-group class="gap-1">
               <z-sidebar-group-label
                 [class]="
-                  'overflow-hidden transition-[height,opacity,padding,color] duration-150 ease-in-out ' +
+                  'grid overflow-hidden transition-[grid-template-rows,opacity] duration-150 ease-in-out ' +
                   (sidebarCollapsed()
                     ? (isClosingCollapseTransition()
-                      ? 'pointer-events-none h-0 px-0 py-0 opacity-100'
-                      : 'pointer-events-none h-0 px-0 py-0 opacity-0 text-transparent')
-                    : 'h-8 opacity-100')
+                      ? 'pointer-events-none grid-rows-[0fr] opacity-100'
+                      : 'pointer-events-none grid-rows-[0fr] opacity-0')
+                    : 'grid-rows-[1fr] opacity-100')
                 "
                 [attr.aria-hidden]="sidebarCollapsed()"
               >
-                {{ section.label | translate }}
+                <span class="overflow-hidden">{{ section.label | translate }}</span>
               </z-sidebar-group-label>
 
               @for (item of section.items; track item.path) {
@@ -90,6 +91,7 @@
                   #routeLinkActive="routerLinkActive"
                   [zTooltip]="sidebarCollapsed() ? (item.label | translate) : null"
                   zPosition="right"
+                  [attr.aria-label]="item.label | translate"
                   [class]="
                     'flex h-9 items-center rounded-md px-3 text-sm transition-colors ' +
                     (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3') +
@@ -102,8 +104,8 @@
                   <z-icon [zType]="item.icon" class="size-4 shrink-0" />
                   <span
                     [class]="
-                      'truncate overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ' +
-                      (sidebarCollapsed() ? 'max-w-0 opacity-0' : 'max-w-40 opacity-100')
+                      'overflow-hidden whitespace-nowrap transition-[opacity,width] duration-200 ease-out ' +
+                      (sidebarCollapsed() ? 'w-0 opacity-0' : 'w-auto opacity-100')
                     "
                     [attr.aria-hidden]="sidebarCollapsed()"
                   >

@@ -21,7 +21,7 @@
       <z-loader zSize="default" />
     </div>
   } @else if (loadError()) {
-    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
       {{ 'overview.cards.activity.loadFailed' | translate }}
     </div>
   } @else {

@@ -190,6 +190,7 @@ const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
       shape: 'pill',
       iconColumnKey: 'categoryIcon',
       colorHexColumnKey: 'categoryColorHex',
+      colorMode: 'icon',
       fullWidth: true,
     },
   },

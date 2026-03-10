@@ -42,7 +42,7 @@ const DEFAULT_MUTED_FOREGROUND = 'oklch(0.556 0 0)';
 const DEFAULT_FOREGROUND = 'oklch(0.145 0 0)';
 const DEFAULT_BORDER = 'oklch(0.922 0 0)';
 const DEFAULT_BACKGROUND = 'oklch(1 0 0)';
-const DEFAULT_FONT_FAMILY = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+const DEFAULT_FONT_FAMILY = 'Manrope, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
 let chartColorContext: CanvasRenderingContext2D | null | undefined;
 const normalizedColorCache = new Map<string, string | null>();
