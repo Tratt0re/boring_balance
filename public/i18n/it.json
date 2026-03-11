@@ -2,6 +2,7 @@
   "common": {
     "actions": "Azioni",
     "titleBar": "Barra del titolo dell'applicazione",
+    "cancel": "Annulla",
     "yes": "Sì",
     "no": "No",
     "labels": {
@@ -146,7 +147,36 @@
       "about": {
         "title": "Info",
         "description": "Vedi i dettagli dell'app, le basi della privacy e il link al progetto in un solo posto."
+      },
+      "data": {
+        "title": "Dati e Archiviazione",
+        "description": "Ripristina e gestisci i dati locali."
       }
+    },
+    "data": {
+      "clear_financial": {
+        "label": "Cancella tutti i dati finanziari",
+        "description": "Elimina definitivamente tutti i conti, transazioni, trasferimenti e budget. Le preferenze vengono mantenute.",
+        "button": "Cancella dati",
+        "confirm": {
+          "title": "Cancellare tutti i dati finanziari?",
+          "body": "Verranno eliminati definitivamente tutti i conti, le transazioni, i trasferimenti, i budget e le categorie create. Questa azione non può essere annullata.",
+          "cta": "Sì, cancella i dati"
+        },
+        "success": "Tutti i dati finanziari sono stati cancellati."
+      },
+      "factory_reset": {
+        "label": "Ripristino alle impostazioni di fabbrica",
+        "description": "Elimina l'intero database e ripristina l'app allo stato iniziale. I backup non vengono modificati.",
+        "button": "Ripristina app",
+        "confirm": {
+          "title": "Ripristino alle impostazioni di fabbrica?",
+          "body": "Verrà eliminato l'intero database e l'app tornerà allo stato iniziale. I file di backup non saranno interessati. Questa azione non può essere annullata.",
+          "input_placeholder": "Digita RESET per confermare",
+          "cta": "Ripristina app"
+        }
+      },
+      "reset_error": "Si è verificato un errore. Riprova."
     },
     "general": {
       "intro": "Queste preferenze si applicano subito, così l'app si adatta a come leggi e controlli le tue finanze.",

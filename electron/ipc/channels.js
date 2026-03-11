@@ -101,6 +101,10 @@ const CHANNELS = Object.freeze({
     pushNow: 'sync:pushNow',
     listSnapshots: 'sync:listSnapshots',
   }),
+  reset: Object.freeze({
+    clearFinancialData: 'db:reset:clear-financial-data',
+    factoryReset: 'db:reset:factory-reset',
+  }),
 });
 
 module.exports = {

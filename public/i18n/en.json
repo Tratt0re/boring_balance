@@ -2,6 +2,7 @@
   "common": {
     "actions": "Actions",
     "titleBar": "Application title bar",
+    "cancel": "Cancel",
     "yes": "Yes",
     "no": "No",
     "labels": {
@@ -146,7 +147,36 @@
       "about": {
         "title": "About",
         "description": "See app details, privacy basics, and the project link in one place."
+      },
+      "data": {
+        "title": "Data & Storage",
+        "description": "Reset and manage your local data."
       }
+    },
+    "data": {
+      "clear_financial": {
+        "label": "Clear all financial data",
+        "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
+        "button": "Clear data",
+        "confirm": {
+          "title": "Clear all financial data?",
+          "body": "This will permanently delete all accounts, transactions, transfers, budgets, and categories you have created. This cannot be undone.",
+          "cta": "Yes, clear data"
+        },
+        "success": "All financial data has been cleared."
+      },
+      "factory_reset": {
+        "label": "Factory reset",
+        "description": "Deletes the entire database and resets the app to its initial state. Your backups are not affected.",
+        "button": "Reset app",
+        "confirm": {
+          "title": "Factory reset?",
+          "body": "This will delete the entire database and return the app to its initial state. Your backup files will not be affected. This cannot be undone.",
+          "input_placeholder": "Type RESET to confirm",
+          "cta": "Reset app"
+        }
+      },
+      "reset_error": "Something went wrong. Please try again."
     },
     "general": {
       "intro": "These preferences update right away so the app matches how you read and review your finances.",

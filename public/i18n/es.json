@@ -2,6 +2,7 @@
   "common": {
     "actions": "Acciones",
     "titleBar": "Barra de título de la aplicación",
+    "cancel": "Cancelar",
     "yes": "Si",
     "no": "No",
     "labels": {
@@ -146,7 +147,36 @@
       "about": {
         "title": "Acerca de",
         "description": "Consulta detalles de la app, privacidad basica y el enlace del proyecto en un solo lugar."
+      },
+      "data": {
+        "title": "Datos y Almacenamiento",
+        "description": "Restablece y gestiona tus datos locales."
       }
+    },
+    "data": {
+      "clear_financial": {
+        "label": "Borrar todos los datos financieros",
+        "description": "Elimina definitivamente todas las cuentas, transacciones, transferencias y presupuestos. Tus preferencias se conservan.",
+        "button": "Borrar datos",
+        "confirm": {
+          "title": "¿Borrar todos los datos financieros?",
+          "body": "Esto eliminará definitivamente todas las cuentas, transacciones, transferencias, presupuestos y categorías creadas. Esta acción no se puede deshacer.",
+          "cta": "Sí, borrar datos"
+        },
+        "success": "Todos los datos financieros han sido borrados."
+      },
+      "factory_reset": {
+        "label": "Restablecer de fábrica",
+        "description": "Elimina la base de datos completa y restablece la app a su estado inicial. Tus copias de seguridad no se ven afectadas.",
+        "button": "Restablecer app",
+        "confirm": {
+          "title": "¿Restablecer de fábrica?",
+          "body": "Esto eliminará toda la base de datos y devolverá la app a su estado inicial. Los archivos de copia de seguridad no se verán afectados. Esta acción no se puede deshacer.",
+          "input_placeholder": "Escribe RESET para confirmar",
+          "cta": "Restablecer app"
+        }
+      },
+      "reset_error": "Algo salió mal. Por favor, inténtalo de nuevo."
     },
     "general": {
       "intro": "Estas preferencias se aplican al instante para que la app se adapte a como revisas tus finanzas.",

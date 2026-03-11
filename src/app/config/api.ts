@@ -24,6 +24,7 @@ export enum APIChannel {
   DATA_EXPORT = 'dataExport',
   IMPORT_EXCEL = 'importExcel',
   SYNC = 'sync',
+  RESET = 'reset',
 }
 
 export interface ElectronIpcClient {
@@ -155,6 +156,10 @@ export interface ElectronIpcClient {
     readonly pullNow: OptionalIpcRequest<void, DTO.SyncPullNowResponse>;
     readonly pushNow: OptionalIpcRequest<void, DTO.SyncPushNowResponse>;
     readonly listSnapshots: OptionalIpcRequest<void, DTO.SyncListSnapshotsResponse>;
+  };
+  readonly reset: {
+    readonly clearFinancialData: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
+    readonly factoryReset: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
   };
 }
 

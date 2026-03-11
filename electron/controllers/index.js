@@ -10,6 +10,7 @@ const syncController = require('./sync.controller');
 const dataExportController = require('./data-export.controller');
 const importExcelController = require('./import-excel.controller');
 const { transactionsController, transfersController } = require('./transactions');
+const resetController = require('./reset.controller');
 
 module.exports = {
   appMetaController,
@@ -25,4 +26,5 @@ module.exports = {
   importExcelController,
   transactionsController,
   transfersController,
+  resetController,
 };

@@ -12,6 +12,7 @@ const {
   importExcelController,
   transactionsController,
   transfersController,
+  resetController,
 } = require('../controllers');
 const { CHANNELS } = require('./channels');
 
@@ -105,6 +106,9 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.sync.pullNow]: syncController.pullNow,
   [CHANNELS.sync.pushNow]: syncController.pushNow,
   [CHANNELS.sync.listSnapshots]: syncController.listSnapshots,
+
+  [CHANNELS.reset.clearFinancialData]: resetController.clearFinancialData,
+  [CHANNELS.reset.factoryReset]: resetController.factoryReset,
 });
 
 module.exports = {

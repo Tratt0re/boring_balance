@@ -1,4 +1,4 @@
-export const SETTINGS_SECTION_KEYS = ['general', 'backups', 'sync', 'export', 'about'] as const;
+export const SETTINGS_SECTION_KEYS = ['general', 'backups', 'sync', 'export', 'data', 'about'] as const;
 
 export type SettingsSectionKey = typeof SETTINGS_SECTION_KEYS[number];
 
@@ -30,6 +30,11 @@ export const SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
     key: 'export',
     label: 'dataBackups.sections.exportImport.title',
     description: 'dataBackups.exportImport.overview.description',
+  },
+  {
+    key: 'data',
+    label: 'settings.sections.data.title',
+    description: 'settings.sections.data.description',
   },
   {
     key: 'about',

@@ -11,6 +11,7 @@ import { BackupsSectionComponent } from './components/sections/backups-section/b
 import { ExportSectionComponent } from './components/sections/export-section/export-section.component';
 import { GeneralSectionComponent } from './components/sections/general-section/general-section.component';
 import { SyncSectionComponent } from './components/sections/sync-section/sync-section.component';
+import { DataSectionComponent } from './components/sections/data-section/data-section.component';
 import {
   DEFAULT_SETTINGS_SECTION,
   SETTINGS_NAV_ITEMS,
@@ -27,6 +28,7 @@ import {
     BackupsSectionComponent,
     SyncSectionComponent,
     ExportSectionComponent,
+    DataSectionComponent,
     AboutSectionComponent,
   ],
   templateUrl: './settings.page.html',

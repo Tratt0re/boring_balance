@@ -1,0 +1,48 @@
+<div class="space-y-4">
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      <div class="min-w-0">
+        <h3 class="text-sm font-semibold tracking-tight">
+          {{ 'settings.data.clear_financial.label' | translate }}
+        </h3>
+        <p class="mt-1 text-sm text-muted-foreground">
+          {{ 'settings.data.clear_financial.description' | translate }}
+        </p>
+      </div>
+
+      <div class="flex shrink-0 items-center">
+        <button
+          z-button
+          zType="outline"
+          class="border-destructive/30 text-destructive hover:bg-destructive/5 hover:text-destructive"
+          (click)="onClearFinancialData()"
+        >
+          {{ 'settings.data.clear_financial.button' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-6 border-t border-border pt-6">
+      <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div class="min-w-0">
+          <h3 class="text-sm font-semibold tracking-tight">
+            {{ 'settings.data.factory_reset.label' | translate }}
+          </h3>
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ 'settings.data.factory_reset.description' | translate }}
+          </p>
+        </div>
+
+        <div class="flex shrink-0 items-center">
+          <button
+            z-button
+            zType="destructive"
+            (click)="onFactoryReset()"
+          >
+            {{ 'settings.data.factory_reset.button' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
