@@ -16,7 +16,9 @@
     [highContrastHeader]="false"
     [title]="'transactions.view.commonTransactions'"
     description="transactions.table.description"
-    emptyMessage="transactions.table.emptyMessage"
+    [emptyMessage]="emptyMessageKey()"
+    [emptyActionLabel]="emptyActionLabelKey()"
+    [emptyActionIcon]="'plus'"
     [appearance]="'default'"
     [showEmpty]="true"
     [hoverable]="true"
@@ -35,5 +37,6 @@
     (pageSizeChange)="onPageSizeChange($event)"
     (editableValueChange)="onEditableValueChange($event)"
     (activeFilterRemove)="onActiveFilterRemove($event)"
+    (emptyActionClick)="onEmptyActionClick()"
   ></app-data-table>
 }

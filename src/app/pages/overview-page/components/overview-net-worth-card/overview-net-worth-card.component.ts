@@ -50,6 +50,7 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
   readonly snapshotsChange = output<AnalyticsNetWorthSnapshotsDto>();
+  readonly netWorthModeChange = output<'valued' | 'ledger'>();
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
@@ -120,6 +121,7 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       console.error('[overview-net-worth-card] Failed to load net worth card data:', error);
       this.totalNetWorthCents.set(0);
       this.netWorthMode.set('ledger');
+      this.netWorthModeChange.emit('ledger');
       this.snapshotRecency.set(EMPTY_SNAPSHOT_RECENCY);
       this.snapshotsChange.emit(EMPTY_SNAPSHOT_RECENCY);
       this.totalLiquidAssetsCents.set(0);
@@ -158,6 +160,7 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       : Number(snapshots.daysSinceLatestSnapshot);
     this.totalNetWorthCents.set(Number.isFinite(totalNetWorthCents) ? totalNetWorthCents : totalNetWorthFromRowsCents);
     this.netWorthMode.set(netWorthMode);
+    this.netWorthModeChange.emit(netWorthMode);
     const normalizedSnapshotRecency: AnalyticsNetWorthSnapshotsDto = {
       hasSnapshots: snapshots.hasSnapshots === true,
       latestSnapshotAtMs: snapshots.latestSnapshotAtMs === null ? null : Number(snapshots.latestSnapshotAtMs),

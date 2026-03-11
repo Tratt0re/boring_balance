@@ -605,7 +605,8 @@
         "receivables": "Crediti",
         "payables": "Debiti",
         "totalAfterRP": "Dopo C&D",
-        "emptyDistribution": "Non ci sono ancora saldi da distribuire. Aggiungi o aggiorna i conti per vedere l'allocazione."
+        "emptyDistribution": "Non ci sono ancora saldi da distribuire. Aggiungi o aggiorna i conti per vedere l'allocazione.",
+        "emptyDistributionNoAccounts": "Non ci sono ancora conti. Aggiungi il primo per vedere l'allocazione."
       },
       "monthlyTotals": {
         "title": "Entrate, spese e flusso di cassa netto",
@@ -1017,6 +1018,7 @@
     "table": {
       "description": "Controlla entrate e spese che influenzano saldi, budget e flusso di cassa netto.",
       "emptyMessage": "Non ci sono ancora movimenti. Aggiungine uno per iniziare a seguire spese, entrate e flusso di cassa netto.",
+      "emptyNoAccountsMessage": "Non ci sono ancora conti. Aggiungi il primo prima di registrare movimenti.",
       "actions": {
         "add": "Aggiungi movimento",
         "filter": "Filtra movimenti",
@@ -1086,6 +1088,8 @@
       "table": {
         "description": "Tieni traccia del denaro spostato tra i tuoi conti. I trasferimenti cambiano dove si trova il denaro, non la spesa totale.",
         "emptyMessage": "Non ci sono ancora trasferimenti. Aggiungine uno quando sposti denaro tra i tuoi conti.",
+        "emptyNoAccountsMessage": "Non ci sono ancora conti. Aggiungi il primo prima di creare trasferimenti.",
+        "emptyNeedTwoAccountsMessage": "Servono almeno due conti per creare un trasferimento. Aggiungi un altro conto per continuare.",
         "actions": {
           "add": "Aggiungi trasferimento",
           "filter": "Filtra trasferimenti",
@@ -1292,6 +1296,7 @@
     "table": {
       "description": "Pianifica movimenti e trasferimenti ripetuti, così la gestione della routine diventa più semplice.",
       "emptyMessage": "Non ci sono ancora eventi ricorrenti. Aggiungine uno per automatizzare movimenti o trasferimenti ripetuti.",
+      "emptyNoAccountsMessage": "Non ci sono ancora conti. Aggiungi il primo prima di creare eventi ricorrenti.",
       "columns": {
         "title": "Titolo",
         "startDate": "Data di inizio",

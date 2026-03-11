@@ -40,7 +40,7 @@
       @if (activeTab() === 'transactions') {
         @if (transactionRows().length === 0) {
           <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
-            <p class="text-sm text-muted-foreground">{{ 'overview.cards.recentTransactions.empty' | translate }}</p>
+            <p class="text-sm text-muted-foreground">{{ emptyMessageKey() | translate }}</p>
             <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
               + {{ quickActionLabelKey() | translate }}
             </button>
@@ -59,7 +59,7 @@
       } @else {
         @if (transferRows().length === 0) {
           <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
-            <p class="text-sm text-muted-foreground">{{ 'transactions.transfers.table.emptyMessage' | translate }}</p>
+            <p class="text-sm text-muted-foreground">{{ emptyMessageKey() | translate }}</p>
             <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
               + {{ quickActionLabelKey() | translate }}
             </button>

@@ -10,8 +10,13 @@
   } @else if (loadError()) {
     <p class="text-sm text-destructive">{{ 'overview.errors.summaryLoad' | translate }}</p>
   } @else if (distributionPieItems().length === 0) {
-    <div class="flex h-24 items-center justify-center rounded-md border border-border/50 bg-muted/30">
-      <p class="text-xs text-muted-foreground">{{ 'overview.cards.netWorth.emptyDistribution' | translate }}</p>
+    <div class="flex h-24 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/30 px-4 py-4 text-center">
+      <p class="text-xs text-muted-foreground">{{ emptyMessageKey() | translate }}</p>
+      @if (canCreateAccountFromEmptyState()) {
+        <button z-button zType="outline" zSize="sm" (click)="onCreateAccountClick()">
+          + {{ 'accounts.table.actions.add' | translate }}
+        </button>
+      }
     </div>
   } @else {
     <app-pie-chart

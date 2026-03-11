@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -263,6 +264,13 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
+  protected readonly accountCount = computed(() => this.accountOptions().length);
+  protected readonly emptyMessageKey = computed(() =>
+    this.accountCount() === 0 ? 'transactions.table.emptyNoAccountsMessage' : 'transactions.table.emptyMessage',
+  );
+  protected readonly emptyActionLabelKey = computed(() =>
+    this.accountCount() === 0 ? 'accounts.table.actions.add' : 'transactions.table.actions.add',
+  );
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);
@@ -449,6 +457,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
+    private readonly router: Router,
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
@@ -573,6 +582,15 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     this.applyFiltersAndReload(nextFilters);
+  }
+
+  protected onEmptyActionClick(): void {
+    if (this.accountCount() === 0) {
+      void this.router.navigate(['/accounts']);
+      return;
+    }
+
+    this.openAddTransactionDialog();
   }
 
   private openFilterSheet(): void {

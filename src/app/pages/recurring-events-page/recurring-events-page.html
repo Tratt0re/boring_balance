@@ -12,7 +12,9 @@
       [structure]="recurringEventTableStructure"
       [title]="'nav.items.recurringEvents'"
       description="recurringEvents.table.description"
-      emptyMessage="recurringEvents.table.emptyMessage"
+      [emptyMessage]="emptyMessageKey()"
+      [emptyActionLabel]="emptyActionLabelKey()"
+      [emptyActionIcon]="'plus'"
       [appearance]="'default'"
       [showEmpty]="true"
       [hoverable]="true"
@@ -29,6 +31,7 @@
       [showTopPagination]="true"
       (pageChange)="onPageChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
+      (emptyActionClick)="onEmptyActionClick()"
     ></app-data-table>
   }
 </section>

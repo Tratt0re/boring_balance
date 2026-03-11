@@ -217,6 +217,10 @@ export class AccountsPage implements OnInit, OnDestroy {
     void this.loadAccounts(1);
   }
 
+  protected onEmptyActionClick(): void {
+    this.openAddAccountDialog();
+  }
+
   private toAccountTableRow(account: AccountModel): AccountTableRow {
     return {
       id: account.id,

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -247,6 +248,22 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly accountCount = computed(() => this.accountOptions().length);
+  protected readonly emptyMessageKey = computed(() => {
+    const count = this.accountCount();
+    if (count === 0) {
+      return 'transactions.transfers.table.emptyNoAccountsMessage';
+    }
+
+    if (count === 1) {
+      return 'transactions.transfers.table.emptyNeedTwoAccountsMessage';
+    }
+
+    return 'transactions.transfers.table.emptyMessage';
+  });
+  protected readonly emptyActionLabelKey = computed(() =>
+    this.accountCount() < 2 ? 'accounts.table.actions.add' : 'transactions.transfers.table.actions.add',
+  );
   protected readonly rows = computed<readonly TransferTableRow[]>(() =>
     this.transfers().map((transfer) => this.toTransferRow(transfer)),
   );
@@ -402,6 +419,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
+    private readonly router: Router,
     private readonly transactionsService: TransactionsService,
     private readonly accountsService: AccountsService,
     private readonly localPreferencesService: LocalPreferencesService,
@@ -514,6 +532,15 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     }
 
     this.applyFiltersAndReload(nextFilters);
+  }
+
+  protected onEmptyActionClick(): void {
+    if (this.accountCount() < 2) {
+      void this.router.navigate(['/accounts']);
+      return;
+    }
+
+    this.openCreateTransferDialog();
   }
 
   private activateToolbarActions(): void {

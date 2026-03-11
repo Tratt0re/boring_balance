@@ -605,7 +605,8 @@
         "receivables": "Receivables",
         "payables": "Payables",
         "totalAfterRP": "After R&P",
-        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation."
+        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation.",
+        "emptyDistributionNoAccounts": "No accounts yet. Add your first account to see the allocation."
       },
       "monthlyTotals": {
         "title": "Income, expenses and net cashflow",
@@ -1019,6 +1020,8 @@
       "table": {
         "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
         "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
+        "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating transfers.",
+        "emptyNeedTwoAccountsMessage": "You need at least two accounts before creating transfers. Add another account to continue.",
         "actions": {
           "add": "Add transfer",
           "filter": "Filter transfers",
@@ -1089,6 +1092,7 @@
     "table": {
       "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
       "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
+      "emptyNoAccountsMessage": "No accounts yet. Add your first account before recording transactions.",
       "actions": {
         "add": "Add transaction",
         "filter": "Filter transactions",
@@ -1292,6 +1296,7 @@
     "table": {
       "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
       "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
+      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
       "columns": {
         "title": "Title",
         "startDate": "Start date",

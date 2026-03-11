@@ -15,6 +15,7 @@
           class="min-w-0"
           [year]="currentCalendarYear"
           [monthIndex]="currentCalendarMonthIndex"
+          (netWorthModeChange)="onNetWorthModeChange($event)"
           (snapshotsChange)="onNetWorthSnapshotsChange($event)"
         ></app-overview-net-worth-card>
 

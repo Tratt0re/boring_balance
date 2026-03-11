@@ -246,6 +246,10 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
     });
   }
 
+  protected onEmptyActionClick(): void {
+    this.openAddValuationDialog();
+  }
+
   private async loadPageData(accountId: number): Promise<void> {
     this.isLoading.set(true);
     this.loadError.set(null);

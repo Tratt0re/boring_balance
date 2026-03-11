@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
-import { LocalPreferenceKey } from '@/config/local-preferences.config';
 import { ResetService } from '@/services/reset.service';
 import { ZardAlertDialogRef } from '@/shared/components/alert-dialog/alert-dialog-ref';
 import { Z_ALERT_MODAL_DATA } from '@/shared/components/alert-dialog/alert-dialog.service';
@@ -138,7 +137,16 @@ export class ResetConfirmDialogComponent {
       this.dialogRef.close();
 
       if (this.isFactory) {
-        Object.values(LocalPreferenceKey).forEach((key) => localStorage.removeItem(key));
+        try {
+          globalThis.localStorage?.clear();
+        } catch {
+          // Ignore storage clear errors (private mode, restricted contexts, etc.).
+        }
+        try {
+          globalThis.sessionStorage?.clear();
+        } catch {
+          // Ignore storage clear errors (private mode, restricted contexts, etc.).
+        }
         globalThis.location.reload();
       } else {
         toast.success(this.translateService.instant('settings.data.clear_financial.success'));

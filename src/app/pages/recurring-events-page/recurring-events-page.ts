@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -155,6 +156,15 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
+  protected readonly accountCount = computed(() => this.accountOptions().length);
+  protected readonly emptyMessageKey = computed(() =>
+    this.accountCount() === 0
+      ? 'recurringEvents.table.emptyNoAccountsMessage'
+      : 'recurringEvents.table.emptyMessage',
+  );
+  protected readonly emptyActionLabelKey = computed(() =>
+    this.accountCount() === 0 ? 'accounts.table.actions.add' : 'recurringEvents.table.actions.add',
+  );
   protected readonly recurringEventTableStructure = createRecurringEventTableStructure(
     (row) => this.onEditRecurringEvent(row),
     (row) => this.onDeleteRecurringEvent(row),
@@ -179,6 +189,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;
 
   constructor(
+    private readonly router: Router,
     private readonly planItemsService: PlanItemsService,
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
@@ -221,6 +232,15 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     this.pageSize.set(nextPageSize);
     this.page.set(1);
     void this.loadRecurringEvents(1);
+  }
+
+  protected onEmptyActionClick(): void {
+    if (this.accountCount() === 0) {
+      void this.router.navigate(['/accounts']);
+      return;
+    }
+
+    this.openAddRecurringEventDialog();
   }
 
   private async loadInitialData(): Promise<void> {

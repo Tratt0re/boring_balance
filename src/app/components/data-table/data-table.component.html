@@ -436,7 +436,23 @@
           } @else if (showEmpty()) {
             <tr z-table-row>
               <td z-table-cell [attr.colspan]="visibleColumnCount()" class="py-6 text-center text-muted-foreground">
-                {{ emptyMessage() | translate }}
+                <div class="flex flex-col items-center justify-center gap-3">
+                  <p>{{ emptyMessage() | translate }}</p>
+                  @if (showEmptyAction()) {
+                    <button
+                      z-button
+                      zType="outline"
+                      zSize="sm"
+                      [attr.aria-label]="emptyActionLabel() | translate"
+                      (click)="onEmptyActionClick()"
+                    >
+                      @if (emptyActionIcon(); as emptyActionIcon) {
+                        <z-icon [zType]="emptyActionIcon" class="size-4" />
+                      }
+                      <span>{{ emptyActionLabel() | translate }}</span>
+                    </button>
+                  }
+                </div>
               </td>
             </tr>
           }
