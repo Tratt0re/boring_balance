@@ -3,6 +3,7 @@ const { closeDatabase, createDatabase, getDatabasePath, getDatabase } = require(
 const { deleteRows } = require('../database/core_op');
 const { initSchema } = require('../database/schema');
 const { runMigrations } = require('../database/migrations');
+const { clearSettingsStore } = require('../utils/settings-store');
 
 // Tables cleared in full (no filter) — deleteRows requires a non-empty where,
 // so these use direct prepare() calls within the transaction.
@@ -35,6 +36,7 @@ function factoryReset(_event, _payload) {
   try {
     const dbPath = getDatabasePath();
     closeDatabase();
+    clearSettingsStore();
     fs.rmSync(dbPath, { force: true });
     fs.rmSync(`${dbPath}-wal`, { force: true });
     fs.rmSync(`${dbPath}-shm`, { force: true });

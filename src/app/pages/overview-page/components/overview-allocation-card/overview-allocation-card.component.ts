@@ -10,6 +10,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
@@ -21,6 +22,7 @@ import { AccountsService } from '@/services/accounts.service';
 import { AnalyticsService } from '@/services/analytics.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
+import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardLoaderComponent } from '@/shared/components/loader';
 import {
   NET_WORTH_PIE_OTHERS_THRESHOLD,
@@ -48,6 +50,7 @@ interface NetWorthDistributionEntry {
     AppBaseCardComponent,
     AppPieChartComponent,
     TranslatePipe,
+    ZardButtonComponent,
     ZardLoaderComponent,
   ],
   templateUrl: './overview-allocation-card.component.html',
@@ -69,7 +72,14 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
 
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
+  protected readonly accountCount = signal(0);
   protected readonly distributionPieItems = signal<readonly AppPieChartItem[]>([]);
+  protected readonly emptyMessageKey = computed(() =>
+    this.accountCount() === 0
+      ? 'overview.cards.netWorth.emptyDistributionNoAccounts'
+      : 'overview.cards.netWorth.emptyDistribution',
+  );
+  protected readonly canCreateAccountFromEmptyState = computed(() => this.accountCount() === 0);
   protected readonly pieChartHeight = computed(() =>
     this.isSmallScreen() ? ALLOCATION_PIE_CHART_HEIGHT_MOBILE : ALLOCATION_PIE_CHART_HEIGHT_DESKTOP,
   );
@@ -79,6 +89,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
     private readonly accountsService: AccountsService,
     private readonly localPreferencesService: LocalPreferencesService,
     private readonly numberFormatService: NumberFormatService,
+    private readonly router: Router,
     private readonly translateService: TranslateService,
   ) {
     effect(() => {
@@ -135,12 +146,21 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
       const useValuation = this.localPreferencesService.dashboardUseValuationPreference();
       const [netWorthResponse, accounts] = await Promise.all([
         this.analyticsService.netWorthByAccount({ useValuation }),
-        this.accountsService.listAll().catch((error) => {
+        this.accountsService.listAll({
+          where: {
+            archived: 0,
+          },
+          options: {
+            orderBy: 'id',
+            orderDirection: 'ASC',
+          },
+        }).catch((error) => {
           console.warn('[overview-allocation-card] Failed to load account colors for allocation chart:', error);
           return [];
         }),
       ]);
 
+      this.accountCount.set(accounts.length);
       this.accountColorHexById = new Map(
         accounts.map((account) => [account.id, resolveVisualColorHex(account.colorKey)] as const),
       );
@@ -148,6 +168,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
       this.applyNetWorthResponse(netWorthResponse);
     } catch (error) {
       console.error('[overview-allocation-card] Failed to load allocation card data:', error);
+      this.accountCount.set(0);
       this.accountColorHexById = new Map();
       this.netWorthResponseCache = null;
       this.distributionPieItems.set([]);
@@ -258,6 +279,10 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
 
   private isValuationTooltipAccountType(accountType: string): boolean {
     return accountType === 'brokerage' || accountType === 'crypto';
+  }
+
+  protected onCreateAccountClick(): void {
+    void this.router.navigate(['/accounts']);
   }
 
   private translate(key: string, params?: Record<string, unknown>): string {

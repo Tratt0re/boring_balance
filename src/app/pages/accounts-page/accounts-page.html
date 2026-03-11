@@ -13,6 +13,8 @@
       [title]="'nav.items.accounts'"
       description="accounts.table.description"
       emptyMessage="accounts.table.emptyMessage"
+      [emptyActionLabel]="'accounts.table.actions.add'"
+      [emptyActionIcon]="'plus'"
       [appearance]="'default'"
       [showEmpty]="true"
       [hoverable]="true"
@@ -30,6 +32,7 @@
       [showTopPagination]="true"
       (pageChange)="onPageChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
+      (emptyActionClick)="onEmptyActionClick()"
     ></app-data-table>
   }
 </section>

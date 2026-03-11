@@ -11,7 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -105,16 +105,41 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       ? 'overview.cards.activity.latestTransactions'
       : 'overview.cards.activity.latestTransfers',
   );
-  protected readonly quickActionLabelKey = computed(() =>
+  protected readonly accountCount = computed(() => this.accountOptions().length);
+  protected readonly shouldPromptAccountCreation = computed(() =>
     this.activeTab() === 'transactions'
-      ? 'transactions.table.actions.add'
-      : 'transactions.transfers.table.actions.add',
+      ? this.accountCount() === 0
+      : this.accountCount() < 2,
+  );
+  protected readonly emptyMessageKey = computed(() => {
+    if (this.activeTab() === 'transactions') {
+      return this.accountCount() === 0
+        ? 'transactions.table.emptyNoAccountsMessage'
+        : 'overview.cards.recentTransactions.empty';
+    }
+
+    if (this.accountCount() === 0) {
+      return 'transactions.transfers.table.emptyNoAccountsMessage';
+    }
+    if (this.accountCount() < 2) {
+      return 'transactions.transfers.table.emptyNeedTwoAccountsMessage';
+    }
+
+    return 'transactions.transfers.table.emptyMessage';
+  });
+  protected readonly quickActionLabelKey = computed(() =>
+    this.shouldPromptAccountCreation()
+      ? 'accounts.table.actions.add'
+      : this.activeTab() === 'transactions'
+        ? 'transactions.table.actions.add'
+        : 'transactions.transfers.table.actions.add',
   );
 
   constructor(
     private readonly accountsService: AccountsService,
     private readonly categoriesService: CategoriesService,
     private readonly dialogService: ZardDialogService,
+    private readonly router: Router,
     private readonly transactionsService: TransactionsService,
     private readonly translateService: TranslateService,
   ) {}
@@ -146,6 +171,11 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   }
 
   protected onQuickAction(): void {
+    if (this.shouldPromptAccountCreation()) {
+      void this.router.navigate(['/accounts']);
+      return;
+    }
+
     if (this.activeTab() === 'transactions') {
       this.openAddTransactionDialog();
       return;

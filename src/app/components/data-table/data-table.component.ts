@@ -102,6 +102,8 @@ export class AppDataTableComponent {
   readonly tableActions = input<readonly TableHeaderActionItem[]>([]);
   readonly activeFilters = input<readonly TableActiveFilterItem[]>([], { alias: 'active-filters' });
   readonly emptyMessage = input('No data available.');
+  readonly emptyActionLabel = input('');
+  readonly emptyActionIcon = input<ZardIcon | null>(null);
   readonly actionColumnName = input('common.actions');
   readonly currencyCode = input('');
   readonly editablePickerIconClass = input<ClassValue>('text-primary opacity-70');
@@ -134,6 +136,7 @@ export class AppDataTableComponent {
   readonly editableValueChange = output<EditableValueChangeEvent>();
   readonly editableValidationError = output<EditableValidationErrorEvent>();
   readonly activeFilterRemove = output<TableActiveFilterItem>();
+  readonly emptyActionClick = output<void>();
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
@@ -184,6 +187,7 @@ export class AppDataTableComponent {
   protected readonly visibleActiveFilters = computed(() =>
     this.activeFilters().filter((activeFilter) => activeFilter.label.trim().length > 0),
   );
+  protected readonly showEmptyAction = computed(() => this.emptyActionLabel().trim().length > 0);
 
   protected readonly hasAnyVisibleRowAction = computed(() => {
     const actionItems = this.actionItems();
@@ -384,6 +388,14 @@ export class AppDataTableComponent {
 
   protected onPageSizeChange(pageSize: number): void {
     this.pageSizeChange.emit(pageSize);
+  }
+
+  protected onEmptyActionClick(): void {
+    if (!this.showEmptyAction()) {
+      return;
+    }
+
+    this.emptyActionClick.emit();
   }
 
   protected sortIcon(column: TableColumn): 'chevrons-up-down' | 'chevron-up' | 'chevron-down' {

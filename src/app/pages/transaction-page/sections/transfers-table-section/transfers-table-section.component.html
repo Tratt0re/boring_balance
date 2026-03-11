@@ -15,7 +15,9 @@
     [stickyHeader]="true"
     [title]="'transactions.view.transfers'"
     description="transactions.transfers.table.description"
-    emptyMessage="transactions.transfers.table.emptyMessage"
+    [emptyMessage]="emptyMessageKey()"
+    [emptyActionLabel]="emptyActionLabelKey()"
+    [emptyActionIcon]="'plus'"
     [appearance]="'default'"
     [showEmpty]="true"
     [hoverable]="true"
@@ -34,5 +36,6 @@
     (pageSizeChange)="onPageSizeChange($event)"
     (editableValueChange)="onEditableValueChange($event)"
     (activeFilterRemove)="onActiveFilterRemove($event)"
+    (emptyActionClick)="onEmptyActionClick()"
   ></app-data-table>
 }

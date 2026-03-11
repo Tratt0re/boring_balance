@@ -51,8 +51,10 @@ export class OverviewPage implements OnInit, OnDestroy {
 
   protected readonly isSingleColumnLayout = signal(false);
   protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
+  protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
   protected readonly showSnapshotsOutdatedBanner = computed(() =>
-    this.snapshotRecency().hasSnapshots
+    this.netWorthMode() === 'valued'
+    && this.snapshotRecency().hasSnapshots
     && this.snapshotRecency().isOutdated
     && this.snapshotRecency().daysSinceLatestSnapshot !== null,
   );
@@ -100,6 +102,10 @@ export class OverviewPage implements OnInit, OnDestroy {
       void this.overviewAllocationCardComponent?.reload();
       void this.overviewCashflowCardComponent?.reload();
     }, OVERVIEW_ACTIVITY_CHANGE_RELOAD_DELAY_MS);
+  }
+
+  protected onNetWorthModeChange(netWorthMode: 'valued' | 'ledger'): void {
+    this.netWorthMode.set(netWorthMode);
   }
 
   protected onNetWorthSnapshotsChange(snapshotRecency: AnalyticsNetWorthSnapshotsDto): void {

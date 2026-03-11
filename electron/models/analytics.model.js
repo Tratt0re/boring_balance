@@ -206,6 +206,7 @@ function selectLatestValuationByAccountIds(database, accountIds = []) {
         MAX(valued_at) AS latest_valued_at
       FROM account_valuations
       WHERE account_id IN (${placeholdersSql})
+        AND valued_at > 0
       GROUP BY account_id
     ) AS latest
     INNER JOIN account_valuations AS valuation
@@ -223,6 +224,7 @@ function selectLatestSnapshotTimestampMs(database, accountIds) {
       SELECT
         MAX(valued_at) AS latest_snapshot_at_ms
       FROM account_valuations
+      WHERE valued_at > 0
     `).get();
   } else {
     const normalizedAccountIds = normalizeAccountIds(accountIds);
@@ -236,12 +238,13 @@ function selectLatestSnapshotTimestampMs(database, accountIds) {
         MAX(valued_at) AS latest_snapshot_at_ms
       FROM account_valuations
       WHERE account_id IN (${placeholdersSql})
+        AND valued_at > 0
     `).get(normalizedAccountIds);
   }
 
   const latestSnapshotAtMs = Number(row?.latest_snapshot_at_ms);
 
-  return Number.isFinite(latestSnapshotAtMs) ? latestSnapshotAtMs : null;
+  return Number.isFinite(latestSnapshotAtMs) && latestSnapshotAtMs > 0 ? latestSnapshotAtMs : null;
 }
 
 function resolveUseValuationFlag(filters = {}) {

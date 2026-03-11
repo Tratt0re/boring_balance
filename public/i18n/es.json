@@ -535,7 +535,8 @@
         "receivables": "Por cobrar",
         "payables": "Por pagar",
         "totalAfterRP": "Tras C&P",
-        "emptyDistribution": "Aun no hay saldos para repartir. Agrega o actualiza cuentas para ver la asignacion."
+        "emptyDistribution": "Aun no hay saldos para repartir. Agrega o actualiza cuentas para ver la asignacion.",
+        "emptyDistributionNoAccounts": "Aun no hay cuentas. Agrega la primera para ver la asignacion."
       },
       "monthlyTotals": {
         "title": "Ingresos, gastos y flujo neto de caja",
@@ -947,6 +948,7 @@
     "table": {
       "description": "Revisa los ingresos y gastos que afectan saldos, presupuestos y flujo neto de caja.",
       "emptyMessage": "Aun no hay movimientos. Agrega uno para empezar a seguir gastos, ingresos y flujo neto de caja.",
+      "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de registrar movimientos.",
       "actions": {
         "add": "Agregar movimiento",
         "filter": "Filtrar movimientos",
@@ -1016,6 +1018,8 @@
       "table": {
         "description": "Sigue el dinero que mueves entre tus propias cuentas. Las transferencias cambian donde esta el dinero, no tu gasto total.",
         "emptyMessage": "Aun no hay transferencias. Agrega una cuando muevas dinero entre tus propias cuentas.",
+        "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de crear transferencias.",
+        "emptyNeedTwoAccountsMessage": "Necesitas al menos dos cuentas para crear transferencias. Agrega otra cuenta para continuar.",
         "actions": {
           "add": "Agregar transferencia",
           "filter": "Filtrar transferencias",
@@ -1222,6 +1226,7 @@
     "table": {
       "description": "Planifica movimientos y transferencias repetidos para llevar mejor tu actividad rutinaria.",
       "emptyMessage": "Aun no hay eventos recurrentes. Agrega uno para automatizar movimientos o transferencias repetidas.",
+      "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de crear eventos recurrentes.",
       "columns": {
         "title": "Titulo",
         "startDate": "Fecha de inicio",

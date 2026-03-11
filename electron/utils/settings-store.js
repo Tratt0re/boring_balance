@@ -57,6 +57,15 @@ function writeSettingsStore(value) {
   safeWriteFileAtomic(settingsFilePath, JSON.stringify(value, null, 2));
 }
 
+function clearSettingsStore() {
+  const settingsFilePath = getSettingsFilePath();
+  if (!fs.existsSync(settingsFilePath)) {
+    return;
+  }
+
+  fs.rmSync(settingsFilePath, { force: true });
+}
+
 function normalizeSectionValue(sectionValue, defaults = {}) {
   const normalizedDefaults = isPlainObject(defaults) ? defaults : {};
   const normalizedSectionValue = isPlainObject(sectionValue) ? sectionValue : {};
@@ -105,6 +114,7 @@ function patchSettingsSection(sectionKey, patchValue, defaults = {}) {
 }
 
 module.exports = {
+  clearSettingsStore,
   getSettingsFilePath,
   getSettingsSection,
   patchSettingsSection,
