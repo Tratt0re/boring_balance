@@ -1516,5 +1516,48 @@
       "deleteSuccess": "Istantanea eliminata con successo.",
       "deleteError": "Impossibile eliminare l'istantanea."
     }
+  },
+  "onboarding": {
+    "step_counter": "{{current}} / {{total}}",
+    "actions": {
+      "back": "Indietro",
+      "continue": "Continua"
+    },
+    "welcome": {
+      "title": "Benvenuto in Boring Balance",
+      "subtitle": "Un posto semplice e privato per monitorare le tue spese. Nessun cloud, nessun abbonamento, nessun rumore.",
+      "cta": "Inizia"
+    },
+    "preferences": {
+      "title": "Imposta le preferenze",
+      "subtitle": "Puoi modificarle in qualsiasi momento nelle Impostazioni.",
+      "theme": {
+        "label": "Tema"
+      },
+      "language": {
+        "label": "Lingua"
+      },
+      "currency": {
+        "label": "Valuta predefinita",
+        "hint": "Usata per la visualizzazione e i nuovi conti. Puoi sovrascriverla per singolo conto."
+      }
+    },
+    "start": {
+      "title": "Come vuoi iniziare?",
+      "scratch": {
+        "title": "Inizia da zero",
+        "description": "Configura i tuoi conti e categorie. Ci vogliono due minuti."
+      },
+      "import": {
+        "title": "Importa un backup",
+        "description": "Ripristina da un'esportazione precedente di Boring Balance."
+      }
+    },
+    "confirm": {
+      "title": "Sei pronto.",
+      "subtitle": "Tutto è salvato localmente sul tuo dispositivo. Sei tu il responsabile.",
+      "import_note": "Puoi importare il backup da Impostazioni → Esporta e importa in qualsiasi momento.",
+      "cta": "Entra in Boring Balance"
+    }
   }
 }
