@@ -1516,5 +1516,48 @@
       "deleteSuccess": "Snapshot deleted successfully.",
       "deleteError": "Failed to delete the snapshot."
     }
+  },
+  "onboarding": {
+    "step_counter": "{{current}} / {{total}}",
+    "actions": {
+      "back": "Back",
+      "continue": "Continue"
+    },
+    "welcome": {
+      "title": "Welcome to Boring Balance",
+      "subtitle": "A simple, private place to track where your money goes. No cloud, no subscriptions, no noise.",
+      "cta": "Get started"
+    },
+    "preferences": {
+      "title": "Set your preferences",
+      "subtitle": "You can change these at any time in Settings.",
+      "theme": {
+        "label": "Theme"
+      },
+      "language": {
+        "label": "Language"
+      },
+      "currency": {
+        "label": "Default currency",
+        "hint": "Used for display and new accounts. You can override per account."
+      }
+    },
+    "start": {
+      "title": "How do you want to begin?",
+      "scratch": {
+        "title": "Start fresh",
+        "description": "Set up your accounts and categories. Takes two minutes."
+      },
+      "import": {
+        "title": "Import a backup",
+        "description": "Restore from a previous Boring Balance export."
+      }
+    },
+    "confirm": {
+      "title": "You're set up.",
+      "subtitle": "Everything is saved locally on your device. You're in control.",
+      "import_note": "You can import your backup from Settings → Export & Import at any time.",
+      "cta": "Enter Boring Balance"
+    }
   }
 }

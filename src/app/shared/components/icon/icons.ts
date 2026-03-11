@@ -118,6 +118,8 @@ import {
   GraduationCap,
   School,
   Shirt,
+  PencilLine,
+  FileUp,
 } from 'lucide-angular';
 
 export const ZARD_ICONS = {
@@ -239,6 +241,8 @@ export const ZARD_ICONS = {
   wallet: Wallet,
   wrench: Wrench,
   refrigerator: Refrigerator,
+  'pencil-line': PencilLine,
+  'file-up': FileUp,
 } as const satisfies Record<string, LucideIconData>;
 
 export declare type ZardIcon = keyof typeof ZARD_ICONS | LucideIconData;
