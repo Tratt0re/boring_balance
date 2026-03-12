@@ -25,6 +25,15 @@ export enum APIChannel {
   IMPORT_EXCEL = 'importExcel',
   SYNC = 'sync',
   RESET = 'reset',
+  UPDATE = 'update',
+}
+
+export interface UpdateCheckResult {
+  updateAvailable: boolean;
+  currentVersion: string;
+  latestVersion: string | null;
+  releaseUrl: string | null;
+  popupDismissedForThisVersion: boolean;
 }
 
 export interface ElectronIpcClient {
@@ -160,6 +169,12 @@ export interface ElectronIpcClient {
   readonly reset: {
     readonly clearFinancialData: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
     readonly factoryReset: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
+  };
+  readonly update: {
+    readonly check: OptionalIpcRequest<void, UpdateCheckResult>;
+    readonly forceCheck: OptionalIpcRequest<void, UpdateCheckResult>;
+    readonly openRelease: IpcRequest<{ url: string }, void>;
+    readonly ignoreVersion: IpcRequest<{ version: string }, void>;
   };
 }
 

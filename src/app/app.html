@@ -4,3 +4,6 @@
   </app-root-layout>
 </div>
 <z-toaster />
+@if (updateService.showModal()) {
+  <app-update-modal />
+}

@@ -105,6 +105,12 @@ const CHANNELS = Object.freeze({
     clearFinancialData: 'db:reset:clear-financial-data',
     factoryReset: 'db:reset:factory-reset',
   }),
+  update: Object.freeze({
+    check: 'update:check',
+    forceCheck: 'update:force-check',
+    openRelease: 'update:open-release',
+    ignoreVersion: 'update:ignore-version',
+  }),
 });
 
 module.exports = {
