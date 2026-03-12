@@ -59,7 +59,7 @@ export interface PreferencesData {
             (zSelectionChange)="onLanguageChange($event)"
           >
             @for (language of languages; track language) {
-              <z-select-item [zValue]="language" [zLabel]="getLanguageLabel(language)" />
+              <z-select-item [zValue]="language" [zLabel]="getLanguageLabelKey(language) | translate" />
             }
           </z-select>
         </div>
@@ -126,9 +126,8 @@ export class OnboardingPreferencesComponent implements OnInit, AfterViewInit {
     this.selectedCurrency.set(data?.currency ?? this.localPreferencesService.getCurrency());
   }
 
-  protected getLanguageLabel(lang: string): string {
-    const labels: Record<string, string> = { en: 'English', it: 'Italiano', es: 'Español' };
-    return labels[lang] ?? lang;
+  protected getLanguageLabelKey(language: string): string {
+    return `header.language.options.${language}`;
   }
 
   protected themeOptionLabelKey(theme: EDarkModes): string {

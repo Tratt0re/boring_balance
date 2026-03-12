@@ -2,22 +2,30 @@ import { isPlatformBrowser, registerLocaleData } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
+import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en';
 import localeEs from '@angular/common/locales/es';
+import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
+import localeUk from '@angular/common/locales/uk';
+import localeZh from '@angular/common/locales/zh';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 
-export const SUPPORTED_LANGUAGES = ['en', 'es', 'it'] as const;
+export const SUPPORTED_LANGUAGES = ['en', 'es', 'it', 'fr', 'de', 'uk', 'zh'] as const;
 export type AppLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 const DEFAULT_LANGUAGE: AppLanguage = 'en';
 const REGISTERED_ANGULAR_LOCALES = new Set<AppLanguage>();
 
 const ANGULAR_LOCALE_DATA_BY_LANGUAGE: Record<AppLanguage, unknown> = {
+  de: localeDe,
   en: localeEn,
   es: localeEs,
+  fr: localeFr,
   it: localeIt,
+  uk: localeUk,
+  zh: localeZh,
 };
 
 @Injectable({

@@ -236,6 +236,17 @@
       "appNameLabel": "App",
       "appVersionLabel": "Version de la app",
       "appVersionUnavailable": "No disponible en esta build",
+      "copy": {
+        "paragraph1": "Hola. Si terminaste aqui, probablemente seas justo el tipo de persona para quien se creo esta app.",
+        "paragraph2": "Cree Boring Balance despues de anos saltando entre apps, archivos de Excel y Google Sheets sin encontrar nunca algo que de verdad encajara con lo que necesitaba.",
+        "paragraph3": "La mayoria de las herramientas eran demasiado complicadas, estaban llenas de anuncios y seguimiento, o bloqueadas tras suscripciones.",
+        "paragraph4": "Asi que hice la mia.",
+        "paragraph5": "Boring Balance esta pensada para ser simple, privada y completamente bajo tu control. Tus datos siguen siendo tuyos. No hay anuncios, no hay seguimiento y no hay funciones disenadas para empujarte a pagar solo para ver tus propias finanzas.",
+        "paragraph6": "Creo que las finanzas personales deben ser algo que gestiones activamente. Tomarte un momento para revisar tus saldos, tus gastos y mantener todo alineado es la unica forma de entender de verdad adonde va tu dinero.",
+        "paragraph7": "Esta app ofrece algunas herramientas clave para ayudarte con eso: seguimiento de cuentas y transacciones, presupuestos y planificacion de eventos recurrentes.",
+        "paragraph8": "Nada aqui es obligatorio. Usa tanto o tan poco como quieras.",
+        "paragraph9": "Bienvenido a este pequeno lugar aburrido - y recuerda mantener tu balance a salvo con una copia de seguridad de vez en cuando 😉"
+      },
       "localFirst": "Boring Balance es un gestor de finanzas personales pensado para la privacidad. Tus datos se quedan en tu dispositivo y la app los usa solo para mostrar balances y analisis.",
       "openSourceNote": "La app principal es open source, asi que puedes revisar el proyecto o seguir su desarrollo desde el repositorio de abajo.",
       "openSourceCta": "Abrir en GitHub",
@@ -1205,7 +1216,11 @@
       "options": {
         "en": "English",
         "es": "Español",
-        "it": "Italiano"
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
       }
     },
     "theme": {

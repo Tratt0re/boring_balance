@@ -45,6 +45,7 @@
   "build": {
     "appId": "com.boringbalance.desktop",
     "productName": "Boring Balance",
+    "icon": "src/assetts/icon/bb_ico_1024.png",
     "directories": {
       "output": "release"
     },

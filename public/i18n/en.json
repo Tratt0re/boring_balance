@@ -236,6 +236,17 @@
       "appNameLabel": "App",
       "appVersionLabel": "App version",
       "appVersionUnavailable": "Not available in this build",
+      "copy": {
+        "paragraph1": "Hi. If you ended up here, you’re probably the kind of person this app was built for.",
+        "paragraph2": "I created Boring Balance after years of moving between apps, Excel files, and Google Sheets without ever finding something that truly fit my needs.",
+        "paragraph3": "Most tools were either too complicated, full of ads and tracking, or locked behind subscriptions.",
+        "paragraph4": "So I built my own.",
+        "paragraph5": "Boring Balance is meant to be simple, private, and completely under your control. Your data stays yours. There are no ads, no tracking, and no features designed to push you into paying just to see your own finances.",
+        "paragraph6": "I believe personal finance should be something you actively manage. Taking a moment to check your balances, review your expenses, and keep things aligned is the only way to truly understand where your money goes.",
+        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring events.",
+        "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
+        "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
+      },
       "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
       "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
       "openSourceCta": "Open on GitHub",
@@ -1275,7 +1286,11 @@
       "options": {
         "en": "English",
         "es": "Español",
-        "it": "Italiano"
+        "it": "Italiano",
+        "fr": "Français",
+        "de": "Deutsch",
+        "uk": "Українська",
+        "zh": "中文"
       }
     },
     "theme": {

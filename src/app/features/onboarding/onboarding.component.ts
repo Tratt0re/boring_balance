@@ -6,6 +6,7 @@ import { I18nService } from '@/services/i18n.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardDarkMode } from '@/shared/services/dark-mode';
 import { applyThemeTransition } from '@/shared/utils/theme-transition';
+import { AppBrandIconComponent } from '@/components/brand-icon/brand-icon.component';
 
 import { OnboardingWelcomeComponent } from './steps/onboarding-welcome.component';
 import { OnboardingPreferencesComponent, type PreferencesData } from './steps/onboarding-preferences.component';
@@ -26,6 +27,7 @@ interface OnboardingState {
   selector: 'app-onboarding',
   imports: [
     TranslatePipe,
+    AppBrandIconComponent,
     OnboardingWelcomeComponent,
     OnboardingPreferencesComponent,
     OnboardingStartComponent,
@@ -35,6 +37,10 @@ interface OnboardingState {
     <div class="fixed inset-0 z-50 flex flex-col bg-background">
       <div class="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <div class="w-full max-w-lg">
+          <div class="mb-8 flex justify-center">
+            <app-brand-icon width="21rem" />
+          </div>
+
           @if (currentStep() > 1) {
             <p class="mb-6 text-sm text-muted-foreground" aria-live="polite">
               {{ 'onboarding.step_counter' | translate: { current: currentStep(), total: totalSteps } }}

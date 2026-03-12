@@ -21,8 +21,23 @@ function resolvePreloadPath() {
   return preloadPath;
 }
 
-function initMainWindow(isDev) {
-  return new BrowserWindow({
+function resolveAppIconPath() {
+  const candidates = [
+    path.join(__dirname, '..', 'src', 'assetts', 'icon', 'bb_ico_1024.png'),
+    path.join(__dirname, '..', 'dist', 'boringbalance', 'browser', 'assetts', 'icon', 'bb_ico_1024.png'),
+  ];
+
+  for (const iconPath of candidates) {
+    if (fs.existsSync(iconPath)) {
+      return iconPath;
+    }
+  }
+
+  return null;
+}
+
+function initMainWindow(isDev, iconPath = null) {
+  const windowOptions = {
     width: 1200,
     height: 800,
     minWidth: 950,
@@ -36,7 +51,13 @@ function initMainWindow(isDev) {
       sandbox: true,
       devTools: isDev,
     },
-  });
+  };
+
+  if (iconPath) {
+    windowOptions.icon = iconPath;
+  }
+
+  return new BrowserWindow(windowOptions);
 }
 
 function emitFullscreenState(mainWindow) {
@@ -112,7 +133,13 @@ function loadWindowContent(mainWindow, isDev) {
 
 function createWindow() {
   const isDev = !app.isPackaged;
-  const mainWindow = initMainWindow(isDev);
+  const iconPath = resolveAppIconPath();
+
+  if (isMac && iconPath) {
+    app.dock.setIcon(iconPath);
+  }
+
+  const mainWindow = initMainWindow(isDev, iconPath);
   registerWindowLifecycle(mainWindow);
 
   mainWindow.once('ready-to-show', () => {

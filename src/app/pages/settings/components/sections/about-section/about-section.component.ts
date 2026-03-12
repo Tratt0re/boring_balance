@@ -3,13 +3,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppMetadataService } from '@/services/app-metadata.service';
+import { AppBrandIconComponent } from '@/components/brand-icon/brand-icon.component';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardIconComponent } from '@/shared/components/icon';
 import { UpdateService } from '@/core/services/update.service';
 
 @Component({
   selector: 'app-about-section',
-  imports: [TranslatePipe, ZardButtonComponent, ZardIconComponent],
+  imports: [TranslatePipe, AppBrandIconComponent, ZardButtonComponent, ZardIconComponent],
   templateUrl: './about-section.component.html',
   styleUrl: './about-section.component.scss',
 })

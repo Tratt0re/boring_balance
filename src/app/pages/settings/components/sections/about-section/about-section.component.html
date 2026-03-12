@@ -1,80 +1,80 @@
-<div class="flex h-full flex-col gap-4">
-  <section class="mx-auto w-full max-w-4xl rounded-lg border border-border/60 bg-card p-4">
+<div class="space-y-4">
+  <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-      <div class="grid flex-1 gap-4 sm:grid-cols-2">
-        <div class="rounded-md bg-muted/40 p-3">
-          <p class="text-xs uppercase tracking-wide text-muted-foreground">
-            {{ 'settings.about.appNameLabel' | translate }}
-          </p>
-          <p class="mt-2 text-sm font-medium">{{ appName }}</p>
-        </div>
+      <p class="text-sm text-muted-foreground">
+        <span class="font-medium">
+          {{ 'settings.about.appVersionLabel' | translate }}:
+        </span>
+        <span class="font-medium text-foreground">
+          {{
+            appVersion
+              ? appVersion
+              : ('settings.about.appVersionUnavailable' | translate)
+          }}
+        </span>
+      </p>
 
-        <div class="rounded-md bg-muted/40 p-3">
-          <p class="text-xs uppercase tracking-wide text-muted-foreground">
-            {{ 'settings.about.appVersionLabel' | translate }}
-          </p>
-          <p class="mt-2 text-sm font-medium">
-            {{
-              appVersion
-                ? appVersion
-                : ('settings.about.appVersionUnavailable' | translate)
-            }}
-          </p>
-        </div>
-      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        @if (repositoryUrl) {
+          <a
+            z-button
+            zType="outline"
+            zSize="sm"
+            class="shrink-0"
+            [href]="repositoryUrl"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <z-icon zType="github" class="size-4" />
+            <span>{{ 'settings.about.openSourceCta' | translate }}</span>
+          </a>
+        }
 
-      @if (repositoryUrl) {
-        <a
+        <button
+          type="button"
           z-button
           zType="outline"
           zSize="sm"
-          class="shrink-0"
-          [href]="repositoryUrl"
-          target="_blank"
-          rel="noreferrer noopener"
+          [zDisabled]="checkingUpdates()"
+          (click)="onCheckForUpdates()"
         >
-          <z-icon zType="github" class="size-4" />
-          <span>{{ 'settings.about.openSourceCta' | translate }}</span>
-        </a>
-      }
+          <z-icon zType="arrow-up" class="size-4" />
+          <span>{{ 'settings.about.checkForUpdates' | translate }}</span>
+        </button>
+      </div>
     </div>
 
-    <p class="mt-4 text-sm text-muted-foreground">
-      {{ 'settings.about.localFirst' | translate }}
-    </p>
-    <p class="mt-3 text-sm text-muted-foreground">
-      {{ 'settings.about.openSourceNote' | translate }}
-    </p>
+    @if (updateService.updateAvailable()) {
+      <p class="mt-3 text-sm text-muted-foreground">
+        {{
+          'update.sidebar.label'
+            | translate: { latest: updateService.updateResult()?.latestVersion }
+        }}
+      </p>
+    }
 
-    <div class="mt-4 flex items-center gap-3">
-      <button
-        type="button"
-        z-button
-        zType="outline"
-        zSize="sm"
-        [zDisabled]="checkingUpdates()"
-        (click)="onCheckForUpdates()"
-      >
-        <z-icon zType="arrow-up" class="size-4" />
-        <span>{{ 'settings.about.checkForUpdates' | translate }}</span>
-      </button>
+    <div class="mt-4 flex items-center justify-center rounded-md bg-muted/20 py-4">
+      <app-brand-icon [ariaLabel]="appName + ' logo'" />
+    </div>
 
-      @if (updateService.updateAvailable()) {
-        <span class="text-sm text-muted-foreground">
-          {{
-            'update.sidebar.label'
-              | translate: { latest: updateService.updateResult()?.latestVersion }
-          }}
-        </span>
-      }
+    <div class="mt-4 space-y-3 text-sm text-muted-foreground">
+      <p>{{ 'settings.about.copy.paragraph1' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph2' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph3' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph4' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph5' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph6' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph7' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph8' | translate }}</p>
+      <p>{{ 'settings.about.copy.paragraph9' | translate }}</p>
     </div>
   </section>
 
   @if (authorName) {
-    <div class="mt-auto flex justify-center pt-2">
+    <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
       <p class="text-center text-sm font-medium text-muted-foreground">
         {{ 'settings.about.footer' | translate: { authorName: authorName } }}
       </p>
-    </div>
+    </section>
   }
 </div>
