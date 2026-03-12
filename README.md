@@ -24,32 +24,47 @@ npm run build:web
 
 Output goes to `dist/boringbalance/browser`.
 
-## Production Packaging (Desktop)
+## Local Production Build Flow
 
-Create a production-ready desktop package for the current OS:
+Build renderer + Electron preload for production:
+
+```bash
+npm run build:prod
+```
+
+Run Electron in local production mode (loads built files, no dev server):
+
+```bash
+npm run electron:prod
+```
+
+Create an unpacked app folder for the current OS:
+
+```bash
+npm run build:desktop
+```
+
+Create distributable artifacts:
 
 ```bash
 npm run dist
-```
-
-What this does:
-- builds Angular in production mode
-- packages the Electron app with `electron-builder`
-- writes artifacts to `release/`
-
-Platform-specific packaging:
-
-```bash
 npm run dist:mac
 npm run dist:win
 npm run dist:linux
 ```
 
-Create an unpacked app folder (useful for smoke testing packaging locally):
+Artifacts are written to `release/`.
 
-```bash
-npm run build:desktop
-```
+### Windows artifacts (`npm run dist:win`)
+
+Expected output:
+- `release/boring-balance-setup-<version>-x64.exe`
+- `release/boring-balance-setup-<version>-x64.exe.blockmap`
+- `release/boring-balance-portable-<version>-x64.exe`
+- `release/win-unpacked/`
+
+Note for non-Windows hosts:
+- Windows packaging depends on Wine/NSIS tooling available to `electron-builder`.
 
 ## Tests
 
@@ -58,6 +73,17 @@ Run unit tests:
 ```bash
 npm test
 ```
+
+## Packaged Build Checklist
+
+- [ ] Packaged app starts without relying on `ng serve`.
+- [ ] Renderer loads correctly in packaged mode.
+- [ ] SQLite database initializes under `<userData>/data/`.
+- [ ] App icons/assets/templates are available at runtime.
+- [ ] Import/export flows complete without file path errors.
+- [ ] Backup/restore and sync-related file operations still work.
+- [ ] Windows artifacts are generated in `release/`.
+- [ ] Installer and portable Windows artifacts are both generated and launch.
 
 ## Database Files (Dev vs Prod)
 

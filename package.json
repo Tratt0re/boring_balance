@@ -12,20 +12,22 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:web": "ng build --configuration production --base-href ./",
+    "build:web": "node scripts/build-web.js",
     "build:preload": "node scripts/build-preload.js",
     "build:preload:prod": "node scripts/build-preload.js --prod",
+    "build:prod": "npm run build:web && npm run build:preload:prod",
     "preload:watch": "node scripts/build-preload.js --watch",
-    "build:desktop": "npm run build:web && npm run build:preload:prod && electron-builder --dir --publish never",
-    "dist": "npm run build:web && npm run build:preload:prod && electron-builder --publish never",
-    "dist:mac": "npm run build:web && npm run build:preload:prod && electron-builder --mac --publish never",
-    "dist:win": "npm run build:web && npm run build:preload:prod && electron-builder --win --x64 --publish never",
-    "dist:linux": "npm run build:web && npm run build:preload:prod && electron-builder --linux --publish never",
+    "build:desktop": "npm run build:prod && electron-builder --dir --publish never",
+    "dist": "npm run build:prod && electron-builder --publish never",
+    "dist:mac": "npm run build:prod && electron-builder --mac --publish never",
+    "dist:win": "npm run build:prod && electron-builder --win --x64 --publish never",
+    "dist:linux": "npm run build:prod && electron-builder --linux --publish never",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "postinstall": "electron-rebuild -f -w better-sqlite3",
     "electron:dev": "npm run build:preload && electronmon .",
     "electron:start": "npm run build:preload && electron .",
+    "electron:prod": "npm run build:prod && electron . --prod",
     "dev": "concurrently -k \"ng serve\" \"npm run preload:watch\" \"wait-on http://localhost:4200 && npm run electron:dev\""
   },
   "prettier": {
@@ -47,9 +49,13 @@
     "productName": "Boring Balance",
     "icon": "src/assetts/icon/bb_ico_1024.png",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "."
     },
     "asar": true,
+    "asarUnpack": [
+      "**/*.node"
+    ],
     "files": [
       "dist/boringbalance/browser/**/*",
       "electron/**/*",
@@ -63,9 +69,17 @@
       "category": "public.app-category.finance"
     },
     "win": {
+      "icon": "src/assetts/icon/bb_ico_1024.png",
       "target": [
-        "nsis"
+        "nsis",
+        "portable"
       ]
+    },
+    "nsis": {
+      "artifactName": "boring-balance-setup-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "boring-balance-portable-${version}-${arch}.${ext}"
     },
     "linux": {
       "target": [
