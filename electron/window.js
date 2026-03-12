@@ -5,14 +5,20 @@ const path = require('node:path');
 const isMac = process.platform === 'darwin';
 
 const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:4200';
+const RENDERER_BUILD_SEGMENTS = ['dist', 'boringbalance', 'browser'];
+const PRODUCTION_MODE_FLAGS = new Set(['--prod', '--production']);
 const openWindows = new Set();
 
+function resolveAppPath(...segments) {
+  return path.join(app.getAppPath(), ...segments);
+}
+
 function resolveRendererIndexPath() {
-  return path.join(__dirname, '..', 'dist', 'boringbalance', 'browser', 'index.html');
+  return resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'index.html');
 }
 
 function resolvePreloadPath() {
-  const preloadPath = path.join(__dirname, 'preload.bundle.cjs');
+  const preloadPath = resolveAppPath('electron', 'preload.bundle.cjs');
 
   if (!fs.existsSync(preloadPath)) {
     throw new Error(`Preload bundle not found at ${preloadPath}. Run "npm run build:preload".`);
@@ -21,11 +27,13 @@ function resolvePreloadPath() {
   return preloadPath;
 }
 
-function resolveAppIconPath() {
-  const candidates = [
-    path.join(__dirname, '..', 'src', 'assetts', 'icon', 'bb_ico_1024.png'),
-    path.join(__dirname, '..', 'dist', 'boringbalance', 'browser', 'assetts', 'icon', 'bb_ico_1024.png'),
-  ];
+function resolveAppIconPath(isDev) {
+  const candidates = isDev
+    ? [
+        resolveAppPath('src', 'assetts', 'icon', 'bb_ico_1024.png'),
+        resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assetts', 'icon', 'bb_ico_1024.png'),
+      ]
+    : [resolveAppPath(...RENDERER_BUILD_SEGMENTS, 'assetts', 'icon', 'bb_ico_1024.png')];
 
   for (const iconPath of candidates) {
     if (fs.existsSync(iconPath)) {
@@ -131,9 +139,13 @@ function loadWindowContent(mainWindow, isDev) {
   mainWindow.loadFile(indexPath);
 }
 
+function isProductionCliMode() {
+  return process.argv.some((flag) => PRODUCTION_MODE_FLAGS.has(flag));
+}
+
 function createWindow() {
-  const isDev = !app.isPackaged;
-  const iconPath = resolveAppIconPath();
+  const isDev = !app.isPackaged && !isProductionCliMode();
+  const iconPath = resolveAppIconPath(isDev);
 
   if (isMac && iconPath) {
     app.dock.setIcon(iconPath);

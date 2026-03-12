@@ -5,7 +5,6 @@ const Database = require('better-sqlite3');
 
 const PROD_DB_FILENAME = 'boringbalance.db';
 const DEV_DB_FILENAME = 'boringbalance.dev.db';
-const APP_STORAGE_DIR_NAME = 'boringbalance';
 
 let db = null;
 
@@ -24,7 +23,7 @@ function resolveDatabaseFilename() {
 }
 
 function getDatabasePath() {
-  const dataDir = path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME, 'data');
+  const dataDir = path.join(app.getPath('userData'), 'data');
   fs.mkdirSync(dataDir, { recursive: true });
   return path.join(dataDir, resolveDatabaseFilename());
 }
