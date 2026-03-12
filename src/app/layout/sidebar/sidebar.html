@@ -65,7 +65,7 @@
 
       @if (bottomMenuSections().length) {
         <div [class]="'flex flex-col pt-4 ' + (sidebarCollapsed() ? 'gap-1' : 'gap-4')">
-          @for (section of bottomMenuSections(); track section.label) {
+          @for (section of bottomMenuSections(); track section.label; let last = $last) {
             <z-sidebar-group class="gap-1">
               <z-sidebar-group-label
                 [class]="
@@ -112,6 +112,30 @@
                     {{ item.label | translate }}
                   </span>
                 </a>
+              }
+
+              @if (last && updateService.updateAvailable()) {
+                <button
+                  type="button"
+                  (click)="updateService.openReleasePage()"
+                  [zTooltip]="sidebarCollapsed() ? ('update.sidebar.label' | translate: { latest: updateService.updateResult()?.latestVersion }) : null"
+                  zPosition="right"
+                  [class]="
+                    'flex h-9 w-full items-center rounded-md border border-sidebar-primary/40 px-3 text-sm text-sidebar-primary transition-colors hover:border-sidebar-primary hover:bg-sidebar-primary/10 ' +
+                    (sidebarCollapsed() ? 'justify-center' : 'justify-start gap-3')
+                  "
+                >
+                  <z-icon zType="arrow-up" class="size-4 shrink-0" />
+                  <span
+                    [class]="
+                      'overflow-hidden whitespace-nowrap transition-[opacity,width] duration-200 ease-out ' +
+                      (sidebarCollapsed() ? 'w-0 opacity-0' : 'w-auto opacity-100')
+                    "
+                    [attr.aria-hidden]="sidebarCollapsed()"
+                  >
+                    {{ 'update.sidebar.label' | translate: { latest: updateService.updateResult()?.latestVersion } }}
+                  </span>
+                </button>
               }
             </z-sidebar-group>
           }

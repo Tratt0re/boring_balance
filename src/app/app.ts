@@ -7,15 +7,18 @@ import { map, startWith } from 'rxjs';
 
 import { RootLayout } from '@/layout/root-layout/root-layout';
 import { ZardToastComponent } from '@/shared/components/toast';
+import { UpdateModalComponent } from '@/shared/components/update-modal/update-modal.component';
+import { UpdateService } from '@/core/services/update.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RootLayout, RouterOutlet, ZardToastComponent],
+  imports: [RootLayout, RouterOutlet, ZardToastComponent, UpdateModalComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
   private readonly translateService = inject(TranslateService);
+  protected readonly updateService = inject(UpdateService);
 
   private readonly lang = toSignal(
     this.translateService.onLangChange.pipe(
@@ -28,5 +31,6 @@ export class App {
     effect(() => {
       document.documentElement.lang = this.lang() ?? 'en';
     });
+    this.updateService.checkForUpdates();
   }
 }

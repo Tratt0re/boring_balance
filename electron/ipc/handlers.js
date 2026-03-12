@@ -13,6 +13,7 @@ const {
   transactionsController,
   transfersController,
   resetController,
+  updateController,
 } = require('../controllers');
 const { CHANNELS } = require('./channels');
 
@@ -109,6 +110,11 @@ const IPC_HANDLERS = Object.freeze({
 
   [CHANNELS.reset.clearFinancialData]: resetController.clearFinancialData,
   [CHANNELS.reset.factoryReset]: resetController.factoryReset,
+
+  [CHANNELS.update.check]: updateController.check,
+  [CHANNELS.update.forceCheck]: updateController.forceCheck,
+  [CHANNELS.update.openRelease]: updateController.openRelease,
+  [CHANNELS.update.ignoreVersion]: updateController.ignoreVersion,
 });
 
 module.exports = {

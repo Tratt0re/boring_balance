@@ -11,6 +11,7 @@ import {
 } from '@/shared/components/layout/sidebar.component';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { mergeClasses } from '@/shared/utils/merge-classes';
+import { UpdateService } from '@/core/services/update.service';
 
 import type { MenuSectionConfig } from '@/config/menu.config';
 
@@ -32,6 +33,7 @@ import type { MenuSectionConfig } from '@/config/menu.config';
 })
 export class Sidebar {
   private readonly destroyRef = inject(DestroyRef);
+  protected readonly updateService = inject(UpdateService);
   private readonly collapseTransitionMs = 100;
   private collapseTransitionTimer?: ReturnType<typeof globalThis.setTimeout>;
   private previousCollapsed?: boolean;

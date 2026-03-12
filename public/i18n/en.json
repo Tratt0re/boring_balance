@@ -239,6 +239,7 @@
       "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
       "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
       "openSourceCta": "Open on GitHub",
+      "checkForUpdates": "Check for updates",
       "footer": "Made with ❤️ by {{authorName}}",
       "runtime": {
         "title": "Runtime",
@@ -1593,6 +1594,20 @@
       "subtitle": "Everything is saved locally on your device. You're in control.",
       "import_note": "You can import your backup from Settings → Export & Import at any time.",
       "cta": "Enter Boring Balance"
+    }
+  },
+  "update": {
+    "modal": {
+      "title": "A new version is available",
+      "body": "You are on v{{current}}. Boring Balance v{{latest}} is now available on GitHub.",
+      "ignore": "Don't remind me again for v{{latest}}",
+      "cta": {
+        "update": "Update on GitHub",
+        "dismiss": "Stay on v{{current}}"
+      }
+    },
+    "sidebar": {
+      "label": "Update available · v{{latest}}"
     }
   }
 }
