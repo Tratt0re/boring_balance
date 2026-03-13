@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Boring Balance</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend."
+    />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#202020" media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://api.github.com" />
+    <link rel="preload" as="font" type="font/woff2" href="assetts/fonts/manrope/Manrope-Regular.woff2" crossorigin />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Boring Balance" />
+    <meta property="og:description" content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend." />
+    <meta property="og:image" content="android-chrome-512x512.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Boring Balance" />
+    <meta name="twitter:description" content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend." />
+
+    <script>
+      (function () {
+        const html = document.documentElement;
+
+        try {
+          const theme = localStorage.theme;
+          const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+
+          const isSystem = theme === 'system' || !('theme' in localStorage);
+          const isDark = theme === 'dark' || (isSystem && prefersDark);
+          html.classList.toggle('dark', isDark);
+          html.setAttribute('data-theme', theme ?? 'system');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

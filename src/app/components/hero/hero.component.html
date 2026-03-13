@@ -1,0 +1,163 @@
+<section class="mx-auto flex w-full max-w-6xl items-center gap-16 px-6 py-16 sm:px-10 sm:py-24">
+
+  <!-- Left column: text + CTAs -->
+  <div class="flex flex-col items-start flex-1 min-w-0">
+    <!-- Logo -->
+    <app-brand-icon class="h-16 w-auto shrink-0 text-primary sm:h-20" />
+
+    <!-- Headline -->
+    <h1 class="mt-5 text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl">
+      Private by default. Boring by design.
+    </h1>
+
+    <!-- Subheadline -->
+    <p class="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+      A local-first personal finance tracker with no accounts, no subscriptions, and no hosted
+      backend.
+    </p>
+
+    <!-- Primary download CTA -->
+    <div class="mt-10 flex flex-col gap-3">
+      <div aria-live="polite" aria-atomic="true">
+        @if (release.isLoading()) {
+          <span
+            class="inline-flex h-11 cursor-default items-center gap-2.5 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground opacity-60"
+          >
+            <lucide-icon [img]="loaderIcon" [size]="15" class="animate-spin" aria-hidden="true" />
+            Fetching latest release&hellip;
+          </span>
+        } @else {
+          <!-- Primary + GitHub CTAs side by side -->
+          <div class="flex flex-wrap items-center gap-3">
+            <a
+              [href]="release.primaryUrl()"
+              class="inline-flex h-11 items-center justify-center gap-2.5 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <lucide-icon [img]="downloadIcon" [size]="15" class="shrink-0" aria-hidden="true" />
+              {{ release.primaryLabel() }}
+            </a>
+
+            <a
+              [href]="repoUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex h-11 items-center gap-2 rounded-md border border-border bg-transparent px-5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <lucide-icon [img]="githubIcon" [size]="15" aria-hidden="true" />
+              View on GitHub <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Platform detection label -->
+      @if (release.platformLabel()) {
+        <p class="text-sm text-muted-foreground">
+          Detected system: {{ release.platformLabel() }}
+        </p>
+      }
+    </div>
+
+    <!-- Secondary platform links -->
+    @if (release.otherPlatforms().length > 0) {
+      <div class="mt-4 flex flex-wrap items-center gap-x-1 gap-y-1 text-sm text-muted-foreground">
+        <span>Also available for:</span>
+        @for (platform of release.otherPlatforms(); track platform; let last = $last) {
+          <a
+            [href]="getPlatformUrl(platform)"
+            class="text-foreground underline underline-offset-4 decoration-border hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >{{ getPlatformLabel(platform) }}</a>@if (!last) {<span aria-hidden="true">&nbsp;&middot;</span>}
+        }
+      </div>
+    } @else {
+      <div class="mt-4 flex flex-wrap items-center gap-x-1 gap-y-1 text-sm text-muted-foreground">
+        <span>Also available for:</span>
+        <a [href]="getPlatformUrl('windows')" class="text-foreground underline underline-offset-4 decoration-border hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">Windows</a>
+        <span aria-hidden="true">&nbsp;&middot;</span>
+        <a [href]="getPlatformUrl('macos')" class="text-foreground underline underline-offset-4 decoration-border hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">macOS</a>
+        <span aria-hidden="true">&nbsp;&middot;</span>
+        <a [href]="getPlatformUrl('linux')" class="text-foreground underline underline-offset-4 decoration-border hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">Linux</a>
+      </div>
+    }
+
+    <!-- Release note -->
+    <p class="mt-8 max-w-sm text-xs leading-5 text-muted-foreground/70">
+      Boring Balance is a desktop application. Releases are distributed through GitHub Releases.
+    </p>
+  </div>
+
+  <!-- Right column: feature highlights as app mockup -->
+  <div class="hidden lg:flex flex-1 items-center justify-end">
+    <div class="w-full max-w-sm rounded-xl border border-border bg-background overflow-hidden">
+      <!-- Window titlebar -->
+      <div class="flex items-center gap-1.5 border-b border-border px-4 py-3">
+        <span class="size-2.5 rounded-full bg-border"></span>
+        <span class="size-2.5 rounded-full bg-border"></span>
+        <span class="size-2.5 rounded-full bg-border"></span>
+        <span class="ml-auto text-xs text-muted-foreground/50 font-mono">boring balance</span>
+      </div>
+
+      <!-- App content -->
+      <div class="p-5">
+        <!-- Section header -->
+        <div class="mb-5">
+          <p class="text-xs text-muted-foreground mb-1 uppercase tracking-wider">What's included</p>
+          <p class="text-2xl font-semibold text-foreground">Every feature.</p>
+          <p class="mt-1 text-xs text-muted-foreground">Free &middot; Forever &middot; No account needed</p>
+        </div>
+
+        <!-- Mini bar chart (decorative) -->
+        <div class="mb-5 flex items-end gap-1 h-10">
+          <div class="flex-1 rounded-sm bg-foreground/8 h-[55%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/8 h-[70%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/8 h-[45%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/10 h-[80%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/10 h-[60%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/12 h-[75%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/15 h-[90%]"></div>
+          <div class="flex-1 rounded-sm bg-foreground/12 h-[65%]"></div>
+        </div>
+
+        <!-- Feature rows styled as transaction list -->
+        <div class="divide-y divide-border">
+          <div class="flex items-center justify-between py-2.5">
+            <div>
+              <p class="text-sm text-foreground">Accounts &amp; net worth</p>
+              <p class="text-xs text-muted-foreground">Track balances over time &middot; Overview</p>
+            </div>
+            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
+          </div>
+          <div class="flex items-center justify-between py-2.5">
+            <div>
+              <p class="text-sm text-foreground">Transaction log</p>
+              <p class="text-xs text-muted-foreground">Categorize &amp; search &middot; Transactions</p>
+            </div>
+            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
+          </div>
+          <div class="flex items-center justify-between py-2.5">
+            <div>
+              <p class="text-sm text-foreground">Budgets &amp; goals</p>
+              <p class="text-xs text-muted-foreground">Monthly limits per category &middot; Budgets</p>
+            </div>
+            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
+          </div>
+          <div class="flex items-center justify-between py-2.5">
+            <div>
+              <p class="text-sm text-foreground">Recurring events</p>
+              <p class="text-xs text-muted-foreground">Automate regular entries &middot; Planning</p>
+            </div>
+            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
+          </div>
+          <div class="flex items-center justify-between py-2.5">
+            <div>
+              <p class="text-sm text-foreground">Local &amp; private</p>
+              <p class="text-xs text-muted-foreground">SQLite, no cloud, no tracking &middot; Privacy</p>
+            </div>
+            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">always</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
