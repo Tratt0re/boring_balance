@@ -2,29 +2,67 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Boring Balance</title>
+    <title>Boring Balance | Desktop Personal Finance and Expense Tracking App</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="Boring Balance" />
+    <meta
+      name="keywords"
+      content="personal finance desktop app, expense tracking desktop app, balance tracking app, simple budgeting software, privacy-friendly finance tracker, desktop money tracking app"
+    />
+    <meta
+      name="robots"
+      content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+    />
     <meta
       name="description"
-      content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend."
+      content="Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux."
     />
+    <meta name="application-name" content="Boring Balance" />
+    <meta name="apple-mobile-web-app-title" content="Boring Balance" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#202020" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://boringbalance.com/" />
     <link rel="preconnect" href="https://api.github.com" />
-    <link rel="preload" as="font" type="font/woff2" href="assetts/fonts/manrope/Manrope-Regular.woff2" crossorigin />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="assetts/fonts/manrope/Manrope-Regular.woff2"
+      crossorigin
+    />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Boring Balance" />
-    <meta property="og:description" content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend." />
-    <meta property="og:image" content="android-chrome-512x512.png" />
+    <meta
+      property="og:title"
+      content="Boring Balance | Desktop Personal Finance and Expense Tracking App"
+    />
+    <meta
+      property="og:description"
+      content="Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux."
+    />
+    <meta property="og:url" content="https://boringbalance.com/" />
+    <meta property="og:image" content="https://boringbalance.com/android-chrome-512x512.png" />
+    <meta property="og:image:alt" content="Boring Balance logo and app icon" />
+    <meta property="og:site_name" content="Boring Balance" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Boring Balance" />
-    <meta name="twitter:description" content="A local-first personal finance tracker with no accounts, no subscriptions, and no hosted backend." />
+    <meta
+      name="twitter:title"
+      content="Boring Balance | Desktop Personal Finance and Expense Tracking App"
+    />
+    <meta
+      name="twitter:description"
+      content="Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux."
+    />
+    <meta name="twitter:image" content="https://boringbalance.com/android-chrome-512x512.png" />
+    <meta name="twitter:image:alt" content="Boring Balance logo and app icon" />
 
     <script>
       (function () {
@@ -40,6 +78,52 @@
           html.setAttribute('data-theme', theme ?? 'system');
         } catch (_) {}
       })();
+    </script>
+
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Boring Balance",
+          "url": "https://boringbalance.com/",
+          "description": "Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux.",
+          "inLanguage": "en"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Boring Balance",
+          "url": "https://boringbalance.com/",
+          "logo": "https://boringbalance.com/android-chrome-512x512.png",
+          "sameAs": ["https://github.com/Tratt0re/boring_balance"]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Boring Balance",
+          "applicationCategory": "FinanceApplication",
+          "applicationSubCategory": "Desktop personal finance app",
+          "operatingSystem": "Windows, macOS, Linux",
+          "description": "Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux.",
+          "url": "https://boringbalance.com/",
+          "downloadUrl": "https://github.com/Tratt0re/boring_balance/releases/latest",
+          "isAccessibleForFree": true,
+          "featureList": [
+            "Track balances, accounts, and net worth",
+            "Log transactions and categories",
+            "Review budgets and recurring entries",
+            "Store personal finance data locally in SQLite",
+            "Download builds through GitHub Releases"
+          ],
+          "publisher": {
+            "@type": "Organization",
+            "name": "Boring Balance",
+            "url": "https://boringbalance.com/"
+          },
+          "sameAs": ["https://github.com/Tratt0re/boring_balance"]
+        }
+      ]
     </script>
   </head>
   <body>

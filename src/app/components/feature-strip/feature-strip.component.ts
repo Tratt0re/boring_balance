@@ -10,22 +10,23 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     label: 'Desktop-first',
-    description: 'Runs locally on your machine. No browser, no web app, no SaaS.',
+    description:
+      'Runs on Windows, macOS, and Linux.',
     icon: Monitor,
   },
   {
-    label: 'Local data only',
-    description: 'Your data lives in a SQLite file on your disk. No cloud sync, ever.',
+    label: 'Local-first',
+    description: 'Your data stays in SQLite on your machine.',
     icon: Database,
   },
   {
     label: 'No account needed',
-    description: 'Open the app and start tracking. Zero sign-up, zero onboarding friction.',
+    description: 'No sign-up. No subscription.',
     icon: UserX,
   },
   {
     label: 'Open source',
-    description: 'Inspect the code, build it yourself, or contribute. MIT licensed.',
+    description: 'Download it, inspect it, build it.',
     icon: GitBranch,
   },
 ];
@@ -37,10 +38,19 @@ const FEATURES: Feature[] = [
   imports: [LucideAngularModule],
   template: `
     <section
-      aria-label="Features"
-      class="mx-auto w-full max-w-6xl border-t border-border px-6 py-12 sm:px-10"
+      aria-labelledby="feature-strip-heading"
+      class="mx-auto w-full max-w-6xl border-t border-border px-6 py-12 sm:px-10 sm:py-14"
     >
-      <ul class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4" role="list">
+      <div class="max-w-3xl">
+        <h2 id="feature-strip-heading" class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          Everything you need. Nothing extra.
+        </h2>
+        <p class="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
+          Track money clearly. Keep your data local.
+        </p>
+      </div>
+
+      <ul class="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4" role="list">
         @for (feature of features; track feature.label) {
           <li class="flex flex-col gap-3">
             <span class="flex size-9 items-center justify-center rounded-md border border-border text-muted-foreground">

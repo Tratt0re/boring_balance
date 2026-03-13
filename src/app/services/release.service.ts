@@ -42,7 +42,7 @@ export class ReleaseService {
     const state = this.releaseState();
     if (state.status === 'loading') return 'Fetching latest release\u2026';
     const p = this.platform();
-    return p ? `Download for ${PLATFORM_LABELS[p]}` : 'Download Latest Release';
+    return p ? `Download for ${PLATFORM_LABELS[p]}` : 'Download Boring Balance';
   });
 
   readonly primaryUrl = computed((): string => {

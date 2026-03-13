@@ -1,15 +1,43 @@
-export const APP_CONFIG = {
-  repoOwner: 'Tratt0re',
-  repoName: 'boring_balance',
-  repoUrl: 'https://github.com/Tratt0re/boring_balance',
+const repoOwner = 'Tratt0re';
+const repoName = 'boring_balance';
+const repoUrl = `https://github.com/${repoOwner}/${repoName}`;
+const releaseUrl = `${repoUrl}/releases/latest`;
+const siteUrl = 'https://boringbalance.com/';
 
-  releasesApiUrl:
-    'https://api.github.com/repos/Tratt0re/boring_balance/releases/latest',
+export const APP_CONFIG = {
+  brandName: 'Boring Balance',
+  siteName: 'Boring Balance',
+  authorName: 'Boring Balance',
+  homePath: './',
+
+  repoOwner,
+  repoName,
+  repoUrl,
+  siteUrl,
+  releaseUrl,
+
+  releasesApiUrl: `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`,
+
+  socialImageUrl: `${siteUrl}android-chrome-512x512.png`,
+  socialImageAlt: 'Boring Balance logo and app icon',
+
+  seo: {
+    title: 'Boring Balance | Desktop Personal Finance and Expense Tracking App',
+    description:
+      'Boring Balance is a calm desktop personal finance app for tracking balances, expenses, budgets, and accounts locally on Windows, macOS, and Linux.',
+    keywords:
+      'personal finance desktop app, expense tracking desktop app, balance tracking app, simple budgeting software, privacy-friendly finance tracker, desktop money tracking app',
+    robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
+    canonicalUrl: siteUrl,
+    locale: 'en_US',
+    themeColorLight: '#ffffff',
+    themeColorDark: '#202020',
+  },
 
   fallback: {
-    windows: 'https://github.com/Tratt0re/boring_balance/releases/latest',
-    macos: 'https://github.com/Tratt0re/boring_balance/releases/latest',
-    linux: 'https://github.com/Tratt0re/boring_balance/releases/latest',
+    windows: releaseUrl,
+    macos: releaseUrl,
+    linux: releaseUrl,
   },
 
   assetPatterns: {
