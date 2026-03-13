@@ -1,7 +1,5 @@
 # Boring Balance
 
-![Boring Balance icon](docs/images/bb_ico_head.png)
-
 Boring Balance is a personal finance tracker built for privacy. It runs locally on your machine, stores your data in a SQLite database, and keeps you in control. There are no accounts, no hosted backend, and no subscriptions. It is built with Angular and Electron for people who want a simple way to track balances, review spending, and stay aligned with their money.
 
 ![Boring Balance dashboard preview in a MacBook frame](docs/images/head.png)
