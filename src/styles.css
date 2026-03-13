@@ -1,29 +1,28 @@
 @import 'tailwindcss';
 @import './styles/fonts.css';
-@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(0.985 0.004 90);
+  --foreground: oklch(0.215 0.012 90);
+  --card: oklch(0.992 0.003 90);
+  --card-foreground: oklch(0.215 0.012 90);
+  --popover: oklch(0.992 0.003 90);
+  --popover-foreground: oklch(0.215 0.012 90);
+  --primary: oklch(0.255 0.013 90);
+  --primary-foreground: oklch(0.985 0.004 90);
+  --secondary: oklch(0.955 0.006 90);
+  --secondary-foreground: oklch(0.255 0.013 90);
+  --muted: oklch(0.955 0.006 90);
+  --muted-foreground: oklch(0.47 0.012 90);
+  --accent: oklch(0.94 0.008 90);
+  --accent-foreground: oklch(0.255 0.013 90);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.88 0.01 90);
+  --input: oklch(0.88 0.01 90);
+  --ring: oklch(0.42 0.02 90);
   --chart-1: oklch(0.66 0.23 25);
   --chart-2: oklch(0.74 0.2 55);
   --chart-3: oklch(0.84 0.17 95);
@@ -64,24 +63,24 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.19 0.008 90);
+  --foreground: oklch(0.95 0.004 90);
+  --card: oklch(0.235 0.01 90);
+  --card-foreground: oklch(0.95 0.004 90);
+  --popover: oklch(0.235 0.01 90);
+  --popover-foreground: oklch(0.95 0.004 90);
+  --primary: oklch(0.89 0.006 90);
+  --primary-foreground: oklch(0.235 0.01 90);
+  --secondary: oklch(0.29 0.01 90);
+  --secondary-foreground: oklch(0.95 0.004 90);
+  --muted: oklch(0.29 0.01 90);
+  --muted-foreground: oklch(0.74 0.01 90);
+  --accent: oklch(0.31 0.01 90);
+  --accent-foreground: oklch(0.95 0.004 90);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(0.38 0.012 90 / 65%);
+  --input: oklch(0.38 0.012 90 / 85%);
+  --ring: oklch(0.78 0.012 90);
   --chart-1: oklch(0.66 0.23 25);
   --chart-2: oklch(0.74 0.2 55);
   --chart-3: oklch(0.84 0.17 95);
@@ -225,6 +224,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    color-scheme: light dark;
+  }
+
   html.theme-transition *,
   html.theme-transition *::before,
   html.theme-transition *::after {
@@ -237,6 +241,29 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     font-feature-settings: 'tnum' 1;
+  }
+
+  .skip-link {
+    position: fixed;
+    inset-block-start: 1rem;
+    inset-inline-start: 1rem;
+    z-index: 50;
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    padding-inline: 1rem;
+    transform: translateY(calc(-100% - 1rem));
+    transition: transform 180ms ease;
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
   .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
@@ -297,6 +324,11 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none !important;
     }
   }
 }

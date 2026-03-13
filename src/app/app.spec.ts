@@ -47,7 +47,7 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Desktop personal finance, without the noise.',
+      'Simple, private, boring',
     );
   });
 

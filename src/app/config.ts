@@ -30,8 +30,8 @@ export const APP_CONFIG = {
     robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
     canonicalUrl: siteUrl,
     locale: 'en_US',
-    themeColorLight: '#ffffff',
-    themeColorDark: '#202020',
+    themeColorLight: '#f5f3ed',
+    themeColorDark: '#2a2722',
   },
 
   fallback: {

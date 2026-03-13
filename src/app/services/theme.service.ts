@@ -19,6 +19,11 @@ export class ThemeService {
     typeof window?.matchMedia === 'function'
       ? window.matchMedia('(prefers-color-scheme: dark)')
       : null;
+  private readonly reducedMotionQuery =
+    typeof window?.matchMedia === 'function'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+  private hasAppliedTheme = false;
 
   readonly theme = signal<ThemeMode>(this.readTheme());
 
@@ -78,8 +83,7 @@ export class ThemeService {
     } catch {
       // ignore
     }
-    // Resolve system preference to a concrete value
-    return this.mediaQuery?.matches ? 'dark' : 'light';
+    return 'system';
   }
 
   private applyTheme(mode: ThemeMode): void {
@@ -94,6 +98,15 @@ export class ThemeService {
     if (typeof document === 'undefined') return;
 
     const html = document.documentElement;
+    const shouldAnimate =
+      this.hasAppliedTheme && !(this.reducedMotionQuery?.matches ?? false);
+
+    if (!shouldAnimate) {
+      apply();
+      this.hasAppliedTheme = true;
+      return;
+    }
+
     if ('startViewTransition' in document) {
       html.classList.add('theme-transition');
       (document as Document & { startViewTransition: (cb: () => void) => { finished: Promise<void> } })
@@ -104,5 +117,7 @@ export class ThemeService {
       apply();
       setTimeout(() => html.classList.remove('theme-transition'), 300);
     }
+
+    this.hasAppliedTheme = true;
   }
 }
