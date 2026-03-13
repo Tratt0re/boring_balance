@@ -26,6 +26,7 @@ export enum APIChannel {
   SYNC = 'sync',
   RESET = 'reset',
   UPDATE = 'update',
+  WINDOW = 'window',
 }
 
 export interface UpdateCheckResult {
@@ -175,6 +176,9 @@ export interface ElectronIpcClient {
     readonly forceCheck: OptionalIpcRequest<void, UpdateCheckResult>;
     readonly openRelease: IpcRequest<{ url: string }, void>;
     readonly ignoreVersion: IpcRequest<{ version: string }, void>;
+  };
+  readonly window: {
+    readonly reload: OptionalIpcRequest<void, void>;
   };
 }
 

@@ -12,6 +12,7 @@ const importExcelController = require('./import-excel.controller');
 const { transactionsController, transfersController } = require('./transactions');
 const resetController = require('./reset.controller');
 const updateController = require('./update.controller');
+const windowController = require('./window.controller');
 
 module.exports = {
   appMetaController,
@@ -29,4 +30,5 @@ module.exports = {
   transfersController,
   resetController,
   updateController,
+  windowController,
 };

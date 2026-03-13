@@ -123,7 +123,9 @@ function loadWindowContent(mainWindow, isDev) {
   if (isDev) {
     console.log(`[electron] DEV mode -> ${DEV_SERVER_URL}`);
     mainWindow.loadURL(DEV_SERVER_URL);
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    if (!mainWindow.webContents.isDevToolsOpened()) {
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
+    }
     return;
   }
 
@@ -164,7 +166,25 @@ function createWindow() {
   return mainWindow;
 }
 
+function reloadOpenWindows() {
+  const isDev = !app.isPackaged && !isProductionCliMode();
+
+  if (openWindows.size === 0) {
+    createWindow();
+    return;
+  }
+
+  for (const mainWindow of openWindows) {
+    if (mainWindow.isDestroyed()) {
+      continue;
+    }
+
+    loadWindowContent(mainWindow, isDev);
+  }
+}
+
 module.exports = {
   createWindow,
   initMainWindow,
+  reloadOpenWindows,
 };

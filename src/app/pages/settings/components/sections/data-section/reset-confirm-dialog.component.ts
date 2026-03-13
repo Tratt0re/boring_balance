@@ -7,6 +7,7 @@ import { ZardAlertDialogRef } from '@/shared/components/alert-dialog/alert-dialo
 import { Z_ALERT_MODAL_DATA } from '@/shared/components/alert-dialog/alert-dialog.service';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardInputDirective } from '@/shared/components/input';
+import { reloadAppShell } from '@/shared/utils/reload-app-shell';
 
 export interface ResetConfirmDialogData {
   readonly mode: 'clear' | 'factory';
@@ -147,10 +148,10 @@ export class ResetConfirmDialogComponent {
         } catch {
           // Ignore storage clear errors (private mode, restricted contexts, etc.).
         }
-        globalThis.location.reload();
+        reloadAppShell();
       } else {
         toast.success(this.translateService.instant('settings.data.clear_financial.success'));
-        globalThis.setTimeout(() => globalThis.location.reload(), 800);
+        reloadAppShell(800);
       }
     } catch {
       this.loading.set(false);

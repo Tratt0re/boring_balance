@@ -14,6 +14,7 @@ const {
   transfersController,
   resetController,
   updateController,
+  windowController,
 } = require('../controllers');
 const { CHANNELS } = require('./channels');
 
@@ -115,6 +116,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.update.forceCheck]: updateController.forceCheck,
   [CHANNELS.update.openRelease]: updateController.openRelease,
   [CHANNELS.update.ignoreVersion]: updateController.ignoreVersion,
+
+  [CHANNELS.window.reload]: windowController.reload,
 });
 
 module.exports = {

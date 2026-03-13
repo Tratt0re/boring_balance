@@ -18,6 +18,7 @@ import { ExportService } from '@/pages/data-backups-page/services/export.service
 import { ImportExcelService } from '@/pages/data-backups-page/services/import-excel.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
+import { reloadAppShell } from '@/shared/utils/reload-app-shell';
 
 interface ImportErrorTableRow {
   readonly id: string;
@@ -327,13 +328,7 @@ export class ExportSectionComponent {
   }
 
   private triggerApplicationRefreshAfterImport(): void {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    globalThis.setTimeout(() => {
-      globalThis.location.reload();
-    }, 800);
+    reloadAppShell(800);
   }
 
   private showTemplateDownloadSuccess(result: DownloadImportTemplateResultDto): void {

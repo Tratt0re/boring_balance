@@ -111,6 +111,9 @@ const CHANNELS = Object.freeze({
     openRelease: 'update:open-release',
     ignoreVersion: 'update:ignore-version',
   }),
+  window: Object.freeze({
+    reload: 'window:reload',
+  }),
 });
 
 module.exports = {

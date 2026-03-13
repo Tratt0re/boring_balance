@@ -15,6 +15,7 @@ import { toast } from 'ngx-sonner';
 
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
+import { reloadAppShell } from '@/shared/utils/reload-app-shell';
 import { BaseIpcService } from './base-ipc.service';
 
 const BACKUP_SETTINGS_DEFAULTS: DTO.BackupSettingsDto = {
@@ -389,12 +390,6 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
   }
 
   private triggerApplicationRefreshAfterRestore(): void {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    globalThis.setTimeout(() => {
-      globalThis.location.reload();
-    }, 250);
+    reloadAppShell(250);
   }
 }
