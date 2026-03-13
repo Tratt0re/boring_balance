@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import { LucideAngularModule, Download, Github, Loader } from 'lucide-angular';
 
-import { BrandIconComponent } from '../brand-icon/brand-icon.component';
+import { LogoComponent } from '../logo/logo.component';
 import { Platform, ReleaseService } from '../../services/release.service';
 import { APP_CONFIG } from '../../config';
 
@@ -9,7 +9,7 @@ import { APP_CONFIG } from '../../config';
   selector: 'app-hero',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [BrandIconComponent, LucideAngularModule],
+  imports: [LogoComponent, LucideAngularModule],
   templateUrl: './hero.component.html',
 })
 export class HeroComponent {

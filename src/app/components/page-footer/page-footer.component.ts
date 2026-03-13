@@ -12,7 +12,7 @@ import { APP_CONFIG } from '../../config';
         <div class="text-sm text-muted-foreground">
           <p>&copy; Boring Balance</p>
           <p class="mt-2 max-w-2xl leading-6">
-            Desktop personal finance, without the noise.
+            Open source desktop personal finance, kept local and kept simple.
           </p>
         </div>
 
@@ -21,7 +21,7 @@ import { APP_CONFIG } from '../../config';
             [href]="releaseUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            class="rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Download on GitHub
           </a>
@@ -29,7 +29,7 @@ import { APP_CONFIG } from '../../config';
             [href]="repoUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+            class="rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Browse the source
           </a>

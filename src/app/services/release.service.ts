@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { catchError, map, of } from 'rxjs';
+import { catchError, map, of, timeout } from 'rxjs';
 
 import { APP_CONFIG } from '../config';
 
@@ -39,8 +39,6 @@ export class ReleaseService {
   });
 
   readonly primaryLabel = computed(() => {
-    const state = this.releaseState();
-    if (state.status === 'loading') return 'Fetching latest release\u2026';
     const p = this.platform();
     return p ? `Download for ${PLATFORM_LABELS[p]}` : 'Download Boring Balance';
   });
@@ -53,6 +51,26 @@ export class ReleaseService {
   });
 
   readonly isLoading = computed(() => this.releaseState().status === 'loading');
+  readonly availabilityNote = computed(() => {
+    const state = this.releaseState();
+    const detectedPlatform = this.platformLabel();
+
+    if (state.status === 'error') {
+      return 'Installer lookup is unavailable right now. The download button opens GitHub Releases instead.';
+    }
+
+    if (state.status === 'loading') {
+      return detectedPlatform
+        ? `Looking up the latest ${detectedPlatform} installer. GitHub Releases are available immediately.`
+        : 'Looking up the latest installer. GitHub Releases are available immediately.';
+    }
+
+    if (detectedPlatform) {
+      return `Suggested for ${detectedPlatform}.`;
+    }
+
+    return 'Windows, macOS, and Linux builds are available.';
+  });
 
   readonly otherPlatforms = computed(() =>
     (['windows', 'macos', 'linux'] as Platform[]).filter((p) => p !== this.platform()),
@@ -78,12 +96,17 @@ export class ReleaseService {
     this.http
       .get<GithubRelease>(APP_CONFIG.releasesApiUrl)
       .pipe(
+        timeout(2500),
         map((r) => this.resolveUrls(r.assets)),
-        catchError(() => of({ ...APP_CONFIG.fallback })),
+        catchError(() => {
+          this.releaseState.set({ status: 'error' });
+          return of(null);
+        }),
       )
-      .subscribe((urls) =>
-        this.releaseState.set({ status: 'ready', urls: urls as Record<Platform, string> }),
-      );
+      .subscribe((urls) => {
+        if (!urls) return;
+        this.releaseState.set({ status: 'ready', urls: urls as Record<Platform, string> });
+      });
   }
 
   private resolveUrls(assets: GithubAsset[]): Record<Platform, string> {

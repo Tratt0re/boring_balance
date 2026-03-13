@@ -16,15 +16,15 @@
           Personal finance that stays out of the way.
         </h2>
         <p class="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-          Track balances, spending, and budgets without clutter.
+          Track balances, spending, and budgets without turning the tool itself into more work.
         </p>
       </header>
 
-      <div class="mt-8 grid gap-4 sm:grid-cols-3">
-        @for (benefit of benefits; track benefit.title) {
-          <article class="rounded-2xl border border-border bg-background p-5">
+      <div class="mt-8 space-y-4">
+        @for (benefit of benefits; track benefit.title; let index = $index) {
+          <article class="border-t border-border pt-4 sm:grid sm:grid-cols-[minmax(0,15rem)_1fr] sm:gap-6">
             <h3 class="text-base font-semibold text-foreground">{{ benefit.title }}</h3>
-            <p class="mt-3 text-sm leading-6 text-muted-foreground">
+            <p class="mt-2 text-sm leading-6 text-muted-foreground sm:mt-0">
               {{ benefit.description }}
             </p>
           </article>
@@ -32,10 +32,11 @@
       </div>
     </div>
 
-    <aside class="rounded-2xl border border-border bg-muted/30 p-6 sm:p-7">
+    <aside class="rounded-[1.5rem] border border-border bg-muted/40 p-6 sm:p-7">
       <h3 class="text-lg font-semibold text-foreground">About this app</h3>
       <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-        A desktop app for balances, expenses, budgets, and recurring entries. Local by default.
+        A desktop app for balances, expenses, budgets, and recurring entries. The data stays local
+        first, and the workflow stays simple.
       </p>
 
       <dl class="mt-6 grid gap-4 sm:grid-cols-2">
@@ -54,7 +55,7 @@
           [href]="releaseUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-foreground underline underline-offset-4 decoration-border transition-colors hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          class="rounded-sm text-foreground underline underline-offset-4 decoration-border transition-colors hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Download on GitHub
         </a>
@@ -63,7 +64,7 @@
           [href]="repoUrl"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-foreground underline underline-offset-4 decoration-border transition-colors hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          class="rounded-sm text-foreground underline underline-offset-4 decoration-border transition-colors hover:decoration-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           view the source
         </a>
@@ -86,16 +87,16 @@
       id="who-its-for-heading"
       class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
     >
-      For people who want less noise.
+      For people who prefer a quieter ledger.
     </h2>
     <p class="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
-      A good fit if you want clear numbers, simple habits, and local control.
+      A good fit if you want clear numbers, simple routines, and local control.
     </p>
   </header>
 
-  <div class="mt-8 grid gap-4 md:grid-cols-3">
-    @for (audience of audiences; track audience.title) {
-      <article class="rounded-2xl border border-border bg-background p-5">
+  <div class="mt-8 grid gap-6 md:grid-cols-3">
+    @for (audience of audiences; track audience.title; let index = $index) {
+      <article class="border-t border-border pt-4">
         <h3 class="text-base font-semibold text-foreground">{{ audience.title }}</h3>
         <p class="mt-3 text-sm leading-6 text-muted-foreground">
           {{ audience.description }}
@@ -114,18 +115,18 @@
     <header>
       <p class="text-sm font-medium tracking-[0.16em] text-muted-foreground uppercase">FAQ</p>
       <h2 id="faq-heading" class="mt-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-        A few quick answers.
+        Questions, answered plainly.
       </h2>
       <p class="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
-        Short answers about the app.
+        Short answers about the app and how it behaves.
       </p>
     </header>
 
-    <div class="mt-8 space-y-4">
-      @for (faq of faqs; track faq.question) {
-        <article class="rounded-2xl border border-border bg-background p-5 sm:p-6">
+    <div class="mt-8 divide-y divide-border border-y border-border">
+      @for (faq of faqs; track faq.question; let index = $index) {
+        <article class="grid gap-3 py-5 sm:grid-cols-[minmax(0,16rem)_1fr] sm:gap-6 sm:py-6">
           <h3 class="text-base font-semibold text-foreground sm:text-lg">{{ faq.question }}</h3>
-          <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
+          <p class="text-sm leading-6 text-muted-foreground sm:text-base">
             {{ faq.answer }}
           </p>
         </article>

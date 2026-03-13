@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
 import { LucideAngularModule, Github, Sun, Moon, Monitor } from 'lucide-angular';
 
-import { LogoComponent } from '../logo/logo.component';
+import { BrandIconComponent } from '../brand-icon/brand-icon.component';
 import { ThemeService } from '../../services/theme.service';
 import { APP_CONFIG } from '../../config';
 
@@ -9,24 +9,27 @@ import { APP_CONFIG } from '../../config';
   selector: 'app-page-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [LogoComponent, LucideAngularModule],
+  imports: [BrandIconComponent, LucideAngularModule],
   template: `
     <header class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-5 sm:px-10">
-      <a [href]="homePath" aria-label="Boring Balance home">
-        <app-logo class="h-7 w-auto text-primary" />
+      <a
+        [href]="homePath"
+        aria-label="Boring Balance home"
+        class="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        <app-brand-icon class="h-8 w-auto text-primary" />
       </a>
 
       <nav aria-label="Site navigation">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5">
           <a
             [href]="repoUrl"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Browse the Boring Balance GitHub repository"
-            class="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-border bg-transparent px-3 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <lucide-icon [img]="githubIcon" [size]="16" aria-hidden="true" />
-            <span class="hidden text-sm font-medium sm:inline">GitHub repo</span>
           </a>
 
           <button
@@ -34,7 +37,7 @@ import { APP_CONFIG } from '../../config';
             (click)="cycleTheme($event)"
             [attr.aria-label]="themeAriaLabel()"
             [attr.title]="themeTitle()"
-            class="flex size-9 items-center justify-center rounded-md border border-border bg-transparent text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <lucide-icon [img]="themeIcon()" [size]="16" aria-hidden="true" />
           </button>
@@ -68,9 +71,9 @@ export class PageHeaderComponent {
 
   protected themeTitle(): string {
     const t = this.theme.theme();
-    if (t === 'light') return 'Light mode';
-    if (t === 'dark') return 'Dark mode';
-    return 'System preference';
+    if (t === 'light') return 'Theme: light';
+    if (t === 'dark') return 'Theme: dark';
+    return 'Theme: system';
   }
 
   protected cycleTheme(event: MouseEvent): void {
