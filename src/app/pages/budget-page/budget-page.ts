@@ -98,6 +98,7 @@ const BUDGET_TABLE_COLUMNS: readonly TableDataItem[] = [
       icon: DEFAULT_VISUAL_ICON_KEY,
       iconColumnKey: 'categoryIcon',
       colorHexColumnKey: 'categoryColorHex',
+      colorMode: 'icon',
       fullWidth: true,
     },
   },

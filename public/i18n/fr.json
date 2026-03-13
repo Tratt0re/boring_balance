@@ -1,229 +1,229 @@
 {
   "common": {
     "actions": "Actions",
-    "titleBar": "Application title bar",
-    "cancel": "Cancel",
-    "yes": "Yes",
-    "no": "No",
+    "titleBar": "Barre de titre de l'application",
+    "cancel": "Annuler",
+    "yes": "Oui",
+    "no": "Non",
     "labels": {
-      "name": "Name",
+      "name": "Nom",
       "type": "Type",
       "description": "Description",
-      "color": "Color",
-      "icon": "Icon",
+      "color": "Couleur",
+      "icon": "Icône",
       "date": "Date",
-      "settled": "Settled",
-      "account": "Account",
-      "category": "Category",
-      "amount": "Amount",
-      "from": "From",
-      "to": "To",
-      "fromAccount": "From account",
-      "toAccount": "To account",
-      "title": "Title",
-      "startDate": "Start date",
+      "settled": "Soldé",
+      "account": "Compte",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "from": "De",
+      "to": "À",
+      "fromAccount": "Compte source",
+      "toAccount": "Compte destinataire",
+      "title": "Titre",
+      "startDate": "Date de début",
       "plan": "Plan",
-      "schedule": "Schedule",
-      "template": "Template",
+      "schedule": "Planification",
+      "template": "Modèle",
       "occurrences": "Occurrences",
-      "frequencyUnit": "Frequency unit",
-      "monthPolicy": "If the day is not in the month",
-      "year": "Year"
+      "frequencyUnit": "Unité de fréquence",
+      "monthPolicy": "Si le jour n'existe pas dans le mois",
+      "year": "Année"
     },
     "placeholders": {
-      "selectType": "Select type",
-      "selectColor": "Select color",
-      "selectIcon": "Select icon",
-      "pickDate": "Pick a date",
+      "selectType": "Sélectionner un type",
+      "selectColor": "Sélectionner une couleur",
+      "selectIcon": "Sélectionner une icône",
+      "pickDate": "Choisir une date",
       "amountZero": "0,00",
-      "selectAccount": "Select account",
-      "selectCategory": "Select category",
-      "optionalDescription": "Optional description",
-      "transactionDescription": "Transaction description"
+      "selectAccount": "Sélectionner un compte",
+      "selectCategory": "Sélectionner une catégorie",
+      "optionalDescription": "Description facultative",
+      "transactionDescription": "Description de la transaction"
     },
     "filters": {
       "fields": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Amount from",
-        "amountTo": "Amount to",
-        "settled": "Settlement status",
-        "categoryType": "Category type",
-        "category": "Category",
-        "account": "Account"
+        "dateFrom": "Date de début",
+        "dateTo": "Date de fin",
+        "amountFrom": "Montant minimum",
+        "amountTo": "Montant maximum",
+        "settled": "Statut de solde",
+        "categoryType": "Type de catégorie",
+        "category": "Catégorie",
+        "account": "Compte"
       },
       "placeholders": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Minimum amount",
-        "amountTo": "Maximum amount",
-        "settled": "Any status",
-        "categoryType": "Any type",
-        "category": "Select a category",
-        "account": "Select an account",
-        "searchCategory": "Search categories...",
-        "searchAccount": "Search accounts..."
+        "dateFrom": "Date de début",
+        "dateTo": "Date de fin",
+        "amountFrom": "Montant minimum",
+        "amountTo": "Montant maximum",
+        "settled": "Tout statut",
+        "categoryType": "Tout type",
+        "category": "Sélectionner une catégorie",
+        "account": "Sélectionner un compte",
+        "searchCategory": "Rechercher des catégories...",
+        "searchAccount": "Rechercher des comptes..."
       },
       "options": {
         "settled": {
-          "any": "Any status",
-          "yes": "Settled",
-          "no": "Not settled"
+          "any": "Tout statut",
+          "yes": "Soldé",
+          "no": "Non soldé"
         },
         "categoryType": {
-          "any": "Any type"
+          "any": "Tout type"
         }
       },
       "actions": {
-        "apply": "Apply filters",
-        "currentMonth": "Current month",
-        "reset": "Reset filters",
-        "cancel": "Cancel"
+        "apply": "Appliquer les filtres",
+        "currentMonth": "Mois en cours",
+        "reset": "Réinitialiser les filtres",
+        "cancel": "Annuler"
       }
     },
     "pagination": {
-      "previous": "Previous",
-      "next": "Next",
-      "counter": "{{current}} of {{total}} pages",
-      "rowsPerPage": "Rows per page",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "counter": "{{current}} sur {{total}} pages",
+      "rowsPerPage": "Lignes par page",
       "tooltips": {
-        "firstPage": "Go to first page",
-        "previousPage": "Go to previous page",
-        "nextPage": "Go to next page",
-        "lastPage": "Go to last page",
-        "toPage": "To page",
-        "toLastPage": "To last page, page"
+        "firstPage": "Aller à la première page",
+        "previousPage": "Aller à la page précédente",
+        "nextPage": "Aller à la page suivante",
+        "lastPage": "Aller à la dernière page",
+        "toPage": "Aller à la page",
+        "toLastPage": "Aller à la dernière page, page"
       }
     },
     "calendar": {
       "actions": {
-        "previousMonth": "Previous month",
-        "nextMonth": "Next month"
+        "previousMonth": "Mois précédent",
+        "nextMonth": "Mois suivant"
       },
       "aria": {
-        "chooseDate": "Choose date",
-        "today": "Today",
-        "selected": "Selected",
-        "rangeStart": "Range start",
-        "rangeEnd": "Range end",
-        "inRange": "In range",
-        "outsideMonth": "Outside month",
-        "disabled": "Disabled"
+        "chooseDate": "Choisir une date",
+        "today": "Aujourd'hui",
+        "selected": "Sélectionné",
+        "rangeStart": "Début de plage",
+        "rangeEnd": "Fin de plage",
+        "inRange": "Dans la plage",
+        "outsideMonth": "Hors du mois",
+        "disabled": "Désactivé"
       }
     },
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Aller au contenu principal"
   },
   "nav": {
     "sections": {
       "main": "Menu",
-      "insights": "Insights",
-      "setup": "Setup",
-      "settings": "Settings"
+      "insights": "Analyses",
+      "setup": "Configuration",
+      "settings": "Paramètres"
     },
     "items": {
-      "overview": "Overview",
+      "overview": "Vue d'ensemble",
       "transactions": "Transactions",
-      "breakdown": "Breakdown",
-      "compare": "Compare",
+      "breakdown": "Répartition",
+      "compare": "Comparaison",
       "budget": "Budget",
-      "accounts": "Accounts",
-      "categories": "Categories",
-      "recurringEvents": "Recurring events",
-      "settings": "Settings",
-      "dataBackups": "Data & Backups",
-      "about": "About"
+      "accounts": "Comptes",
+      "categories": "Catégories",
+      "recurringEvents": "Événements récurrents",
+      "settings": "Paramètres",
+      "dataBackups": "Données et sauvegardes",
+      "about": "À propos"
     }
   },
   "settings": {
     "page": {
-      "title": "Settings",
-      "description": "Manage app preferences, backups, sync, exports, and local app details."
+      "title": "Paramètres",
+      "description": "Gérer les préférences de l'application, les sauvegardes, la synchronisation, les exports et les détails locaux."
     },
     "sections": {
       "general": {
-        "title": "General",
-        "description": "Set how the app looks and how money amounts appear across your workspace."
+        "title": "Général",
+        "description": "Définir l'apparence de l'application et la façon dont les montants s'affichent dans l'espace de travail."
       },
       "about": {
-        "title": "About",
-        "description": "See app details, privacy basics, and the project link in one place."
+        "title": "À propos",
+        "description": "Consulter les détails de l'application, les informations de confidentialité et le lien vers le projet."
       },
       "data": {
-        "title": "Data & Storage",
-        "description": "Reset and manage your local data."
+        "title": "Données et stockage",
+        "description": "Réinitialiser et gérer les données locales."
       }
     },
     "data": {
       "clear_financial": {
-        "label": "Clear all financial data",
-        "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
-        "button": "Clear data",
+        "label": "Effacer toutes les données financières",
+        "description": "Supprime définitivement tous les comptes, transactions, virements et budgets. Les préférences sont conservées.",
+        "button": "Effacer les données",
         "confirm": {
-          "title": "Clear all financial data?",
-          "body": "This will permanently delete all accounts, transactions, transfers, budgets, and categories you have created. This cannot be undone.",
-          "cta": "Yes, clear data"
+          "title": "Effacer toutes les données financières ?",
+          "body": "Cette action supprimera définitivement tous les comptes, transactions, virements, budgets et catégories créés. Cette opération est irréversible.",
+          "cta": "Oui, effacer les données"
         },
-        "success": "All financial data has been cleared."
+        "success": "Toutes les données financières ont été effacées."
       },
       "factory_reset": {
-        "label": "Factory reset",
-        "description": "Deletes the entire database and resets the app to its initial state. Your backups are not affected.",
-        "button": "Reset app",
+        "label": "Réinitialisation usine",
+        "description": "Supprime la base de données entière et remet l'application dans son état initial. Les sauvegardes ne sont pas affectées.",
+        "button": "Réinitialiser l'application",
         "confirm": {
-          "title": "Factory reset?",
-          "body": "This will delete the entire database and return the app to its initial state. Your backup files will not be affected. This cannot be undone.",
-          "input_placeholder": "Type RESET to confirm",
-          "cta": "Reset app"
+          "title": "Réinitialisation usine ?",
+          "body": "Cette action supprimera la base de données entière et remettra l'application dans son état initial. Les fichiers de sauvegarde ne seront pas affectés. Cette opération est irréversible.",
+          "input_placeholder": "Saisir RESET pour confirmer",
+          "cta": "Réinitialiser l'application"
         }
       },
-      "reset_error": "Something went wrong. Please try again."
+      "reset_error": "Une erreur s'est produite. Veuillez réessayer."
     },
     "general": {
-      "intro": "These preferences update right away so the app matches how you read and review your finances.",
-      "appearanceGroupTitle": "Appearance",
-      "currencyGroupTitle": "Currency",
-      "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
+      "intro": "Ces préférences prennent effet immédiatement pour que l'application corresponde à votre façon de consulter vos finances.",
+      "appearanceGroupTitle": "Apparence",
+      "currencyGroupTitle": "Devise",
+      "currencyGroupDescription": "Choisir comment les montants s'affichent pour que les soldes, les rapports et les formulaires restent lisibles.",
       "cards": {
         "theme": {
-          "title": "Theme",
-          "description": "Pick the appearance that feels best for everyday use across the whole app.",
-          "fieldLabel": "Theme mode",
+          "title": "Thème",
+          "description": "Choisir l'apparence la plus adaptée à une utilisation quotidienne dans toute l'application.",
+          "fieldLabel": "Mode d'affichage",
           "options": {
-            "system": "System",
-            "light": "Light",
-            "dark": "Dark"
+            "system": "Système",
+            "light": "Clair",
+            "dark": "Sombre"
           }
         },
         "language": {
-          "title": "Language",
-          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
-          "fieldLabel": "App language"
+          "title": "Langue",
+          "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
+          "fieldLabel": "Langue de l'application"
         },
         "dashboardValuationMode": {
-          "title": "Dashboard net worth mode",
-          "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
-          "fieldLabel": "Dashboard calculations",
+          "title": "Mode valeur nette du tableau de bord",
+          "description": "Choisir si la valeur nette et la répartition dans la vue d'ensemble doivent inclure les valorisations lorsqu'elles sont disponibles. Si désactivé, ces cartes utilisent uniquement les soldes comptables des transactions.",
+          "fieldLabel": "Calculs du tableau de bord",
           "options": {
-            "include": "Include valuations",
-            "exclude": "Ledger balances only"
+            "include": "Inclure les valorisations",
+            "exclude": "Soldes comptables uniquement"
           }
         },
         "currency": {
-          "title": "Currency symbol",
-          "description": "Select the symbol you want to see next to balances, transactions, and reports.",
-          "fieldLabel": "Symbol",
-          "customLabel": "Custom symbol",
+          "title": "Symbole monétaire",
+          "description": "Sélectionner le symbole à afficher à côté des soldes, transactions et rapports.",
+          "fieldLabel": "Symbole",
+          "customLabel": "Symbole personnalisé",
           "customPlaceholder": "CHF",
           "options": {
-            "custom": "Custom"
+            "custom": "Personnalisé"
           }
         },
         "numberFormat": {
-          "title": "Currency display style",
-          "description": "Choose the separators used in amounts so entries and reports match what you expect.",
+          "title": "Format d'affichage des montants",
+          "description": "Choisir les séparateurs utilisés dans les montants pour que les saisies et rapports correspondent au format attendu.",
           "fieldLabel": "Format",
-          "previewLabel": "Preview",
-          "previewDescription": "Preview the current symbol and number style before you keep entering data.",
+          "previewLabel": "Aperçu",
+          "previewDescription": "Prévisualiser le symbole et le format numérique actuels avant de continuer la saisie.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -233,46 +233,46 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
-      "appVersionLabel": "App version",
-      "appVersionUnavailable": "Not available in this build",
+      "appNameLabel": "Application",
+      "appVersionLabel": "Version",
+      "appVersionUnavailable": "Non disponible dans cette version",
       "copy": {
-        "paragraph1": "Hi. If you ended up here, you’re probably the kind of person this app was built for.",
-        "paragraph2": "I created Boring Balance after years of moving between apps, Excel files, and Google Sheets without ever finding something that truly fit my needs.",
-        "paragraph3": "Most tools were either too complicated, full of ads and tracking, or locked behind subscriptions.",
-        "paragraph4": "So I built my own.",
-        "paragraph5": "Boring Balance is meant to be simple, private, and completely under your control. Your data stays yours. There are no ads, no tracking, and no features designed to push you into paying just to see your own finances.",
-        "paragraph6": "I believe personal finance should be something you actively manage. Taking a moment to check your balances, review your expenses, and keep things aligned is the only way to truly understand where your money goes.",
-        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring events.",
-        "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
-        "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
+        "paragraph1": "Bonjour. Si vous êtes ici, vous êtes probablement exactement la personne pour laquelle cette application a été conçue.",
+        "paragraph2": "J'ai créé Boring Balance après des années à passer d'une application à l'autre, entre fichiers Excel et Google Sheets, sans jamais trouver quelque chose qui corresponde vraiment à mes besoins.",
+        "paragraph3": "La plupart des outils étaient soit trop complexes, remplis de publicités et de pistage, soit verrouillés derrière des abonnements.",
+        "paragraph4": "Alors j'ai construit le mien.",
+        "paragraph5": "Boring Balance se veut simple, privé et entièrement sous votre contrôle. Vos données vous appartiennent. Pas de publicité, pas de pistage, et aucune fonctionnalité conçue pour vous pousser à payer pour accéder à vos propres finances.",
+        "paragraph6": "Je crois que les finances personnelles doivent être gérées activement. Prendre un moment pour vérifier ses soldes, examiner ses dépenses et maintenir l'équilibre est le seul moyen de vraiment comprendre où va l'argent.",
+        "paragraph7": "Cette application fournit quelques outils essentiels pour cela : suivi des comptes et des transactions, budgétisation, et planification des événements récurrents.",
+        "paragraph8": "Rien n'est imposé. Utilisez autant ou aussi peu que vous le souhaitez.",
+        "paragraph9": "Bienvenue dans ce petit endroit tranquille — et pensez à protéger vos données avec une sauvegarde de temps en temps 😉"
       },
-      "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
-      "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
-      "openSourceCta": "Open on GitHub",
-      "checkForUpdates": "Check for updates",
-      "footer": "Made with ❤️ by {{authorName}}",
+      "localFirst": "Boring Balance est un gestionnaire de finances personnelles axé sur la confidentialité. Vos données restent sur votre appareil et l'application les utilise uniquement pour afficher vos soldes et analyses.",
+      "openSourceNote": "L'application principale est open source, vous pouvez donc consulter le projet ou suivre son développement depuis le dépôt ci-dessous.",
+      "openSourceCta": "Ouvrir sur GitHub",
+      "checkForUpdates": "Vérifier les mises à jour",
+      "footer": "Fait avec ❤️ par {{authorName}}",
       "runtime": {
-        "title": "Runtime",
-        "description": "Renderer runtime versions exposed through the Electron bridge.",
+        "title": "Environnement d'exécution",
+        "description": "Versions de l'environnement d'exécution du moteur de rendu exposées via le pont Electron.",
         "electron": "Electron",
         "node": "Node.js",
         "chrome": "Chrome",
-        "unknown": "Unavailable"
+        "unknown": "Indisponible"
       }
     }
   },
   "dataBackups": {
     "page": {
-      "title": "Data & Backups",
-      "description": "Manage local backups and prepare for sync and import/export features."
+      "title": "Données et sauvegardes",
+      "description": "Gérer les sauvegardes locales et préparer la synchronisation et les fonctions d'import/export."
     },
     "sections": {
       "backups": {
-        "title": "Backups"
+        "title": "Sauvegardes"
       },
       "sync": {
-        "title": "Sync"
+        "title": "Synchronisation"
       },
       "exportImport": {
         "title": "Import / Export"
@@ -280,1005 +280,1005 @@
     },
     "backups": {
       "destination": {
-        "title": "Backup destination",
-        "description": "Turn on backups and choose where recovery copies should be saved."
+        "title": "Destination des sauvegardes",
+        "description": "Activer les sauvegardes et choisir l'emplacement d'enregistrement des copies de récupération."
       },
       "form": {
-        "enabled": "Enable backups",
-        "folderPath": "Backup folder",
-        "folderNotSet": "Not set"
+        "enabled": "Activer les sauvegardes",
+        "folderPath": "Dossier de sauvegarde",
+        "folderNotSet": "Non défini"
       },
-      "disabledInfo": "Turn on backups to create recovery copies automatically, run one on demand, and keep restore points ready.",
+      "disabledInfo": "Activer les sauvegardes pour créer automatiquement des copies de récupération, en lancer une à la demande et conserver des points de restauration.",
       "warnings": {
-        "missingFolder": "Backups are enabled but no backup folder is configured yet."
+        "missingFolder": "Les sauvegardes sont activées mais aucun dossier de sauvegarde n'est encore configuré."
       },
       "autoBackup": {
-        "title": "Automatic backups",
-        "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
-        "onQuit": "Run backup on app quit",
-        "intervalMin": "Interval (minutes, 0 to disable)",
-        "retentionCount": "Retention count",
+        "title": "Sauvegardes automatiques",
+        "description": "Choisir la fréquence d'enregistrement des copies de récupération et le nombre de copies anciennes à conserver.",
+        "onQuit": "Effectuer une sauvegarde à la fermeture",
+        "intervalMin": "Intervalle (minutes, 0 pour désactiver)",
+        "retentionCount": "Nombre de copies conservées",
         "intervalOptions": {
-          "off": "Off",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes",
-          "minutes120": "Every 120 minutes"
+          "off": "Désactivé",
+          "minutes30": "Toutes les 30 minutes",
+          "minutes60": "Toutes les 60 minutes",
+          "minutes120": "Toutes les 120 minutes"
         }
       },
       "manual": {
-        "title": "Manual backup and status",
-        "description": "Create a backup now and review the latest backup result in one place."
+        "title": "Sauvegarde manuelle et statut",
+        "description": "Créer une sauvegarde maintenant et consulter le dernier résultat en un seul endroit."
       },
       "actions": {
-        "chooseFolder": "Choose folder",
-        "backupNow": "Backup now",
-        "refreshList": "Refresh list",
-        "restore": "Restore",
-        "delete": "Delete"
+        "chooseFolder": "Choisir un dossier",
+        "backupNow": "Sauvegarder maintenant",
+        "refreshList": "Actualiser la liste",
+        "restore": "Restaurer",
+        "delete": "Supprimer"
       },
       "status": {
-        "lastBackupAt": "Last backup",
-        "current": "Status",
-        "lastFile": "Last backup file",
-        "never": "Never",
-        "none": "None",
-        "idle": "Idle",
-        "running": "Running",
-        "ok": "Completed",
-        "error": "Failed"
+        "lastBackupAt": "Dernière sauvegarde",
+        "current": "Statut",
+        "lastFile": "Dernier fichier de sauvegarde",
+        "never": "Jamais",
+        "none": "Aucun",
+        "idle": "Inactif",
+        "running": "En cours",
+        "ok": "Terminé",
+        "error": "Échec"
       },
       "list": {
-        "title": "Available backups",
-        "description": "Review saved backups, then restore or remove the ones you no longer need.",
-        "loading": "Refreshing backups list...",
-        "empty": "No backups here yet. Run a backup to create your first restore point.",
+        "title": "Sauvegardes disponibles",
+        "description": "Consulter les sauvegardes enregistrées, puis restaurer ou supprimer celles dont vous n'avez plus besoin.",
+        "loading": "Actualisation de la liste des sauvegardes...",
+        "empty": "Aucune sauvegarde pour l'instant. Lancez une sauvegarde pour créer votre premier point de restauration.",
         "columns": {
           "date": "Date",
-          "file": "File",
-          "size": "Size"
+          "file": "Fichier",
+          "size": "Taille"
         }
       },
       "restoreAlert": {
-        "title": "Restore backup",
-        "description": "Restore \"{{fileName}}\" and replace your current data with that saved copy. Continue?",
+        "title": "Restaurer la sauvegarde",
+        "description": "Restaurer \"{{fileName}}\" et remplacer les données actuelles par cette copie enregistrée. Continuer ?",
         "actions": {
-          "restore": "Restore",
-          "cancel": "Cancel"
+          "restore": "Restaurer",
+          "cancel": "Annuler"
         }
       },
       "deleteAlert": {
-        "title": "Delete backup",
-        "description": "Delete \"{{fileName}}\" from your backup folder. You will not be able to restore from it afterward.",
+        "title": "Supprimer la sauvegarde",
+        "description": "Supprimer \"{{fileName}}\" du dossier de sauvegarde. Il ne sera plus possible de restaurer à partir de ce fichier.",
         "actions": {
-          "delete": "Delete",
-          "cancel": "Cancel"
+          "delete": "Supprimer",
+          "cancel": "Annuler"
         }
       }
     },
     "sync": {
-      "title": "Sync",
+      "title": "Synchronisation",
       "overview": {
-        "title": "External folder sync",
-        "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
-        "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
-        "enabled": "Enable sync",
-        "chooseFolder": "Choose root folder",
-        "selectedFolder": "Selected root folder",
-        "baseFolderPath": "Root folder",
-        "repoPath": "App sync folder",
-        "notConnected": "Not connected yet",
+        "title": "Synchronisation via dossier externe",
+        "description": "Utiliser un dossier déjà synchronisé entre vos appareils, comme un disque cloud, un NAS ou une clé USB.",
+        "warning": "Choisir un dossier de synchronisation de confiance. L'application continue de fonctionner depuis votre appareil et n'utilise le dossier partagé que pour échanger des copies en toute sécurité.",
+        "enabled": "Activer la synchronisation",
+        "chooseFolder": "Choisir le dossier racine",
+        "selectedFolder": "Dossier racine sélectionné",
+        "baseFolderPath": "Dossier racine",
+        "repoPath": "Dossier de synchronisation de l'application",
+        "notConnected": "Pas encore connecté",
         "enableHints": {
-          "turnOnFirst": "Turn on sync first, then choose the folder you want to use across devices.",
-          "ready": "Sync is ready to connect. Choose the folder you want this device to use."
+          "turnOnFirst": "Activer d'abord la synchronisation, puis choisir le dossier à utiliser sur tous les appareils.",
+          "ready": "La synchronisation est prête à être connectée. Choisir le dossier que cet appareil doit utiliser."
         }
       },
       "setup": {
-        "title": "Connect a sync folder",
-        "description": "Pick the shared folder, then either create a new sync space or connect to one that already exists.",
+        "title": "Connecter un dossier de synchronisation",
+        "description": "Sélectionner le dossier partagé, puis créer un nouvel espace de synchronisation ou se connecter à un existant.",
         "steps": {
           "rootFolder": {
-            "title": "1. Choose a root folder",
-            "description": "Pick an existing folder or create a new one. Boring Balance will place its own sync folder inside it."
+            "title": "1. Choisir un dossier racine",
+            "description": "Sélectionner un dossier existant ou en créer un nouveau. Boring Balance y placera son propre dossier de synchronisation."
           },
           "create": {
-            "title": "2. Create on the first device",
-            "description": "Use Create when this device should publish the first sync data into that folder."
+            "title": "2. Créer sur le premier appareil",
+            "description": "Utiliser Créer lorsque cet appareil doit publier les premières données de synchronisation dans ce dossier."
           },
           "attach": {
-            "title": "3. Connect on other devices",
-            "description": "Use Connect when another device already created the sync folder and this device should join it."
+            "title": "3. Connecter sur les autres appareils",
+            "description": "Utiliser Connecter lorsqu'un autre appareil a déjà créé le dossier de synchronisation et que cet appareil doit le rejoindre."
           }
         },
         "actions": {
-          "create": "Create new sync space",
-          "attach": "Connect to existing sync space"
+          "create": "Créer un nouvel espace de synchronisation",
+          "attach": "Se connecter à un espace existant"
         },
         "status": {
-          "checking": "Checking the selected folder...",
-          "chooseFirst": "Choose a root folder to continue.",
-          "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
-          "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
-          "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
-          "waitingForFolder": "Choose a root folder to continue."
+          "checking": "Vérification du dossier sélectionné...",
+          "chooseFirst": "Choisir un dossier racine pour continuer.",
+          "exists": "Un espace de synchronisation existant a été trouvé dans ce dossier. Utiliser Connecter si un autre appareil l'utilise déjà.",
+          "missing": "Aucun espace de synchronisation trouvé dans ce dossier. Utiliser Créer s'il s'agit du premier appareil synchronisé.",
+          "repoPathPending": "Le dossier de synchronisation de l'application apparaîtra ici après la vérification du dossier racine.",
+          "waitingForFolder": "Choisir un dossier racine pour continuer."
         },
-        "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
+        "actionHelp": "Créer démarre la synchronisation depuis cet appareil. Connecter rejoint un espace de synchronisation déjà créé par un autre appareil."
       },
-      "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
+      "disabledInfo": "Activer la synchronisation pour choisir un dossier partagé et connecter cet appareil.",
       "autoSync": {
-        "title": "Automatic sync",
-        "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
-        "autoPullIntervalMin": "Auto pull interval",
-        "autoPushIntervalMin": "Auto push interval",
-        "autoPushOnQuit": "Push on app quit",
-        "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
-        "retentionCountPerDevice": "Snapshots kept per device",
+        "title": "Synchronisation automatique",
+        "description": "Définir la fréquence à laquelle l'application vérifie les données plus récentes et partage les dernières modifications.",
+        "autoPullIntervalMin": "Intervalle de récupération automatique",
+        "autoPushIntervalMin": "Intervalle d'envoi automatique",
+        "autoPushOnQuit": "Envoyer à la fermeture",
+        "autoPushOnQuitHint": "Lorsqu'activé, l'application partage vos dernières modifications avant de se fermer.",
+        "retentionCountPerDevice": "Instantanés conservés par appareil",
         "intervalOptions": {
-          "off": "Off",
-          "minutes5": "Every 5 minutes",
-          "minutes10": "Every 10 minutes",
-          "minutes15": "Every 15 minutes",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes"
+          "off": "Désactivé",
+          "minutes5": "Toutes les 5 minutes",
+          "minutes10": "Toutes les 10 minutes",
+          "minutes15": "Toutes les 15 minutes",
+          "minutes30": "Toutes les 30 minutes",
+          "minutes60": "Toutes les 60 minutes"
         }
       },
       "manual": {
-        "title": "Manual sync",
-        "description": "Use these actions when you want to check or share changes immediately.",
+        "title": "Synchronisation manuelle",
+        "description": "Utiliser ces actions pour vérifier ou partager des modifications immédiatement.",
         "tooltips": {
-          "syncNow": "Checks for newer shared data first, then shares this device if needed.",
-          "pullNow": "Brings in newer shared data without sending this device's changes.",
-          "pushNow": "Shares this device's latest changes without checking for newer shared data first."
+          "syncNow": "Vérifie d'abord les données partagées plus récentes, puis envoie cet appareil si nécessaire.",
+          "pullNow": "Récupère les données partagées plus récentes sans envoyer les modifications de cet appareil.",
+          "pushNow": "Envoie les dernières modifications de cet appareil sans vérifier d'abord les données partagées plus récentes."
         },
         "hints": {
-          "syncNow": "Sync now is the safest full check: it looks for newer shared changes, then shares yours if needed.",
-          "pullNow": "Pull now only brings in newer shared data to this device.",
-          "pushNow": "Push now only shares this device's current changes to the shared folder."
+          "syncNow": "Synchroniser maintenant est la vérification complète la plus sûre : elle recherche les modifications partagées plus récentes, puis partage les vôtres si nécessaire.",
+          "pullNow": "Récupérer maintenant apporte uniquement les données partagées plus récentes sur cet appareil.",
+          "pushNow": "Envoyer maintenant partage uniquement les modifications actuelles de cet appareil vers le dossier partagé."
         }
       },
       "actions": {
-        "syncNow": "Sync now",
-        "pullNow": "Pull now",
-        "pushNow": "Push now"
+        "syncNow": "Synchroniser maintenant",
+        "pullNow": "Récupérer maintenant",
+        "pushNow": "Envoyer maintenant"
       },
       "status": {
-        "title": "Status",
-        "description": "Check the current sync state and see when this device last pulled or pushed.",
+        "title": "Statut",
+        "description": "Vérifier l'état actuel de la synchronisation et voir quand cet appareil a récupéré ou envoyé des données pour la dernière fois.",
         "columns": {
-          "item": "Item",
-          "value": "Value"
+          "item": "Élément",
+          "value": "Valeur"
         },
         "rows": {
-          "current": "Current status",
-          "lastPull": "Last pull",
-          "lastPush": "Last push"
+          "current": "Statut actuel",
+          "lastPull": "Dernière récupération",
+          "lastPush": "Dernier envoi"
         },
         "values": {
-          "never": "Never",
-          "noLastPull": "No last pull available",
-          "idle": "Idle",
-          "running": "Running",
+          "never": "Jamais",
+          "noLastPull": "Aucune récupération disponible",
+          "idle": "Inactif",
+          "running": "En cours",
           "ok": "OK",
-          "error": "Error",
-          "conflict": "Conflict"
+          "error": "Erreur",
+          "conflict": "Conflit"
         }
       },
       "alerts": {
-        "lastErrorTitle": "Last error",
-        "conflictTitle": "Conflict detected",
-        "localCopyPath": "Local copy saved at",
-        "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "Your local copy was kept, and the shared copy was opened so you can review the difference."
+        "lastErrorTitle": "Dernière erreur",
+        "conflictTitle": "Conflit détecté",
+        "localCopyPath": "Copie locale enregistrée sous",
+        "remoteSnapshotPath": "Instantané distant restauré depuis",
+        "conflictHint": "Votre copie locale a été conservée et la copie partagée a été ouverte pour vous permettre d'examiner la différence."
       },
       "attachAlert": {
-        "title": "Connect existing sync space",
-        "description": "Connecting can replace this device's current data if the shared folder is newer. Continue?",
+        "title": "Connecter un espace de synchronisation existant",
+        "description": "La connexion peut remplacer les données actuelles de cet appareil si le dossier partagé est plus récent. Continuer ?",
         "actions": {
-          "attach": "Connect",
-          "cancel": "Cancel"
+          "attach": "Connecter",
+          "cancel": "Annuler"
         }
       }
     },
     "exportImport": {
       "overview": {
-        "description": "Keep a clear Excel copy of your data, or start from the official template when you want to bring information in safely."
+        "description": "Conserver une copie Excel claire de vos données, ou partir du modèle officiel pour importer des informations en toute sécurité."
       },
       "export": {
         "title": "Export",
-        "description": "Save a clean Excel copy of your activity and setup so you can review it, share it, or keep it for later.",
-        "lastExportLabel": "Last export"
+        "description": "Enregistrer une copie Excel propre de votre activité et de votre configuration pour la consulter, la partager ou la conserver.",
+        "lastExportLabel": "Dernier export"
       },
       "import": {
-        "title": "Import from Excel template",
-        "description": "Start with the official template, review everything first, and import only when the file is ready.",
-        "warning": "Imports are validated first. If errors exist, nothing is imported.",
-        "selectedFileLabel": "Selected file",
+        "title": "Importer depuis le modèle Excel",
+        "description": "Partir du modèle officiel, tout vérifier d'abord, et importer uniquement lorsque le fichier est prêt.",
+        "warning": "Les imports sont validés en premier. En cas d'erreurs, rien n'est importé.",
+        "selectedFileLabel": "Fichier sélectionné",
         "template": {
-          "title": "Import template",
-          "description": "Download the Excel template, fill it in at your pace, then come back here to import it.",
+          "title": "Modèle d'import",
+          "description": "Télécharger le modèle Excel, le remplir à votre rythme, puis revenir ici pour l'importer.",
           "messages": {
-            "success": "Template saved: {{fileName}}",
-            "error": "Failed to save the import template."
+            "success": "Modèle enregistré : {{fileName}}",
+            "error": "Échec de l'enregistrement du modèle d'import."
           }
         },
         "actions": {
-          "title": "Import data file",
-          "description": "Pick the completed workbook, check any issues the app finds, and import only when everything looks right."
+          "title": "Importer un fichier de données",
+          "description": "Sélectionner le classeur complété, vérifier les problèmes détectés et importer uniquement lorsque tout est correct."
         },
         "validation": {
-          "previewTitle": "Validation preview",
-          "previewDescription": "These rows are ready to be imported.",
-          "errorTitle": "Validation errors",
-          "errorDescription": "Fix the rows below and validate again before importing."
+          "previewTitle": "Aperçu de la validation",
+          "previewDescription": "Ces lignes sont prêtes à être importées.",
+          "errorTitle": "Erreurs de validation",
+          "errorDescription": "Corriger les lignes ci-dessous et valider à nouveau avant d'importer."
         },
         "summary": {
-          "accounts": "Accounts",
-          "categories": "Categories",
+          "accounts": "Comptes",
+          "categories": "Catégories",
           "transactions": "Transactions",
-          "transfers": "Transfers"
+          "transfers": "Virements"
         },
         "errors": {
-          "count": "{{count}} errors found",
-          "tableTitle": "Import errors",
-          "tableDescription": "Each error points to the exact worksheet row that must be fixed.",
-          "empty": "No import errors.",
+          "count": "{{count}} erreurs trouvées",
+          "tableTitle": "Erreurs d'import",
+          "tableDescription": "Chaque erreur indique la ligne exacte de la feuille à corriger.",
+          "empty": "Aucune erreur d'import.",
           "columns": {
-            "sheet": "Sheet",
-            "row": "Row",
-            "column": "Column",
+            "sheet": "Feuille",
+            "row": "Ligne",
+            "column": "Colonne",
             "message": "Message"
           }
         },
         "result": {
-          "title": "Last import result",
-          "description": "The app will reload after a successful import.",
+          "title": "Dernier résultat d'import",
+          "description": "L'application se rechargera après un import réussi.",
           "labels": {
-            "inserted": "Inserted",
-            "updated": "Updated",
-            "skipped": "Skipped"
+            "inserted": "Inséré",
+            "updated": "Mis à jour",
+            "skipped": "Ignoré"
           }
         },
         "confirm": {
-          "title": "Import data from Excel?",
-          "description": "This will import data into your database.",
+          "title": "Importer les données depuis Excel ?",
+          "description": "Cette action importera des données dans votre base de données.",
           "actions": {
-            "import": "Import",
-            "cancel": "Cancel"
+            "import": "Importer",
+            "cancel": "Annuler"
           }
         },
         "messages": {
-          "fileRequired": "Select an Excel file first.",
-          "selectError": "Failed to select an Excel file.",
-          "validateError": "Failed to validate the selected Excel file.",
-          "importSuccess": "Import completed. Reloading app data...",
-          "importError": "Import failed."
+          "fileRequired": "Sélectionner d'abord un fichier Excel.",
+          "selectError": "Échec de la sélection d'un fichier Excel.",
+          "validateError": "Échec de la validation du fichier Excel sélectionné.",
+          "importSuccess": "Import terminé. Rechargement des données de l'application...",
+          "importError": "Échec de l'import."
         }
       },
       "controls": {
-        "exportExcel": "Export to Excel",
-        "importData": "Import DB / CSV",
-        "downloadTemplate": "Download template",
-        "selectFile": "Select Excel file",
-        "removeSelectedFile": "Remove file",
-        "validateImport": "Validate",
-        "importExcel": "Import"
+        "exportExcel": "Exporter en Excel",
+        "importData": "Importer DB / CSV",
+        "downloadTemplate": "Télécharger le modèle",
+        "selectFile": "Sélectionner un fichier Excel",
+        "removeSelectedFile": "Supprimer le fichier",
+        "validateImport": "Valider",
+        "importExcel": "Importer"
       },
       "messages": {
-        "success": "Export completed: {{fileName}}",
-        "error": "Failed to export data."
+        "success": "Export terminé : {{fileName}}",
+        "error": "Échec de l'export des données."
       }
     }
   },
   "overview": {
     "toolbar": {
-      "reload": "Reload"
+      "reload": "Actualiser"
     },
     "banners": {
       "snapshotsOutdated": {
-        "title": "Snapshots may be outdated",
-        "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."
+        "title": "Les instantanés sont peut-être obsolètes",
+        "body": "Votre dernier instantané date de {{days}} jours. Mettez à jour les instantanés pour maintenir la précision de la valeur nette."
       }
     },
     "errors": {
-      "summaryLoad": "Unable to load summary data."
+      "summaryLoad": "Impossible de charger les données récapitulatives."
     },
     "pie": {
-      "others": "Others"
+      "others": "Autres"
     },
     "cards": {
       "netWorth": {
-        "title": "Total net worth",
-        "summaryTitle": "Net Worth",
-        "receivablesPayablesTitle": "Receivables & Payables",
-        "allocationTitle": "Allocation",
-        "description": "See your current net worth, how it changed since last month, and how receivables or payables affect the full picture.",
-        "allocationDescription": "See which accounts make up your net worth so you can spot concentration at a glance.",
-        "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
+        "title": "Valeur nette totale",
+        "summaryTitle": "Valeur nette",
+        "receivablesPayablesTitle": "Créances et dettes",
+        "allocationTitle": "Répartition",
+        "description": "Consulter la valeur nette actuelle, son évolution depuis le mois dernier et l'impact des créances ou dettes sur l'ensemble.",
+        "allocationDescription": "Voir quels comptes constituent la valeur nette pour identifier la concentration d'un coup d'œil.",
+        "descriptionDailyAverage": "Valeur nette moy./jour (MTD) : {{value}}/jour",
         "tooltips": {
-          "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
-          "current": "Current",
-          "ledgerBalance": "Ledger Balance",
-          "marketValue": "Market Value"
+          "averageDailyChangePositive": "Votre valeur nette totale augmente en moyenne de {{value}} par jour ce mois-ci (par rapport à la fin du mois dernier).",
+          "averageDailyChangeNegative": "Votre valeur nette totale diminue en moyenne de {{value}} par jour ce mois-ci (par rapport à la fin du mois dernier).",
+          "averageDailyChangeNeutral": "Votre valeur nette totale est stable en moyenne par jour ce mois-ci (par rapport à la fin du mois dernier).",
+          "current": "Actuel",
+          "ledgerBalance": "Solde comptable",
+          "marketValue": "Valeur de marché"
         },
         "total": "Total",
-        "withValuations": "With valuations",
-        "liquidAssets": "Liquidity",
-        "investments": "Investments",
+        "withValuations": "Avec valorisations",
+        "liquidAssets": "Liquidités",
+        "investments": "Investissements",
         "snapshotBased": {
-          "today": "Snapshots updated today",
-          "daysAgo": "Based on snapshots ({{days}} days ago)"
+          "today": "Instantanés mis à jour aujourd'hui",
+          "daysAgo": "Basé sur les instantanés (il y a {{days}} jours)"
         },
         "valuationsOutdated": {
-          "title": "Valuations may be outdated",
-          "body": "Your latest valuation snapshot is {{days}} days old. Update snapshots to keep 'With valuations' accurate."
+          "title": "Les valorisations sont peut-être obsolètes",
+          "body": "Votre dernier instantané de valorisation date de {{days}} jours. Mettez à jour les instantanés pour maintenir la précision de 'Avec valorisations'."
         },
-        "deltaVsPreviousMonth": "vs previous month",
-        "receivables": "Receivables",
-        "payables": "Payables",
-        "totalAfterRP": "After R&P",
-        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation.",
-        "emptyDistributionNoAccounts": "No accounts yet. Add your first account to see the allocation."
+        "deltaVsPreviousMonth": "vs mois précédent",
+        "receivables": "Créances",
+        "payables": "Dettes",
+        "totalAfterRP": "Après C&D",
+        "emptyDistribution": "Aucun solde de compte à répartir. Ajouter ou mettre à jour des comptes pour voir la répartition.",
+        "emptyDistributionNoAccounts": "Aucun compte. Ajouter votre premier compte pour voir la répartition."
       },
       "monthlyTotals": {
-        "title": "Income, expenses and net cashflow",
-        "segmentTitle": "Income & expenses",
-        "descriptionCurrentYear": "Compare income, expenses, and net cashflow month by month across {{year}}.",
-        "loading": "Loading analytics...",
-        "loadFailedWithError": "Failed to load analytics: {{error}}",
-        "empty": "No analytics data available for the selected filters.",
+        "title": "Revenus, dépenses et flux de trésorerie net",
+        "segmentTitle": "Revenus et dépenses",
+        "descriptionCurrentYear": "Comparer les revenus, dépenses et flux de trésorerie net mois par mois pour {{year}}.",
+        "loading": "Chargement des analyses...",
+        "loadFailedWithError": "Échec du chargement des analyses : {{error}}",
+        "empty": "Aucune donnée analytique disponible pour les filtres sélectionnés.",
         "series": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "netCashflow": "Net Cashflow"
+          "incomes": "Revenus",
+          "expenses": "Dépenses",
+          "netCashflow": "Flux de trésorerie net"
         }
       },
       "activity": {
-        "title": "Activity",
-        "latestTransactions": "Latest {{count}} transactions this month so you can review new spending and income quickly.",
-        "latestTransfers": "Latest {{count}} transfers this month so you can verify money moved between accounts.",
-        "loadFailed": "Unable to load activity."
+        "title": "Activité",
+        "latestTransactions": "Les {{count}} dernières transactions du mois pour examiner rapidement les nouvelles dépenses et revenus.",
+        "latestTransfers": "Les {{count}} derniers virements du mois pour vérifier les mouvements entre comptes.",
+        "loadFailed": "Impossible de charger l'activité."
       },
       "recentTransactions": {
-        "title": "Last transactions",
-        "description": "Latest {{count}} transactions this month",
-        "loadFailed": "Unable to load transactions.",
-        "empty": "No transactions this month yet. Add one to start building your activity feed.",
-        "toggleSettled": "Toggle settled",
+        "title": "Dernières transactions",
+        "description": "Les {{count}} dernières transactions du mois",
+        "loadFailed": "Impossible de charger les transactions.",
+        "empty": "Aucune transaction ce mois-ci. Ajoutez-en une pour commencer à alimenter le journal d'activité.",
+        "toggleSettled": "Basculer le statut soldé",
         "tooltips": {
-          "settled": "Settled",
-          "settle": "Settle",
-          "unsettled": "Unsettled"
+          "settled": "Soldé",
+          "settle": "Solder",
+          "unsettled": "Non soldé"
         },
         "actions": {
-          "goToTransactionsPage": "All transactions"
+          "goToTransactionsPage": "Toutes les transactions"
         },
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknownAccount": "Compte inconnu",
+        "unknownCategory": "Catégorie inconnue"
       },
       "moneyFlowSankey": {
-        "title": "Money flow",
-        "description": "{{month}} at a glance: see where money came from, where it went, and what remained.",
-        "loading": "Loading money flow...",
-        "loadFailedWithError": "Failed to load money flow: {{error}}",
-        "empty": "No money flow for this month yet. Add transactions to see where money moved.",
+        "title": "Flux d'argent",
+        "description": "{{month}} en un coup d'œil : voir d'où vient l'argent, où il va et ce qui reste.",
+        "loading": "Chargement du flux d'argent...",
+        "loadFailedWithError": "Échec du chargement du flux d'argent : {{error}}",
+        "empty": "Aucun flux d'argent ce mois-ci. Ajoutez des transactions pour voir les mouvements.",
         "tooltips": {
-          "actualNetCashflow": "Actual net cashflow"
+          "actualNetCashflow": "Flux de trésorerie net réel"
         },
         "nodes": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "savings": "Savings",
-          "investments": "Investments",
+          "incomes": "Revenus",
+          "expenses": "Dépenses",
+          "savings": "Épargne",
+          "investments": "Investissements",
           "crypto": "Crypto",
-          "netCashflow": "Net Cashflow",
-          "priorBalances": "Prior balances",
-          "unused": "Unused",
-          "otherExpenses": "Other expenses"
+          "netCashflow": "Flux de trésorerie net",
+          "priorBalances": "Soldes antérieurs",
+          "unused": "Non utilisé",
+          "otherExpenses": "Autres dépenses"
         }
       }
     }
   },
   "breakdown": {
     "toolbar": {
-      "selectYear": "Select year"
+      "selectYear": "Sélectionner une année"
     },
     "view": {
-      "all": "All"
+      "all": "Tout"
     },
     "averageMode": {
-      "label": "Use elapsed months for averages",
-      "hint": "Turn this on to compare against the months that have happened so far instead of averaging across the full year."
+      "label": "Utiliser les mois écoulés pour les moyennes",
+      "hint": "Activer pour comparer avec les mois déjà passés plutôt que sur l'année entière."
     },
-    "sectionYear": "Year {{year}}",
+    "sectionYear": "Année {{year}}",
     "moneyFlowOptions": {
       "showAllocationTargets": {
-        "label": "Show savings, brokerage and crypto flows",
-        "hint": "Hide these to focus on core income versus expenses, or show them to include savings and investment moves."
+        "label": "Afficher les flux d'épargne, de courtage et de crypto",
+        "hint": "Masquer pour se concentrer sur les revenus et dépenses principaux, ou afficher pour inclure les mouvements d'épargne et d'investissement."
       }
     },
     "metrics": {
-      "yearTotal": "Year total",
-      "avgPerMonth": "Avg/month"
+      "yearTotal": "Total annuel",
+      "avgPerMonth": "Moy./mois"
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Money flow of the year: {{year}}",
-        "empty": "No money flow for this year yet. Add transactions to see how money moved over time."
+        "titleYear": "Flux d'argent de l'année : {{year}}",
+        "empty": "Aucun flux d'argent cette année. Ajoutez des transactions pour voir les mouvements dans le temps."
       },
       "monthlyTrend": {
-        "title": "{{label}} by month",
-        "description": "See when {{label}} rises, dips, or stays steady across the year."
+        "title": "{{label}} par mois",
+        "description": "Voir quand {{label}} augmente, diminue ou reste stable au cours de l'année."
       },
       "monthlyByCategory": {
-        "title": "{{label}} by category",
-        "description": "Compare how each month's {{label}} is split across categories.",
-        "summaryTitle": "Category totals and averages"
+        "title": "{{label}} par catégorie",
+        "description": "Comparer comment le {{label}} de chaque mois se répartit entre les catégories.",
+        "summaryTitle": "Totaux et moyennes par catégorie"
       }
     }
   },
   "compare": {
-    "loadingTitle": "Preparing comparison",
-    "loadingDescription": "Gathering both months so you can compare them side by side.",
-    "loadFailedWithError": "Failed to load comparison analytics: {{error}}",
-    "empty": "No comparison data for these months yet. Record activity in both months to compare them here.",
+    "loadingTitle": "Préparation de la comparaison",
+    "loadingDescription": "Chargement des deux mois pour une comparaison côte à côte.",
+    "loadFailedWithError": "Échec du chargement des analyses de comparaison : {{error}}",
+    "empty": "Aucune donnée de comparaison pour ces mois. Enregistrez de l'activité dans les deux mois pour les comparer ici.",
     "selectors": {
       "left": {
-        "title": "Month 1"
+        "title": "Mois 1"
       },
       "right": {
-        "title": "Month 2"
+        "title": "Mois 2"
       },
-      "year": "Year",
-      "month": "Month"
+      "year": "Année",
+      "month": "Mois"
     },
     "metrics": {
-      "delta": "Delta"
+      "delta": "Écart"
     },
     "cards": {
       "summary": {
-        "title": "Comparison summary",
-        "description": "Compare income, expenses, and net cashflow side by side to see which month changed more."
+        "title": "Résumé de la comparaison",
+        "description": "Comparer les revenus, dépenses et flux de trésorerie net côte à côte pour voir quel mois a le plus évolué."
       },
       "radar": {
-        "title": "Radar comparison",
-        "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
-        "empty": "No expense categories available for radar comparison."
+        "title": "Comparaison radar",
+        "description": "Voir quelles catégories de dépenses ont augmenté, diminué ou sont restées similaires entre les deux mois.",
+        "empty": "Aucune catégorie de dépenses disponible pour la comparaison radar."
       },
       "dailyCalendar": {
-        "title": "Daily expense calendar",
-        "description": "See which days carried the heaviest spending in each month with one shared scale.",
-        "panelHint": "Daily expenses (same scale)",
-        "empty": "No daily spending data for the selected months."
+        "title": "Calendrier des dépenses journalières",
+        "description": "Voir quels jours ont concentré les dépenses les plus importantes dans chaque mois, avec une échelle commune.",
+        "panelHint": "Dépenses journalières (même échelle)",
+        "empty": "Aucune donnée de dépenses journalières pour les mois sélectionnés."
       },
       "expensesByCategory": {
-        "title": "Expenses by category",
-        "description": "Review each category side by side, including the difference between the two months.",
-        "empty": "No expense category totals for the selected months."
+        "title": "Dépenses par catégorie",
+        "description": "Examiner chaque catégorie côte à côte, y compris la différence entre les deux mois.",
+        "empty": "Aucun total de catégorie de dépenses pour les mois sélectionnés."
       }
     }
   },
   "category": {
     "exclude": {
-      "name": "Exclude",
-      "description": "Transactions excluded from analytics and budget calculations."
+      "name": "Exclure",
+      "description": "Transactions exclues des analyses et des calculs budgétaires."
     },
     "transfer": {
-      "name": "Transfer",
-      "description": "Money moved between your own accounts."
+      "name": "Virement",
+      "description": "Argent déplacé entre vos propres comptes."
     },
     "other_expense": {
-      "name": "Other Expense",
-      "description": "Fallback category for uncategorized expenses."
+      "name": "Autres dépenses",
+      "description": "Catégorie de secours pour les dépenses non catégorisées."
     },
     "other_income": {
-      "name": "Other Income",
-      "description": "Fallback category for uncategorized income."
+      "name": "Autres revenus",
+      "description": "Catégorie de secours pour les revenus non catégorisés."
     },
     "type": {
-      "income": "Income",
-      "expense": "Expense",
-      "exclude": "Exclude"
+      "income": "Revenus",
+      "expense": "Dépenses",
+      "exclude": "Exclure"
     }
   },
   "account": {
     "type": {
-      "cash": "Cash",
-      "bank": "Bank",
-      "savings": "Savings",
-      "brokerage": "Brokerage",
+      "cash": "Espèces",
+      "bank": "Banque",
+      "savings": "Épargne",
+      "brokerage": "Courtage",
       "crypto": "Crypto",
-      "credit": "Credit"
+      "credit": "Crédit"
     }
   },
   "accounts": {
     "table": {
-      "description": "Set up the accounts that hold your money or debt so balances and transfers stay organized.",
-      "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
+      "description": "Configurer les comptes qui détiennent votre argent ou vos dettes pour que les soldes et virements restent organisés.",
+      "emptyMessage": "Aucun compte. Ajoutez votre premier compte pour commencer à suivre les soldes et les virements.",
       "actions": {
-        "add": "Add account",
-        "edit": "Edit account",
-        "archive": "Archive account",
-        "locked": "Locked account"
+        "add": "Ajouter un compte",
+        "edit": "Modifier le compte",
+        "archive": "Archiver le compte",
+        "locked": "Compte verrouillé"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "Couleur",
+        "icon": "Icône"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add account",
-        "description": "Create an account you can use in transactions, transfers, and net worth tracking.",
+        "title": "Ajouter un compte",
+        "description": "Créer un compte utilisable dans les transactions, les virements et le suivi de la valeur nette.",
         "placeholders": {
-          "name": "Account name",
-          "description": "Account description"
+          "name": "Nom du compte",
+          "description": "Description du compte"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create account"
+          "cancel": "Annuler",
+          "create": "Créer le compte"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the account.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "typeRequired": "Account type is required.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "createFailed": "Failed to create account."
+          "fixValidation": "Veuillez corriger les champs indiqués avant de créer le compte.",
+          "nameRequired": "Le nom est obligatoire.",
+          "nameMinLength": "Le nom doit comporter au moins 2 caractères.",
+          "nameMaxLength": "Le nom ne doit pas dépasser 64 caractères.",
+          "typeRequired": "Le type de compte est obligatoire.",
+          "descriptionMaxLength": "La description ne doit pas dépasser 50 caractères.",
+          "createFailed": "Échec de la création du compte."
         }
       },
       "edit": {
-        "title": "Edit account",
-        "description": "Update how this account appears and where you use it across the app.",
+        "title": "Modifier le compte",
+        "description": "Mettre à jour l'affichage de ce compte et son utilisation dans l'application.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Annuler",
+          "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the account.",
-          "updateFailed": "Failed to update account."
+          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le compte.",
+          "updateFailed": "Échec de la mise à jour du compte."
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive account?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
+      "title": "Archiver le compte ?",
+      "description": "Archiver \"{{name}}\" pour qu'il n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom du compte.",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "Annuler",
+        "archive": "Archiver"
       }
     },
     "toasts": {
-      "createSuccess": "Account created successfully.",
-      "createError": "Failed to create account.",
-      "updateSuccess": "Account updated successfully.",
-      "updateError": "Failed to update account.",
-      "archiveSuccess": "Account archived successfully.",
-      "archiveError": "Failed to archive account."
+      "createSuccess": "Compte créé avec succès.",
+      "createError": "Échec de la création du compte.",
+      "updateSuccess": "Compte mis à jour avec succès.",
+      "updateError": "Échec de la mise à jour du compte.",
+      "archiveSuccess": "Compte archivé avec succès.",
+      "archiveError": "Échec de l'archivage du compte."
     },
     "errors": {
-      "loadFailed": "Failed to load accounts: {{error}}"
+      "loadFailed": "Échec du chargement des comptes : {{error}}"
     }
   },
   "categories": {
     "table": {
-      "description": "Organize transactions into categories so reports, budgets, and comparisons stay meaningful.",
-      "emptyMessage": "No categories yet. Add your first category to organize spending and income.",
+      "description": "Organiser les transactions en catégories pour que les rapports, budgets et comparaisons restent pertinents.",
+      "emptyMessage": "Aucune catégorie. Ajoutez votre première catégorie pour organiser les dépenses et revenus.",
       "actions": {
-        "add": "Add category",
-        "edit": "Edit category",
-        "archive": "Archive category",
-        "locked": "Locked category"
+        "add": "Ajouter une catégorie",
+        "edit": "Modifier la catégorie",
+        "archive": "Archiver la catégorie",
+        "locked": "Catégorie verrouillée"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "Couleur",
+        "icon": "Icône"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add category",
-        "description": "Create a category to label transactions and group them in reports.",
+        "title": "Ajouter une catégorie",
+        "description": "Créer une catégorie pour étiqueter les transactions et les regrouper dans les rapports.",
         "placeholders": {
-          "name": "Category name",
-          "description": "Category description"
+          "name": "Nom de la catégorie",
+          "description": "Description de la catégorie"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create category"
+          "cancel": "Annuler",
+          "create": "Créer la catégorie"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the category.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "typeRequired": "Category type is required.",
-          "createFailed": "Failed to create category."
+          "fixValidation": "Veuillez corriger les champs indiqués avant de créer la catégorie.",
+          "nameRequired": "Le nom est obligatoire.",
+          "nameMinLength": "Le nom doit comporter au moins 2 caractères.",
+          "nameMaxLength": "Le nom ne doit pas dépasser 64 caractères.",
+          "descriptionMaxLength": "La description ne doit pas dépasser 50 caractères.",
+          "typeRequired": "Le type de catégorie est obligatoire.",
+          "createFailed": "Échec de la création de la catégorie."
         }
       },
       "edit": {
-        "title": "Edit category",
-        "description": "Update this category's label, type, or visual marker.",
+        "title": "Modifier la catégorie",
+        "description": "Mettre à jour le libellé, le type ou le marqueur visuel de cette catégorie.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Annuler",
+          "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the category.",
-          "updateFailed": "Failed to update category."
+          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer la catégorie.",
+          "updateFailed": "Échec de la mise à jour de la catégorie."
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive category?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
+      "title": "Archiver la catégorie ?",
+      "description": "Archiver \"{{name}}\" pour qu'elle n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom de la catégorie.",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "Annuler",
+        "archive": "Archiver"
       }
     },
     "toasts": {
-      "createSuccess": "Category created successfully.",
-      "createError": "Failed to create category.",
-      "updateSuccess": "Category updated successfully.",
-      "updateError": "Failed to update category.",
-      "archiveSuccess": "Category archived successfully.",
-      "archiveError": "Failed to archive category."
+      "createSuccess": "Catégorie créée avec succès.",
+      "createError": "Échec de la création de la catégorie.",
+      "updateSuccess": "Catégorie mise à jour avec succès.",
+      "updateError": "Échec de la mise à jour de la catégorie.",
+      "archiveSuccess": "Catégorie archivée avec succès.",
+      "archiveError": "Échec de l'archivage de la catégorie."
     },
     "errors": {
-      "loadFailed": "Failed to load categories: {{error}}"
+      "loadFailed": "Échec du chargement des catégories : {{error}}"
     }
   },
   "budgets": {
     "view": {
-      "setup": "Budget setup",
-      "analysis": "Budget analysis"
+      "setup": "Configuration du budget",
+      "analysis": "Analyse budgétaire"
     },
     "table": {
-      "description": "Set spending targets by category so you can compare your plan against real spending.",
-      "emptyMessage": "No budgets yet. Add your first budget to start tracking category targets.",
-      "unknownCategory": "Unknown category",
+      "description": "Définir des objectifs de dépenses par catégorie pour comparer le plan aux dépenses réelles.",
+      "emptyMessage": "Aucun budget. Ajoutez votre premier budget pour commencer à suivre les objectifs par catégorie.",
+      "unknownCategory": "Catégorie inconnue",
       "actions": {
-        "add": "Add budget",
-        "edit": "Edit budget",
-        "delete": "Delete budget"
+        "add": "Ajouter un budget",
+        "edit": "Modifier le budget",
+        "delete": "Supprimer le budget"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add budget",
-        "description": "Create a spending target for {{year}} so you can measure category spending against it.",
+        "title": "Ajouter un budget",
+        "description": "Créer un objectif de dépenses pour {{year}} afin de mesurer les dépenses par catégorie.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create budget"
+          "cancel": "Annuler",
+          "create": "Créer le budget"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the budget.",
-          "categoryRequired": "Category is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create budget."
+          "fixValidation": "Veuillez corriger les champs indiqués avant de créer le budget.",
+          "categoryRequired": "La catégorie est obligatoire.",
+          "amountRequired": "Le montant est obligatoire.",
+          "amountInvalid": "Le montant doit être un nombre positif.",
+          "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
+          "createFailed": "Échec de la création du budget."
         }
       },
       "edit": {
-        "title": "Edit budget",
-        "description": "Update this category target for {{year}} as your plan changes.",
+        "title": "Modifier le budget",
+        "description": "Mettre à jour cet objectif de catégorie pour {{year}} si le plan évolue.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Annuler",
+          "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the budget.",
-          "updateFailed": "Failed to update budget."
+          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le budget.",
+          "updateFailed": "Échec de la mise à jour du budget."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete budget?",
-      "description": "Delete the budget for \"{{category}}\". You can add it again later if needed.",
+      "title": "Supprimer le budget ?",
+      "description": "Supprimer le budget pour \"{{category}}\". Vous pourrez le rajouter ultérieurement si nécessaire.",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       }
     },
     "toasts": {
-      "createSuccess": "Budget created successfully.",
-      "createError": "Failed to create budget.",
-      "updateSuccess": "Budget updated successfully.",
-      "updateError": "Failed to update budget.",
-      "deleteSuccess": "Budget deleted successfully.",
-      "deleteError": "Failed to delete budget."
+      "createSuccess": "Budget créé avec succès.",
+      "createError": "Échec de la création du budget.",
+      "updateSuccess": "Budget mis à jour avec succès.",
+      "updateError": "Échec de la mise à jour du budget.",
+      "deleteSuccess": "Budget supprimé avec succès.",
+      "deleteError": "Échec de la suppression du budget."
     },
     "analysis": {
-      "title": "Budget analysis",
-      "description": "Compare budget targets against actual category expenses for the selected year.",
-      "loading": "Loading budget analysis...",
-      "empty": "No budget analysis for {{year}} yet. Add budgets and matching transactions to compare plan versus actual.",
+      "title": "Analyse budgétaire",
+      "description": "Comparer les objectifs budgétaires aux dépenses réelles par catégorie pour l'année sélectionnée.",
+      "loading": "Chargement de l'analyse budgétaire...",
+      "empty": "Aucune analyse budgétaire pour {{year}}. Ajoutez des budgets et des transactions correspondantes pour comparer le plan et le réel.",
       "series": {
         "budget": "Budget",
-        "expenses": "Expenses"
+        "expenses": "Dépenses"
       },
       "metrics": {
-        "totalBudget": "Total budget",
-        "totalExpenses": "Total expenses",
-        "delta": "Remaining budget",
-        "availablePercent": "Budget still available"
+        "totalBudget": "Budget total",
+        "totalExpenses": "Dépenses totales",
+        "delta": "Budget restant",
+        "availablePercent": "Budget encore disponible"
       },
       "chart": {
-        "title": "Budget vs expenses by category",
-        "description": "See which categories are on track, close to the limit, or already over budget."
+        "title": "Budget vs dépenses par catégorie",
+        "description": "Voir quelles catégories sont dans les limites, proches du plafond ou déjà dépassées."
       },
       "errors": {
-        "loadFailedWithError": "Failed to load budget analysis: {{error}}"
+        "loadFailedWithError": "Échec du chargement de l'analyse budgétaire : {{error}}"
       }
     },
     "errors": {
-      "loadFailed": "Failed to load budgets: {{error}}"
+      "loadFailed": "Échec du chargement des budgets : {{error}}"
     }
   },
   "transactions": {
     "view": {
-      "commonTransactions": "Common transactions",
-      "transfers": "Transfers"
+      "commonTransactions": "Transactions",
+      "transfers": "Virements"
     },
     "pagination": {
-      "summary": "{{start}}-{{end}} of {{total}}"
+      "summary": "{{start}}-{{end}} sur {{total}}"
     },
     "transfers": {
-      "title": "Transfers",
+      "title": "Virements",
       "table": {
-        "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
-        "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
-        "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating transfers.",
-        "emptyNeedTwoAccountsMessage": "You need at least two accounts before creating transfers. Add another account to continue.",
+        "description": "Suivre les mouvements d'argent entre vos propres comptes. Les virements changent l'emplacement de l'argent, pas les totaux de dépenses.",
+        "emptyMessage": "Aucun virement. Ajoutez-en un lorsque vous déplacez de l'argent entre vos comptes.",
+        "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant de créer des virements.",
+        "emptyNeedTwoAccountsMessage": "Au moins deux comptes sont nécessaires pour créer des virements. Ajoutez un autre compte pour continuer.",
         "actions": {
-          "add": "Add transfer",
-          "filter": "Filter transfers",
-          "edit": "Edit transfer",
-          "delete": "Delete transfer"
+          "add": "Ajouter un virement",
+          "filter": "Filtrer les virements",
+          "edit": "Modifier le virement",
+          "delete": "Supprimer le virement"
         }
       },
       "dialog": {
         "add": {
-          "title": "Add transfer",
-          "description": "Move money between two of your accounts without affecting income or expense totals.",
+          "title": "Ajouter un virement",
+          "description": "Déplacer de l'argent entre deux de vos comptes sans affecter les totaux de revenus ou de dépenses.",
           "actions": {
-            "cancel": "Cancel",
-            "create": "Create transfer"
+            "cancel": "Annuler",
+            "create": "Créer le virement"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before creating the transfer.",
-            "dateRequired": "Date is required.",
-            "fromAccountRequired": "Source account is required.",
-            "toAccountRequired": "Destination account is required.",
-            "accountsMustDiffer": "Source and destination accounts must be different.",
-            "amountRequired": "Amount is required.",
-            "amountInvalid": "Amount must be a positive number.",
-            "descriptionMaxLength": "Description must be at most 75 characters.",
-            "createFailed": "Failed to create transfer."
+            "fixValidation": "Veuillez corriger les champs indiqués avant de créer le virement.",
+            "dateRequired": "La date est obligatoire.",
+            "fromAccountRequired": "Le compte source est obligatoire.",
+            "toAccountRequired": "Le compte destinataire est obligatoire.",
+            "accountsMustDiffer": "Le compte source et le compte destinataire doivent être différents.",
+            "amountRequired": "Le montant est obligatoire.",
+            "amountInvalid": "Le montant doit être un nombre positif.",
+            "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
+            "createFailed": "Échec de la création du virement."
           }
         },
         "edit": {
-          "title": "Edit transfer",
-          "description": "Update this transfer so your account movement history stays accurate.",
+          "title": "Modifier le virement",
+          "description": "Mettre à jour ce virement pour que l'historique des mouvements de compte reste précis.",
           "actions": {
-            "cancel": "Cancel",
-            "save": "Save changes"
+            "cancel": "Annuler",
+            "save": "Enregistrer les modifications"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before saving the transfer.",
-            "updateFailed": "Failed to update transfer."
+            "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le virement.",
+            "updateFailed": "Échec de la mise à jour du virement."
           }
         }
       },
       "deleteAlert": {
-        "title": "Delete transfer?",
-        "description": "Delete this transfer from your history. This cannot be undone.",
+        "title": "Supprimer le virement ?",
+        "description": "Supprimer ce virement de l'historique. Cette opération est irréversible.",
         "actions": {
-          "cancel": "Cancel",
-          "delete": "Delete"
+          "cancel": "Annuler",
+          "delete": "Supprimer"
         }
       },
       "filters": {
-        "title": "Filter transfers",
-        "description": "Narrow the transfer list to the dates, amounts, or accounts you want to review.",
+        "title": "Filtrer les virements",
+        "description": "Restreindre la liste des virements aux dates, montants ou comptes souhaités.",
         "empty": {
-          "account": "No accounts yet. Add an account before filtering transfers."
+          "account": "Aucun compte. Ajoutez un compte avant de filtrer les virements."
         }
       },
       "toasts": {
-        "createSuccess": "Transfer created successfully.",
-        "createError": "Failed to create transfer.",
-        "updateSuccess": "Transfer updated successfully.",
-        "updateError": "Failed to update transfer.",
-        "deleteSuccess": "Transfer deleted successfully.",
-        "deleteError": "Failed to delete transfer."
+        "createSuccess": "Virement créé avec succès.",
+        "createError": "Échec de la création du virement.",
+        "updateSuccess": "Virement mis à jour avec succès.",
+        "updateError": "Échec de la mise à jour du virement.",
+        "deleteSuccess": "Virement supprimé avec succès.",
+        "deleteError": "Échec de la suppression du virement."
       },
       "errors": {
-        "loadFailed": "Failed to load transfers: {{error}}"
+        "loadFailed": "Échec du chargement des virements : {{error}}"
       }
     },
     "table": {
-      "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
-      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before recording transactions.",
+      "description": "Examiner les entrées de revenus et de dépenses qui affectent les soldes, les budgets et le flux de trésorerie net.",
+      "emptyMessage": "Aucune transaction. Ajoutez-en une pour commencer à suivre les dépenses, les revenus et le flux de trésorerie net.",
+      "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant d'enregistrer des transactions.",
       "actions": {
-        "add": "Add transaction",
-        "filter": "Filter transactions",
-        "edit": "Edit transaction",
-        "duplicate": "Duplicate transaction",
-        "delete": "Delete transaction"
+        "add": "Ajouter une transaction",
+        "filter": "Filtrer les transactions",
+        "edit": "Modifier la transaction",
+        "duplicate": "Dupliquer la transaction",
+        "delete": "Supprimer la transaction"
       }
     },
     "filters": {
-      "title": "Filter transactions",
-      "description": "Narrow the list to the dates, categories, accounts, or amounts you want to review.",
+      "title": "Filtrer les transactions",
+      "description": "Restreindre la liste aux dates, catégories, comptes ou montants souhaités.",
       "empty": {
-        "category": "No categories yet. Add a category before filtering transactions.",
-        "account": "No accounts yet. Add an account before filtering transactions."
+        "category": "Aucune catégorie. Ajoutez une catégorie avant de filtrer les transactions.",
+        "account": "Aucun compte. Ajoutez un compte avant de filtrer les transactions."
       }
     },
     "dialog": {
       "add": {
-        "title": "Add transaction",
-        "description": "Record an income or expense so it appears in balances, budgets, and reports.",
+        "title": "Ajouter une transaction",
+        "description": "Enregistrer un revenu ou une dépense pour qu'il apparaisse dans les soldes, budgets et rapports.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create transaction"
+          "cancel": "Annuler",
+          "create": "Créer la transaction"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the transaction.",
-          "dateRequired": "Date is required.",
-          "accountRequired": "Account is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a valid number.",
-          "categoryRequired": "Category is required.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create transaction."
+          "fixValidation": "Veuillez corriger les champs indiqués avant de créer la transaction.",
+          "dateRequired": "La date est obligatoire.",
+          "accountRequired": "Le compte est obligatoire.",
+          "amountRequired": "Le montant est obligatoire.",
+          "amountInvalid": "Le montant doit être un nombre valide.",
+          "categoryRequired": "La catégorie est obligatoire.",
+          "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
+          "createFailed": "Échec de la création de la transaction."
         }
       },
       "edit": {
-        "title": "Edit transaction",
-        "description": "Update the details behind this income or expense entry.",
+        "title": "Modifier la transaction",
+        "description": "Mettre à jour les détails de cette entrée de revenu ou de dépense.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Annuler",
+          "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the transaction.",
-          "updateFailed": "Failed to update transaction."
+          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer la transaction.",
+          "updateFailed": "Échec de la mise à jour de la transaction."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete transaction?",
-      "description": "Delete this transaction from your history. This cannot be undone.",
+      "title": "Supprimer la transaction ?",
+      "description": "Supprimer cette transaction de l'historique. Cette opération est irréversible.",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       }
     },
     "duplicateAlert": {
-      "title": "Duplicate transaction?",
-      "description": "Create a copy of this transaction so you can edit it instead of entering everything again.",
+      "title": "Dupliquer la transaction ?",
+      "description": "Créer une copie de cette transaction pour la modifier plutôt que de tout ressaisir.",
       "actions": {
-        "cancel": "Cancel",
-        "duplicate": "Duplicate"
+        "cancel": "Annuler",
+        "duplicate": "Dupliquer"
       }
     },
     "toasts": {
-      "createSuccess": "Transaction created successfully.",
-      "createError": "Failed to create transaction.",
-      "updateSuccess": "Transaction updated successfully.",
-      "updateError": "Failed to update transaction.",
-      "deleteSuccess": "Transaction deleted successfully.",
-      "deleteError": "Failed to delete transaction.",
-      "duplicateSuccess": "Transaction duplicated successfully.",
-      "duplicateError": "Failed to duplicate transaction."
+      "createSuccess": "Transaction créée avec succès.",
+      "createError": "Échec de la création de la transaction.",
+      "updateSuccess": "Transaction mise à jour avec succès.",
+      "updateError": "Échec de la mise à jour de la transaction.",
+      "deleteSuccess": "Transaction supprimée avec succès.",
+      "deleteError": "Échec de la suppression de la transaction.",
+      "duplicateSuccess": "Transaction dupliquée avec succès.",
+      "duplicateError": "Échec de la duplication de la transaction."
     },
     "errors": {
-      "loadFailed": "Failed to load transactions: {{error}}"
+      "loadFailed": "Échec du chargement des transactions : {{error}}"
     }
   },
   "options": {
     "colors": {
-      "none": "None",
-      "gray": "Gray",
-      "coral": "Coral",
-      "amber": "Amber",
-      "gold": "Gold",
-      "lime": "Lime",
-      "green": "Green",
-      "teal": "Teal",
-      "sky": "Sky",
-      "blue": "Blue",
+      "none": "Aucune",
+      "gray": "Gris",
+      "coral": "Corail",
+      "amber": "Ambre",
+      "gold": "Or",
+      "lime": "Citron vert",
+      "green": "Vert",
+      "teal": "Sarcelle",
+      "sky": "Ciel",
+      "blue": "Bleu",
       "violet": "Violet",
       "rose": "Rose"
     },
     "icons": {
-      "none": "None",
-      "blocked": "Blocked",
-      "transfer": "Transfer",
-      "circle": "Circle",
-      "income": "Income",
-      "expense": "Expense",
-      "tag": "Tag",
-      "tags": "Tags",
-      "money": "Money",
-      "coins": "Coins",
-      "handCoins": "Hand Coins",
-      "wallet": "Wallet",
-      "piggyBank": "Piggy Bank",
-      "vault": "Vault",
-      "bank": "Bank",
-      "banknoteArrowUp": "Banknote",
-      "shoppingCart": "Shopping Cart",
-      "store": "Store",
-      "backpack": "Backpack",
+      "none": "Aucune",
+      "blocked": "Bloqué",
+      "transfer": "Virement",
+      "circle": "Cercle",
+      "income": "Revenus",
+      "expense": "Dépenses",
+      "tag": "Étiquette",
+      "tags": "Étiquettes",
+      "money": "Argent",
+      "coins": "Pièces",
+      "handCoins": "Pièces en main",
+      "wallet": "Portefeuille",
+      "piggyBank": "Tirelire",
+      "vault": "Coffre",
+      "bank": "Banque",
+      "banknoteArrowUp": "Billet",
+      "shoppingCart": "Panier",
+      "store": "Magasin",
+      "backpack": "Sac à dos",
       "globe": "Globe",
-      "library": "Library",
-      "school": "School",
-      "graduationCap": "Graduation Cap",
-      "gamepad": "Gaming",
-      "music": "Music",
-      "cassette": "Cassette Tape",
+      "library": "Bibliothèque",
+      "school": "École",
+      "graduationCap": "Toque de diplômé",
+      "gamepad": "Jeux",
+      "music": "Musique",
+      "cassette": "Cassette",
       "film": "Film",
-      "camera": "Camera",
+      "camera": "Appareil photo",
       "popcorn": "Popcorn",
       "cigarette": "Cigarette",
-      "beer": "Beer",
-      "coffee": "Coffee",
-      "glassWater": "Glass Water",
+      "beer": "Bière",
+      "coffee": "Café",
+      "glassWater": "Verre d'eau",
       "martini": "Martini",
-      "techReceipt": "Receipt",
-      "badgePercent": "Percent",
+      "techReceipt": "Reçu",
+      "badgePercent": "Pourcentage",
       "dumbbell": "Fitness",
-      "biceps": "Workout",
+      "biceps": "Musculation",
       "ambulance": "Ambulance",
-      "hospital": "Hospital",
-      "pill": "Pill",
+      "hospital": "Hôpital",
+      "pill": "Médicament",
       "cannabis": "Cannabis",
-      "mountainSnow": "Mountain",
-      "treePalm": "Palm Tree",
-      "leaf": "Leaf",
-      "bird": "Bird",
-      "cat": "Cat",
-      "dog": "Dog",
-      "fish": "Fish",
-      "utensils": "Utensils",
+      "mountainSnow": "Montagne",
+      "treePalm": "Palmier",
+      "leaf": "Feuille",
+      "bird": "Oiseau",
+      "cat": "Chat",
+      "dog": "Chien",
+      "fish": "Poisson",
+      "utensils": "Couverts",
       "hamburger": "Burger",
-      "salad": "Salad",
+      "salad": "Salade",
       "pizza": "Pizza",
-      "baby": "Baby",
-      "glasses": "Eyewear",
-      "gift": "Gift",
-      "tech": "Tech",
-      "laptop": "Laptop",
-      "home": "Home",
-      "shirt": "Shirt",
-      "armchair": "Armchair",
-      "lampDesk": "Desk Lamp",
-      "frown": "Frown",
-      "smile": "Smile",
-      "heart": "Heart",
-      "star": "Star",
-      "sparkles": "Sparkles",
-      "creditCard": "Credit Card",
-      "tractor": "Tractor",
+      "baby": "Bébé",
+      "glasses": "Lunettes",
+      "gift": "Cadeau",
+      "tech": "Technologie",
+      "laptop": "Ordinateur portable",
+      "home": "Domicile",
+      "shirt": "Chemise",
+      "armchair": "Fauteuil",
+      "lampDesk": "Lampe de bureau",
+      "frown": "Froncement",
+      "smile": "Sourire",
+      "heart": "Cœur",
+      "star": "Étoile",
+      "sparkles": "Étincelles",
+      "creditCard": "Carte de crédit",
+      "tractor": "Tracteur",
       "train": "Train",
-      "footprints": "Footprints",
-      "wrench": "Wrench",
-      "refrigerator": "Refrigerator",
-      "package": "Package",
-      "scissors": "Scissors",
-      "brain": "Brain",
+      "footprints": "Empreintes",
+      "wrench": "Clé",
+      "refrigerator": "Réfrigérateur",
+      "package": "Colis",
+      "scissors": "Ciseaux",
+      "brain": "Cerveau",
       "crypto": "Crypto",
-      "factory": "Factory",
-      "car": "Car",
-      "card": "Card"
+      "factory": "Usine",
+      "car": "Voiture",
+      "card": "Carte"
     }
   },
   "header": {
@@ -1294,335 +1294,335 @@
       }
     },
     "theme": {
-      "activateLight": "Activate light mode",
-      "activateDark": "Activate dark mode",
-      "lightMode": "Light mode",
-      "darkMode": "Dark mode"
+      "activateLight": "Activer le mode clair",
+      "activateDark": "Activer le mode sombre",
+      "lightMode": "Mode clair",
+      "darkMode": "Mode sombre"
     }
   },
   "sidebar": {
-    "close": "Close sidebar",
-    "expand": "Expand sidebar",
-    "collapse": "Collapse sidebar"
+    "close": "Fermer la barre latérale",
+    "expand": "Développer la barre latérale",
+    "collapse": "Réduire la barre latérale"
   },
   "breadcrumb": {
-    "ariaLabel": "Breadcrumb"
+    "ariaLabel": "Fil d'Ariane"
   },
   "recurringEvents": {
     "table": {
-      "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
-      "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
+      "description": "Planifier des transactions et des virements récurrents pour faciliter le suivi des activités routinières.",
+      "emptyMessage": "Aucun événement récurrent. Ajoutez-en un pour automatiser les transactions ou virements répétés.",
+      "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant de créer des événements récurrents.",
       "columns": {
-        "title": "Title",
-        "startDate": "Start date",
-        "schedule": "Schedule",
-        "template": "Template"
+        "title": "Titre",
+        "startDate": "Date de début",
+        "schedule": "Planification",
+        "template": "Modèle"
       },
       "actions": {
-        "add": "Add recurring event",
-        "edit": "Edit recurring event",
-        "run": "Run recurring event",
-        "delete": "Delete recurring event"
+        "add": "Ajouter un événement récurrent",
+        "edit": "Modifier l'événement récurrent",
+        "run": "Exécuter l'événement récurrent",
+        "delete": "Supprimer l'événement récurrent"
       },
       "schedule": {
-        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}",
-        "every": "{{interval}} every {{unit}}",
+        "summary": "Se produit {{count}} fois, {{interval}} toutes les {{unit}}",
+        "every": "{{interval}} toutes les {{unit}}",
         "occurrences": "{{count}} occurrences",
-        "monthPolicy": "If the day is not in the month: {{policy}}"
+        "monthPolicy": "Si le jour n'existe pas dans le mois : {{policy}}"
       },
       "template": {
-        "unknown": "Unknown template",
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknown": "Modèle inconnu",
+        "unknownAccount": "Compte inconnu",
+        "unknownCategory": "Catégorie inconnue"
       }
     },
     "type": {
       "transaction": "Transaction",
-      "transfer": "Transfer"
+      "transfer": "Virement"
     },
     "frequency": {
       "unit": {
-        "day": "day(s)",
-        "week": "week(s)",
-        "month": "month(s)",
-        "year": "year(s)"
+        "day": "jour(s)",
+        "week": "semaine(s)",
+        "month": "mois",
+        "year": "an(s)"
       }
     },
     "monthPolicy": {
-      "none": "Default",
-      "clip": "Use the last valid day of the month",
-      "skip": "Skip",
-      "last_day": "Last day",
-      "first_day": "First day"
+      "none": "Par défaut",
+      "clip": "Utiliser le dernier jour valide du mois",
+      "skip": "Ignorer",
+      "last_day": "Dernier jour",
+      "first_day": "Premier jour"
     },
     "dialog": {
       "add": {
-        "title": "Add recurring event",
-        "description": "Create a repeating rule so the app can add upcoming transactions or transfers for you.",
+        "title": "Ajouter un événement récurrent",
+        "description": "Créer une règle de répétition pour que l'application ajoute automatiquement les transactions ou virements à venir.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create recurring event"
+          "cancel": "Annuler",
+          "create": "Créer l'événement récurrent"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the recurring event.",
-          "titleRequired": "Title is required.",
-          "titleMinLength": "Title must be at least 2 characters.",
-          "titleMaxLength": "Title must be at most 80 characters.",
-          "typeRequired": "Type is required.",
-          "startDateRequired": "Start date is required.",
-          "countRequired": "Occurrences count is required.",
-          "countInvalid": "Occurrences count must be a positive integer.",
-          "frequencyIntervalRequired": "Frequency interval is required.",
-          "frequencyIntervalInvalid": "Frequency interval must be a positive integer.",
-          "frequencyUnitRequired": "Frequency unit is required.",
-          "accountRequired": "Account is required.",
-          "categoryRequired": "Category is required.",
-          "fromAccountRequired": "Source account is required.",
-          "toAccountRequired": "Destination account is required.",
-          "accountsMustDiffer": "Source and destination accounts must be different.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create recurring event."
+          "fixValidation": "Veuillez corriger les champs indiqués avant de créer l'événement récurrent.",
+          "titleRequired": "Le titre est obligatoire.",
+          "titleMinLength": "Le titre doit comporter au moins 2 caractères.",
+          "titleMaxLength": "Le titre ne doit pas dépasser 80 caractères.",
+          "typeRequired": "Le type est obligatoire.",
+          "startDateRequired": "La date de début est obligatoire.",
+          "countRequired": "Le nombre d'occurrences est obligatoire.",
+          "countInvalid": "Le nombre d'occurrences doit être un entier positif.",
+          "frequencyIntervalRequired": "L'intervalle de fréquence est obligatoire.",
+          "frequencyIntervalInvalid": "L'intervalle de fréquence doit être un entier positif.",
+          "frequencyUnitRequired": "L'unité de fréquence est obligatoire.",
+          "accountRequired": "Le compte est obligatoire.",
+          "categoryRequired": "La catégorie est obligatoire.",
+          "fromAccountRequired": "Le compte source est obligatoire.",
+          "toAccountRequired": "Le compte destinataire est obligatoire.",
+          "accountsMustDiffer": "Le compte source et le compte destinataire doivent être différents.",
+          "amountRequired": "Le montant est obligatoire.",
+          "amountInvalid": "Le montant doit être un nombre positif.",
+          "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
+          "createFailed": "Échec de la création de l'événement récurrent."
         }
       },
       "edit": {
-        "title": "Edit recurring event",
-        "description": "Update this rule and keep future planned items aligned with it.",
+        "title": "Modifier l'événement récurrent",
+        "description": "Mettre à jour cette règle et maintenir les éléments planifiés futurs en accord avec elle.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Annuler",
+          "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the recurring event.",
-          "updateFailed": "Failed to update recurring event."
+          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer l'événement récurrent.",
+          "updateFailed": "Échec de la mise à jour de l'événement récurrent."
         }
       },
       "form": {
         "labels": {
-          "title": "Title",
-          "startDate": "Start date",
+          "title": "Titre",
+          "startDate": "Date de début",
           "occurrences": "Occurrences",
-          "frequencyInterval": "Every",
-          "frequencyUnit": "Frequency unit",
-          "monthPolicy": "If the day is not in the month"
+          "frequencyInterval": "Tous les",
+          "frequencyUnit": "Unité de fréquence",
+          "monthPolicy": "Si le jour n'existe pas dans le mois"
         },
         "placeholders": {
-          "title": "Recurring event title",
+          "title": "Titre de l'événement récurrent",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
         "tooltips": {
-          "scheduleLockedAfterCreate": "After you create it, the schedule stays fixed so generated dates remain predictable."
+          "scheduleLockedAfterCreate": "Après la création, la planification reste fixe pour que les dates générées restent prévisibles."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete recurring event?",
-      "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
+      "title": "Supprimer l'événement récurrent ?",
+      "description": "Supprimer \"{{title}}\" et arrêter la création de futurs éléments à partir de cette règle.",
       "options": {
-        "deleteLinkedItems": "Also delete linked items already created by this plan",
-        "deleteLinkedItemsHint": "This also removes the transactions or transfers that were already created from this rule."
+        "deleteLinkedItems": "Supprimer également les éléments liés déjà créés par ce plan",
+        "deleteLinkedItemsHint": "Cela supprimera également les transactions ou virements déjà créés à partir de cette règle."
       },
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Annuler",
+        "delete": "Supprimer"
       }
     },
     "runConfirm": {
-      "title": "Run recurring event?",
-      "description": "Generate any missing scheduled items for \"{{title}}\" now.",
+      "title": "Exécuter l'événement récurrent ?",
+      "description": "Générer maintenant les éléments planifiés manquants pour \"{{title}}\".",
       "actions": {
-        "cancel": "Cancel",
-        "run": "Run now"
+        "cancel": "Annuler",
+        "run": "Exécuter maintenant"
       }
     },
     "createResult": {
-      "title": "Recurring event created"
+      "title": "Événement récurrent créé"
     },
     "updateResult": {
-      "title": "Recurring event updated",
-      "description": "\"{{title}}\" was updated successfully. Linked generated items were updated where applicable.",
+      "title": "Événement récurrent mis à jour",
+      "description": "\"{{title}}\" a été mis à jour avec succès. Les éléments liés générés ont été mis à jour le cas échéant.",
       "actions": {
         "ok": "OK"
       }
     },
     "runResult": {
-      "title": "Recurring events created",
-      "description": "\"{{title}}\" processed {{total}} occurrences. Created: {{created}}. Skipped existing: {{skipped}}.",
+      "title": "Événements récurrents créés",
+      "description": "\"{{title}}\" a traité {{total}} occurrences. Créées : {{created}}. Existantes ignorées : {{skipped}}.",
       "labels": {
-        "plan": "Recurring plan",
-        "created": "Created now",
-        "skipped": "Already existed",
-        "total": "Scheduled dates"
+        "plan": "Plan récurrent",
+        "created": "Créés maintenant",
+        "skipped": "Déjà existants",
+        "total": "Dates planifiées"
       },
       "hints": {
-        "noNewItems": "No new items were created because all scheduled dates already had linked items."
+        "noNewItems": "Aucun nouvel élément créé car toutes les dates planifiées avaient déjà des éléments liés."
       },
       "actions": {
         "ok": "OK"
       }
     },
     "runError": {
-      "title": "Failed to run recurring event",
-      "description": "The recurring event could not be executed: {{error}}",
+      "title": "Échec de l'exécution de l'événement récurrent",
+      "description": "L'événement récurrent n'a pas pu être exécuté : {{error}}",
       "actions": {
         "ok": "OK"
       },
-      "fallbackError": "Unexpected error"
+      "fallbackError": "Erreur inattendue"
     },
     "toasts": {
-      "createSuccess": "Recurring event created successfully.",
-      "createError": "Failed to create recurring event.",
-      "updateSuccess": "Recurring event updated successfully.",
-      "updateError": "Failed to update recurring event.",
-      "deleteSuccess": "Recurring event deleted successfully.",
-      "deleteError": "Failed to delete recurring event."
+      "createSuccess": "Événement récurrent créé avec succès.",
+      "createError": "Échec de la création de l'événement récurrent.",
+      "updateSuccess": "Événement récurrent mis à jour avec succès.",
+      "updateError": "Échec de la mise à jour de l'événement récurrent.",
+      "deleteSuccess": "Événement récurrent supprimé avec succès.",
+      "deleteError": "Échec de la suppression de l'événement récurrent."
     },
     "errors": {
-      "loadFailedWithError": "Failed to load recurring events: {{error}}",
-      "loadUnexpected": "Unexpected error while loading recurring events."
+      "loadFailedWithError": "Échec du chargement des événements récurrents : {{error}}",
+      "loadUnexpected": "Erreur inattendue lors du chargement des événements récurrents."
     }
   },
   "accountValuations": {
     "page": {
-      "title": "Account Valuations"
+      "title": "Valorisations du compte"
     },
     "table": {
-      "description": "History of valuation snapshots for this account.",
-      "emptyMessage": "No valuation snapshots yet. Add your first snapshot to start tracking.",
+      "description": "Historique des instantanés de valorisation pour ce compte.",
+      "emptyMessage": "Aucun instantané de valorisation. Ajoutez votre premier instantané pour commencer le suivi.",
       "columns": {
         "date": "Date",
-        "value": "Value",
-        "change": "Change"
+        "value": "Valeur",
+        "change": "Variation"
       },
       "actions": {
-        "viewHistory": "View valuation history",
-        "add": "Add snapshot",
-        "edit": "Edit",
-        "delete": "Delete"
+        "viewHistory": "Voir l'historique des valorisations",
+        "add": "Ajouter un instantané",
+        "edit": "Modifier",
+        "delete": "Supprimer"
       }
     },
     "header": {
-      "currentValue": "Current value",
-      "change": "Change",
-      "changePct": "Change %",
-      "accountBalance": "Account balance",
-      "lastSnapshot": "Latest snapshot",
-      "changeVsBalance": "Change vs balance",
-      "noSnapshots": "Add your first snapshot to compare against your account balance."
+      "currentValue": "Valeur actuelle",
+      "change": "Variation",
+      "changePct": "Variation %",
+      "accountBalance": "Solde du compte",
+      "lastSnapshot": "Dernier instantané",
+      "changeVsBalance": "Variation vs solde",
+      "noSnapshots": "Ajoutez votre premier instantané pour comparer avec le solde du compte."
     },
     "chart": {
-      "title": "Value over time",
-      "description": "Trend of saved valuation snapshots for this account.",
-      "seriesName": "Value"
+      "title": "Valeur dans le temps",
+      "description": "Tendance des instantanés de valorisation enregistrés pour ce compte.",
+      "seriesName": "Valeur"
     },
     "dialog": {
       "fields": {
-        "value": "Value",
+        "value": "Valeur",
         "date": "Date"
       },
       "add": {
-        "title": "Add snapshot",
-        "description": "Record the current value of your account at a specific date.",
+        "title": "Ajouter un instantané",
+        "description": "Enregistrer la valeur actuelle du compte à une date précise.",
         "actions": {
-          "create": "Add snapshot",
-          "cancel": "Cancel"
+          "create": "Ajouter un instantané",
+          "cancel": "Annuler"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "createFailed": "Failed to create the snapshot. Please try again.",
-          "valueRequired": "Value is required.",
-          "valueInvalid": "Value must be a valid positive number.",
-          "dateRequired": "Date is required."
+          "fixValidation": "Veuillez corriger les erreurs ci-dessus avant d'enregistrer.",
+          "createFailed": "Échec de la création de l'instantané. Veuillez réessayer.",
+          "valueRequired": "La valeur est obligatoire.",
+          "valueInvalid": "La valeur doit être un nombre positif valide.",
+          "dateRequired": "La date est obligatoire."
         }
       },
       "edit": {
-        "title": "Edit snapshot",
-        "description": "Update the value or date of this valuation snapshot.",
+        "title": "Modifier l'instantané",
+        "description": "Mettre à jour la valeur ou la date de cet instantané de valorisation.",
         "actions": {
-          "save": "Save changes",
-          "cancel": "Cancel"
+          "save": "Enregistrer les modifications",
+          "cancel": "Annuler"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "updateFailed": "Failed to update the snapshot. Please try again."
+          "fixValidation": "Veuillez corriger les erreurs ci-dessus avant d'enregistrer.",
+          "updateFailed": "Échec de la mise à jour de l'instantané. Veuillez réessayer."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete snapshot",
-      "description": "Are you sure you want to delete this valuation snapshot? This action cannot be undone.",
+      "title": "Supprimer l'instantané",
+      "description": "Confirmer la suppression de cet instantané de valorisation ? Cette opération est irréversible.",
       "actions": {
-        "delete": "Delete",
-        "cancel": "Cancel"
+        "delete": "Supprimer",
+        "cancel": "Annuler"
       }
     },
     "toasts": {
-      "createSuccess": "Snapshot added successfully.",
-      "createError": "Failed to add the snapshot.",
-      "updateSuccess": "Snapshot updated successfully.",
-      "updateError": "Failed to update the snapshot.",
-      "deleteSuccess": "Snapshot deleted successfully.",
-      "deleteError": "Failed to delete the snapshot."
+      "createSuccess": "Instantané ajouté avec succès.",
+      "createError": "Échec de l'ajout de l'instantané.",
+      "updateSuccess": "Instantané mis à jour avec succès.",
+      "updateError": "Échec de la mise à jour de l'instantané.",
+      "deleteSuccess": "Instantané supprimé avec succès.",
+      "deleteError": "Échec de la suppression de l'instantané."
     }
   },
   "onboarding": {
     "step_counter": "{{current}} / {{total}}",
     "actions": {
-      "back": "Back",
-      "continue": "Continue"
+      "back": "Retour",
+      "continue": "Continuer"
     },
     "welcome": {
-      "title": "Welcome to Boring Balance",
-      "subtitle": "A simple, private place to track where your money goes. No cloud, no subscriptions, no noise.",
-      "cta": "Get started"
+      "title": "Bienvenue dans Boring Balance",
+      "subtitle": "Un endroit simple et privé pour suivre où va votre argent. Sans cloud, sans abonnement, sans bruit.",
+      "cta": "Commencer"
     },
     "preferences": {
-      "title": "Set your preferences",
-      "subtitle": "You can change these at any time in Settings.",
+      "title": "Définir vos préférences",
+      "subtitle": "Vous pouvez les modifier à tout moment dans les paramètres.",
       "theme": {
-        "label": "Theme"
+        "label": "Thème"
       },
       "language": {
-        "label": "Language"
+        "label": "Langue"
       },
       "currency": {
-        "label": "Default currency",
-        "hint": "Used for display and new accounts. You can override per account."
+        "label": "Devise par défaut",
+        "hint": "Utilisée pour l'affichage et les nouveaux comptes. Modifiable par compte."
       }
     },
     "start": {
-      "title": "How do you want to begin?",
+      "title": "Comment souhaitez-vous commencer ?",
       "scratch": {
-        "title": "Start fresh",
-        "description": "Set up your accounts and categories. Takes two minutes."
+        "title": "Repartir de zéro",
+        "description": "Configurer vos comptes et catégories. Deux minutes suffisent."
       },
       "import": {
-        "title": "Import a backup",
-        "description": "Restore from a previous Boring Balance export."
+        "title": "Importer une sauvegarde",
+        "description": "Restaurer depuis un export Boring Balance précédent."
       }
     },
     "confirm": {
-      "title": "You're set up.",
-      "subtitle": "Everything is saved locally on your device. You're in control.",
-      "import_note": "You can import your backup from Settings → Export & Import at any time.",
-      "cta": "Enter Boring Balance"
+      "title": "Configuration terminée.",
+      "subtitle": "Tout est enregistré localement sur votre appareil. Vous gardez le contrôle.",
+      "import_note": "Vous pouvez importer votre sauvegarde depuis Paramètres → Export & Import à tout moment.",
+      "cta": "Accéder à Boring Balance"
     }
   },
   "update": {
     "modal": {
-      "title": "A new version is available",
-      "body": "You are on v{{current}}. Boring Balance v{{latest}} is now available on GitHub.",
-      "ignore": "Don't remind me again for v{{latest}}",
+      "title": "Une nouvelle version est disponible",
+      "body": "Vous utilisez la v{{current}}. Boring Balance v{{latest}} est désormais disponible sur GitHub.",
+      "ignore": "Ne plus me rappeler pour la v{{latest}}",
       "cta": {
-        "update": "Update on GitHub",
-        "dismiss": "Stay on v{{current}}"
+        "update": "Mettre à jour sur GitHub",
+        "dismiss": "Rester sur la v{{current}}"
       }
     },
     "sidebar": {
-      "label": "Update available · v{{latest}}"
+      "label": "Mise à jour disponible · v{{latest}}"
     }
   }
 }

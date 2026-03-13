@@ -1,229 +1,229 @@
 {
   "common": {
-    "actions": "Actions",
-    "titleBar": "Application title bar",
-    "cancel": "Cancel",
-    "yes": "Yes",
-    "no": "No",
+    "actions": "Дії",
+    "titleBar": "Панель заголовка програми",
+    "cancel": "Скасувати",
+    "yes": "Так",
+    "no": "Ні",
     "labels": {
-      "name": "Name",
-      "type": "Type",
-      "description": "Description",
-      "color": "Color",
-      "icon": "Icon",
-      "date": "Date",
-      "settled": "Settled",
-      "account": "Account",
-      "category": "Category",
-      "amount": "Amount",
-      "from": "From",
-      "to": "To",
-      "fromAccount": "From account",
-      "toAccount": "To account",
-      "title": "Title",
-      "startDate": "Start date",
-      "plan": "Plan",
-      "schedule": "Schedule",
-      "template": "Template",
-      "occurrences": "Occurrences",
-      "frequencyUnit": "Frequency unit",
-      "monthPolicy": "If the day is not in the month",
-      "year": "Year"
+      "name": "Назва",
+      "type": "Тип",
+      "description": "Опис",
+      "color": "Колір",
+      "icon": "Іконка",
+      "date": "Дата",
+      "settled": "Проведено",
+      "account": "Рахунок",
+      "category": "Категорія",
+      "amount": "Сума",
+      "from": "Від",
+      "to": "До",
+      "fromAccount": "З рахунку",
+      "toAccount": "На рахунок",
+      "title": "Заголовок",
+      "startDate": "Дата початку",
+      "plan": "План",
+      "schedule": "Розклад",
+      "template": "Шаблон",
+      "occurrences": "Повторення",
+      "frequencyUnit": "Одиниця частоти",
+      "monthPolicy": "Якщо дня немає в місяці",
+      "year": "Рік"
     },
     "placeholders": {
-      "selectType": "Select type",
-      "selectColor": "Select color",
-      "selectIcon": "Select icon",
-      "pickDate": "Pick a date",
+      "selectType": "Обрати тип",
+      "selectColor": "Обрати колір",
+      "selectIcon": "Обрати іконку",
+      "pickDate": "Обрати дату",
       "amountZero": "0,00",
-      "selectAccount": "Select account",
-      "selectCategory": "Select category",
-      "optionalDescription": "Optional description",
-      "transactionDescription": "Transaction description"
+      "selectAccount": "Обрати рахунок",
+      "selectCategory": "Обрати категорію",
+      "optionalDescription": "Необов'язковий опис",
+      "transactionDescription": "Опис транзакції"
     },
     "filters": {
       "fields": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Amount from",
-        "amountTo": "Amount to",
-        "settled": "Settlement status",
-        "categoryType": "Category type",
-        "category": "Category",
-        "account": "Account"
+        "dateFrom": "Дата від",
+        "dateTo": "Дата до",
+        "amountFrom": "Сума від",
+        "amountTo": "Сума до",
+        "settled": "Статус проведення",
+        "categoryType": "Тип категорії",
+        "category": "Категорія",
+        "account": "Рахунок"
       },
       "placeholders": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Minimum amount",
-        "amountTo": "Maximum amount",
-        "settled": "Any status",
-        "categoryType": "Any type",
-        "category": "Select a category",
-        "account": "Select an account",
-        "searchCategory": "Search categories...",
-        "searchAccount": "Search accounts..."
+        "dateFrom": "Дата від",
+        "dateTo": "Дата до",
+        "amountFrom": "Мінімальна сума",
+        "amountTo": "Максимальна сума",
+        "settled": "Будь-який статус",
+        "categoryType": "Будь-який тип",
+        "category": "Обрати категорію",
+        "account": "Обрати рахунок",
+        "searchCategory": "Пошук категорій...",
+        "searchAccount": "Пошук рахунків..."
       },
       "options": {
         "settled": {
-          "any": "Any status",
-          "yes": "Settled",
-          "no": "Not settled"
+          "any": "Будь-який статус",
+          "yes": "Проведено",
+          "no": "Не проведено"
         },
         "categoryType": {
-          "any": "Any type"
+          "any": "Будь-який тип"
         }
       },
       "actions": {
-        "apply": "Apply filters",
-        "currentMonth": "Current month",
-        "reset": "Reset filters",
-        "cancel": "Cancel"
+        "apply": "Застосувати фільтри",
+        "currentMonth": "Поточний місяць",
+        "reset": "Скинути фільтри",
+        "cancel": "Скасувати"
       }
     },
     "pagination": {
-      "previous": "Previous",
-      "next": "Next",
-      "counter": "{{current}} of {{total}} pages",
-      "rowsPerPage": "Rows per page",
+      "previous": "Назад",
+      "next": "Далі",
+      "counter": "{{current}} з {{total}} сторінок",
+      "rowsPerPage": "Рядків на сторінці",
       "tooltips": {
-        "firstPage": "Go to first page",
-        "previousPage": "Go to previous page",
-        "nextPage": "Go to next page",
-        "lastPage": "Go to last page",
-        "toPage": "To page",
-        "toLastPage": "To last page, page"
+        "firstPage": "Перейти на першу сторінку",
+        "previousPage": "Перейти на попередню сторінку",
+        "nextPage": "Перейти на наступну сторінку",
+        "lastPage": "Перейти на останню сторінку",
+        "toPage": "На сторінку",
+        "toLastPage": "На останню сторінку, сторінка"
       }
     },
     "calendar": {
       "actions": {
-        "previousMonth": "Previous month",
-        "nextMonth": "Next month"
+        "previousMonth": "Попередній місяць",
+        "nextMonth": "Наступний місяць"
       },
       "aria": {
-        "chooseDate": "Choose date",
-        "today": "Today",
-        "selected": "Selected",
-        "rangeStart": "Range start",
-        "rangeEnd": "Range end",
-        "inRange": "In range",
-        "outsideMonth": "Outside month",
-        "disabled": "Disabled"
+        "chooseDate": "Обрати дату",
+        "today": "Сьогодні",
+        "selected": "Вибрано",
+        "rangeStart": "Початок діапазону",
+        "rangeEnd": "Кінець діапазону",
+        "inRange": "У діапазоні",
+        "outsideMonth": "Поза місяцем",
+        "disabled": "Недоступно"
       }
     },
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Перейти до основного вмісту"
   },
   "nav": {
     "sections": {
-      "main": "Menu",
-      "insights": "Insights",
-      "setup": "Setup",
-      "settings": "Settings"
+      "main": "Меню",
+      "insights": "Аналітика",
+      "setup": "Налаштування",
+      "settings": "Параметри"
     },
     "items": {
-      "overview": "Overview",
-      "transactions": "Transactions",
-      "breakdown": "Breakdown",
-      "compare": "Compare",
-      "budget": "Budget",
-      "accounts": "Accounts",
-      "categories": "Categories",
-      "recurringEvents": "Recurring events",
-      "settings": "Settings",
-      "dataBackups": "Data & Backups",
-      "about": "About"
+      "overview": "Огляд",
+      "transactions": "Транзакції",
+      "breakdown": "Розбивка",
+      "compare": "Порівняння",
+      "budget": "Бюджет",
+      "accounts": "Рахунки",
+      "categories": "Категорії",
+      "recurringEvents": "Регулярні події",
+      "settings": "Параметри",
+      "dataBackups": "Дані та резервні копії",
+      "about": "Про програму"
     }
   },
   "settings": {
     "page": {
-      "title": "Settings",
-      "description": "Manage app preferences, backups, sync, exports, and local app details."
+      "title": "Параметри",
+      "description": "Керуй налаштуваннями програми, резервними копіями, синхронізацією, експортами та локальними деталями."
     },
     "sections": {
       "general": {
-        "title": "General",
-        "description": "Set how the app looks and how money amounts appear across your workspace."
+        "title": "Загальні",
+        "description": "Встанови вигляд програми та відображення сум у робочому просторі."
       },
       "about": {
-        "title": "About",
-        "description": "See app details, privacy basics, and the project link in one place."
+        "title": "Про програму",
+        "description": "Переглянь деталі програми, основи конфіденційності та посилання на проект."
       },
       "data": {
-        "title": "Data & Storage",
-        "description": "Reset and manage your local data."
+        "title": "Дані та сховище",
+        "description": "Скинь та керуй локальними даними."
       }
     },
     "data": {
       "clear_financial": {
-        "label": "Clear all financial data",
-        "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
-        "button": "Clear data",
+        "label": "Очистити всі фінансові дані",
+        "description": "Назавжди видаляє всі рахунки, транзакції, перекази та бюджети. Налаштування зберігаються.",
+        "button": "Очистити дані",
         "confirm": {
-          "title": "Clear all financial data?",
-          "body": "This will permanently delete all accounts, transactions, transfers, budgets, and categories you have created. This cannot be undone.",
-          "cta": "Yes, clear data"
+          "title": "Очистити всі фінансові дані?",
+          "body": "Це назавжди видалить усі створені рахунки, транзакції, перекази, бюджети та категорії. Цю дію неможливо скасувати.",
+          "cta": "Так, очистити дані"
         },
-        "success": "All financial data has been cleared."
+        "success": "Усі фінансові дані було очищено."
       },
       "factory_reset": {
-        "label": "Factory reset",
-        "description": "Deletes the entire database and resets the app to its initial state. Your backups are not affected.",
-        "button": "Reset app",
+        "label": "Скидання до заводських налаштувань",
+        "description": "Видаляє всю базу даних і повертає програму до початкового стану. Резервні копії не зачіпаються.",
+        "button": "Скинути програму",
         "confirm": {
-          "title": "Factory reset?",
-          "body": "This will delete the entire database and return the app to its initial state. Your backup files will not be affected. This cannot be undone.",
-          "input_placeholder": "Type RESET to confirm",
-          "cta": "Reset app"
+          "title": "Скинути до заводських налаштувань?",
+          "body": "Це видалить всю базу даних і поверне програму до початкового стану. Файли резервних копій не будуть зачеплені. Цю дію неможливо скасувати.",
+          "input_placeholder": "Введи RESET для підтвердження",
+          "cta": "Скинути програму"
         }
       },
-      "reset_error": "Something went wrong. Please try again."
+      "reset_error": "Щось пішло не так. Спробуй ще раз."
     },
     "general": {
-      "intro": "These preferences update right away so the app matches how you read and review your finances.",
-      "appearanceGroupTitle": "Appearance",
-      "currencyGroupTitle": "Currency",
-      "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
+      "intro": "Ці налаштування застосовуються одразу, щоб програма відповідала тому, як ти переглядаєш свої фінанси.",
+      "appearanceGroupTitle": "Зовнішній вигляд",
+      "currencyGroupTitle": "Валюта",
+      "currencyGroupDescription": "Обери, як відображаються грошові суми, щоб залишки, звіти та форми були зручні для перегляду.",
       "cards": {
         "theme": {
-          "title": "Theme",
-          "description": "Pick the appearance that feels best for everyday use across the whole app.",
-          "fieldLabel": "Theme mode",
+          "title": "Тема",
+          "description": "Обери вигляд, який найкраще підходить для щоденного використання в усій програмі.",
+          "fieldLabel": "Режим теми",
           "options": {
-            "system": "System",
-            "light": "Light",
-            "dark": "Dark"
+            "system": "Системна",
+            "light": "Світла",
+            "dark": "Темна"
           }
         },
         "language": {
-          "title": "Language",
-          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
-          "fieldLabel": "App language"
+          "title": "Мова",
+          "description": "Обери мову для навігації, підписів і повідомлень у програмі.",
+          "fieldLabel": "Мова програми"
         },
         "dashboardValuationMode": {
-          "title": "Dashboard net worth mode",
-          "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
-          "fieldLabel": "Dashboard calculations",
+          "title": "Режим чистого капіталу на панелі",
+          "description": "Обери, чи мають чистий капітал і розподіл в Огляді враховувати знімки оцінки, коли вони доступні. Якщо вимкнено, ці картки використовують лише облікові залишки з транзакцій.",
+          "fieldLabel": "Розрахунки панелі",
           "options": {
-            "include": "Include valuations",
-            "exclude": "Ledger balances only"
+            "include": "Включати оцінки",
+            "exclude": "Лише облікові залишки"
           }
         },
         "currency": {
-          "title": "Currency symbol",
-          "description": "Select the symbol you want to see next to balances, transactions, and reports.",
-          "fieldLabel": "Symbol",
-          "customLabel": "Custom symbol",
+          "title": "Символ валюти",
+          "description": "Обери символ, який відображатиметься поруч із залишками, транзакціями та звітами.",
+          "fieldLabel": "Символ",
+          "customLabel": "Власний символ",
           "customPlaceholder": "CHF",
           "options": {
-            "custom": "Custom"
+            "custom": "Власний"
           }
         },
         "numberFormat": {
-          "title": "Currency display style",
-          "description": "Choose the separators used in amounts so entries and reports match what you expect.",
-          "fieldLabel": "Format",
-          "previewLabel": "Preview",
-          "previewDescription": "Preview the current symbol and number style before you keep entering data.",
+          "title": "Стиль відображення валюти",
+          "description": "Обери роздільники для сум, щоб записи та звіти відповідали очікуваному формату.",
+          "fieldLabel": "Формат",
+          "previewLabel": "Попередній перегляд",
+          "previewDescription": "Переглянь поточний символ і числовий стиль перед введенням даних.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -233,1052 +233,1052 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
-      "appVersionLabel": "App version",
-      "appVersionUnavailable": "Not available in this build",
+      "appNameLabel": "Програма",
+      "appVersionLabel": "Версія програми",
+      "appVersionUnavailable": "Недоступно в цій збірці",
       "copy": {
-        "paragraph1": "Hi. If you ended up here, you’re probably the kind of person this app was built for.",
-        "paragraph2": "I created Boring Balance after years of moving between apps, Excel files, and Google Sheets without ever finding something that truly fit my needs.",
-        "paragraph3": "Most tools were either too complicated, full of ads and tracking, or locked behind subscriptions.",
-        "paragraph4": "So I built my own.",
-        "paragraph5": "Boring Balance is meant to be simple, private, and completely under your control. Your data stays yours. There are no ads, no tracking, and no features designed to push you into paying just to see your own finances.",
-        "paragraph6": "I believe personal finance should be something you actively manage. Taking a moment to check your balances, review your expenses, and keep things aligned is the only way to truly understand where your money goes.",
-        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring events.",
-        "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
-        "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
+        "paragraph1": "Привіт. Якщо ти тут, то, мабуть, саме та людина, для якої створено цю програму.",
+        "paragraph2": "Я створив Boring Balance після років переходу між додатками, файлами Excel та Google Sheets, так і не знайшовши те, що справді відповідало б моїм потребам.",
+        "paragraph3": "Більшість інструментів були або надто складними, переповненими рекламою та стеженням, або закритими за підпискою.",
+        "paragraph4": "Тож я зробив свій власний.",
+        "paragraph5": "Boring Balance має бути простим, приватним і повністю під твоїм контролем. Твої дані залишаються твоїми. Жодної реклами, жодного стеження та жодних функцій, розроблених щоб змусити тебе платити лише щоб побачити власні фінанси.",
+        "paragraph6": "Я вважаю, що особистими фінансами потрібно активно керувати. Час від часу перевіряти залишки, переглядати витрати та підтримувати порядок — єдиний спосіб по-справжньому зрозуміти, куди йдуть гроші.",
+        "paragraph7": "Ця програма надає кілька основних інструментів для цього: відстеження рахунків і транзакцій, бюджетування та планування регулярних подій.",
+        "paragraph8": "Тут нічого не нав'язується. Використовуй стільки або стільки мало, скільки хочеш.",
+        "paragraph9": "Ласкаво просимо до цього спокійного місця — і не забувай час від часу захищати свої дані резервною копією 😉"
       },
-      "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
-      "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
-      "openSourceCta": "Open on GitHub",
-      "checkForUpdates": "Check for updates",
-      "footer": "Made with ❤️ by {{authorName}}",
+      "localFirst": "Boring Balance — персональний фінансовий трекер, орієнтований на конфіденційність. Твої дані залишаються на твоєму пристрої, і програма використовує їх лише для відображення залишків та аналітики.",
+      "openSourceNote": "Основна програма є відкритим кодом, тому ти можеш переглянути проект або стежити за його розвитком у репозиторії нижче.",
+      "openSourceCta": "Відкрити на GitHub",
+      "checkForUpdates": "Перевірити оновлення",
+      "footer": "Зроблено з ❤️ від {{authorName}}",
       "runtime": {
-        "title": "Runtime",
-        "description": "Renderer runtime versions exposed through the Electron bridge.",
+        "title": "Середовище виконання",
+        "description": "Версії середовища виконання рендерера, доступні через міст Electron.",
         "electron": "Electron",
         "node": "Node.js",
         "chrome": "Chrome",
-        "unknown": "Unavailable"
+        "unknown": "Недоступно"
       }
     }
   },
   "dataBackups": {
     "page": {
-      "title": "Data & Backups",
-      "description": "Manage local backups and prepare for sync and import/export features."
+      "title": "Дані та резервні копії",
+      "description": "Керуй локальними резервними копіями та готуйся до синхронізації та функцій імпорту/експорту."
     },
     "sections": {
       "backups": {
-        "title": "Backups"
+        "title": "Резервні копії"
       },
       "sync": {
-        "title": "Sync"
+        "title": "Синхронізація"
       },
       "exportImport": {
-        "title": "Import / Export"
+        "title": "Імпорт / Експорт"
       }
     },
     "backups": {
       "destination": {
-        "title": "Backup destination",
-        "description": "Turn on backups and choose where recovery copies should be saved."
+        "title": "Призначення резервних копій",
+        "description": "Увімкни резервні копії та обери, де зберігати копії для відновлення."
       },
       "form": {
-        "enabled": "Enable backups",
-        "folderPath": "Backup folder",
-        "folderNotSet": "Not set"
+        "enabled": "Увімкнути резервні копії",
+        "folderPath": "Папка резервних копій",
+        "folderNotSet": "Не вказано"
       },
-      "disabledInfo": "Turn on backups to create recovery copies automatically, run one on demand, and keep restore points ready.",
+      "disabledInfo": "Увімкни резервні копії, щоб автоматично створювати копії для відновлення, запускати їх на вимогу та зберігати точки відновлення.",
       "warnings": {
-        "missingFolder": "Backups are enabled but no backup folder is configured yet."
+        "missingFolder": "Резервні копії увімкнено, але папку для резервних копій ще не налаштовано."
       },
       "autoBackup": {
-        "title": "Automatic backups",
-        "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
-        "onQuit": "Run backup on app quit",
-        "intervalMin": "Interval (minutes, 0 to disable)",
-        "retentionCount": "Retention count",
+        "title": "Автоматичні резервні копії",
+        "description": "Обери, як часто програма зберігає копії для відновлення та скільки старих копій зберігати.",
+        "onQuit": "Створювати копію при закритті програми",
+        "intervalMin": "Інтервал (хвилини, 0 для вимкнення)",
+        "retentionCount": "Кількість копій для зберігання",
         "intervalOptions": {
-          "off": "Off",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes",
-          "minutes120": "Every 120 minutes"
+          "off": "Вимкнено",
+          "minutes30": "Кожні 30 хвилин",
+          "minutes60": "Кожні 60 хвилин",
+          "minutes120": "Кожні 120 хвилин"
         }
       },
       "manual": {
-        "title": "Manual backup and status",
-        "description": "Create a backup now and review the latest backup result in one place."
+        "title": "Ручне резервне копіювання та статус",
+        "description": "Створи резервну копію зараз і переглянь останній результат в одному місці."
       },
       "actions": {
-        "chooseFolder": "Choose folder",
-        "backupNow": "Backup now",
-        "refreshList": "Refresh list",
-        "restore": "Restore",
-        "delete": "Delete"
+        "chooseFolder": "Обрати папку",
+        "backupNow": "Зробити копію зараз",
+        "refreshList": "Оновити список",
+        "restore": "Відновити",
+        "delete": "Видалити"
       },
       "status": {
-        "lastBackupAt": "Last backup",
-        "current": "Status",
-        "lastFile": "Last backup file",
-        "never": "Never",
-        "none": "None",
-        "idle": "Idle",
-        "running": "Running",
-        "ok": "Completed",
-        "error": "Failed"
+        "lastBackupAt": "Остання резервна копія",
+        "current": "Статус",
+        "lastFile": "Останній файл резервної копії",
+        "never": "Ніколи",
+        "none": "Немає",
+        "idle": "Очікування",
+        "running": "Виконується",
+        "ok": "Завершено",
+        "error": "Помилка"
       },
       "list": {
-        "title": "Available backups",
-        "description": "Review saved backups, then restore or remove the ones you no longer need.",
-        "loading": "Refreshing backups list...",
-        "empty": "No backups here yet. Run a backup to create your first restore point.",
+        "title": "Доступні резервні копії",
+        "description": "Переглянь збережені копії, потім відновіть або видали ті, що більше не потрібні.",
+        "loading": "Оновлення списку резервних копій...",
+        "empty": "Резервних копій ще немає. Запусти резервне копіювання, щоб створити першу точку відновлення.",
         "columns": {
-          "date": "Date",
-          "file": "File",
-          "size": "Size"
+          "date": "Дата",
+          "file": "Файл",
+          "size": "Розмір"
         }
       },
       "restoreAlert": {
-        "title": "Restore backup",
-        "description": "Restore \"{{fileName}}\" and replace your current data with that saved copy. Continue?",
+        "title": "Відновити резервну копію",
+        "description": "Відновити \"{{fileName}}\" і замінити поточні дані збереженою копією. Продовжити?",
         "actions": {
-          "restore": "Restore",
-          "cancel": "Cancel"
+          "restore": "Відновити",
+          "cancel": "Скасувати"
         }
       },
       "deleteAlert": {
-        "title": "Delete backup",
-        "description": "Delete \"{{fileName}}\" from your backup folder. You will not be able to restore from it afterward.",
+        "title": "Видалити резервну копію",
+        "description": "Видалити \"{{fileName}}\" з папки резервних копій. Після цього відновлення з неї буде неможливим.",
         "actions": {
-          "delete": "Delete",
-          "cancel": "Cancel"
+          "delete": "Видалити",
+          "cancel": "Скасувати"
         }
       }
     },
     "sync": {
-      "title": "Sync",
+      "title": "Синхронізація",
       "overview": {
-        "title": "External folder sync",
-        "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
-        "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
-        "enabled": "Enable sync",
-        "chooseFolder": "Choose root folder",
-        "selectedFolder": "Selected root folder",
-        "baseFolderPath": "Root folder",
-        "repoPath": "App sync folder",
-        "notConnected": "Not connected yet",
+        "title": "Синхронізація через зовнішню папку",
+        "description": "Використовуй папку, яка вже синхронізується між пристроями, наприклад хмарний диск, NAS або USB-накопичувач.",
+        "warning": "Обери надійну папку синхронізації. Програма продовжує працювати з твого пристрою і використовує спільну папку лише для безпечного обміну копіями.",
+        "enabled": "Увімкнути синхронізацію",
+        "chooseFolder": "Обрати кореневу папку",
+        "selectedFolder": "Обрана коренева папка",
+        "baseFolderPath": "Коренева папка",
+        "repoPath": "Папка синхронізації програми",
+        "notConnected": "Ще не підключено",
         "enableHints": {
-          "turnOnFirst": "Turn on sync first, then choose the folder you want to use across devices.",
-          "ready": "Sync is ready to connect. Choose the folder you want this device to use."
+          "turnOnFirst": "Спочатку увімкни синхронізацію, потім обери папку для використання на всіх пристроях.",
+          "ready": "Синхронізація готова до підключення. Обери папку, яку має використовувати цей пристрій."
         }
       },
       "setup": {
-        "title": "Connect a sync folder",
-        "description": "Pick the shared folder, then either create a new sync space or connect to one that already exists.",
+        "title": "Підключити папку синхронізації",
+        "description": "Обери спільну папку, потім або створи новий простір синхронізації, або підключись до наявного.",
         "steps": {
           "rootFolder": {
-            "title": "1. Choose a root folder",
-            "description": "Pick an existing folder or create a new one. Boring Balance will place its own sync folder inside it."
+            "title": "1. Обрати кореневу папку",
+            "description": "Обери наявну папку або створи нову. Boring Balance розмістить власну папку синхронізації всередині неї."
           },
           "create": {
-            "title": "2. Create on the first device",
-            "description": "Use Create when this device should publish the first sync data into that folder."
+            "title": "2. Створити на першому пристрої",
+            "description": "Використовуй Створити, коли цей пристрій має першим опублікувати дані синхронізації в папку."
           },
           "attach": {
-            "title": "3. Connect on other devices",
-            "description": "Use Connect when another device already created the sync folder and this device should join it."
+            "title": "3. Підключити на інших пристроях",
+            "description": "Використовуй Підключити, коли інший пристрій вже створив папку синхронізації і цей пристрій має до неї приєднатись."
           }
         },
         "actions": {
-          "create": "Create new sync space",
-          "attach": "Connect to existing sync space"
+          "create": "Створити новий простір синхронізації",
+          "attach": "Підключитись до наявного простору"
         },
         "status": {
-          "checking": "Checking the selected folder...",
-          "chooseFirst": "Choose a root folder to continue.",
-          "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
-          "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
-          "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
-          "waitingForFolder": "Choose a root folder to continue."
+          "checking": "Перевірка обраної папки...",
+          "chooseFirst": "Обери кореневу папку для продовження.",
+          "exists": "У цій папці знайдено наявний простір синхронізації. Використовуй Підключити, якщо інший пристрій вже його використовує.",
+          "missing": "У цій папці простору синхронізації ще немає. Використовуй Створити, якщо це перший синхронізований пристрій.",
+          "repoPathPending": "Папка синхронізації програми з'явиться тут після перевірки кореневої папки.",
+          "waitingForFolder": "Обери кореневу папку для продовження."
         },
-        "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
+        "actionHelp": "Створити запускає синхронізацію з цього пристрою. Підключити приєднується до простору синхронізації, вже створеного іншим пристроєм."
       },
-      "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
+      "disabledInfo": "Увімкни синхронізацію, щоб обрати спільну папку та підключити цей пристрій.",
       "autoSync": {
-        "title": "Automatic sync",
-        "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
-        "autoPullIntervalMin": "Auto pull interval",
-        "autoPushIntervalMin": "Auto push interval",
-        "autoPushOnQuit": "Push on app quit",
-        "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
-        "retentionCountPerDevice": "Snapshots kept per device",
+        "title": "Автоматична синхронізація",
+        "description": "Встанови, як часто програма перевіряє нові дані та як часто ділиться останніми змінами.",
+        "autoPullIntervalMin": "Інтервал автоотримання",
+        "autoPushIntervalMin": "Інтервал автовідправлення",
+        "autoPushOnQuit": "Відправляти при закритті програми",
+        "autoPushOnQuitHint": "Якщо увімкнено, програма ділиться останніми змінами перед закриттям.",
+        "retentionCountPerDevice": "Знімків на пристрій",
         "intervalOptions": {
-          "off": "Off",
-          "minutes5": "Every 5 minutes",
-          "minutes10": "Every 10 minutes",
-          "minutes15": "Every 15 minutes",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes"
+          "off": "Вимкнено",
+          "minutes5": "Кожні 5 хвилин",
+          "minutes10": "Кожні 10 хвилин",
+          "minutes15": "Кожні 15 хвилин",
+          "minutes30": "Кожні 30 хвилин",
+          "minutes60": "Кожні 60 хвилин"
         }
       },
       "manual": {
-        "title": "Manual sync",
-        "description": "Use these actions when you want to check or share changes immediately.",
+        "title": "Ручна синхронізація",
+        "description": "Використовуй ці дії, коли хочеш негайно перевірити або поділитись змінами.",
         "tooltips": {
-          "syncNow": "Checks for newer shared data first, then shares this device if needed.",
-          "pullNow": "Brings in newer shared data without sending this device's changes.",
-          "pushNow": "Shares this device's latest changes without checking for newer shared data first."
+          "syncNow": "Спочатку перевіряє нові спільні дані, потім при потребі відправляє зміни цього пристрою.",
+          "pullNow": "Отримує нові спільні дані без відправки змін цього пристрою.",
+          "pushNow": "Відправляє останні зміни цього пристрою без попередньої перевірки нових спільних даних."
         },
         "hints": {
-          "syncNow": "Sync now is the safest full check: it looks for newer shared changes, then shares yours if needed.",
-          "pullNow": "Pull now only brings in newer shared data to this device.",
-          "pushNow": "Push now only shares this device's current changes to the shared folder."
+          "syncNow": "Синхронізувати зараз — найбезпечніша повна перевірка: шукає нові спільні зміни, потім при потребі ділиться своїми.",
+          "pullNow": "Отримати зараз — лише завантажує нові спільні дані на цей пристрій.",
+          "pushNow": "Відправити зараз — лише ділиться поточними змінами цього пристрою до спільної папки."
         }
       },
       "actions": {
-        "syncNow": "Sync now",
-        "pullNow": "Pull now",
-        "pushNow": "Push now"
+        "syncNow": "Синхронізувати зараз",
+        "pullNow": "Отримати зараз",
+        "pushNow": "Відправити зараз"
       },
       "status": {
-        "title": "Status",
-        "description": "Check the current sync state and see when this device last pulled or pushed.",
+        "title": "Статус",
+        "description": "Перевір поточний стан синхронізації та дізнайся, коли цей пристрій востаннє отримував або відправляв дані.",
         "columns": {
-          "item": "Item",
-          "value": "Value"
+          "item": "Елемент",
+          "value": "Значення"
         },
         "rows": {
-          "current": "Current status",
-          "lastPull": "Last pull",
-          "lastPush": "Last push"
+          "current": "Поточний статус",
+          "lastPull": "Останнє отримання",
+          "lastPush": "Останнє відправлення"
         },
         "values": {
-          "never": "Never",
-          "noLastPull": "No last pull available",
-          "idle": "Idle",
-          "running": "Running",
+          "never": "Ніколи",
+          "noLastPull": "Дані про останнє отримання відсутні",
+          "idle": "Очікування",
+          "running": "Виконується",
           "ok": "OK",
-          "error": "Error",
-          "conflict": "Conflict"
+          "error": "Помилка",
+          "conflict": "Конфлікт"
         }
       },
       "alerts": {
-        "lastErrorTitle": "Last error",
-        "conflictTitle": "Conflict detected",
-        "localCopyPath": "Local copy saved at",
-        "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "Your local copy was kept, and the shared copy was opened so you can review the difference."
+        "lastErrorTitle": "Остання помилка",
+        "conflictTitle": "Виявлено конфлікт",
+        "localCopyPath": "Локальна копія збережена за шляхом",
+        "remoteSnapshotPath": "Віддалений знімок відновлено з",
+        "conflictHint": "Твоя локальна копія збережена, а спільна копія відкрита для перегляду різниці."
       },
       "attachAlert": {
-        "title": "Connect existing sync space",
-        "description": "Connecting can replace this device's current data if the shared folder is newer. Continue?",
+        "title": "Підключити наявний простір синхронізації",
+        "description": "Підключення може замінити поточні дані цього пристрою, якщо спільна папка новіша. Продовжити?",
         "actions": {
-          "attach": "Connect",
-          "cancel": "Cancel"
+          "attach": "Підключити",
+          "cancel": "Скасувати"
         }
       }
     },
     "exportImport": {
       "overview": {
-        "description": "Keep a clear Excel copy of your data, or start from the official template when you want to bring information in safely."
+        "description": "Зберігай чітку копію даних у Excel або починай з офіційного шаблону для безпечного імпорту інформації."
       },
       "export": {
-        "title": "Export",
-        "description": "Save a clean Excel copy of your activity and setup so you can review it, share it, or keep it for later.",
-        "lastExportLabel": "Last export"
+        "title": "Експорт",
+        "description": "Збережи чисту копію Excel своєї діяльності та налаштувань для перегляду, поширення або зберігання.",
+        "lastExportLabel": "Останній експорт"
       },
       "import": {
-        "title": "Import from Excel template",
-        "description": "Start with the official template, review everything first, and import only when the file is ready.",
-        "warning": "Imports are validated first. If errors exist, nothing is imported.",
-        "selectedFileLabel": "Selected file",
+        "title": "Імпорт з шаблону Excel",
+        "description": "Почни з офіційного шаблону, спочатку перевір усе та імпортуй лише коли файл готовий.",
+        "warning": "Імпорти спочатку перевіряються. Якщо є помилки, нічого не імпортується.",
+        "selectedFileLabel": "Вибраний файл",
         "template": {
-          "title": "Import template",
-          "description": "Download the Excel template, fill it in at your pace, then come back here to import it.",
+          "title": "Шаблон імпорту",
+          "description": "Завантаж шаблон Excel, заповни у зручному темпі та повернись сюди для імпорту.",
           "messages": {
-            "success": "Template saved: {{fileName}}",
-            "error": "Failed to save the import template."
+            "success": "Шаблон збережено: {{fileName}}",
+            "error": "Не вдалося зберегти шаблон імпорту."
           }
         },
         "actions": {
-          "title": "Import data file",
-          "description": "Pick the completed workbook, check any issues the app finds, and import only when everything looks right."
+          "title": "Імпортувати файл даних",
+          "description": "Вибери заповнену книгу, перевір знайдені проблеми та імпортуй лише коли все виглядає правильно."
         },
         "validation": {
-          "previewTitle": "Validation preview",
-          "previewDescription": "These rows are ready to be imported.",
-          "errorTitle": "Validation errors",
-          "errorDescription": "Fix the rows below and validate again before importing."
+          "previewTitle": "Попередній перегляд перевірки",
+          "previewDescription": "Ці рядки готові до імпорту.",
+          "errorTitle": "Помилки перевірки",
+          "errorDescription": "Виправ рядки нижче та перевір знову перед імпортом."
         },
         "summary": {
-          "accounts": "Accounts",
-          "categories": "Categories",
-          "transactions": "Transactions",
-          "transfers": "Transfers"
+          "accounts": "Рахунки",
+          "categories": "Категорії",
+          "transactions": "Транзакції",
+          "transfers": "Перекази"
         },
         "errors": {
-          "count": "{{count}} errors found",
-          "tableTitle": "Import errors",
-          "tableDescription": "Each error points to the exact worksheet row that must be fixed.",
-          "empty": "No import errors.",
+          "count": "Знайдено {{count}} помилок",
+          "tableTitle": "Помилки імпорту",
+          "tableDescription": "Кожна помилка вказує на точний рядок таблиці, який потрібно виправити.",
+          "empty": "Помилок імпорту немає.",
           "columns": {
-            "sheet": "Sheet",
-            "row": "Row",
-            "column": "Column",
-            "message": "Message"
+            "sheet": "Аркуш",
+            "row": "Рядок",
+            "column": "Стовпець",
+            "message": "Повідомлення"
           }
         },
         "result": {
-          "title": "Last import result",
-          "description": "The app will reload after a successful import.",
+          "title": "Останній результат імпорту",
+          "description": "Програма перезавантажиться після успішного імпорту.",
           "labels": {
-            "inserted": "Inserted",
-            "updated": "Updated",
-            "skipped": "Skipped"
+            "inserted": "Додано",
+            "updated": "Оновлено",
+            "skipped": "Пропущено"
           }
         },
         "confirm": {
-          "title": "Import data from Excel?",
-          "description": "This will import data into your database.",
+          "title": "Імпортувати дані з Excel?",
+          "description": "Це імпортує дані до бази даних.",
           "actions": {
-            "import": "Import",
-            "cancel": "Cancel"
+            "import": "Імпортувати",
+            "cancel": "Скасувати"
           }
         },
         "messages": {
-          "fileRequired": "Select an Excel file first.",
-          "selectError": "Failed to select an Excel file.",
-          "validateError": "Failed to validate the selected Excel file.",
-          "importSuccess": "Import completed. Reloading app data...",
-          "importError": "Import failed."
+          "fileRequired": "Спочатку вибери файл Excel.",
+          "selectError": "Не вдалося вибрати файл Excel.",
+          "validateError": "Не вдалося перевірити вибраний файл Excel.",
+          "importSuccess": "Імпорт завершено. Перезавантаження даних програми...",
+          "importError": "Імпорт не вдався."
         }
       },
       "controls": {
-        "exportExcel": "Export to Excel",
-        "importData": "Import DB / CSV",
-        "downloadTemplate": "Download template",
-        "selectFile": "Select Excel file",
-        "removeSelectedFile": "Remove file",
-        "validateImport": "Validate",
-        "importExcel": "Import"
+        "exportExcel": "Експортувати в Excel",
+        "importData": "Імпортувати БД / CSV",
+        "downloadTemplate": "Завантажити шаблон",
+        "selectFile": "Вибрати файл Excel",
+        "removeSelectedFile": "Видалити файл",
+        "validateImport": "Перевірити",
+        "importExcel": "Імпортувати"
       },
       "messages": {
-        "success": "Export completed: {{fileName}}",
-        "error": "Failed to export data."
+        "success": "Експорт завершено: {{fileName}}",
+        "error": "Не вдалося експортувати дані."
       }
     }
   },
   "overview": {
     "toolbar": {
-      "reload": "Reload"
+      "reload": "Оновити"
     },
     "banners": {
       "snapshotsOutdated": {
-        "title": "Snapshots may be outdated",
-        "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."
+        "title": "Знімки можуть бути застарілими",
+        "body": "Твій останній знімок від {{days}} днів тому. Оновіть знімки, щоб підтримувати точність чистого капіталу."
       }
     },
     "errors": {
-      "summaryLoad": "Unable to load summary data."
+      "summaryLoad": "Не вдалося завантажити зведені дані."
     },
     "pie": {
-      "others": "Others"
+      "others": "Інші"
     },
     "cards": {
       "netWorth": {
-        "title": "Total net worth",
-        "summaryTitle": "Net Worth",
-        "receivablesPayablesTitle": "Receivables & Payables",
-        "allocationTitle": "Allocation",
-        "description": "See your current net worth, how it changed since last month, and how receivables or payables affect the full picture.",
-        "allocationDescription": "See which accounts make up your net worth so you can spot concentration at a glance.",
-        "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
+        "title": "Загальний чистий капітал",
+        "summaryTitle": "Чистий капітал",
+        "receivablesPayablesTitle": "Дебіторська та кредиторська заборгованість",
+        "allocationTitle": "Розподіл",
+        "description": "Переглянь поточний чистий капітал, його зміну з минулого місяця та вплив дебіторської або кредиторської заборгованості на загальну картину.",
+        "allocationDescription": "Перегляд того, які рахунки складають чистий капітал, щоб одразу помітити концентрацію.",
+        "descriptionDailyAverage": "Сер. чистий капітал/день (MTD): {{value}}/день",
         "tooltips": {
-          "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
-          "current": "Current",
-          "ledgerBalance": "Ledger Balance",
-          "marketValue": "Market Value"
+          "averageDailyChangePositive": "Твій загальний чистий капітал зростає в середньому на {{value}} на день цього місяця (порівняно з кінцем минулого місяця).",
+          "averageDailyChangeNegative": "Твій загальний чистий капітал зменшується в середньому на {{value}} на день цього місяця (порівняно з кінцем минулого місяця).",
+          "averageDailyChangeNeutral": "Твій загальний чистий капітал в середньому не змінюється на день цього місяця (порівняно з кінцем минулого місяця).",
+          "current": "Поточний",
+          "ledgerBalance": "Обліковий залишок",
+          "marketValue": "Ринкова вартість"
         },
-        "total": "Total",
-        "withValuations": "With valuations",
-        "liquidAssets": "Liquidity",
-        "investments": "Investments",
+        "total": "Разом",
+        "withValuations": "З оцінками",
+        "liquidAssets": "Ліквідність",
+        "investments": "Інвестиції",
         "snapshotBased": {
-          "today": "Snapshots updated today",
-          "daysAgo": "Based on snapshots ({{days}} days ago)"
+          "today": "Знімки оновлено сьогодні",
+          "daysAgo": "На основі знімків ({{days}} днів тому)"
         },
         "valuationsOutdated": {
-          "title": "Valuations may be outdated",
-          "body": "Your latest valuation snapshot is {{days}} days old. Update snapshots to keep 'With valuations' accurate."
+          "title": "Оцінки можуть бути застарілими",
+          "body": "Твій останній знімок оцінки від {{days}} днів тому. Оновіть знімки, щоб підтримувати точність 'З оцінками'."
         },
-        "deltaVsPreviousMonth": "vs previous month",
-        "receivables": "Receivables",
-        "payables": "Payables",
-        "totalAfterRP": "After R&P",
-        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation.",
-        "emptyDistributionNoAccounts": "No accounts yet. Add your first account to see the allocation."
+        "deltaVsPreviousMonth": "порівняно з минулим місяцем",
+        "receivables": "Дебіторська заборгованість",
+        "payables": "Кредиторська заборгованість",
+        "totalAfterRP": "Після Д&К",
+        "emptyDistribution": "Залишків рахунків для розподілу ще немає. Додай або оновіть рахунки, щоб побачити розподіл.",
+        "emptyDistributionNoAccounts": "Рахунків ще немає. Додай перший рахунок, щоб побачити розподіл."
       },
       "monthlyTotals": {
-        "title": "Income, expenses and net cashflow",
-        "segmentTitle": "Income & expenses",
-        "descriptionCurrentYear": "Compare income, expenses, and net cashflow month by month across {{year}}.",
-        "loading": "Loading analytics...",
-        "loadFailedWithError": "Failed to load analytics: {{error}}",
-        "empty": "No analytics data available for the selected filters.",
+        "title": "Доходи, витрати та чистий грошовий потік",
+        "segmentTitle": "Доходи та витрати",
+        "descriptionCurrentYear": "Порівнюй доходи, витрати та чистий грошовий потік помісячно за {{year}}.",
+        "loading": "Завантаження аналітики...",
+        "loadFailedWithError": "Не вдалося завантажити аналітику: {{error}}",
+        "empty": "Аналітичних даних для вибраних фільтрів немає.",
         "series": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "netCashflow": "Net Cashflow"
+          "incomes": "Доходи",
+          "expenses": "Витрати",
+          "netCashflow": "Чистий грошовий потік"
         }
       },
       "activity": {
-        "title": "Activity",
-        "latestTransactions": "Latest {{count}} transactions this month so you can review new spending and income quickly.",
-        "latestTransfers": "Latest {{count}} transfers this month so you can verify money moved between accounts.",
-        "loadFailed": "Unable to load activity."
+        "title": "Активність",
+        "latestTransactions": "Останні {{count}} транзакцій цього місяця для швидкого перегляду нових витрат і доходів.",
+        "latestTransfers": "Останні {{count}} переказів цього місяця для перевірки переміщень між рахунками.",
+        "loadFailed": "Не вдалося завантажити активність."
       },
       "recentTransactions": {
-        "title": "Last transactions",
-        "description": "Latest {{count}} transactions this month",
-        "loadFailed": "Unable to load transactions.",
-        "empty": "No transactions this month yet. Add one to start building your activity feed.",
-        "toggleSettled": "Toggle settled",
+        "title": "Останні транзакції",
+        "description": "Останні {{count}} транзакцій цього місяця",
+        "loadFailed": "Не вдалося завантажити транзакції.",
+        "empty": "Транзакцій цього місяця ще немає. Додай одну, щоб почати формувати журнал активності.",
+        "toggleSettled": "Змінити статус проведення",
         "tooltips": {
-          "settled": "Settled",
-          "settle": "Settle",
-          "unsettled": "Unsettled"
+          "settled": "Проведено",
+          "settle": "Провести",
+          "unsettled": "Не проведено"
         },
         "actions": {
-          "goToTransactionsPage": "All transactions"
+          "goToTransactionsPage": "Всі транзакції"
         },
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknownAccount": "Невідомий рахунок",
+        "unknownCategory": "Невідома категорія"
       },
       "moneyFlowSankey": {
-        "title": "Money flow",
-        "description": "{{month}} at a glance: see where money came from, where it went, and what remained.",
-        "loading": "Loading money flow...",
-        "loadFailedWithError": "Failed to load money flow: {{error}}",
-        "empty": "No money flow for this month yet. Add transactions to see where money moved.",
+        "title": "Грошовий потік",
+        "description": "{{month}} в одному погляді: звідки надійшли гроші, куди пішли і що залишилось.",
+        "loading": "Завантаження грошового потоку...",
+        "loadFailedWithError": "Не вдалося завантажити грошовий потік: {{error}}",
+        "empty": "Грошового потоку за цей місяць ще немає. Додай транзакції, щоб побачити рух коштів.",
         "tooltips": {
-          "actualNetCashflow": "Actual net cashflow"
+          "actualNetCashflow": "Фактичний чистий грошовий потік"
         },
         "nodes": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "savings": "Savings",
-          "investments": "Investments",
-          "crypto": "Crypto",
-          "netCashflow": "Net Cashflow",
-          "priorBalances": "Prior balances",
-          "unused": "Unused",
-          "otherExpenses": "Other expenses"
+          "incomes": "Доходи",
+          "expenses": "Витрати",
+          "savings": "Заощадження",
+          "investments": "Інвестиції",
+          "crypto": "Крипто",
+          "netCashflow": "Чистий грошовий потік",
+          "priorBalances": "Попередні залишки",
+          "unused": "Не використано",
+          "otherExpenses": "Інші витрати"
         }
       }
     }
   },
   "breakdown": {
     "toolbar": {
-      "selectYear": "Select year"
+      "selectYear": "Обрати рік"
     },
     "view": {
-      "all": "All"
+      "all": "Всі"
     },
     "averageMode": {
-      "label": "Use elapsed months for averages",
-      "hint": "Turn this on to compare against the months that have happened so far instead of averaging across the full year."
+      "label": "Використовувати минулі місяці для середніх",
+      "hint": "Увімкни для порівняння з місяцями, що вже минули, а не з усім роком."
     },
-    "sectionYear": "Year {{year}}",
+    "sectionYear": "Рік {{year}}",
     "moneyFlowOptions": {
       "showAllocationTargets": {
-        "label": "Show savings, brokerage and crypto flows",
-        "hint": "Hide these to focus on core income versus expenses, or show them to include savings and investment moves."
+        "label": "Показати потоки заощаджень, брокерського рахунку та крипто",
+        "hint": "Приховай для фокусу на основних доходах і витратах, або покажи для відображення заощаджень і інвестицій."
       }
     },
     "metrics": {
-      "yearTotal": "Year total",
-      "avgPerMonth": "Avg/month"
+      "yearTotal": "Підсумок за рік",
+      "avgPerMonth": "Сер./місяць"
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Money flow of the year: {{year}}",
-        "empty": "No money flow for this year yet. Add transactions to see how money moved over time."
+        "titleYear": "Грошовий потік за рік: {{year}}",
+        "empty": "Грошового потоку за цей рік ще немає. Додай транзакції, щоб побачити рух коштів з часом."
       },
       "monthlyTrend": {
-        "title": "{{label}} by month",
-        "description": "See when {{label}} rises, dips, or stays steady across the year."
+        "title": "{{label}} за місяцями",
+        "description": "Дивись, коли {{label}} зростає, падає або залишається стабільним протягом року."
       },
       "monthlyByCategory": {
-        "title": "{{label}} by category",
-        "description": "Compare how each month's {{label}} is split across categories.",
-        "summaryTitle": "Category totals and averages"
+        "title": "{{label}} за категоріями",
+        "description": "Порівнюй, як {{label}} кожного місяця розподіляється по категоріях.",
+        "summaryTitle": "Підсумки та середні значення по категоріях"
       }
     }
   },
   "compare": {
-    "loadingTitle": "Preparing comparison",
-    "loadingDescription": "Gathering both months so you can compare them side by side.",
-    "loadFailedWithError": "Failed to load comparison analytics: {{error}}",
-    "empty": "No comparison data for these months yet. Record activity in both months to compare them here.",
+    "loadingTitle": "Підготовка порівняння",
+    "loadingDescription": "Збираємо обидва місяці для порівняння поруч.",
+    "loadFailedWithError": "Не вдалося завантажити аналітику порівняння: {{error}}",
+    "empty": "Даних для порівняння за ці місяці ще немає. Записуй активність в обох місяцях, щоб порівняти їх тут.",
     "selectors": {
       "left": {
-        "title": "Month 1"
+        "title": "Місяць 1"
       },
       "right": {
-        "title": "Month 2"
+        "title": "Місяць 2"
       },
-      "year": "Year",
-      "month": "Month"
+      "year": "Рік",
+      "month": "Місяць"
     },
     "metrics": {
-      "delta": "Delta"
+      "delta": "Різниця"
     },
     "cards": {
       "summary": {
-        "title": "Comparison summary",
-        "description": "Compare income, expenses, and net cashflow side by side to see which month changed more."
+        "title": "Зведення порівняння",
+        "description": "Порівнюй доходи, витрати та чистий грошовий потік поруч, щоб побачити, який місяць змінився більше."
       },
       "radar": {
-        "title": "Radar comparison",
-        "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
-        "empty": "No expense categories available for radar comparison."
+        "title": "Радарне порівняння",
+        "description": "Дивись, які категорії витрат зросли, скоротились або залишились схожими за два місяці.",
+        "empty": "Категорій витрат для радарного порівняння немає."
       },
       "dailyCalendar": {
-        "title": "Daily expense calendar",
-        "description": "See which days carried the heaviest spending in each month with one shared scale.",
-        "panelHint": "Daily expenses (same scale)",
-        "empty": "No daily spending data for the selected months."
+        "title": "Щоденний календар витрат",
+        "description": "Дивись, які дні мали найбільші витрати в кожному місяці зі спільною шкалою.",
+        "panelHint": "Щоденні витрати (однакова шкала)",
+        "empty": "Щоденних даних про витрати для вибраних місяців немає."
       },
       "expensesByCategory": {
-        "title": "Expenses by category",
-        "description": "Review each category side by side, including the difference between the two months.",
-        "empty": "No expense category totals for the selected months."
+        "title": "Витрати за категоріями",
+        "description": "Переглядай кожну категорію поруч, включно з різницею між двома місяцями.",
+        "empty": "Підсумків категорій витрат для вибраних місяців немає."
       }
     }
   },
   "category": {
     "exclude": {
-      "name": "Exclude",
-      "description": "Transactions excluded from analytics and budget calculations."
+      "name": "Виключити",
+      "description": "Транзакції, виключені з аналітики та розрахунків бюджету."
     },
     "transfer": {
-      "name": "Transfer",
-      "description": "Money moved between your own accounts."
+      "name": "Переказ",
+      "description": "Гроші, переміщені між власними рахунками."
     },
     "other_expense": {
-      "name": "Other Expense",
-      "description": "Fallback category for uncategorized expenses."
+      "name": "Інші витрати",
+      "description": "Запасна категорія для некатегоризованих витрат."
     },
     "other_income": {
-      "name": "Other Income",
-      "description": "Fallback category for uncategorized income."
+      "name": "Інші доходи",
+      "description": "Запасна категорія для некатегоризованих доходів."
     },
     "type": {
-      "income": "Income",
-      "expense": "Expense",
-      "exclude": "Exclude"
+      "income": "Дохід",
+      "expense": "Витрати",
+      "exclude": "Виключити"
     }
   },
   "account": {
     "type": {
-      "cash": "Cash",
-      "bank": "Bank",
-      "savings": "Savings",
-      "brokerage": "Brokerage",
-      "crypto": "Crypto",
-      "credit": "Credit"
+      "cash": "Готівка",
+      "bank": "Банк",
+      "savings": "Ощадний рахунок",
+      "brokerage": "Брокерський рахунок",
+      "crypto": "Крипто",
+      "credit": "Кредит"
     }
   },
   "accounts": {
     "table": {
-      "description": "Set up the accounts that hold your money or debt so balances and transfers stay organized.",
-      "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
+      "description": "Налаштуй рахунки, де зберігаються гроші або борги, щоб залишки та перекази залишались організованими.",
+      "emptyMessage": "Рахунків ще немає. Додай перший рахунок для відстеження залишків і переказів.",
       "actions": {
-        "add": "Add account",
-        "edit": "Edit account",
-        "archive": "Archive account",
-        "locked": "Locked account"
+        "add": "Додати рахунок",
+        "edit": "Редагувати рахунок",
+        "archive": "Архівувати рахунок",
+        "locked": "Заблокований рахунок"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "Колір",
+        "icon": "Іконка"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add account",
-        "description": "Create an account you can use in transactions, transfers, and net worth tracking.",
+        "title": "Додати рахунок",
+        "description": "Створи рахунок для використання в транзакціях, переказах і відстеженні чистого капіталу.",
         "placeholders": {
-          "name": "Account name",
-          "description": "Account description"
+          "name": "Назва рахунку",
+          "description": "Опис рахунку"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create account"
+          "cancel": "Скасувати",
+          "create": "Створити рахунок"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the account.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "typeRequired": "Account type is required.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "createFailed": "Failed to create account."
+          "fixValidation": "Виправ виділені поля перед створенням рахунку.",
+          "nameRequired": "Назва обов'язкова.",
+          "nameMinLength": "Назва має містити щонайменше 2 символи.",
+          "nameMaxLength": "Назва має містити не більше 64 символів.",
+          "typeRequired": "Тип рахунку обов'язковий.",
+          "descriptionMaxLength": "Опис має містити не більше 50 символів.",
+          "createFailed": "Не вдалося створити рахунок."
         }
       },
       "edit": {
-        "title": "Edit account",
-        "description": "Update how this account appears and where you use it across the app.",
+        "title": "Редагувати рахунок",
+        "description": "Оновіть відображення цього рахунку та місця його використання в програмі.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Скасувати",
+          "save": "Зберегти зміни"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the account.",
-          "updateFailed": "Failed to update account."
+          "fixValidation": "Виправ виділені поля перед збереженням рахунку.",
+          "updateFailed": "Не вдалося оновити рахунок."
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive account?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
+      "title": "Архівувати рахунок?",
+      "description": "Архівувати \"{{name}}\", щоб він більше не з'являвся в нових записах. Наявна історія збереже назву рахунку.",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "Скасувати",
+        "archive": "Архівувати"
       }
     },
     "toasts": {
-      "createSuccess": "Account created successfully.",
-      "createError": "Failed to create account.",
-      "updateSuccess": "Account updated successfully.",
-      "updateError": "Failed to update account.",
-      "archiveSuccess": "Account archived successfully.",
-      "archiveError": "Failed to archive account."
+      "createSuccess": "Рахунок успішно створено.",
+      "createError": "Не вдалося створити рахунок.",
+      "updateSuccess": "Рахунок успішно оновлено.",
+      "updateError": "Не вдалося оновити рахунок.",
+      "archiveSuccess": "Рахунок успішно архівовано.",
+      "archiveError": "Не вдалося архівувати рахунок."
     },
     "errors": {
-      "loadFailed": "Failed to load accounts: {{error}}"
+      "loadFailed": "Не вдалося завантажити рахунки: {{error}}"
     }
   },
   "categories": {
     "table": {
-      "description": "Organize transactions into categories so reports, budgets, and comparisons stay meaningful.",
-      "emptyMessage": "No categories yet. Add your first category to organize spending and income.",
+      "description": "Організуй транзакції за категоріями, щоб звіти, бюджети та порівняння залишались змістовними.",
+      "emptyMessage": "Категорій ще немає. Додай першу категорію для організації витрат і доходів.",
       "actions": {
-        "add": "Add category",
-        "edit": "Edit category",
-        "archive": "Archive category",
-        "locked": "Locked category"
+        "add": "Додати категорію",
+        "edit": "Редагувати категорію",
+        "archive": "Архівувати категорію",
+        "locked": "Заблокована категорія"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "Колір",
+        "icon": "Іконка"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add category",
-        "description": "Create a category to label transactions and group them in reports.",
+        "title": "Додати категорію",
+        "description": "Створи категорію для маркування транзакцій і їх групування у звітах.",
         "placeholders": {
-          "name": "Category name",
-          "description": "Category description"
+          "name": "Назва категорії",
+          "description": "Опис категорії"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create category"
+          "cancel": "Скасувати",
+          "create": "Створити категорію"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the category.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "typeRequired": "Category type is required.",
-          "createFailed": "Failed to create category."
+          "fixValidation": "Виправ виділені поля перед створенням категорії.",
+          "nameRequired": "Назва обов'язкова.",
+          "nameMinLength": "Назва має містити щонайменше 2 символи.",
+          "nameMaxLength": "Назва має містити не більше 64 символів.",
+          "descriptionMaxLength": "Опис має містити не більше 50 символів.",
+          "typeRequired": "Тип категорії обов'язковий.",
+          "createFailed": "Не вдалося створити категорію."
         }
       },
       "edit": {
-        "title": "Edit category",
-        "description": "Update this category's label, type, or visual marker.",
+        "title": "Редагувати категорію",
+        "description": "Оновіть мітку, тип або візуальний маркер цієї категорії.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Скасувати",
+          "save": "Зберегти зміни"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the category.",
-          "updateFailed": "Failed to update category."
+          "fixValidation": "Виправ виділені поля перед збереженням категорії.",
+          "updateFailed": "Не вдалося оновити категорію."
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive category?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
+      "title": "Архівувати категорію?",
+      "description": "Архівувати \"{{name}}\", щоб вона більше не з'являлась у нових записах. Наявна історія збереже назву категорії.",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "Скасувати",
+        "archive": "Архівувати"
       }
     },
     "toasts": {
-      "createSuccess": "Category created successfully.",
-      "createError": "Failed to create category.",
-      "updateSuccess": "Category updated successfully.",
-      "updateError": "Failed to update category.",
-      "archiveSuccess": "Category archived successfully.",
-      "archiveError": "Failed to archive category."
+      "createSuccess": "Категорію успішно створено.",
+      "createError": "Не вдалося створити категорію.",
+      "updateSuccess": "Категорію успішно оновлено.",
+      "updateError": "Не вдалося оновити категорію.",
+      "archiveSuccess": "Категорію успішно архівовано.",
+      "archiveError": "Не вдалося архівувати категорію."
     },
     "errors": {
-      "loadFailed": "Failed to load categories: {{error}}"
+      "loadFailed": "Не вдалося завантажити категорії: {{error}}"
     }
   },
   "budgets": {
     "view": {
-      "setup": "Budget setup",
-      "analysis": "Budget analysis"
+      "setup": "Налаштування бюджету",
+      "analysis": "Аналіз бюджету"
     },
     "table": {
-      "description": "Set spending targets by category so you can compare your plan against real spending.",
-      "emptyMessage": "No budgets yet. Add your first budget to start tracking category targets.",
-      "unknownCategory": "Unknown category",
+      "description": "Встанови цілі витрат за категоріями для порівняння плану з фактичними витратами.",
+      "emptyMessage": "Бюджетів ще немає. Додай перший бюджет для відстеження цілей за категоріями.",
+      "unknownCategory": "Невідома категорія",
       "actions": {
-        "add": "Add budget",
-        "edit": "Edit budget",
-        "delete": "Delete budget"
+        "add": "Додати бюджет",
+        "edit": "Редагувати бюджет",
+        "delete": "Видалити бюджет"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add budget",
-        "description": "Create a spending target for {{year}} so you can measure category spending against it.",
+        "title": "Додати бюджет",
+        "description": "Створи ціль витрат на {{year}} для вимірювання витрат за категоріями.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create budget"
+          "cancel": "Скасувати",
+          "create": "Створити бюджет"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the budget.",
-          "categoryRequired": "Category is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create budget."
+          "fixValidation": "Виправ виділені поля перед створенням бюджету.",
+          "categoryRequired": "Категорія обов'язкова.",
+          "amountRequired": "Сума обов'язкова.",
+          "amountInvalid": "Сума має бути додатнім числом.",
+          "descriptionMaxLength": "Опис має містити не більше 75 символів.",
+          "createFailed": "Не вдалося створити бюджет."
         }
       },
       "edit": {
-        "title": "Edit budget",
-        "description": "Update this category target for {{year}} as your plan changes.",
+        "title": "Редагувати бюджет",
+        "description": "Оновіть ціль цієї категорії на {{year}} при зміні плану.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Скасувати",
+          "save": "Зберегти зміни"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the budget.",
-          "updateFailed": "Failed to update budget."
+          "fixValidation": "Виправ виділені поля перед збереженням бюджету.",
+          "updateFailed": "Не вдалося оновити бюджет."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete budget?",
-      "description": "Delete the budget for \"{{category}}\". You can add it again later if needed.",
+      "title": "Видалити бюджет?",
+      "description": "Видалити бюджет для \"{{category}}\". При потребі його можна додати знову пізніше.",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Скасувати",
+        "delete": "Видалити"
       }
     },
     "toasts": {
-      "createSuccess": "Budget created successfully.",
-      "createError": "Failed to create budget.",
-      "updateSuccess": "Budget updated successfully.",
-      "updateError": "Failed to update budget.",
-      "deleteSuccess": "Budget deleted successfully.",
-      "deleteError": "Failed to delete budget."
+      "createSuccess": "Бюджет успішно створено.",
+      "createError": "Не вдалося створити бюджет.",
+      "updateSuccess": "Бюджет успішно оновлено.",
+      "updateError": "Не вдалося оновити бюджет.",
+      "deleteSuccess": "Бюджет успішно видалено.",
+      "deleteError": "Не вдалося видалити бюджет."
     },
     "analysis": {
-      "title": "Budget analysis",
-      "description": "Compare budget targets against actual category expenses for the selected year.",
-      "loading": "Loading budget analysis...",
-      "empty": "No budget analysis for {{year}} yet. Add budgets and matching transactions to compare plan versus actual.",
+      "title": "Аналіз бюджету",
+      "description": "Порівнюй цілі бюджету з фактичними витратами за категоріями за вибраний рік.",
+      "loading": "Завантаження аналізу бюджету...",
+      "empty": "Аналізу бюджету за {{year}} ще немає. Додай бюджети та відповідні транзакції для порівняння плану з фактом.",
       "series": {
-        "budget": "Budget",
-        "expenses": "Expenses"
+        "budget": "Бюджет",
+        "expenses": "Витрати"
       },
       "metrics": {
-        "totalBudget": "Total budget",
-        "totalExpenses": "Total expenses",
-        "delta": "Remaining budget",
-        "availablePercent": "Budget still available"
+        "totalBudget": "Загальний бюджет",
+        "totalExpenses": "Загальні витрати",
+        "delta": "Залишок бюджету",
+        "availablePercent": "Бюджет ще доступний"
       },
       "chart": {
-        "title": "Budget vs expenses by category",
-        "description": "See which categories are on track, close to the limit, or already over budget."
+        "title": "Бюджет проти витрат за категоріями",
+        "description": "Дивись, які категорії в межах плану, близькі до ліміту або вже перевищили його."
       },
       "errors": {
-        "loadFailedWithError": "Failed to load budget analysis: {{error}}"
+        "loadFailedWithError": "Не вдалося завантажити аналіз бюджету: {{error}}"
       }
     },
     "errors": {
-      "loadFailed": "Failed to load budgets: {{error}}"
+      "loadFailed": "Не вдалося завантажити бюджети: {{error}}"
     }
   },
   "transactions": {
     "view": {
-      "commonTransactions": "Common transactions",
-      "transfers": "Transfers"
+      "commonTransactions": "Транзакції",
+      "transfers": "Перекази"
     },
     "pagination": {
-      "summary": "{{start}}-{{end}} of {{total}}"
+      "summary": "{{start}}-{{end}} з {{total}}"
     },
     "transfers": {
-      "title": "Transfers",
+      "title": "Перекази",
       "table": {
-        "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
-        "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
-        "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating transfers.",
-        "emptyNeedTwoAccountsMessage": "You need at least two accounts before creating transfers. Add another account to continue.",
+        "description": "Відстежуй переміщення грошей між власними рахунками. Перекази змінюють місце зберігання коштів, а не підсумки витрат.",
+        "emptyMessage": "Переказів ще немає. Додай один, коли переміщуєш гроші між власними рахунками.",
+        "emptyNoAccountsMessage": "Рахунків ще немає. Додай перший рахунок перед створенням переказів.",
+        "emptyNeedTwoAccountsMessage": "Для переказів потрібно щонайменше два рахунки. Додай інший рахунок для продовження.",
         "actions": {
-          "add": "Add transfer",
-          "filter": "Filter transfers",
-          "edit": "Edit transfer",
-          "delete": "Delete transfer"
+          "add": "Додати переказ",
+          "filter": "Фільтрувати перекази",
+          "edit": "Редагувати переказ",
+          "delete": "Видалити переказ"
         }
       },
       "dialog": {
         "add": {
-          "title": "Add transfer",
-          "description": "Move money between two of your accounts without affecting income or expense totals.",
+          "title": "Додати переказ",
+          "description": "Перемісти гроші між двома власними рахунками без впливу на підсумки доходів або витрат.",
           "actions": {
-            "cancel": "Cancel",
-            "create": "Create transfer"
+            "cancel": "Скасувати",
+            "create": "Створити переказ"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before creating the transfer.",
-            "dateRequired": "Date is required.",
-            "fromAccountRequired": "Source account is required.",
-            "toAccountRequired": "Destination account is required.",
-            "accountsMustDiffer": "Source and destination accounts must be different.",
-            "amountRequired": "Amount is required.",
-            "amountInvalid": "Amount must be a positive number.",
-            "descriptionMaxLength": "Description must be at most 75 characters.",
-            "createFailed": "Failed to create transfer."
+            "fixValidation": "Виправ виділені поля перед створенням переказу.",
+            "dateRequired": "Дата обов'язкова.",
+            "fromAccountRequired": "Рахунок-джерело обов'язковий.",
+            "toAccountRequired": "Рахунок призначення обов'язковий.",
+            "accountsMustDiffer": "Рахунок-джерело та рахунок призначення мають бути різними.",
+            "amountRequired": "Сума обов'язкова.",
+            "amountInvalid": "Сума має бути додатнім числом.",
+            "descriptionMaxLength": "Опис має містити не більше 75 символів.",
+            "createFailed": "Не вдалося створити переказ."
           }
         },
         "edit": {
-          "title": "Edit transfer",
-          "description": "Update this transfer so your account movement history stays accurate.",
+          "title": "Редагувати переказ",
+          "description": "Оновіть цей переказ, щоб історія переміщень між рахунками залишалась точною.",
           "actions": {
-            "cancel": "Cancel",
-            "save": "Save changes"
+            "cancel": "Скасувати",
+            "save": "Зберегти зміни"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before saving the transfer.",
-            "updateFailed": "Failed to update transfer."
+            "fixValidation": "Виправ виділені поля перед збереженням переказу.",
+            "updateFailed": "Не вдалося оновити переказ."
           }
         }
       },
       "deleteAlert": {
-        "title": "Delete transfer?",
-        "description": "Delete this transfer from your history. This cannot be undone.",
+        "title": "Видалити переказ?",
+        "description": "Видалити цей переказ з історії. Цю дію неможливо скасувати.",
         "actions": {
-          "cancel": "Cancel",
-          "delete": "Delete"
+          "cancel": "Скасувати",
+          "delete": "Видалити"
         }
       },
       "filters": {
-        "title": "Filter transfers",
-        "description": "Narrow the transfer list to the dates, amounts, or accounts you want to review.",
+        "title": "Фільтрувати перекази",
+        "description": "Звузь список переказів до потрібних дат, сум або рахунків.",
         "empty": {
-          "account": "No accounts yet. Add an account before filtering transfers."
+          "account": "Рахунків ще немає. Додай рахунок перед фільтрацією переказів."
         }
       },
       "toasts": {
-        "createSuccess": "Transfer created successfully.",
-        "createError": "Failed to create transfer.",
-        "updateSuccess": "Transfer updated successfully.",
-        "updateError": "Failed to update transfer.",
-        "deleteSuccess": "Transfer deleted successfully.",
-        "deleteError": "Failed to delete transfer."
+        "createSuccess": "Переказ успішно створено.",
+        "createError": "Не вдалося створити переказ.",
+        "updateSuccess": "Переказ успішно оновлено.",
+        "updateError": "Не вдалося оновити переказ.",
+        "deleteSuccess": "Переказ успішно видалено.",
+        "deleteError": "Не вдалося видалити переказ."
       },
       "errors": {
-        "loadFailed": "Failed to load transfers: {{error}}"
+        "loadFailed": "Не вдалося завантажити перекази: {{error}}"
       }
     },
     "table": {
-      "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
-      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before recording transactions.",
+      "description": "Переглядай записи доходів і витрат, що впливають на залишки, бюджети та чистий грошовий потік.",
+      "emptyMessage": "Транзакцій ще немає. Додай одну для відстеження витрат, доходів і чистого грошового потоку.",
+      "emptyNoAccountsMessage": "Рахунків ще немає. Додай перший рахунок перед записом транзакцій.",
       "actions": {
-        "add": "Add transaction",
-        "filter": "Filter transactions",
-        "edit": "Edit transaction",
-        "duplicate": "Duplicate transaction",
-        "delete": "Delete transaction"
+        "add": "Додати транзакцію",
+        "filter": "Фільтрувати транзакції",
+        "edit": "Редагувати транзакцію",
+        "duplicate": "Дублювати транзакцію",
+        "delete": "Видалити транзакцію"
       }
     },
     "filters": {
-      "title": "Filter transactions",
-      "description": "Narrow the list to the dates, categories, accounts, or amounts you want to review.",
+      "title": "Фільтрувати транзакції",
+      "description": "Звузь список до потрібних дат, категорій, рахунків або сум.",
       "empty": {
-        "category": "No categories yet. Add a category before filtering transactions.",
-        "account": "No accounts yet. Add an account before filtering transactions."
+        "category": "Категорій ще немає. Додай категорію перед фільтрацією транзакцій.",
+        "account": "Рахунків ще немає. Додай рахунок перед фільтрацією транзакцій."
       }
     },
     "dialog": {
       "add": {
-        "title": "Add transaction",
-        "description": "Record an income or expense so it appears in balances, budgets, and reports.",
+        "title": "Додати транзакцію",
+        "description": "Запиши дохід або витрату, щоб вони відображались у залишках, бюджетах і звітах.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create transaction"
+          "cancel": "Скасувати",
+          "create": "Створити транзакцію"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the transaction.",
-          "dateRequired": "Date is required.",
-          "accountRequired": "Account is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a valid number.",
-          "categoryRequired": "Category is required.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create transaction."
+          "fixValidation": "Виправ виділені поля перед створенням транзакції.",
+          "dateRequired": "Дата обов'язкова.",
+          "accountRequired": "Рахунок обов'язковий.",
+          "amountRequired": "Сума обов'язкова.",
+          "amountInvalid": "Сума має бути дійсним числом.",
+          "categoryRequired": "Категорія обов'язкова.",
+          "descriptionMaxLength": "Опис має містити не більше 75 символів.",
+          "createFailed": "Не вдалося створити транзакцію."
         }
       },
       "edit": {
-        "title": "Edit transaction",
-        "description": "Update the details behind this income or expense entry.",
+        "title": "Редагувати транзакцію",
+        "description": "Оновіть деталі цього запису доходу або витрати.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Скасувати",
+          "save": "Зберегти зміни"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the transaction.",
-          "updateFailed": "Failed to update transaction."
+          "fixValidation": "Виправ виділені поля перед збереженням транзакції.",
+          "updateFailed": "Не вдалося оновити транзакцію."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete transaction?",
-      "description": "Delete this transaction from your history. This cannot be undone.",
+      "title": "Видалити транзакцію?",
+      "description": "Видалити цю транзакцію з історії. Цю дію неможливо скасувати.",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Скасувати",
+        "delete": "Видалити"
       }
     },
     "duplicateAlert": {
-      "title": "Duplicate transaction?",
-      "description": "Create a copy of this transaction so you can edit it instead of entering everything again.",
+      "title": "Дублювати транзакцію?",
+      "description": "Створити копію цієї транзакції, щоб відредагувати її замість повторного введення.",
       "actions": {
-        "cancel": "Cancel",
-        "duplicate": "Duplicate"
+        "cancel": "Скасувати",
+        "duplicate": "Дублювати"
       }
     },
     "toasts": {
-      "createSuccess": "Transaction created successfully.",
-      "createError": "Failed to create transaction.",
-      "updateSuccess": "Transaction updated successfully.",
-      "updateError": "Failed to update transaction.",
-      "deleteSuccess": "Transaction deleted successfully.",
-      "deleteError": "Failed to delete transaction.",
-      "duplicateSuccess": "Transaction duplicated successfully.",
-      "duplicateError": "Failed to duplicate transaction."
+      "createSuccess": "Транзакцію успішно створено.",
+      "createError": "Не вдалося створити транзакцію.",
+      "updateSuccess": "Транзакцію успішно оновлено.",
+      "updateError": "Не вдалося оновити транзакцію.",
+      "deleteSuccess": "Транзакцію успішно видалено.",
+      "deleteError": "Не вдалося видалити транзакцію.",
+      "duplicateSuccess": "Транзакцію успішно продубльовано.",
+      "duplicateError": "Не вдалося продублювати транзакцію."
     },
     "errors": {
-      "loadFailed": "Failed to load transactions: {{error}}"
+      "loadFailed": "Не вдалося завантажити транзакції: {{error}}"
     }
   },
   "options": {
     "colors": {
-      "none": "None",
-      "gray": "Gray",
-      "coral": "Coral",
-      "amber": "Amber",
-      "gold": "Gold",
-      "lime": "Lime",
-      "green": "Green",
-      "teal": "Teal",
-      "sky": "Sky",
-      "blue": "Blue",
-      "violet": "Violet",
-      "rose": "Rose"
+      "none": "Немає",
+      "gray": "Сірий",
+      "coral": "Коралловий",
+      "amber": "Бурштиновий",
+      "gold": "Золотий",
+      "lime": "Лаймовий",
+      "green": "Зелений",
+      "teal": "Темно-бірюзовий",
+      "sky": "Небесний",
+      "blue": "Синій",
+      "violet": "Фіолетовий",
+      "rose": "Рожевий"
     },
     "icons": {
-      "none": "None",
-      "blocked": "Blocked",
-      "transfer": "Transfer",
-      "circle": "Circle",
-      "income": "Income",
-      "expense": "Expense",
-      "tag": "Tag",
-      "tags": "Tags",
-      "money": "Money",
-      "coins": "Coins",
-      "handCoins": "Hand Coins",
-      "wallet": "Wallet",
-      "piggyBank": "Piggy Bank",
-      "vault": "Vault",
-      "bank": "Bank",
-      "banknoteArrowUp": "Banknote",
-      "shoppingCart": "Shopping Cart",
-      "store": "Store",
-      "backpack": "Backpack",
-      "globe": "Globe",
-      "library": "Library",
-      "school": "School",
-      "graduationCap": "Graduation Cap",
-      "gamepad": "Gaming",
-      "music": "Music",
-      "cassette": "Cassette Tape",
-      "film": "Film",
-      "camera": "Camera",
-      "popcorn": "Popcorn",
-      "cigarette": "Cigarette",
-      "beer": "Beer",
-      "coffee": "Coffee",
-      "glassWater": "Glass Water",
-      "martini": "Martini",
-      "techReceipt": "Receipt",
-      "badgePercent": "Percent",
-      "dumbbell": "Fitness",
-      "biceps": "Workout",
-      "ambulance": "Ambulance",
-      "hospital": "Hospital",
-      "pill": "Pill",
-      "cannabis": "Cannabis",
-      "mountainSnow": "Mountain",
-      "treePalm": "Palm Tree",
-      "leaf": "Leaf",
-      "bird": "Bird",
-      "cat": "Cat",
-      "dog": "Dog",
-      "fish": "Fish",
-      "utensils": "Utensils",
-      "hamburger": "Burger",
-      "salad": "Salad",
-      "pizza": "Pizza",
-      "baby": "Baby",
-      "glasses": "Eyewear",
-      "gift": "Gift",
-      "tech": "Tech",
-      "laptop": "Laptop",
-      "home": "Home",
-      "shirt": "Shirt",
-      "armchair": "Armchair",
-      "lampDesk": "Desk Lamp",
-      "frown": "Frown",
-      "smile": "Smile",
-      "heart": "Heart",
-      "star": "Star",
-      "sparkles": "Sparkles",
-      "creditCard": "Credit Card",
-      "tractor": "Tractor",
-      "train": "Train",
-      "footprints": "Footprints",
-      "wrench": "Wrench",
-      "refrigerator": "Refrigerator",
-      "package": "Package",
-      "scissors": "Scissors",
-      "brain": "Brain",
-      "crypto": "Crypto",
-      "factory": "Factory",
-      "car": "Car",
-      "card": "Card"
+      "none": "Немає",
+      "blocked": "Заблоковано",
+      "transfer": "Переказ",
+      "circle": "Коло",
+      "income": "Дохід",
+      "expense": "Витрати",
+      "tag": "Мітка",
+      "tags": "Мітки",
+      "money": "Гроші",
+      "coins": "Монети",
+      "handCoins": "Монети в руці",
+      "wallet": "Гаманець",
+      "piggyBank": "Скарбничка",
+      "vault": "Сейф",
+      "bank": "Банк",
+      "banknoteArrowUp": "Банкнота",
+      "shoppingCart": "Кошик",
+      "store": "Магазин",
+      "backpack": "Рюкзак",
+      "globe": "Глобус",
+      "library": "Бібліотека",
+      "school": "Школа",
+      "graduationCap": "Академічна шапочка",
+      "gamepad": "Ігри",
+      "music": "Музика",
+      "cassette": "Касета",
+      "film": "Фільм",
+      "camera": "Камера",
+      "popcorn": "Попкорн",
+      "cigarette": "Цигарка",
+      "beer": "Пиво",
+      "coffee": "Кава",
+      "glassWater": "Стакан води",
+      "martini": "Мартіні",
+      "techReceipt": "Чек",
+      "badgePercent": "Відсоток",
+      "dumbbell": "Фітнес",
+      "biceps": "Тренування",
+      "ambulance": "Швидка допомога",
+      "hospital": "Лікарня",
+      "pill": "Таблетка",
+      "cannabis": "Канабіс",
+      "mountainSnow": "Гора",
+      "treePalm": "Пальма",
+      "leaf": "Листок",
+      "bird": "Птах",
+      "cat": "Кіт",
+      "dog": "Собака",
+      "fish": "Риба",
+      "utensils": "Столові прибори",
+      "hamburger": "Бургер",
+      "salad": "Салат",
+      "pizza": "Піца",
+      "baby": "Дитина",
+      "glasses": "Окуляри",
+      "gift": "Подарунок",
+      "tech": "Техніка",
+      "laptop": "Ноутбук",
+      "home": "Дім",
+      "shirt": "Сорочка",
+      "armchair": "Крісло",
+      "lampDesk": "Настільна лампа",
+      "frown": "Хмурий вираз",
+      "smile": "Посмішка",
+      "heart": "Серце",
+      "star": "Зірка",
+      "sparkles": "Іскри",
+      "creditCard": "Кредитна картка",
+      "tractor": "Трактор",
+      "train": "Поїзд",
+      "footprints": "Сліди",
+      "wrench": "Ключ",
+      "refrigerator": "Холодильник",
+      "package": "Посилка",
+      "scissors": "Ножиці",
+      "brain": "Мозок",
+      "crypto": "Крипто",
+      "factory": "Завод",
+      "car": "Автомобіль",
+      "card": "Картка"
     }
   },
   "header": {
@@ -1294,335 +1294,335 @@
       }
     },
     "theme": {
-      "activateLight": "Activate light mode",
-      "activateDark": "Activate dark mode",
-      "lightMode": "Light mode",
-      "darkMode": "Dark mode"
+      "activateLight": "Увімкнути світлу тему",
+      "activateDark": "Увімкнути темну тему",
+      "lightMode": "Світла тема",
+      "darkMode": "Темна тема"
     }
   },
   "sidebar": {
-    "close": "Close sidebar",
-    "expand": "Expand sidebar",
-    "collapse": "Collapse sidebar"
+    "close": "Закрити бічну панель",
+    "expand": "Розгорнути бічну панель",
+    "collapse": "Згорнути бічну панель"
   },
   "breadcrumb": {
-    "ariaLabel": "Breadcrumb"
+    "ariaLabel": "Навігаційний шлях"
   },
   "recurringEvents": {
     "table": {
-      "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
-      "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
+      "description": "Плануй регулярні транзакції та перекази, щоб рутинна активність була легше відстежувана.",
+      "emptyMessage": "Регулярних подій ще немає. Додай одну для автоматизації повторюваних транзакцій або переказів.",
+      "emptyNoAccountsMessage": "Рахунків ще немає. Додай перший рахунок перед створенням регулярних подій.",
       "columns": {
-        "title": "Title",
-        "startDate": "Start date",
-        "schedule": "Schedule",
-        "template": "Template"
+        "title": "Заголовок",
+        "startDate": "Дата початку",
+        "schedule": "Розклад",
+        "template": "Шаблон"
       },
       "actions": {
-        "add": "Add recurring event",
-        "edit": "Edit recurring event",
-        "run": "Run recurring event",
-        "delete": "Delete recurring event"
+        "add": "Додати регулярну подію",
+        "edit": "Редагувати регулярну подію",
+        "run": "Запустити регулярну подію",
+        "delete": "Видалити регулярну подію"
       },
       "schedule": {
-        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}",
-        "every": "{{interval}} every {{unit}}",
-        "occurrences": "{{count}} occurrences",
-        "monthPolicy": "If the day is not in the month: {{policy}}"
+        "summary": "Відбувається {{count}} разів, {{interval}} кожні {{unit}}",
+        "every": "{{interval}} кожні {{unit}}",
+        "occurrences": "{{count}} повторень",
+        "monthPolicy": "Якщо дня немає в місяці: {{policy}}"
       },
       "template": {
-        "unknown": "Unknown template",
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknown": "Невідомий шаблон",
+        "unknownAccount": "Невідомий рахунок",
+        "unknownCategory": "Невідома категорія"
       }
     },
     "type": {
-      "transaction": "Transaction",
-      "transfer": "Transfer"
+      "transaction": "Транзакція",
+      "transfer": "Переказ"
     },
     "frequency": {
       "unit": {
-        "day": "day(s)",
-        "week": "week(s)",
-        "month": "month(s)",
-        "year": "year(s)"
+        "day": "день(-ів)",
+        "week": "тиждень(-ів)",
+        "month": "місяць(-ів)",
+        "year": "рік(-ів)"
       }
     },
     "monthPolicy": {
-      "none": "Default",
-      "clip": "Use the last valid day of the month",
-      "skip": "Skip",
-      "last_day": "Last day",
-      "first_day": "First day"
+      "none": "За замовчуванням",
+      "clip": "Використати останній дійсний день місяця",
+      "skip": "Пропустити",
+      "last_day": "Останній день",
+      "first_day": "Перший день"
     },
     "dialog": {
       "add": {
-        "title": "Add recurring event",
-        "description": "Create a repeating rule so the app can add upcoming transactions or transfers for you.",
+        "title": "Додати регулярну подію",
+        "description": "Створи правило повторення, щоб програма автоматично додавала майбутні транзакції або перекази.",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create recurring event"
+          "cancel": "Скасувати",
+          "create": "Створити регулярну подію"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the recurring event.",
-          "titleRequired": "Title is required.",
-          "titleMinLength": "Title must be at least 2 characters.",
-          "titleMaxLength": "Title must be at most 80 characters.",
-          "typeRequired": "Type is required.",
-          "startDateRequired": "Start date is required.",
-          "countRequired": "Occurrences count is required.",
-          "countInvalid": "Occurrences count must be a positive integer.",
-          "frequencyIntervalRequired": "Frequency interval is required.",
-          "frequencyIntervalInvalid": "Frequency interval must be a positive integer.",
-          "frequencyUnitRequired": "Frequency unit is required.",
-          "accountRequired": "Account is required.",
-          "categoryRequired": "Category is required.",
-          "fromAccountRequired": "Source account is required.",
-          "toAccountRequired": "Destination account is required.",
-          "accountsMustDiffer": "Source and destination accounts must be different.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create recurring event."
+          "fixValidation": "Виправ виділені поля перед створенням регулярної події.",
+          "titleRequired": "Заголовок обов'язковий.",
+          "titleMinLength": "Заголовок має містити щонайменше 2 символи.",
+          "titleMaxLength": "Заголовок має містити не більше 80 символів.",
+          "typeRequired": "Тип обов'язковий.",
+          "startDateRequired": "Дата початку обов'язкова.",
+          "countRequired": "Кількість повторень обов'язкова.",
+          "countInvalid": "Кількість повторень має бути додатнім цілим числом.",
+          "frequencyIntervalRequired": "Інтервал частоти обов'язковий.",
+          "frequencyIntervalInvalid": "Інтервал частоти має бути додатнім цілим числом.",
+          "frequencyUnitRequired": "Одиниця частоти обов'язкова.",
+          "accountRequired": "Рахунок обов'язковий.",
+          "categoryRequired": "Категорія обов'язкова.",
+          "fromAccountRequired": "Рахунок-джерело обов'язковий.",
+          "toAccountRequired": "Рахунок призначення обов'язковий.",
+          "accountsMustDiffer": "Рахунок-джерело та рахунок призначення мають бути різними.",
+          "amountRequired": "Сума обов'язкова.",
+          "amountInvalid": "Сума має бути додатнім числом.",
+          "descriptionMaxLength": "Опис має містити не більше 75 символів.",
+          "createFailed": "Не вдалося створити регулярну подію."
         }
       },
       "edit": {
-        "title": "Edit recurring event",
-        "description": "Update this rule and keep future planned items aligned with it.",
+        "title": "Редагувати регулярну подію",
+        "description": "Оновіть це правило та підтримуй відповідність майбутніх запланованих елементів.",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "Скасувати",
+          "save": "Зберегти зміни"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the recurring event.",
-          "updateFailed": "Failed to update recurring event."
+          "fixValidation": "Виправ виділені поля перед збереженням регулярної події.",
+          "updateFailed": "Не вдалося оновити регулярну подію."
         }
       },
       "form": {
         "labels": {
-          "title": "Title",
-          "startDate": "Start date",
-          "occurrences": "Occurrences",
-          "frequencyInterval": "Every",
-          "frequencyUnit": "Frequency unit",
-          "monthPolicy": "If the day is not in the month"
+          "title": "Заголовок",
+          "startDate": "Дата початку",
+          "occurrences": "Повторення",
+          "frequencyInterval": "Кожні",
+          "frequencyUnit": "Одиниця частоти",
+          "monthPolicy": "Якщо дня немає в місяці"
         },
         "placeholders": {
-          "title": "Recurring event title",
+          "title": "Заголовок регулярної події",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
         "tooltips": {
-          "scheduleLockedAfterCreate": "After you create it, the schedule stays fixed so generated dates remain predictable."
+          "scheduleLockedAfterCreate": "Після створення розклад залишається незмінним, щоб згенеровані дати були передбачуваними."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete recurring event?",
-      "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
+      "title": "Видалити регулярну подію?",
+      "description": "Видалити \"{{title}}\" і припинити створення майбутніх елементів з цього правила.",
       "options": {
-        "deleteLinkedItems": "Also delete linked items already created by this plan",
-        "deleteLinkedItemsHint": "This also removes the transactions or transfers that were already created from this rule."
+        "deleteLinkedItems": "Також видалити пов'язані елементи, вже створені цим планом",
+        "deleteLinkedItemsHint": "Це також видалить транзакції або перекази, вже створені з цього правила."
       },
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "Скасувати",
+        "delete": "Видалити"
       }
     },
     "runConfirm": {
-      "title": "Run recurring event?",
-      "description": "Generate any missing scheduled items for \"{{title}}\" now.",
+      "title": "Запустити регулярну подію?",
+      "description": "Згенерувати зараз відсутні заплановані елементи для \"{{title}}\".",
       "actions": {
-        "cancel": "Cancel",
-        "run": "Run now"
+        "cancel": "Скасувати",
+        "run": "Запустити зараз"
       }
     },
     "createResult": {
-      "title": "Recurring event created"
+      "title": "Регулярну подію створено"
     },
     "updateResult": {
-      "title": "Recurring event updated",
-      "description": "\"{{title}}\" was updated successfully. Linked generated items were updated where applicable.",
+      "title": "Регулярну подію оновлено",
+      "description": "\"{{title}}\" успішно оновлено. Пов'язані згенеровані елементи оновлено там, де це застосовно.",
       "actions": {
         "ok": "OK"
       }
     },
     "runResult": {
-      "title": "Recurring events created",
-      "description": "\"{{title}}\" processed {{total}} occurrences. Created: {{created}}. Skipped existing: {{skipped}}.",
+      "title": "Регулярні події створено",
+      "description": "\"{{title}}\" опрацювало {{total}} повторень. Створено: {{created}}. Вже існуючих пропущено: {{skipped}}.",
       "labels": {
-        "plan": "Recurring plan",
-        "created": "Created now",
-        "skipped": "Already existed",
-        "total": "Scheduled dates"
+        "plan": "Регулярний план",
+        "created": "Щойно створено",
+        "skipped": "Вже існувало",
+        "total": "Заплановані дати"
       },
       "hints": {
-        "noNewItems": "No new items were created because all scheduled dates already had linked items."
+        "noNewItems": "Нових елементів не створено, оскільки всі заплановані дати вже мали пов'язані елементи."
       },
       "actions": {
         "ok": "OK"
       }
     },
     "runError": {
-      "title": "Failed to run recurring event",
-      "description": "The recurring event could not be executed: {{error}}",
+      "title": "Не вдалося запустити регулярну подію",
+      "description": "Регулярну подію не вдалося виконати: {{error}}",
       "actions": {
         "ok": "OK"
       },
-      "fallbackError": "Unexpected error"
+      "fallbackError": "Неочікувана помилка"
     },
     "toasts": {
-      "createSuccess": "Recurring event created successfully.",
-      "createError": "Failed to create recurring event.",
-      "updateSuccess": "Recurring event updated successfully.",
-      "updateError": "Failed to update recurring event.",
-      "deleteSuccess": "Recurring event deleted successfully.",
-      "deleteError": "Failed to delete recurring event."
+      "createSuccess": "Регулярну подію успішно створено.",
+      "createError": "Не вдалося створити регулярну подію.",
+      "updateSuccess": "Регулярну подію успішно оновлено.",
+      "updateError": "Не вдалося оновити регулярну подію.",
+      "deleteSuccess": "Регулярну подію успішно видалено.",
+      "deleteError": "Не вдалося видалити регулярну подію."
     },
     "errors": {
-      "loadFailedWithError": "Failed to load recurring events: {{error}}",
-      "loadUnexpected": "Unexpected error while loading recurring events."
+      "loadFailedWithError": "Не вдалося завантажити регулярні події: {{error}}",
+      "loadUnexpected": "Неочікувана помилка при завантаженні регулярних подій."
     }
   },
   "accountValuations": {
     "page": {
-      "title": "Account Valuations"
+      "title": "Оцінки рахунку"
     },
     "table": {
-      "description": "History of valuation snapshots for this account.",
-      "emptyMessage": "No valuation snapshots yet. Add your first snapshot to start tracking.",
+      "description": "Історія знімків оцінки для цього рахунку.",
+      "emptyMessage": "Знімків оцінки ще немає. Додай перший знімок, щоб почати відстеження.",
       "columns": {
-        "date": "Date",
-        "value": "Value",
-        "change": "Change"
+        "date": "Дата",
+        "value": "Значення",
+        "change": "Зміна"
       },
       "actions": {
-        "viewHistory": "View valuation history",
-        "add": "Add snapshot",
-        "edit": "Edit",
-        "delete": "Delete"
+        "viewHistory": "Переглянути історію оцінок",
+        "add": "Додати знімок",
+        "edit": "Редагувати",
+        "delete": "Видалити"
       }
     },
     "header": {
-      "currentValue": "Current value",
-      "change": "Change",
-      "changePct": "Change %",
-      "accountBalance": "Account balance",
-      "lastSnapshot": "Latest snapshot",
-      "changeVsBalance": "Change vs balance",
-      "noSnapshots": "Add your first snapshot to compare against your account balance."
+      "currentValue": "Поточне значення",
+      "change": "Зміна",
+      "changePct": "Зміна %",
+      "accountBalance": "Залишок рахунку",
+      "lastSnapshot": "Останній знімок",
+      "changeVsBalance": "Зміна проти залишку",
+      "noSnapshots": "Додай перший знімок для порівняння із залишком рахунку."
     },
     "chart": {
-      "title": "Value over time",
-      "description": "Trend of saved valuation snapshots for this account.",
-      "seriesName": "Value"
+      "title": "Значення з часом",
+      "description": "Тренд збережених знімків оцінки для цього рахунку.",
+      "seriesName": "Значення"
     },
     "dialog": {
       "fields": {
-        "value": "Value",
-        "date": "Date"
+        "value": "Значення",
+        "date": "Дата"
       },
       "add": {
-        "title": "Add snapshot",
-        "description": "Record the current value of your account at a specific date.",
+        "title": "Додати знімок",
+        "description": "Запиши поточне значення рахунку на певну дату.",
         "actions": {
-          "create": "Add snapshot",
-          "cancel": "Cancel"
+          "create": "Додати знімок",
+          "cancel": "Скасувати"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "createFailed": "Failed to create the snapshot. Please try again.",
-          "valueRequired": "Value is required.",
-          "valueInvalid": "Value must be a valid positive number.",
-          "dateRequired": "Date is required."
+          "fixValidation": "Виправ помилки вище перед збереженням.",
+          "createFailed": "Не вдалося створити знімок. Спробуй ще раз.",
+          "valueRequired": "Значення обов'язкове.",
+          "valueInvalid": "Значення має бути дійсним додатнім числом.",
+          "dateRequired": "Дата обов'язкова."
         }
       },
       "edit": {
-        "title": "Edit snapshot",
-        "description": "Update the value or date of this valuation snapshot.",
+        "title": "Редагувати знімок",
+        "description": "Оновіть значення або дату цього знімка оцінки.",
         "actions": {
-          "save": "Save changes",
-          "cancel": "Cancel"
+          "save": "Зберегти зміни",
+          "cancel": "Скасувати"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "updateFailed": "Failed to update the snapshot. Please try again."
+          "fixValidation": "Виправ помилки вище перед збереженням.",
+          "updateFailed": "Не вдалося оновити знімок. Спробуй ще раз."
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete snapshot",
-      "description": "Are you sure you want to delete this valuation snapshot? This action cannot be undone.",
+      "title": "Видалити знімок",
+      "description": "Видалити цей знімок оцінки? Цю дію неможливо скасувати.",
       "actions": {
-        "delete": "Delete",
-        "cancel": "Cancel"
+        "delete": "Видалити",
+        "cancel": "Скасувати"
       }
     },
     "toasts": {
-      "createSuccess": "Snapshot added successfully.",
-      "createError": "Failed to add the snapshot.",
-      "updateSuccess": "Snapshot updated successfully.",
-      "updateError": "Failed to update the snapshot.",
-      "deleteSuccess": "Snapshot deleted successfully.",
-      "deleteError": "Failed to delete the snapshot."
+      "createSuccess": "Знімок успішно додано.",
+      "createError": "Не вдалося додати знімок.",
+      "updateSuccess": "Знімок успішно оновлено.",
+      "updateError": "Не вдалося оновити знімок.",
+      "deleteSuccess": "Знімок успішно видалено.",
+      "deleteError": "Не вдалося видалити знімок."
     }
   },
   "onboarding": {
     "step_counter": "{{current}} / {{total}}",
     "actions": {
-      "back": "Back",
-      "continue": "Continue"
+      "back": "Назад",
+      "continue": "Продовжити"
     },
     "welcome": {
-      "title": "Welcome to Boring Balance",
-      "subtitle": "A simple, private place to track where your money goes. No cloud, no subscriptions, no noise.",
-      "cta": "Get started"
+      "title": "Ласкаво просимо до Boring Balance",
+      "subtitle": "Простий приватний простір для відстеження, куди йдуть твої гроші. Без хмари, без підписок, без зайвого.",
+      "cta": "Почати"
     },
     "preferences": {
-      "title": "Set your preferences",
-      "subtitle": "You can change these at any time in Settings.",
+      "title": "Встанови свої налаштування",
+      "subtitle": "Їх можна змінити будь-коли в Параметрах.",
       "theme": {
-        "label": "Theme"
+        "label": "Тема"
       },
       "language": {
-        "label": "Language"
+        "label": "Мова"
       },
       "currency": {
-        "label": "Default currency",
-        "hint": "Used for display and new accounts. You can override per account."
+        "label": "Валюта за замовчуванням",
+        "hint": "Використовується для відображення та нових рахунків. Можна змінити для кожного рахунку."
       }
     },
     "start": {
-      "title": "How do you want to begin?",
+      "title": "Як хочеш почати?",
       "scratch": {
-        "title": "Start fresh",
-        "description": "Set up your accounts and categories. Takes two minutes."
+        "title": "Почати з нуля",
+        "description": "Налаштуй рахунки та категорії. Займе дві хвилини."
       },
       "import": {
-        "title": "Import a backup",
-        "description": "Restore from a previous Boring Balance export."
+        "title": "Імпортувати резервну копію",
+        "description": "Відновити з попереднього експорту Boring Balance."
       }
     },
     "confirm": {
-      "title": "You're set up.",
-      "subtitle": "Everything is saved locally on your device. You're in control.",
-      "import_note": "You can import your backup from Settings → Export & Import at any time.",
-      "cta": "Enter Boring Balance"
+      "title": "Налаштування завершено.",
+      "subtitle": "Все зберігається локально на твоєму пристрої. Ти контролюєш ситуацію.",
+      "import_note": "Резервну копію можна імпортувати з Параметри → Експорт та імпорт будь-коли.",
+      "cta": "Відкрити Boring Balance"
     }
   },
   "update": {
     "modal": {
-      "title": "A new version is available",
-      "body": "You are on v{{current}}. Boring Balance v{{latest}} is now available on GitHub.",
-      "ignore": "Don't remind me again for v{{latest}}",
+      "title": "Доступна нова версія",
+      "body": "Ти використовуєш v{{current}}. Boring Balance v{{latest}} тепер доступна на GitHub.",
+      "ignore": "Більше не нагадувати про v{{latest}}",
       "cta": {
-        "update": "Update on GitHub",
-        "dismiss": "Stay on v{{current}}"
+        "update": "Оновити на GitHub",
+        "dismiss": "Залишитись на v{{current}}"
       }
     },
     "sidebar": {
-      "label": "Update available · v{{latest}}"
+      "label": "Доступне оновлення · v{{latest}}"
     }
   }
 }

@@ -1,229 +1,229 @@
 {
   "common": {
-    "actions": "Actions",
-    "titleBar": "Application title bar",
-    "cancel": "Cancel",
-    "yes": "Yes",
-    "no": "No",
+    "actions": "操作",
+    "titleBar": "应用标题栏",
+    "cancel": "取消",
+    "yes": "是",
+    "no": "否",
     "labels": {
-      "name": "Name",
-      "type": "Type",
-      "description": "Description",
-      "color": "Color",
-      "icon": "Icon",
-      "date": "Date",
-      "settled": "Settled",
-      "account": "Account",
-      "category": "Category",
-      "amount": "Amount",
-      "from": "From",
-      "to": "To",
-      "fromAccount": "From account",
-      "toAccount": "To account",
-      "title": "Title",
-      "startDate": "Start date",
-      "plan": "Plan",
-      "schedule": "Schedule",
-      "template": "Template",
-      "occurrences": "Occurrences",
-      "frequencyUnit": "Frequency unit",
-      "monthPolicy": "If the day is not in the month",
-      "year": "Year"
+      "name": "名称",
+      "type": "类型",
+      "description": "描述",
+      "color": "颜色",
+      "icon": "图标",
+      "date": "日期",
+      "settled": "已结清",
+      "account": "账户",
+      "category": "分类",
+      "amount": "金额",
+      "from": "从",
+      "to": "至",
+      "fromAccount": "来源账户",
+      "toAccount": "目标账户",
+      "title": "标题",
+      "startDate": "开始日期",
+      "plan": "计划",
+      "schedule": "安排",
+      "template": "模板",
+      "occurrences": "次数",
+      "frequencyUnit": "频率单位",
+      "monthPolicy": "若该日不在月份中",
+      "year": "年"
     },
     "placeholders": {
-      "selectType": "Select type",
-      "selectColor": "Select color",
-      "selectIcon": "Select icon",
-      "pickDate": "Pick a date",
-      "amountZero": "0,00",
-      "selectAccount": "Select account",
-      "selectCategory": "Select category",
-      "optionalDescription": "Optional description",
-      "transactionDescription": "Transaction description"
+      "selectType": "选择类型",
+      "selectColor": "选择颜色",
+      "selectIcon": "选择图标",
+      "pickDate": "选择日期",
+      "amountZero": "0.00",
+      "selectAccount": "选择账户",
+      "selectCategory": "选择分类",
+      "optionalDescription": "可选描述",
+      "transactionDescription": "交易描述"
     },
     "filters": {
       "fields": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Amount from",
-        "amountTo": "Amount to",
-        "settled": "Settlement status",
-        "categoryType": "Category type",
-        "category": "Category",
-        "account": "Account"
+        "dateFrom": "开始日期",
+        "dateTo": "结束日期",
+        "amountFrom": "最低金额",
+        "amountTo": "最高金额",
+        "settled": "结清状态",
+        "categoryType": "分类类型",
+        "category": "分类",
+        "account": "账户"
       },
       "placeholders": {
-        "dateFrom": "From date",
-        "dateTo": "To date",
-        "amountFrom": "Minimum amount",
-        "amountTo": "Maximum amount",
-        "settled": "Any status",
-        "categoryType": "Any type",
-        "category": "Select a category",
-        "account": "Select an account",
-        "searchCategory": "Search categories...",
-        "searchAccount": "Search accounts..."
+        "dateFrom": "开始日期",
+        "dateTo": "结束日期",
+        "amountFrom": "最低金额",
+        "amountTo": "最高金额",
+        "settled": "任意状态",
+        "categoryType": "任意类型",
+        "category": "选择分类",
+        "account": "选择账户",
+        "searchCategory": "搜索分类...",
+        "searchAccount": "搜索账户..."
       },
       "options": {
         "settled": {
-          "any": "Any status",
-          "yes": "Settled",
-          "no": "Not settled"
+          "any": "任意状态",
+          "yes": "已结清",
+          "no": "未结清"
         },
         "categoryType": {
-          "any": "Any type"
+          "any": "任意类型"
         }
       },
       "actions": {
-        "apply": "Apply filters",
-        "currentMonth": "Current month",
-        "reset": "Reset filters",
-        "cancel": "Cancel"
+        "apply": "应用筛选",
+        "currentMonth": "本月",
+        "reset": "重置筛选",
+        "cancel": "取消"
       }
     },
     "pagination": {
-      "previous": "Previous",
-      "next": "Next",
-      "counter": "{{current}} of {{total}} pages",
-      "rowsPerPage": "Rows per page",
+      "previous": "上一页",
+      "next": "下一页",
+      "counter": "第 {{current}} / {{total}} 页",
+      "rowsPerPage": "每页行数",
       "tooltips": {
-        "firstPage": "Go to first page",
-        "previousPage": "Go to previous page",
-        "nextPage": "Go to next page",
-        "lastPage": "Go to last page",
-        "toPage": "To page",
-        "toLastPage": "To last page, page"
+        "firstPage": "跳至第一页",
+        "previousPage": "跳至上一页",
+        "nextPage": "跳至下一页",
+        "lastPage": "跳至最后一页",
+        "toPage": "跳至页",
+        "toLastPage": "跳至最后一页"
       }
     },
     "calendar": {
       "actions": {
-        "previousMonth": "Previous month",
-        "nextMonth": "Next month"
+        "previousMonth": "上个月",
+        "nextMonth": "下个月"
       },
       "aria": {
-        "chooseDate": "Choose date",
-        "today": "Today",
-        "selected": "Selected",
-        "rangeStart": "Range start",
-        "rangeEnd": "Range end",
-        "inRange": "In range",
-        "outsideMonth": "Outside month",
-        "disabled": "Disabled"
+        "chooseDate": "选择日期",
+        "today": "今天",
+        "selected": "已选",
+        "rangeStart": "范围开始",
+        "rangeEnd": "范围结束",
+        "inRange": "在范围内",
+        "outsideMonth": "本月外",
+        "disabled": "已禁用"
       }
     },
-    "skipToContent": "Skip to main content"
+    "skipToContent": "跳至主要内容"
   },
   "nav": {
     "sections": {
-      "main": "Menu",
-      "insights": "Insights",
-      "setup": "Setup",
-      "settings": "Settings"
+      "main": "菜单",
+      "insights": "分析",
+      "setup": "设置",
+      "settings": "首选项"
     },
     "items": {
-      "overview": "Overview",
-      "transactions": "Transactions",
-      "breakdown": "Breakdown",
-      "compare": "Compare",
-      "budget": "Budget",
-      "accounts": "Accounts",
-      "categories": "Categories",
-      "recurringEvents": "Recurring events",
-      "settings": "Settings",
-      "dataBackups": "Data & Backups",
-      "about": "About"
+      "overview": "概览",
+      "transactions": "交易",
+      "breakdown": "明细",
+      "compare": "对比",
+      "budget": "预算",
+      "accounts": "账户",
+      "categories": "分类",
+      "recurringEvents": "定期事件",
+      "settings": "首选项",
+      "dataBackups": "数据与备份",
+      "about": "关于"
     }
   },
   "settings": {
     "page": {
-      "title": "Settings",
-      "description": "Manage app preferences, backups, sync, exports, and local app details."
+      "title": "首选项",
+      "description": "管理应用偏好、备份、同步、导出及本地详情。"
     },
     "sections": {
       "general": {
-        "title": "General",
-        "description": "Set how the app looks and how money amounts appear across your workspace."
+        "title": "通用",
+        "description": "设置应用外观及工作区中金额的显示方式。"
       },
       "about": {
-        "title": "About",
-        "description": "See app details, privacy basics, and the project link in one place."
+        "title": "关于",
+        "description": "在一处查看应用详情、隐私说明及项目链接。"
       },
       "data": {
-        "title": "Data & Storage",
-        "description": "Reset and manage your local data."
+        "title": "数据与存储",
+        "description": "重置并管理本地数据。"
       }
     },
     "data": {
       "clear_financial": {
-        "label": "Clear all financial data",
-        "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
-        "button": "Clear data",
+        "label": "清除所有财务数据",
+        "description": "永久删除所有账户、交易、转账及预算。偏好设置将保留。",
+        "button": "清除数据",
         "confirm": {
-          "title": "Clear all financial data?",
-          "body": "This will permanently delete all accounts, transactions, transfers, budgets, and categories you have created. This cannot be undone.",
-          "cta": "Yes, clear data"
+          "title": "清除所有财务数据？",
+          "body": "此操作将永久删除所有已创建的账户、交易、转账、预算和分类，且无法撤销。",
+          "cta": "确认清除数据"
         },
-        "success": "All financial data has been cleared."
+        "success": "所有财务数据已清除。"
       },
       "factory_reset": {
-        "label": "Factory reset",
-        "description": "Deletes the entire database and resets the app to its initial state. Your backups are not affected.",
-        "button": "Reset app",
+        "label": "恢复出厂设置",
+        "description": "删除整个数据库并将应用恢复至初始状态。备份文件不受影响。",
+        "button": "重置应用",
         "confirm": {
-          "title": "Factory reset?",
-          "body": "This will delete the entire database and return the app to its initial state. Your backup files will not be affected. This cannot be undone.",
-          "input_placeholder": "Type RESET to confirm",
-          "cta": "Reset app"
+          "title": "恢复出厂设置？",
+          "body": "此操作将删除整个数据库并将应用恢复至初始状态。备份文件不受影响，且无法撤销。",
+          "input_placeholder": "输入 RESET 以确认",
+          "cta": "重置应用"
         }
       },
-      "reset_error": "Something went wrong. Please try again."
+      "reset_error": "出现错误，请重试。"
     },
     "general": {
-      "intro": "These preferences update right away so the app matches how you read and review your finances.",
-      "appearanceGroupTitle": "Appearance",
-      "currencyGroupTitle": "Currency",
-      "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
+      "intro": "这些偏好设置立即生效，使应用与你查看和管理财务的方式保持一致。",
+      "appearanceGroupTitle": "外观",
+      "currencyGroupTitle": "货币",
+      "currencyGroupDescription": "选择金额的显示方式，使余额、报告和表单易于阅读。",
       "cards": {
         "theme": {
-          "title": "Theme",
-          "description": "Pick the appearance that feels best for everyday use across the whole app.",
-          "fieldLabel": "Theme mode",
+          "title": "主题",
+          "description": "选择最适合日常使用的外观。",
+          "fieldLabel": "显示模式",
           "options": {
-            "system": "System",
-            "light": "Light",
-            "dark": "Dark"
+            "system": "跟随系统",
+            "light": "浅色",
+            "dark": "深色"
           }
         },
         "language": {
-          "title": "Language",
-          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
-          "fieldLabel": "App language"
+          "title": "语言",
+          "description": "选择应用导航、标签和消息所用的语言。",
+          "fieldLabel": "应用语言"
         },
         "dashboardValuationMode": {
-          "title": "Dashboard net worth mode",
-          "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
-          "fieldLabel": "Dashboard calculations",
+          "title": "仪表板净资产模式",
+          "description": "选择概览中的净资产和分配是否在可用时包含估值快照。禁用后，这些卡片仅使用交易的账本余额。",
+          "fieldLabel": "仪表板计算方式",
           "options": {
-            "include": "Include valuations",
-            "exclude": "Ledger balances only"
+            "include": "包含估值",
+            "exclude": "仅账本余额"
           }
         },
         "currency": {
-          "title": "Currency symbol",
-          "description": "Select the symbol you want to see next to balances, transactions, and reports.",
-          "fieldLabel": "Symbol",
-          "customLabel": "Custom symbol",
-          "customPlaceholder": "CHF",
+          "title": "货币符号",
+          "description": "选择余额、交易和报告旁显示的符号。",
+          "fieldLabel": "符号",
+          "customLabel": "自定义符号",
+          "customPlaceholder": "CNY",
           "options": {
-            "custom": "Custom"
+            "custom": "自定义"
           }
         },
         "numberFormat": {
-          "title": "Currency display style",
-          "description": "Choose the separators used in amounts so entries and reports match what you expect.",
-          "fieldLabel": "Format",
-          "previewLabel": "Preview",
-          "previewDescription": "Preview the current symbol and number style before you keep entering data.",
+          "title": "金额显示格式",
+          "description": "选择金额使用的分隔符，使录入和报告符合预期格式。",
+          "fieldLabel": "格式",
+          "previewLabel": "预览",
+          "previewDescription": "在继续录入前预览当前符号和数字格式。",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -233,1052 +233,1052 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
-      "appVersionLabel": "App version",
-      "appVersionUnavailable": "Not available in this build",
+      "appNameLabel": "应用",
+      "appVersionLabel": "版本",
+      "appVersionUnavailable": "此版本不可用",
       "copy": {
-        "paragraph1": "Hi. If you ended up here, you’re probably the kind of person this app was built for.",
-        "paragraph2": "I created Boring Balance after years of moving between apps, Excel files, and Google Sheets without ever finding something that truly fit my needs.",
-        "paragraph3": "Most tools were either too complicated, full of ads and tracking, or locked behind subscriptions.",
-        "paragraph4": "So I built my own.",
-        "paragraph5": "Boring Balance is meant to be simple, private, and completely under your control. Your data stays yours. There are no ads, no tracking, and no features designed to push you into paying just to see your own finances.",
-        "paragraph6": "I believe personal finance should be something you actively manage. Taking a moment to check your balances, review your expenses, and keep things aligned is the only way to truly understand where your money goes.",
-        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring events.",
-        "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
-        "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
+        "paragraph1": "你好。如果你来到这里，你可能正是这款应用的目标用户。",
+        "paragraph2": "我在多年辗转于各种应用、Excel 文件和 Google 表格之后创建了 Boring Balance，始终找不到真正符合我需求的工具。",
+        "paragraph3": "大多数工具要么过于复杂，充斥广告和追踪，要么锁在订阅付费墙后面。",
+        "paragraph4": "于是我自己做了一个。",
+        "paragraph5": "Boring Balance 旨在简单、私密，完全由你掌控。数据属于你。没有广告，没有追踪，也没有任何功能是为了诱导你为查看自己的财务数据而付费。",
+        "paragraph6": "我相信个人财务需要主动管理。花时间查看余额、审视支出、保持平衡，是真正了解钱去哪里的唯一方式。",
+        "paragraph7": "这款应用提供了几项核心工具：账户与交易追踪、预算管理，以及定期事件规划。",
+        "paragraph8": "没有任何功能是强制的。按需使用即可。",
+        "paragraph9": "欢迎来到这个朴实的小地方——记得偶尔备份，保护好你的数据 😉"
       },
-      "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
-      "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
-      "openSourceCta": "Open on GitHub",
-      "checkForUpdates": "Check for updates",
-      "footer": "Made with ❤️ by {{authorName}}",
+      "localFirst": "Boring Balance 是一款注重隐私的个人财务追踪应用。数据保存在你的设备上，应用仅用于显示余额和分析。",
+      "openSourceNote": "核心应用为开源项目，你可以在下方仓库中查看代码或跟进开发进展。",
+      "openSourceCta": "在 GitHub 上查看",
+      "checkForUpdates": "检查更新",
+      "footer": "由 {{authorName}} 用 ❤️ 制作",
       "runtime": {
-        "title": "Runtime",
-        "description": "Renderer runtime versions exposed through the Electron bridge.",
+        "title": "运行时",
+        "description": "通过 Electron 桥接暴露的渲染器运行时版本。",
         "electron": "Electron",
         "node": "Node.js",
         "chrome": "Chrome",
-        "unknown": "Unavailable"
+        "unknown": "不可用"
       }
     }
   },
   "dataBackups": {
     "page": {
-      "title": "Data & Backups",
-      "description": "Manage local backups and prepare for sync and import/export features."
+      "title": "数据与备份",
+      "description": "管理本地备份，并为同步及导入/导出功能做好准备。"
     },
     "sections": {
       "backups": {
-        "title": "Backups"
+        "title": "备份"
       },
       "sync": {
-        "title": "Sync"
+        "title": "同步"
       },
       "exportImport": {
-        "title": "Import / Export"
+        "title": "导入 / 导出"
       }
     },
     "backups": {
       "destination": {
-        "title": "Backup destination",
-        "description": "Turn on backups and choose where recovery copies should be saved."
+        "title": "备份目标",
+        "description": "启用备份并选择恢复副本的保存位置。"
       },
       "form": {
-        "enabled": "Enable backups",
-        "folderPath": "Backup folder",
-        "folderNotSet": "Not set"
+        "enabled": "启用备份",
+        "folderPath": "备份文件夹",
+        "folderNotSet": "未设置"
       },
-      "disabledInfo": "Turn on backups to create recovery copies automatically, run one on demand, and keep restore points ready.",
+      "disabledInfo": "启用备份以自动创建恢复副本、按需运行备份并保留还原点。",
       "warnings": {
-        "missingFolder": "Backups are enabled but no backup folder is configured yet."
+        "missingFolder": "备份已启用，但尚未配置备份文件夹。"
       },
       "autoBackup": {
-        "title": "Automatic backups",
-        "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
-        "onQuit": "Run backup on app quit",
-        "intervalMin": "Interval (minutes, 0 to disable)",
-        "retentionCount": "Retention count",
+        "title": "自动备份",
+        "description": "设置应用保存恢复副本的频率及保留旧副本的数量。",
+        "onQuit": "退出时备份",
+        "intervalMin": "间隔（分钟，0 为禁用）",
+        "retentionCount": "保留数量",
         "intervalOptions": {
-          "off": "Off",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes",
-          "minutes120": "Every 120 minutes"
+          "off": "关闭",
+          "minutes30": "每 30 分钟",
+          "minutes60": "每 60 分钟",
+          "minutes120": "每 120 分钟"
         }
       },
       "manual": {
-        "title": "Manual backup and status",
-        "description": "Create a backup now and review the latest backup result in one place."
+        "title": "手动备份与状态",
+        "description": "立即创建备份并在一处查看最新备份结果。"
       },
       "actions": {
-        "chooseFolder": "Choose folder",
-        "backupNow": "Backup now",
-        "refreshList": "Refresh list",
-        "restore": "Restore",
-        "delete": "Delete"
+        "chooseFolder": "选择文件夹",
+        "backupNow": "立即备份",
+        "refreshList": "刷新列表",
+        "restore": "恢复",
+        "delete": "删除"
       },
       "status": {
-        "lastBackupAt": "Last backup",
-        "current": "Status",
-        "lastFile": "Last backup file",
-        "never": "Never",
-        "none": "None",
-        "idle": "Idle",
-        "running": "Running",
-        "ok": "Completed",
-        "error": "Failed"
+        "lastBackupAt": "上次备份",
+        "current": "状态",
+        "lastFile": "最新备份文件",
+        "never": "从未",
+        "none": "无",
+        "idle": "空闲",
+        "running": "运行中",
+        "ok": "已完成",
+        "error": "失败"
       },
       "list": {
-        "title": "Available backups",
-        "description": "Review saved backups, then restore or remove the ones you no longer need.",
-        "loading": "Refreshing backups list...",
-        "empty": "No backups here yet. Run a backup to create your first restore point.",
+        "title": "可用备份",
+        "description": "查看已保存的备份，恢复或删除不再需要的副本。",
+        "loading": "正在刷新备份列表...",
+        "empty": "暂无备份。运行一次备份以创建首个还原点。",
         "columns": {
-          "date": "Date",
-          "file": "File",
-          "size": "Size"
+          "date": "日期",
+          "file": "文件",
+          "size": "大小"
         }
       },
       "restoreAlert": {
-        "title": "Restore backup",
-        "description": "Restore \"{{fileName}}\" and replace your current data with that saved copy. Continue?",
+        "title": "恢复备份",
+        "description": "恢复「{{fileName}}」并用该保存副本替换当前数据。继续？",
         "actions": {
-          "restore": "Restore",
-          "cancel": "Cancel"
+          "restore": "恢复",
+          "cancel": "取消"
         }
       },
       "deleteAlert": {
-        "title": "Delete backup",
-        "description": "Delete \"{{fileName}}\" from your backup folder. You will not be able to restore from it afterward.",
+        "title": "删除备份",
+        "description": "从备份文件夹中删除「{{fileName}}」。删除后将无法从中恢复。",
         "actions": {
-          "delete": "Delete",
-          "cancel": "Cancel"
+          "delete": "删除",
+          "cancel": "取消"
         }
       }
     },
     "sync": {
-      "title": "Sync",
+      "title": "同步",
       "overview": {
-        "title": "External folder sync",
-        "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
-        "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
-        "enabled": "Enable sync",
-        "chooseFolder": "Choose root folder",
-        "selectedFolder": "Selected root folder",
-        "baseFolderPath": "Root folder",
-        "repoPath": "App sync folder",
-        "notConnected": "Not connected yet",
+        "title": "外部文件夹同步",
+        "description": "使用已在设备间同步的文件夹，例如云盘、NAS 或 USB 驱动器。",
+        "warning": "请选择可信任的同步文件夹。应用继续从你的设备运行，仅使用共享文件夹安全交换副本。",
+        "enabled": "启用同步",
+        "chooseFolder": "选择根文件夹",
+        "selectedFolder": "已选根文件夹",
+        "baseFolderPath": "根文件夹",
+        "repoPath": "应用同步文件夹",
+        "notConnected": "尚未连接",
         "enableHints": {
-          "turnOnFirst": "Turn on sync first, then choose the folder you want to use across devices.",
-          "ready": "Sync is ready to connect. Choose the folder you want this device to use."
+          "turnOnFirst": "先启用同步，再选择要跨设备使用的文件夹。",
+          "ready": "同步已准备好连接。选择本设备要使用的文件夹。"
         }
       },
       "setup": {
-        "title": "Connect a sync folder",
-        "description": "Pick the shared folder, then either create a new sync space or connect to one that already exists.",
+        "title": "连接同步文件夹",
+        "description": "选择共享文件夹，然后创建新的同步空间或连接已有的同步空间。",
         "steps": {
           "rootFolder": {
-            "title": "1. Choose a root folder",
-            "description": "Pick an existing folder or create a new one. Boring Balance will place its own sync folder inside it."
+            "title": "1. 选择根文件夹",
+            "description": "选择已有文件夹或创建新文件夹。Boring Balance 将在其中创建自己的同步文件夹。"
           },
           "create": {
-            "title": "2. Create on the first device",
-            "description": "Use Create when this device should publish the first sync data into that folder."
+            "title": "2. 在第一台设备上创建",
+            "description": "当本设备需要首先将同步数据发布到该文件夹时，使用「创建」。"
           },
           "attach": {
-            "title": "3. Connect on other devices",
-            "description": "Use Connect when another device already created the sync folder and this device should join it."
+            "title": "3. 在其他设备上连接",
+            "description": "当另一台设备已创建同步文件夹且本设备需要加入时，使用「连接」。"
           }
         },
         "actions": {
-          "create": "Create new sync space",
-          "attach": "Connect to existing sync space"
+          "create": "创建新同步空间",
+          "attach": "连接已有同步空间"
         },
         "status": {
-          "checking": "Checking the selected folder...",
-          "chooseFirst": "Choose a root folder to continue.",
-          "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
-          "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
-          "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
-          "waitingForFolder": "Choose a root folder to continue."
+          "checking": "正在检查所选文件夹...",
+          "chooseFirst": "选择根文件夹以继续。",
+          "exists": "此文件夹中发现已有同步空间。如另一台设备已在使用，请使用「连接」。",
+          "missing": "此文件夹中尚未找到同步空间。如这是第一台同步设备，请使用「创建」。",
+          "repoPathPending": "检查根文件夹后，应用同步文件夹将显示在此处。",
+          "waitingForFolder": "选择根文件夹以继续。"
         },
-        "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
+        "actionHelp": "「创建」从本设备启动同步。「连接」加入另一台设备已创建的同步空间。"
       },
-      "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
+      "disabledInfo": "启用同步以选择共享文件夹并连接本设备。",
       "autoSync": {
-        "title": "Automatic sync",
-        "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
-        "autoPullIntervalMin": "Auto pull interval",
-        "autoPushIntervalMin": "Auto push interval",
-        "autoPushOnQuit": "Push on app quit",
-        "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
-        "retentionCountPerDevice": "Snapshots kept per device",
+        "title": "自动同步",
+        "description": "设置应用检查新数据和分享最新更改的频率。",
+        "autoPullIntervalMin": "自动拉取间隔",
+        "autoPushIntervalMin": "自动推送间隔",
+        "autoPushOnQuit": "退出时推送",
+        "autoPushOnQuitHint": "启用后，应用在关闭前会分享最新更改。",
+        "retentionCountPerDevice": "每设备保留快照数",
         "intervalOptions": {
-          "off": "Off",
-          "minutes5": "Every 5 minutes",
-          "minutes10": "Every 10 minutes",
-          "minutes15": "Every 15 minutes",
-          "minutes30": "Every 30 minutes",
-          "minutes60": "Every 60 minutes"
+          "off": "关闭",
+          "minutes5": "每 5 分钟",
+          "minutes10": "每 10 分钟",
+          "minutes15": "每 15 分钟",
+          "minutes30": "每 30 分钟",
+          "minutes60": "每 60 分钟"
         }
       },
       "manual": {
-        "title": "Manual sync",
-        "description": "Use these actions when you want to check or share changes immediately.",
+        "title": "手动同步",
+        "description": "需要立即检查或分享更改时使用这些操作。",
         "tooltips": {
-          "syncNow": "Checks for newer shared data first, then shares this device if needed.",
-          "pullNow": "Brings in newer shared data without sending this device's changes.",
-          "pushNow": "Shares this device's latest changes without checking for newer shared data first."
+          "syncNow": "先检查是否有更新的共享数据，再按需推送本设备更改。",
+          "pullNow": "仅拉取更新的共享数据，不推送本设备更改。",
+          "pushNow": "仅推送本设备的最新更改，不检查共享数据。"
         },
         "hints": {
-          "syncNow": "Sync now is the safest full check: it looks for newer shared changes, then shares yours if needed.",
-          "pullNow": "Pull now only brings in newer shared data to this device.",
-          "pushNow": "Push now only shares this device's current changes to the shared folder."
+          "syncNow": "「立即同步」是最安全的完整检查：先查找更新的共享更改，再按需分享你的更改。",
+          "pullNow": "「立即拉取」仅将更新的共享数据下载到本设备。",
+          "pushNow": "「立即推送」仅将本设备的当前更改上传到共享文件夹。"
         }
       },
       "actions": {
-        "syncNow": "Sync now",
-        "pullNow": "Pull now",
-        "pushNow": "Push now"
+        "syncNow": "立即同步",
+        "pullNow": "立即拉取",
+        "pushNow": "立即推送"
       },
       "status": {
-        "title": "Status",
-        "description": "Check the current sync state and see when this device last pulled or pushed.",
+        "title": "状态",
+        "description": "查看当前同步状态及本设备上次拉取或推送的时间。",
         "columns": {
-          "item": "Item",
-          "value": "Value"
+          "item": "项目",
+          "value": "值"
         },
         "rows": {
-          "current": "Current status",
-          "lastPull": "Last pull",
-          "lastPush": "Last push"
+          "current": "当前状态",
+          "lastPull": "上次拉取",
+          "lastPush": "上次推送"
         },
         "values": {
-          "never": "Never",
-          "noLastPull": "No last pull available",
-          "idle": "Idle",
-          "running": "Running",
-          "ok": "OK",
-          "error": "Error",
-          "conflict": "Conflict"
+          "never": "从未",
+          "noLastPull": "无上次拉取记录",
+          "idle": "空闲",
+          "running": "运行中",
+          "ok": "正常",
+          "error": "错误",
+          "conflict": "冲突"
         }
       },
       "alerts": {
-        "lastErrorTitle": "Last error",
-        "conflictTitle": "Conflict detected",
-        "localCopyPath": "Local copy saved at",
-        "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "Your local copy was kept, and the shared copy was opened so you can review the difference."
+        "lastErrorTitle": "最后错误",
+        "conflictTitle": "检测到冲突",
+        "localCopyPath": "本地副本保存路径",
+        "remoteSnapshotPath": "远程快照恢复自",
+        "conflictHint": "你的本地副本已保留，共享副本已打开供你查看差异。"
       },
       "attachAlert": {
-        "title": "Connect existing sync space",
-        "description": "Connecting can replace this device's current data if the shared folder is newer. Continue?",
+        "title": "连接已有同步空间",
+        "description": "如果共享文件夹更新，连接可能会替换本设备的当前数据。继续？",
         "actions": {
-          "attach": "Connect",
-          "cancel": "Cancel"
+          "attach": "连接",
+          "cancel": "取消"
         }
       }
     },
     "exportImport": {
       "overview": {
-        "description": "Keep a clear Excel copy of your data, or start from the official template when you want to bring information in safely."
+        "description": "保留一份清晰的 Excel 数据副本，或使用官方模板安全导入数据。"
       },
       "export": {
-        "title": "Export",
-        "description": "Save a clean Excel copy of your activity and setup so you can review it, share it, or keep it for later.",
-        "lastExportLabel": "Last export"
+        "title": "导出",
+        "description": "保存活动和设置的干净 Excel 副本，以便查看、分享或留存。",
+        "lastExportLabel": "上次导出"
       },
       "import": {
-        "title": "Import from Excel template",
-        "description": "Start with the official template, review everything first, and import only when the file is ready.",
-        "warning": "Imports are validated first. If errors exist, nothing is imported.",
-        "selectedFileLabel": "Selected file",
+        "title": "从 Excel 模板导入",
+        "description": "从官方模板开始，先检查所有内容，文件准备好后再导入。",
+        "warning": "导入前会先进行验证。如存在错误，将不会导入任何内容。",
+        "selectedFileLabel": "已选文件",
         "template": {
-          "title": "Import template",
-          "description": "Download the Excel template, fill it in at your pace, then come back here to import it.",
+          "title": "导入模板",
+          "description": "下载 Excel 模板，按自己的节奏填写，然后回到此处导入。",
           "messages": {
-            "success": "Template saved: {{fileName}}",
-            "error": "Failed to save the import template."
+            "success": "模板已保存：{{fileName}}",
+            "error": "导入模板保存失败。"
           }
         },
         "actions": {
-          "title": "Import data file",
-          "description": "Pick the completed workbook, check any issues the app finds, and import only when everything looks right."
+          "title": "导入数据文件",
+          "description": "选择已填写的工作簿，检查发现的问题，确认一切正确后再导入。"
         },
         "validation": {
-          "previewTitle": "Validation preview",
-          "previewDescription": "These rows are ready to be imported.",
-          "errorTitle": "Validation errors",
-          "errorDescription": "Fix the rows below and validate again before importing."
+          "previewTitle": "验证预览",
+          "previewDescription": "这些行已准备好导入。",
+          "errorTitle": "验证错误",
+          "errorDescription": "请修正以下行后重新验证，再进行导入。"
         },
         "summary": {
-          "accounts": "Accounts",
-          "categories": "Categories",
-          "transactions": "Transactions",
-          "transfers": "Transfers"
+          "accounts": "账户",
+          "categories": "分类",
+          "transactions": "交易",
+          "transfers": "转账"
         },
         "errors": {
-          "count": "{{count}} errors found",
-          "tableTitle": "Import errors",
-          "tableDescription": "Each error points to the exact worksheet row that must be fixed.",
-          "empty": "No import errors.",
+          "count": "发现 {{count}} 个错误",
+          "tableTitle": "导入错误",
+          "tableDescription": "每条错误指向需要修正的确切工作表行。",
+          "empty": "无导入错误。",
           "columns": {
-            "sheet": "Sheet",
-            "row": "Row",
-            "column": "Column",
-            "message": "Message"
+            "sheet": "工作表",
+            "row": "行",
+            "column": "列",
+            "message": "消息"
           }
         },
         "result": {
-          "title": "Last import result",
-          "description": "The app will reload after a successful import.",
+          "title": "上次导入结果",
+          "description": "成功导入后应用将重新加载。",
           "labels": {
-            "inserted": "Inserted",
-            "updated": "Updated",
-            "skipped": "Skipped"
+            "inserted": "已插入",
+            "updated": "已更新",
+            "skipped": "已跳过"
           }
         },
         "confirm": {
-          "title": "Import data from Excel?",
-          "description": "This will import data into your database.",
+          "title": "从 Excel 导入数据？",
+          "description": "此操作将向数据库导入数据。",
           "actions": {
-            "import": "Import",
-            "cancel": "Cancel"
+            "import": "导入",
+            "cancel": "取消"
           }
         },
         "messages": {
-          "fileRequired": "Select an Excel file first.",
-          "selectError": "Failed to select an Excel file.",
-          "validateError": "Failed to validate the selected Excel file.",
-          "importSuccess": "Import completed. Reloading app data...",
-          "importError": "Import failed."
+          "fileRequired": "请先选择 Excel 文件。",
+          "selectError": "选择 Excel 文件失败。",
+          "validateError": "所选 Excel 文件验证失败。",
+          "importSuccess": "导入完成，正在重新加载应用数据...",
+          "importError": "导入失败。"
         }
       },
       "controls": {
-        "exportExcel": "Export to Excel",
-        "importData": "Import DB / CSV",
-        "downloadTemplate": "Download template",
-        "selectFile": "Select Excel file",
-        "removeSelectedFile": "Remove file",
-        "validateImport": "Validate",
-        "importExcel": "Import"
+        "exportExcel": "导出为 Excel",
+        "importData": "导入数据库 / CSV",
+        "downloadTemplate": "下载模板",
+        "selectFile": "选择 Excel 文件",
+        "removeSelectedFile": "移除文件",
+        "validateImport": "验证",
+        "importExcel": "导入"
       },
       "messages": {
-        "success": "Export completed: {{fileName}}",
-        "error": "Failed to export data."
+        "success": "导出完成：{{fileName}}",
+        "error": "数据导出失败。"
       }
     }
   },
   "overview": {
     "toolbar": {
-      "reload": "Reload"
+      "reload": "刷新"
     },
     "banners": {
       "snapshotsOutdated": {
-        "title": "Snapshots may be outdated",
-        "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."
+        "title": "快照可能已过期",
+        "body": "你的最新快照已有 {{days}} 天。更新快照以保持净资产准确。"
       }
     },
     "errors": {
-      "summaryLoad": "Unable to load summary data."
+      "summaryLoad": "无法加载汇总数据。"
     },
     "pie": {
-      "others": "Others"
+      "others": "其他"
     },
     "cards": {
       "netWorth": {
-        "title": "Total net worth",
-        "summaryTitle": "Net Worth",
-        "receivablesPayablesTitle": "Receivables & Payables",
-        "allocationTitle": "Allocation",
-        "description": "See your current net worth, how it changed since last month, and how receivables or payables affect the full picture.",
-        "allocationDescription": "See which accounts make up your net worth so you can spot concentration at a glance.",
-        "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
+        "title": "总净资产",
+        "summaryTitle": "净资产",
+        "receivablesPayablesTitle": "应收与应付",
+        "allocationTitle": "分配",
+        "description": "查看当前净资产、与上月相比的变化，以及应收或应付款对整体的影响。",
+        "allocationDescription": "查看哪些账户构成净资产，一眼识别集中情况。",
+        "descriptionDailyAverage": "平均净资产/天（MTD）：{{value}}/天",
         "tooltips": {
-          "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
-          "current": "Current",
-          "ledgerBalance": "Ledger Balance",
-          "marketValue": "Market Value"
+          "averageDailyChangePositive": "本月你的总净资产平均每天增加 {{value}}（相对于上月末）。",
+          "averageDailyChangeNegative": "本月你的总净资产平均每天减少 {{value}}（相对于上月末）。",
+          "averageDailyChangeNeutral": "本月你的总净资产平均每天无变化（相对于上月末）。",
+          "current": "当前",
+          "ledgerBalance": "账本余额",
+          "marketValue": "市值"
         },
-        "total": "Total",
-        "withValuations": "With valuations",
-        "liquidAssets": "Liquidity",
-        "investments": "Investments",
+        "total": "合计",
+        "withValuations": "含估值",
+        "liquidAssets": "流动资产",
+        "investments": "投资",
         "snapshotBased": {
-          "today": "Snapshots updated today",
-          "daysAgo": "Based on snapshots ({{days}} days ago)"
+          "today": "快照已于今日更新",
+          "daysAgo": "基于快照（{{days}} 天前）"
         },
         "valuationsOutdated": {
-          "title": "Valuations may be outdated",
-          "body": "Your latest valuation snapshot is {{days}} days old. Update snapshots to keep 'With valuations' accurate."
+          "title": "估值可能已过期",
+          "body": "你的最新估值快照已有 {{days}} 天。更新快照以保持「含估值」的准确性。"
         },
-        "deltaVsPreviousMonth": "vs previous month",
-        "receivables": "Receivables",
-        "payables": "Payables",
-        "totalAfterRP": "After R&P",
-        "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation.",
-        "emptyDistributionNoAccounts": "No accounts yet. Add your first account to see the allocation."
+        "deltaVsPreviousMonth": "较上月",
+        "receivables": "应收款",
+        "payables": "应付款",
+        "totalAfterRP": "应收应付后",
+        "emptyDistribution": "暂无账户余额可分配。添加或更新账户以查看分配情况。",
+        "emptyDistributionNoAccounts": "暂无账户。添加第一个账户以查看分配情况。"
       },
       "monthlyTotals": {
-        "title": "Income, expenses and net cashflow",
-        "segmentTitle": "Income & expenses",
-        "descriptionCurrentYear": "Compare income, expenses, and net cashflow month by month across {{year}}.",
-        "loading": "Loading analytics...",
-        "loadFailedWithError": "Failed to load analytics: {{error}}",
-        "empty": "No analytics data available for the selected filters.",
+        "title": "收入、支出与净现金流",
+        "segmentTitle": "收入与支出",
+        "descriptionCurrentYear": "逐月对比 {{year}} 年的收入、支出和净现金流。",
+        "loading": "正在加载分析数据...",
+        "loadFailedWithError": "分析数据加载失败：{{error}}",
+        "empty": "所选筛选条件下无分析数据。",
         "series": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "netCashflow": "Net Cashflow"
+          "incomes": "收入",
+          "expenses": "支出",
+          "netCashflow": "净现金流"
         }
       },
       "activity": {
-        "title": "Activity",
-        "latestTransactions": "Latest {{count}} transactions this month so you can review new spending and income quickly.",
-        "latestTransfers": "Latest {{count}} transfers this month so you can verify money moved between accounts.",
-        "loadFailed": "Unable to load activity."
+        "title": "活动",
+        "latestTransactions": "本月最新 {{count}} 笔交易，快速查看新增支出和收入。",
+        "latestTransfers": "本月最新 {{count}} 笔转账，核实账户间资金流动。",
+        "loadFailed": "无法加载活动数据。"
       },
       "recentTransactions": {
-        "title": "Last transactions",
-        "description": "Latest {{count}} transactions this month",
-        "loadFailed": "Unable to load transactions.",
-        "empty": "No transactions this month yet. Add one to start building your activity feed.",
-        "toggleSettled": "Toggle settled",
+        "title": "最近交易",
+        "description": "本月最新 {{count}} 笔交易",
+        "loadFailed": "无法加载交易记录。",
+        "empty": "本月暂无交易。添加一笔以开始记录活动。",
+        "toggleSettled": "切换结清状态",
         "tooltips": {
-          "settled": "Settled",
-          "settle": "Settle",
-          "unsettled": "Unsettled"
+          "settled": "已结清",
+          "settle": "结清",
+          "unsettled": "未结清"
         },
         "actions": {
-          "goToTransactionsPage": "All transactions"
+          "goToTransactionsPage": "所有交易"
         },
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknownAccount": "未知账户",
+        "unknownCategory": "未知分类"
       },
       "moneyFlowSankey": {
-        "title": "Money flow",
-        "description": "{{month}} at a glance: see where money came from, where it went, and what remained.",
-        "loading": "Loading money flow...",
-        "loadFailedWithError": "Failed to load money flow: {{error}}",
-        "empty": "No money flow for this month yet. Add transactions to see where money moved.",
+        "title": "资金流向",
+        "description": "{{month}} 概览：资金从哪里来、流向哪里、留存多少。",
+        "loading": "正在加载资金流向...",
+        "loadFailedWithError": "资金流向加载失败：{{error}}",
+        "empty": "本月暂无资金流向数据。添加交易以查看资金动向。",
         "tooltips": {
-          "actualNetCashflow": "Actual net cashflow"
+          "actualNetCashflow": "实际净现金流"
         },
         "nodes": {
-          "incomes": "Incomes",
-          "expenses": "Expenses",
-          "savings": "Savings",
-          "investments": "Investments",
-          "crypto": "Crypto",
-          "netCashflow": "Net Cashflow",
-          "priorBalances": "Prior balances",
-          "unused": "Unused",
-          "otherExpenses": "Other expenses"
+          "incomes": "收入",
+          "expenses": "支出",
+          "savings": "储蓄",
+          "investments": "投资",
+          "crypto": "加密货币",
+          "netCashflow": "净现金流",
+          "priorBalances": "期初余额",
+          "unused": "未使用",
+          "otherExpenses": "其他支出"
         }
       }
     }
   },
   "breakdown": {
     "toolbar": {
-      "selectYear": "Select year"
+      "selectYear": "选择年份"
     },
     "view": {
-      "all": "All"
+      "all": "全部"
     },
     "averageMode": {
-      "label": "Use elapsed months for averages",
-      "hint": "Turn this on to compare against the months that have happened so far instead of averaging across the full year."
+      "label": "使用已过月份计算平均值",
+      "hint": "启用后按已过月份而非全年计算平均值。"
     },
-    "sectionYear": "Year {{year}}",
+    "sectionYear": "{{year}} 年",
     "moneyFlowOptions": {
       "showAllocationTargets": {
-        "label": "Show savings, brokerage and crypto flows",
-        "hint": "Hide these to focus on core income versus expenses, or show them to include savings and investment moves."
+        "label": "显示储蓄、券商及加密货币流向",
+        "hint": "隐藏以专注于核心收支，或显示以包含储蓄和投资动向。"
       }
     },
     "metrics": {
-      "yearTotal": "Year total",
-      "avgPerMonth": "Avg/month"
+      "yearTotal": "年度合计",
+      "avgPerMonth": "月均"
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Money flow of the year: {{year}}",
-        "empty": "No money flow for this year yet. Add transactions to see how money moved over time."
+        "titleYear": "{{year}} 年资金流向",
+        "empty": "本年暂无资金流向数据。添加交易以查看资金随时间的变动。"
       },
       "monthlyTrend": {
-        "title": "{{label}} by month",
-        "description": "See when {{label}} rises, dips, or stays steady across the year."
+        "title": "按月 {{label}}",
+        "description": "查看 {{label}} 在全年中的涨跌或平稳情况。"
       },
       "monthlyByCategory": {
-        "title": "{{label}} by category",
-        "description": "Compare how each month's {{label}} is split across categories.",
-        "summaryTitle": "Category totals and averages"
+        "title": "按分类 {{label}}",
+        "description": "对比各月 {{label}} 在分类间的分布情况。",
+        "summaryTitle": "分类合计与平均值"
       }
     }
   },
   "compare": {
-    "loadingTitle": "Preparing comparison",
-    "loadingDescription": "Gathering both months so you can compare them side by side.",
-    "loadFailedWithError": "Failed to load comparison analytics: {{error}}",
-    "empty": "No comparison data for these months yet. Record activity in both months to compare them here.",
+    "loadingTitle": "正在准备对比",
+    "loadingDescription": "正在获取两个月的数据以进行并排对比。",
+    "loadFailedWithError": "对比分析数据加载失败：{{error}}",
+    "empty": "这两个月暂无对比数据。在两个月内都记录活动后即可在此对比。",
     "selectors": {
       "left": {
-        "title": "Month 1"
+        "title": "月份 1"
       },
       "right": {
-        "title": "Month 2"
+        "title": "月份 2"
       },
-      "year": "Year",
-      "month": "Month"
+      "year": "年",
+      "month": "月"
     },
     "metrics": {
-      "delta": "Delta"
+      "delta": "差额"
     },
     "cards": {
       "summary": {
-        "title": "Comparison summary",
-        "description": "Compare income, expenses, and net cashflow side by side to see which month changed more."
+        "title": "对比摘要",
+        "description": "并排对比收入、支出和净现金流，查看哪个月变化更大。"
       },
       "radar": {
-        "title": "Radar comparison",
-        "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
-        "empty": "No expense categories available for radar comparison."
+        "title": "雷达对比",
+        "description": "查看哪些支出分类在两个月间增长、收缩或保持相近。",
+        "empty": "无支出分类可用于雷达对比。"
       },
       "dailyCalendar": {
-        "title": "Daily expense calendar",
-        "description": "See which days carried the heaviest spending in each month with one shared scale.",
-        "panelHint": "Daily expenses (same scale)",
-        "empty": "No daily spending data for the selected months."
+        "title": "每日支出日历",
+        "description": "使用统一刻度查看各月哪些天支出最多。",
+        "panelHint": "每日支出（相同刻度）",
+        "empty": "所选月份无每日支出数据。"
       },
       "expensesByCategory": {
-        "title": "Expenses by category",
-        "description": "Review each category side by side, including the difference between the two months.",
-        "empty": "No expense category totals for the selected months."
+        "title": "按分类支出",
+        "description": "并排查看各分类，包括两个月之间的差额。",
+        "empty": "所选月份无支出分类合计。"
       }
     }
   },
   "category": {
     "exclude": {
-      "name": "Exclude",
-      "description": "Transactions excluded from analytics and budget calculations."
+      "name": "排除",
+      "description": "从分析和预算计算中排除的交易。"
     },
     "transfer": {
-      "name": "Transfer",
-      "description": "Money moved between your own accounts."
+      "name": "转账",
+      "description": "在自有账户间流转的资金。"
     },
     "other_expense": {
-      "name": "Other Expense",
-      "description": "Fallback category for uncategorized expenses."
+      "name": "其他支出",
+      "description": "未分类支出的备用分类。"
     },
     "other_income": {
-      "name": "Other Income",
-      "description": "Fallback category for uncategorized income."
+      "name": "其他收入",
+      "description": "未分类收入的备用分类。"
     },
     "type": {
-      "income": "Income",
-      "expense": "Expense",
-      "exclude": "Exclude"
+      "income": "收入",
+      "expense": "支出",
+      "exclude": "排除"
     }
   },
   "account": {
     "type": {
-      "cash": "Cash",
-      "bank": "Bank",
-      "savings": "Savings",
-      "brokerage": "Brokerage",
-      "crypto": "Crypto",
-      "credit": "Credit"
+      "cash": "现金",
+      "bank": "银行",
+      "savings": "储蓄",
+      "brokerage": "券商",
+      "crypto": "加密货币",
+      "credit": "信用"
     }
   },
   "accounts": {
     "table": {
-      "description": "Set up the accounts that hold your money or debt so balances and transfers stay organized.",
-      "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
+      "description": "设置持有资金或负债的账户，使余额和转账保持有序。",
+      "emptyMessage": "暂无账户。添加第一个账户以开始追踪余额和转账。",
       "actions": {
-        "add": "Add account",
-        "edit": "Edit account",
-        "archive": "Archive account",
-        "locked": "Locked account"
+        "add": "添加账户",
+        "edit": "编辑账户",
+        "archive": "归档账户",
+        "locked": "已锁定账户"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "颜色",
+        "icon": "图标"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add account",
-        "description": "Create an account you can use in transactions, transfers, and net worth tracking.",
+        "title": "添加账户",
+        "description": "创建可用于交易、转账和净资产追踪的账户。",
         "placeholders": {
-          "name": "Account name",
-          "description": "Account description"
+          "name": "账户名称",
+          "description": "账户描述"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create account"
+          "cancel": "取消",
+          "create": "创建账户"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the account.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "typeRequired": "Account type is required.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "createFailed": "Failed to create account."
+          "fixValidation": "请修正标红字段后再创建账户。",
+          "nameRequired": "名称为必填项。",
+          "nameMinLength": "名称至少需要 2 个字符。",
+          "nameMaxLength": "名称最多 64 个字符。",
+          "typeRequired": "账户类型为必填项。",
+          "descriptionMaxLength": "描述最多 50 个字符。",
+          "createFailed": "账户创建失败。"
         }
       },
       "edit": {
-        "title": "Edit account",
-        "description": "Update how this account appears and where you use it across the app.",
+        "title": "编辑账户",
+        "description": "更新此账户在应用中的显示和使用方式。",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "取消",
+          "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the account.",
-          "updateFailed": "Failed to update account."
+          "fixValidation": "请修正标红字段后再保存账户。",
+          "updateFailed": "账户更新失败。"
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive account?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
+      "title": "归档账户？",
+      "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留账户名称。",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "取消",
+        "archive": "归档"
       }
     },
     "toasts": {
-      "createSuccess": "Account created successfully.",
-      "createError": "Failed to create account.",
-      "updateSuccess": "Account updated successfully.",
-      "updateError": "Failed to update account.",
-      "archiveSuccess": "Account archived successfully.",
-      "archiveError": "Failed to archive account."
+      "createSuccess": "账户创建成功。",
+      "createError": "账户创建失败。",
+      "updateSuccess": "账户更新成功。",
+      "updateError": "账户更新失败。",
+      "archiveSuccess": "账户归档成功。",
+      "archiveError": "账户归档失败。"
     },
     "errors": {
-      "loadFailed": "Failed to load accounts: {{error}}"
+      "loadFailed": "账户加载失败：{{error}}"
     }
   },
   "categories": {
     "table": {
-      "description": "Organize transactions into categories so reports, budgets, and comparisons stay meaningful.",
-      "emptyMessage": "No categories yet. Add your first category to organize spending and income.",
+      "description": "将交易整理到分类中，使报告、预算和对比保持有意义。",
+      "emptyMessage": "暂无分类。添加第一个分类以整理支出和收入。",
       "actions": {
-        "add": "Add category",
-        "edit": "Edit category",
-        "archive": "Archive category",
-        "locked": "Locked category"
+        "add": "添加分类",
+        "edit": "编辑分类",
+        "archive": "归档分类",
+        "locked": "已锁定分类"
       },
       "columns": {
-        "color": "Color",
-        "icon": "Icon"
+        "color": "颜色",
+        "icon": "图标"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add category",
-        "description": "Create a category to label transactions and group them in reports.",
+        "title": "添加分类",
+        "description": "创建分类以标记交易并在报告中分组。",
         "placeholders": {
-          "name": "Category name",
-          "description": "Category description"
+          "name": "分类名称",
+          "description": "分类描述"
         },
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create category"
+          "cancel": "取消",
+          "create": "创建分类"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the category.",
-          "nameRequired": "Name is required.",
-          "nameMinLength": "Name must be at least 2 characters.",
-          "nameMaxLength": "Name must be at most 64 characters.",
-          "descriptionMaxLength": "Description must be at most 50 characters.",
-          "typeRequired": "Category type is required.",
-          "createFailed": "Failed to create category."
+          "fixValidation": "请修正标红字段后再创建分类。",
+          "nameRequired": "名称为必填项。",
+          "nameMinLength": "名称至少需要 2 个字符。",
+          "nameMaxLength": "名称最多 64 个字符。",
+          "descriptionMaxLength": "描述最多 50 个字符。",
+          "typeRequired": "分类类型为必填项。",
+          "createFailed": "分类创建失败。"
         }
       },
       "edit": {
-        "title": "Edit category",
-        "description": "Update this category's label, type, or visual marker.",
+        "title": "编辑分类",
+        "description": "更新此分类的标签、类型或视觉标记。",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "取消",
+          "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the category.",
-          "updateFailed": "Failed to update category."
+          "fixValidation": "请修正标红字段后再保存分类。",
+          "updateFailed": "分类更新失败。"
         }
       }
     },
     "archiveAlert": {
-      "title": "Archive category?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
+      "title": "归档分类？",
+      "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留分类名称。",
       "actions": {
-        "cancel": "Cancel",
-        "archive": "Archive"
+        "cancel": "取消",
+        "archive": "归档"
       }
     },
     "toasts": {
-      "createSuccess": "Category created successfully.",
-      "createError": "Failed to create category.",
-      "updateSuccess": "Category updated successfully.",
-      "updateError": "Failed to update category.",
-      "archiveSuccess": "Category archived successfully.",
-      "archiveError": "Failed to archive category."
+      "createSuccess": "分类创建成功。",
+      "createError": "分类创建失败。",
+      "updateSuccess": "分类更新成功。",
+      "updateError": "分类更新失败。",
+      "archiveSuccess": "分类归档成功。",
+      "archiveError": "分类归档失败。"
     },
     "errors": {
-      "loadFailed": "Failed to load categories: {{error}}"
+      "loadFailed": "分类加载失败：{{error}}"
     }
   },
   "budgets": {
     "view": {
-      "setup": "Budget setup",
-      "analysis": "Budget analysis"
+      "setup": "预算设置",
+      "analysis": "预算分析"
     },
     "table": {
-      "description": "Set spending targets by category so you can compare your plan against real spending.",
-      "emptyMessage": "No budgets yet. Add your first budget to start tracking category targets.",
-      "unknownCategory": "Unknown category",
+      "description": "按分类设置支出目标，将计划与实际支出进行对比。",
+      "emptyMessage": "暂无预算。添加第一个预算以开始追踪分类目标。",
+      "unknownCategory": "未知分类",
       "actions": {
-        "add": "Add budget",
-        "edit": "Edit budget",
-        "delete": "Delete budget"
+        "add": "添加预算",
+        "edit": "编辑预算",
+        "delete": "删除预算"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add budget",
-        "description": "Create a spending target for {{year}} so you can measure category spending against it.",
+        "title": "添加预算",
+        "description": "为 {{year}} 年创建支出目标，以衡量各分类的支出情况。",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create budget"
+          "cancel": "取消",
+          "create": "创建预算"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the budget.",
-          "categoryRequired": "Category is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create budget."
+          "fixValidation": "请修正标红字段后再创建预算。",
+          "categoryRequired": "分类为必填项。",
+          "amountRequired": "金额为必填项。",
+          "amountInvalid": "金额必须为正数。",
+          "descriptionMaxLength": "描述最多 75 个字符。",
+          "createFailed": "预算创建失败。"
         }
       },
       "edit": {
-        "title": "Edit budget",
-        "description": "Update this category target for {{year}} as your plan changes.",
+        "title": "编辑预算",
+        "description": "随计划调整更新 {{year}} 年的此分类目标。",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "取消",
+          "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the budget.",
-          "updateFailed": "Failed to update budget."
+          "fixValidation": "请修正标红字段后再保存预算。",
+          "updateFailed": "预算更新失败。"
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete budget?",
-      "description": "Delete the budget for \"{{category}}\". You can add it again later if needed.",
+      "title": "删除预算？",
+      "description": "删除「{{category}}」的预算。如需要可在之后重新添加。",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "取消",
+        "delete": "删除"
       }
     },
     "toasts": {
-      "createSuccess": "Budget created successfully.",
-      "createError": "Failed to create budget.",
-      "updateSuccess": "Budget updated successfully.",
-      "updateError": "Failed to update budget.",
-      "deleteSuccess": "Budget deleted successfully.",
-      "deleteError": "Failed to delete budget."
+      "createSuccess": "预算创建成功。",
+      "createError": "预算创建失败。",
+      "updateSuccess": "预算更新成功。",
+      "updateError": "预算更新失败。",
+      "deleteSuccess": "预算删除成功。",
+      "deleteError": "预算删除失败。"
     },
     "analysis": {
-      "title": "Budget analysis",
-      "description": "Compare budget targets against actual category expenses for the selected year.",
-      "loading": "Loading budget analysis...",
-      "empty": "No budget analysis for {{year}} yet. Add budgets and matching transactions to compare plan versus actual.",
+      "title": "预算分析",
+      "description": "对比所选年份各分类的预算目标与实际支出。",
+      "loading": "正在加载预算分析...",
+      "empty": "{{year}} 年暂无预算分析。添加预算和相应交易后即可对比计划与实际。",
       "series": {
-        "budget": "Budget",
-        "expenses": "Expenses"
+        "budget": "预算",
+        "expenses": "支出"
       },
       "metrics": {
-        "totalBudget": "Total budget",
-        "totalExpenses": "Total expenses",
-        "delta": "Remaining budget",
-        "availablePercent": "Budget still available"
+        "totalBudget": "总预算",
+        "totalExpenses": "总支出",
+        "delta": "剩余预算",
+        "availablePercent": "预算剩余比例"
       },
       "chart": {
-        "title": "Budget vs expenses by category",
-        "description": "See which categories are on track, close to the limit, or already over budget."
+        "title": "各分类预算与支出对比",
+        "description": "查看哪些分类在预算内、接近上限或已超支。"
       },
       "errors": {
-        "loadFailedWithError": "Failed to load budget analysis: {{error}}"
+        "loadFailedWithError": "预算分析加载失败：{{error}}"
       }
     },
     "errors": {
-      "loadFailed": "Failed to load budgets: {{error}}"
+      "loadFailed": "预算加载失败：{{error}}"
     }
   },
   "transactions": {
     "view": {
-      "commonTransactions": "Common transactions",
-      "transfers": "Transfers"
+      "commonTransactions": "交易",
+      "transfers": "转账"
     },
     "pagination": {
-      "summary": "{{start}}-{{end}} of {{total}}"
+      "summary": "{{start}}-{{end}} / {{total}}"
     },
     "transfers": {
-      "title": "Transfers",
+      "title": "转账",
       "table": {
-        "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
-        "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
-        "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating transfers.",
-        "emptyNeedTwoAccountsMessage": "You need at least two accounts before creating transfers. Add another account to continue.",
+        "description": "追踪自有账户间的资金流动。转账改变资金位置，不影响支出合计。",
+        "emptyMessage": "暂无转账记录。在自有账户间转移资金时添加。",
+        "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建转账。",
+        "emptyNeedTwoAccountsMessage": "创建转账至少需要两个账户。添加另一个账户以继续。",
         "actions": {
-          "add": "Add transfer",
-          "filter": "Filter transfers",
-          "edit": "Edit transfer",
-          "delete": "Delete transfer"
+          "add": "添加转账",
+          "filter": "筛选转账",
+          "edit": "编辑转账",
+          "delete": "删除转账"
         }
       },
       "dialog": {
         "add": {
-          "title": "Add transfer",
-          "description": "Move money between two of your accounts without affecting income or expense totals.",
+          "title": "添加转账",
+          "description": "在两个自有账户间转移资金，不影响收入或支出合计。",
           "actions": {
-            "cancel": "Cancel",
-            "create": "Create transfer"
+            "cancel": "取消",
+            "create": "创建转账"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before creating the transfer.",
-            "dateRequired": "Date is required.",
-            "fromAccountRequired": "Source account is required.",
-            "toAccountRequired": "Destination account is required.",
-            "accountsMustDiffer": "Source and destination accounts must be different.",
-            "amountRequired": "Amount is required.",
-            "amountInvalid": "Amount must be a positive number.",
-            "descriptionMaxLength": "Description must be at most 75 characters.",
-            "createFailed": "Failed to create transfer."
+            "fixValidation": "请修正标红字段后再创建转账。",
+            "dateRequired": "日期为必填项。",
+            "fromAccountRequired": "来源账户为必填项。",
+            "toAccountRequired": "目标账户为必填项。",
+            "accountsMustDiffer": "来源账户与目标账户必须不同。",
+            "amountRequired": "金额为必填项。",
+            "amountInvalid": "金额必须为正数。",
+            "descriptionMaxLength": "描述最多 75 个字符。",
+            "createFailed": "转账创建失败。"
           }
         },
         "edit": {
-          "title": "Edit transfer",
-          "description": "Update this transfer so your account movement history stays accurate.",
+          "title": "编辑转账",
+          "description": "更新此转账以保持账户流动历史的准确性。",
           "actions": {
-            "cancel": "Cancel",
-            "save": "Save changes"
+            "cancel": "取消",
+            "save": "保存更改"
           },
           "errors": {
-            "fixValidation": "Please fix the highlighted fields before saving the transfer.",
-            "updateFailed": "Failed to update transfer."
+            "fixValidation": "请修正标红字段后再保存转账。",
+            "updateFailed": "转账更新失败。"
           }
         }
       },
       "deleteAlert": {
-        "title": "Delete transfer?",
-        "description": "Delete this transfer from your history. This cannot be undone.",
+        "title": "删除转账？",
+        "description": "从历史记录中删除此转账。此操作无法撤销。",
         "actions": {
-          "cancel": "Cancel",
-          "delete": "Delete"
+          "cancel": "取消",
+          "delete": "删除"
         }
       },
       "filters": {
-        "title": "Filter transfers",
-        "description": "Narrow the transfer list to the dates, amounts, or accounts you want to review.",
+        "title": "筛选转账",
+        "description": "将转账列表缩小至所需的日期、金额或账户。",
         "empty": {
-          "account": "No accounts yet. Add an account before filtering transfers."
+          "account": "暂无账户。添加账户后再筛选转账。"
         }
       },
       "toasts": {
-        "createSuccess": "Transfer created successfully.",
-        "createError": "Failed to create transfer.",
-        "updateSuccess": "Transfer updated successfully.",
-        "updateError": "Failed to update transfer.",
-        "deleteSuccess": "Transfer deleted successfully.",
-        "deleteError": "Failed to delete transfer."
+        "createSuccess": "转账创建成功。",
+        "createError": "转账创建失败。",
+        "updateSuccess": "转账更新成功。",
+        "updateError": "转账更新失败。",
+        "deleteSuccess": "转账删除成功。",
+        "deleteError": "转账删除失败。"
       },
       "errors": {
-        "loadFailed": "Failed to load transfers: {{error}}"
+        "loadFailed": "转账加载失败：{{error}}"
       }
     },
     "table": {
-      "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
-      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before recording transactions.",
+      "description": "查看影响余额、预算和净现金流的收入与支出记录。",
+      "emptyMessage": "暂无交易记录。添加一笔以开始追踪支出、收入和净现金流。",
+      "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再记录交易。",
       "actions": {
-        "add": "Add transaction",
-        "filter": "Filter transactions",
-        "edit": "Edit transaction",
-        "duplicate": "Duplicate transaction",
-        "delete": "Delete transaction"
+        "add": "添加交易",
+        "filter": "筛选交易",
+        "edit": "编辑交易",
+        "duplicate": "复制交易",
+        "delete": "删除交易"
       }
     },
     "filters": {
-      "title": "Filter transactions",
-      "description": "Narrow the list to the dates, categories, accounts, or amounts you want to review.",
+      "title": "筛选交易",
+      "description": "将列表缩小至所需的日期、分类、账户或金额。",
       "empty": {
-        "category": "No categories yet. Add a category before filtering transactions.",
-        "account": "No accounts yet. Add an account before filtering transactions."
+        "category": "暂无分类。添加分类后再筛选交易。",
+        "account": "暂无账户。添加账户后再筛选交易。"
       }
     },
     "dialog": {
       "add": {
-        "title": "Add transaction",
-        "description": "Record an income or expense so it appears in balances, budgets, and reports.",
+        "title": "添加交易",
+        "description": "记录一笔收入或支出，使其出现在余额、预算和报告中。",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create transaction"
+          "cancel": "取消",
+          "create": "创建交易"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the transaction.",
-          "dateRequired": "Date is required.",
-          "accountRequired": "Account is required.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a valid number.",
-          "categoryRequired": "Category is required.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create transaction."
+          "fixValidation": "请修正标红字段后再创建交易。",
+          "dateRequired": "日期为必填项。",
+          "accountRequired": "账户为必填项。",
+          "amountRequired": "金额为必填项。",
+          "amountInvalid": "金额必须为有效数字。",
+          "categoryRequired": "分类为必填项。",
+          "descriptionMaxLength": "描述最多 75 个字符。",
+          "createFailed": "交易创建失败。"
         }
       },
       "edit": {
-        "title": "Edit transaction",
-        "description": "Update the details behind this income or expense entry.",
+        "title": "编辑交易",
+        "description": "更新此收入或支出记录的详情。",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "取消",
+          "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the transaction.",
-          "updateFailed": "Failed to update transaction."
+          "fixValidation": "请修正标红字段后再保存交易。",
+          "updateFailed": "交易更新失败。"
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete transaction?",
-      "description": "Delete this transaction from your history. This cannot be undone.",
+      "title": "删除交易？",
+      "description": "从历史记录中删除此交易。此操作无法撤销。",
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "取消",
+        "delete": "删除"
       }
     },
     "duplicateAlert": {
-      "title": "Duplicate transaction?",
-      "description": "Create a copy of this transaction so you can edit it instead of entering everything again.",
+      "title": "复制交易？",
+      "description": "创建此交易的副本以便编辑，无需重新输入所有内容。",
       "actions": {
-        "cancel": "Cancel",
-        "duplicate": "Duplicate"
+        "cancel": "取消",
+        "duplicate": "复制"
       }
     },
     "toasts": {
-      "createSuccess": "Transaction created successfully.",
-      "createError": "Failed to create transaction.",
-      "updateSuccess": "Transaction updated successfully.",
-      "updateError": "Failed to update transaction.",
-      "deleteSuccess": "Transaction deleted successfully.",
-      "deleteError": "Failed to delete transaction.",
-      "duplicateSuccess": "Transaction duplicated successfully.",
-      "duplicateError": "Failed to duplicate transaction."
+      "createSuccess": "交易创建成功。",
+      "createError": "交易创建失败。",
+      "updateSuccess": "交易更新成功。",
+      "updateError": "交易更新失败。",
+      "deleteSuccess": "交易删除成功。",
+      "deleteError": "交易删除失败。",
+      "duplicateSuccess": "交易复制成功。",
+      "duplicateError": "交易复制失败。"
     },
     "errors": {
-      "loadFailed": "Failed to load transactions: {{error}}"
+      "loadFailed": "交易加载失败：{{error}}"
     }
   },
   "options": {
     "colors": {
-      "none": "None",
-      "gray": "Gray",
-      "coral": "Coral",
-      "amber": "Amber",
-      "gold": "Gold",
-      "lime": "Lime",
-      "green": "Green",
-      "teal": "Teal",
-      "sky": "Sky",
-      "blue": "Blue",
-      "violet": "Violet",
-      "rose": "Rose"
+      "none": "无",
+      "gray": "灰色",
+      "coral": "珊瑚色",
+      "amber": "琥珀色",
+      "gold": "金色",
+      "lime": "青柠色",
+      "green": "绿色",
+      "teal": "青色",
+      "sky": "天蓝色",
+      "blue": "蓝色",
+      "violet": "紫色",
+      "rose": "玫瑰色"
     },
     "icons": {
-      "none": "None",
-      "blocked": "Blocked",
-      "transfer": "Transfer",
-      "circle": "Circle",
-      "income": "Income",
-      "expense": "Expense",
-      "tag": "Tag",
-      "tags": "Tags",
-      "money": "Money",
-      "coins": "Coins",
-      "handCoins": "Hand Coins",
-      "wallet": "Wallet",
-      "piggyBank": "Piggy Bank",
-      "vault": "Vault",
-      "bank": "Bank",
-      "banknoteArrowUp": "Banknote",
-      "shoppingCart": "Shopping Cart",
-      "store": "Store",
-      "backpack": "Backpack",
-      "globe": "Globe",
-      "library": "Library",
-      "school": "School",
-      "graduationCap": "Graduation Cap",
-      "gamepad": "Gaming",
-      "music": "Music",
-      "cassette": "Cassette Tape",
-      "film": "Film",
-      "camera": "Camera",
-      "popcorn": "Popcorn",
-      "cigarette": "Cigarette",
-      "beer": "Beer",
-      "coffee": "Coffee",
-      "glassWater": "Glass Water",
-      "martini": "Martini",
-      "techReceipt": "Receipt",
-      "badgePercent": "Percent",
-      "dumbbell": "Fitness",
-      "biceps": "Workout",
-      "ambulance": "Ambulance",
-      "hospital": "Hospital",
-      "pill": "Pill",
-      "cannabis": "Cannabis",
-      "mountainSnow": "Mountain",
-      "treePalm": "Palm Tree",
-      "leaf": "Leaf",
-      "bird": "Bird",
-      "cat": "Cat",
-      "dog": "Dog",
-      "fish": "Fish",
-      "utensils": "Utensils",
-      "hamburger": "Burger",
-      "salad": "Salad",
-      "pizza": "Pizza",
-      "baby": "Baby",
-      "glasses": "Eyewear",
-      "gift": "Gift",
-      "tech": "Tech",
-      "laptop": "Laptop",
-      "home": "Home",
-      "shirt": "Shirt",
-      "armchair": "Armchair",
-      "lampDesk": "Desk Lamp",
-      "frown": "Frown",
-      "smile": "Smile",
-      "heart": "Heart",
-      "star": "Star",
-      "sparkles": "Sparkles",
-      "creditCard": "Credit Card",
-      "tractor": "Tractor",
-      "train": "Train",
-      "footprints": "Footprints",
-      "wrench": "Wrench",
-      "refrigerator": "Refrigerator",
-      "package": "Package",
-      "scissors": "Scissors",
-      "brain": "Brain",
-      "crypto": "Crypto",
-      "factory": "Factory",
-      "car": "Car",
-      "card": "Card"
+      "none": "无",
+      "blocked": "已屏蔽",
+      "transfer": "转账",
+      "circle": "圆形",
+      "income": "收入",
+      "expense": "支出",
+      "tag": "标签",
+      "tags": "标签组",
+      "money": "钱",
+      "coins": "硬币",
+      "handCoins": "手持硬币",
+      "wallet": "钱包",
+      "piggyBank": "存钱罐",
+      "vault": "保险箱",
+      "bank": "银行",
+      "banknoteArrowUp": "纸币",
+      "shoppingCart": "购物车",
+      "store": "商店",
+      "backpack": "背包",
+      "globe": "地球",
+      "library": "图书馆",
+      "school": "学校",
+      "graduationCap": "学士帽",
+      "gamepad": "游戏",
+      "music": "音乐",
+      "cassette": "磁带",
+      "film": "电影",
+      "camera": "相机",
+      "popcorn": "爆米花",
+      "cigarette": "香烟",
+      "beer": "啤酒",
+      "coffee": "咖啡",
+      "glassWater": "水杯",
+      "martini": "马提尼",
+      "techReceipt": "收据",
+      "badgePercent": "百分比",
+      "dumbbell": "健身",
+      "biceps": "训练",
+      "ambulance": "救护车",
+      "hospital": "医院",
+      "pill": "药片",
+      "cannabis": "大麻",
+      "mountainSnow": "山峰",
+      "treePalm": "棕榈树",
+      "leaf": "叶子",
+      "bird": "鸟",
+      "cat": "猫",
+      "dog": "狗",
+      "fish": "鱼",
+      "utensils": "餐具",
+      "hamburger": "汉堡",
+      "salad": "沙拉",
+      "pizza": "披萨",
+      "baby": "婴儿",
+      "glasses": "眼镜",
+      "gift": "礼物",
+      "tech": "科技",
+      "laptop": "笔记本",
+      "home": "家",
+      "shirt": "衬衫",
+      "armchair": "扶手椅",
+      "lampDesk": "台灯",
+      "frown": "皱眉",
+      "smile": "微笑",
+      "heart": "心形",
+      "star": "星星",
+      "sparkles": "闪光",
+      "creditCard": "信用卡",
+      "tractor": "拖拉机",
+      "train": "火车",
+      "footprints": "足迹",
+      "wrench": "扳手",
+      "refrigerator": "冰箱",
+      "package": "包裹",
+      "scissors": "剪刀",
+      "brain": "大脑",
+      "crypto": "加密货币",
+      "factory": "工厂",
+      "car": "汽车",
+      "card": "卡片"
     }
   },
   "header": {
@@ -1294,335 +1294,335 @@
       }
     },
     "theme": {
-      "activateLight": "Activate light mode",
-      "activateDark": "Activate dark mode",
-      "lightMode": "Light mode",
-      "darkMode": "Dark mode"
+      "activateLight": "启用浅色模式",
+      "activateDark": "启用深色模式",
+      "lightMode": "浅色模式",
+      "darkMode": "深色模式"
     }
   },
   "sidebar": {
-    "close": "Close sidebar",
-    "expand": "Expand sidebar",
-    "collapse": "Collapse sidebar"
+    "close": "关闭侧边栏",
+    "expand": "展开侧边栏",
+    "collapse": "收起侧边栏"
   },
   "breadcrumb": {
-    "ariaLabel": "Breadcrumb"
+    "ariaLabel": "面包屑导航"
   },
   "recurringEvents": {
     "table": {
-      "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
-      "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
+      "description": "规划定期交易和转账，使常规活动更易于追踪。",
+      "emptyMessage": "暂无定期事件。添加一个以自动化重复交易或转账。",
+      "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建定期事件。",
       "columns": {
-        "title": "Title",
-        "startDate": "Start date",
-        "schedule": "Schedule",
-        "template": "Template"
+        "title": "标题",
+        "startDate": "开始日期",
+        "schedule": "安排",
+        "template": "模板"
       },
       "actions": {
-        "add": "Add recurring event",
-        "edit": "Edit recurring event",
-        "run": "Run recurring event",
-        "delete": "Delete recurring event"
+        "add": "添加定期事件",
+        "edit": "编辑定期事件",
+        "run": "执行定期事件",
+        "delete": "删除定期事件"
       },
       "schedule": {
-        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}",
-        "every": "{{interval}} every {{unit}}",
-        "occurrences": "{{count}} occurrences",
-        "monthPolicy": "If the day is not in the month: {{policy}}"
+        "summary": "共 {{count}} 次，每 {{unit}} {{interval}} 次",
+        "every": "每 {{unit}} {{interval}} 次",
+        "occurrences": "{{count}} 次",
+        "monthPolicy": "若该日不在月份中：{{policy}}"
       },
       "template": {
-        "unknown": "Unknown template",
-        "unknownAccount": "Unknown account",
-        "unknownCategory": "Unknown category"
+        "unknown": "未知模板",
+        "unknownAccount": "未知账户",
+        "unknownCategory": "未知分类"
       }
     },
     "type": {
-      "transaction": "Transaction",
-      "transfer": "Transfer"
+      "transaction": "交易",
+      "transfer": "转账"
     },
     "frequency": {
       "unit": {
-        "day": "day(s)",
-        "week": "week(s)",
-        "month": "month(s)",
-        "year": "year(s)"
+        "day": "天",
+        "week": "周",
+        "month": "月",
+        "year": "年"
       }
     },
     "monthPolicy": {
-      "none": "Default",
-      "clip": "Use the last valid day of the month",
-      "skip": "Skip",
-      "last_day": "Last day",
-      "first_day": "First day"
+      "none": "默认",
+      "clip": "使用该月最后一个有效日",
+      "skip": "跳过",
+      "last_day": "最后一天",
+      "first_day": "第一天"
     },
     "dialog": {
       "add": {
-        "title": "Add recurring event",
-        "description": "Create a repeating rule so the app can add upcoming transactions or transfers for you.",
+        "title": "添加定期事件",
+        "description": "创建重复规则，使应用自动添加即将到来的交易或转账。",
         "actions": {
-          "cancel": "Cancel",
-          "create": "Create recurring event"
+          "cancel": "取消",
+          "create": "创建定期事件"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before creating the recurring event.",
-          "titleRequired": "Title is required.",
-          "titleMinLength": "Title must be at least 2 characters.",
-          "titleMaxLength": "Title must be at most 80 characters.",
-          "typeRequired": "Type is required.",
-          "startDateRequired": "Start date is required.",
-          "countRequired": "Occurrences count is required.",
-          "countInvalid": "Occurrences count must be a positive integer.",
-          "frequencyIntervalRequired": "Frequency interval is required.",
-          "frequencyIntervalInvalid": "Frequency interval must be a positive integer.",
-          "frequencyUnitRequired": "Frequency unit is required.",
-          "accountRequired": "Account is required.",
-          "categoryRequired": "Category is required.",
-          "fromAccountRequired": "Source account is required.",
-          "toAccountRequired": "Destination account is required.",
-          "accountsMustDiffer": "Source and destination accounts must be different.",
-          "amountRequired": "Amount is required.",
-          "amountInvalid": "Amount must be a positive number.",
-          "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Failed to create recurring event."
+          "fixValidation": "请修正标红字段后再创建定期事件。",
+          "titleRequired": "标题为必填项。",
+          "titleMinLength": "标题至少需要 2 个字符。",
+          "titleMaxLength": "标题最多 80 个字符。",
+          "typeRequired": "类型为必填项。",
+          "startDateRequired": "开始日期为必填项。",
+          "countRequired": "次数为必填项。",
+          "countInvalid": "次数必须为正整数。",
+          "frequencyIntervalRequired": "频率间隔为必填项。",
+          "frequencyIntervalInvalid": "频率间隔必须为正整数。",
+          "frequencyUnitRequired": "频率单位为必填项。",
+          "accountRequired": "账户为必填项。",
+          "categoryRequired": "分类为必填项。",
+          "fromAccountRequired": "来源账户为必填项。",
+          "toAccountRequired": "目标账户为必填项。",
+          "accountsMustDiffer": "来源账户与目标账户必须不同。",
+          "amountRequired": "金额为必填项。",
+          "amountInvalid": "金额必须为正数。",
+          "descriptionMaxLength": "描述最多 75 个字符。",
+          "createFailed": "定期事件创建失败。"
         }
       },
       "edit": {
-        "title": "Edit recurring event",
-        "description": "Update this rule and keep future planned items aligned with it.",
+        "title": "编辑定期事件",
+        "description": "更新此规则，并使未来的计划项目与之保持一致。",
         "actions": {
-          "cancel": "Cancel",
-          "save": "Save changes"
+          "cancel": "取消",
+          "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "Please fix the highlighted fields before saving the recurring event.",
-          "updateFailed": "Failed to update recurring event."
+          "fixValidation": "请修正标红字段后再保存定期事件。",
+          "updateFailed": "定期事件更新失败。"
         }
       },
       "form": {
         "labels": {
-          "title": "Title",
-          "startDate": "Start date",
-          "occurrences": "Occurrences",
-          "frequencyInterval": "Every",
-          "frequencyUnit": "Frequency unit",
-          "monthPolicy": "If the day is not in the month"
+          "title": "标题",
+          "startDate": "开始日期",
+          "occurrences": "次数",
+          "frequencyInterval": "每",
+          "frequencyUnit": "频率单位",
+          "monthPolicy": "若该日不在月份中"
         },
         "placeholders": {
-          "title": "Recurring event title",
+          "title": "定期事件标题",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
         "tooltips": {
-          "scheduleLockedAfterCreate": "After you create it, the schedule stays fixed so generated dates remain predictable."
+          "scheduleLockedAfterCreate": "创建后安排将固定不变，以确保生成的日期可预测。"
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete recurring event?",
-      "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
+      "title": "删除定期事件？",
+      "description": "删除「{{title}}」并停止从此规则创建未来项目。",
       "options": {
-        "deleteLinkedItems": "Also delete linked items already created by this plan",
-        "deleteLinkedItemsHint": "This also removes the transactions or transfers that were already created from this rule."
+        "deleteLinkedItems": "同时删除此计划已创建的关联项目",
+        "deleteLinkedItemsHint": "这将同时删除已从此规则创建的交易或转账。"
       },
       "actions": {
-        "cancel": "Cancel",
-        "delete": "Delete"
+        "cancel": "取消",
+        "delete": "删除"
       }
     },
     "runConfirm": {
-      "title": "Run recurring event?",
-      "description": "Generate any missing scheduled items for \"{{title}}\" now.",
+      "title": "执行定期事件？",
+      "description": "立即为「{{title}}」生成缺失的计划项目。",
       "actions": {
-        "cancel": "Cancel",
-        "run": "Run now"
+        "cancel": "取消",
+        "run": "立即执行"
       }
     },
     "createResult": {
-      "title": "Recurring event created"
+      "title": "定期事件已创建"
     },
     "updateResult": {
-      "title": "Recurring event updated",
-      "description": "\"{{title}}\" was updated successfully. Linked generated items were updated where applicable.",
+      "title": "定期事件已更新",
+      "description": "「{{title}}」已成功更新。关联的生成项目已在适用处同步更新。",
       "actions": {
-        "ok": "OK"
+        "ok": "确定"
       }
     },
     "runResult": {
-      "title": "Recurring events created",
-      "description": "\"{{title}}\" processed {{total}} occurrences. Created: {{created}}. Skipped existing: {{skipped}}.",
+      "title": "定期事件已创建",
+      "description": "「{{title}}」处理了 {{total}} 次。已创建：{{created}}。已跳过现有：{{skipped}}。",
       "labels": {
-        "plan": "Recurring plan",
-        "created": "Created now",
-        "skipped": "Already existed",
-        "total": "Scheduled dates"
+        "plan": "定期计划",
+        "created": "本次创建",
+        "skipped": "已存在",
+        "total": "计划日期"
       },
       "hints": {
-        "noNewItems": "No new items were created because all scheduled dates already had linked items."
+        "noNewItems": "未创建新项目，因为所有计划日期已有关联项目。"
       },
       "actions": {
-        "ok": "OK"
+        "ok": "确定"
       }
     },
     "runError": {
-      "title": "Failed to run recurring event",
-      "description": "The recurring event could not be executed: {{error}}",
+      "title": "定期事件执行失败",
+      "description": "定期事件无法执行：{{error}}",
       "actions": {
-        "ok": "OK"
+        "ok": "确定"
       },
-      "fallbackError": "Unexpected error"
+      "fallbackError": "意外错误"
     },
     "toasts": {
-      "createSuccess": "Recurring event created successfully.",
-      "createError": "Failed to create recurring event.",
-      "updateSuccess": "Recurring event updated successfully.",
-      "updateError": "Failed to update recurring event.",
-      "deleteSuccess": "Recurring event deleted successfully.",
-      "deleteError": "Failed to delete recurring event."
+      "createSuccess": "定期事件创建成功。",
+      "createError": "定期事件创建失败。",
+      "updateSuccess": "定期事件更新成功。",
+      "updateError": "定期事件更新失败。",
+      "deleteSuccess": "定期事件删除成功。",
+      "deleteError": "定期事件删除失败。"
     },
     "errors": {
-      "loadFailedWithError": "Failed to load recurring events: {{error}}",
-      "loadUnexpected": "Unexpected error while loading recurring events."
+      "loadFailedWithError": "定期事件加载失败：{{error}}",
+      "loadUnexpected": "加载定期事件时发生意外错误。"
     }
   },
   "accountValuations": {
     "page": {
-      "title": "Account Valuations"
+      "title": "账户估值"
     },
     "table": {
-      "description": "History of valuation snapshots for this account.",
-      "emptyMessage": "No valuation snapshots yet. Add your first snapshot to start tracking.",
+      "description": "此账户的估值快照历史记录。",
+      "emptyMessage": "暂无估值快照。添加第一个快照以开始追踪。",
       "columns": {
-        "date": "Date",
-        "value": "Value",
-        "change": "Change"
+        "date": "日期",
+        "value": "价值",
+        "change": "变化"
       },
       "actions": {
-        "viewHistory": "View valuation history",
-        "add": "Add snapshot",
-        "edit": "Edit",
-        "delete": "Delete"
+        "viewHistory": "查看估值历史",
+        "add": "添加快照",
+        "edit": "编辑",
+        "delete": "删除"
       }
     },
     "header": {
-      "currentValue": "Current value",
-      "change": "Change",
-      "changePct": "Change %",
-      "accountBalance": "Account balance",
-      "lastSnapshot": "Latest snapshot",
-      "changeVsBalance": "Change vs balance",
-      "noSnapshots": "Add your first snapshot to compare against your account balance."
+      "currentValue": "当前价值",
+      "change": "变化",
+      "changePct": "变化 %",
+      "accountBalance": "账户余额",
+      "lastSnapshot": "最新快照",
+      "changeVsBalance": "与余额的差异",
+      "noSnapshots": "添加第一个快照以与账户余额进行对比。"
     },
     "chart": {
-      "title": "Value over time",
-      "description": "Trend of saved valuation snapshots for this account.",
-      "seriesName": "Value"
+      "title": "价值随时间变化",
+      "description": "此账户已保存估值快照的趋势。",
+      "seriesName": "价值"
     },
     "dialog": {
       "fields": {
-        "value": "Value",
-        "date": "Date"
+        "value": "价值",
+        "date": "日期"
       },
       "add": {
-        "title": "Add snapshot",
-        "description": "Record the current value of your account at a specific date.",
+        "title": "添加快照",
+        "description": "记录账户在特定日期的当前价值。",
         "actions": {
-          "create": "Add snapshot",
-          "cancel": "Cancel"
+          "create": "添加快照",
+          "cancel": "取消"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "createFailed": "Failed to create the snapshot. Please try again.",
-          "valueRequired": "Value is required.",
-          "valueInvalid": "Value must be a valid positive number.",
-          "dateRequired": "Date is required."
+          "fixValidation": "请修正上方错误后再保存。",
+          "createFailed": "快照创建失败，请重试。",
+          "valueRequired": "价值为必填项。",
+          "valueInvalid": "价值必须为有效正数。",
+          "dateRequired": "日期为必填项。"
         }
       },
       "edit": {
-        "title": "Edit snapshot",
-        "description": "Update the value or date of this valuation snapshot.",
+        "title": "编辑快照",
+        "description": "更新此估值快照的价值或日期。",
         "actions": {
-          "save": "Save changes",
-          "cancel": "Cancel"
+          "save": "保存更改",
+          "cancel": "取消"
         },
         "errors": {
-          "fixValidation": "Please fix the errors above before saving.",
-          "updateFailed": "Failed to update the snapshot. Please try again."
+          "fixValidation": "请修正上方错误后再保存。",
+          "updateFailed": "快照更新失败，请重试。"
         }
       }
     },
     "deleteAlert": {
-      "title": "Delete snapshot",
-      "description": "Are you sure you want to delete this valuation snapshot? This action cannot be undone.",
+      "title": "删除快照",
+      "description": "确定要删除此估值快照吗？此操作无法撤销。",
       "actions": {
-        "delete": "Delete",
-        "cancel": "Cancel"
+        "delete": "删除",
+        "cancel": "取消"
       }
     },
     "toasts": {
-      "createSuccess": "Snapshot added successfully.",
-      "createError": "Failed to add the snapshot.",
-      "updateSuccess": "Snapshot updated successfully.",
-      "updateError": "Failed to update the snapshot.",
-      "deleteSuccess": "Snapshot deleted successfully.",
-      "deleteError": "Failed to delete the snapshot."
+      "createSuccess": "快照添加成功。",
+      "createError": "快照添加失败。",
+      "updateSuccess": "快照更新成功。",
+      "updateError": "快照更新失败。",
+      "deleteSuccess": "快照删除成功。",
+      "deleteError": "快照删除失败。"
     }
   },
   "onboarding": {
     "step_counter": "{{current}} / {{total}}",
     "actions": {
-      "back": "Back",
-      "continue": "Continue"
+      "back": "返回",
+      "continue": "继续"
     },
     "welcome": {
-      "title": "Welcome to Boring Balance",
-      "subtitle": "A simple, private place to track where your money goes. No cloud, no subscriptions, no noise.",
-      "cta": "Get started"
+      "title": "欢迎使用 Boring Balance",
+      "subtitle": "一个简单、私密的地方，追踪你的钱去了哪里。无需云端，无需订阅，没有杂音。",
+      "cta": "开始使用"
     },
     "preferences": {
-      "title": "Set your preferences",
-      "subtitle": "You can change these at any time in Settings.",
+      "title": "设置偏好",
+      "subtitle": "可随时在设置中更改。",
       "theme": {
-        "label": "Theme"
+        "label": "主题"
       },
       "language": {
-        "label": "Language"
+        "label": "语言"
       },
       "currency": {
-        "label": "Default currency",
-        "hint": "Used for display and new accounts. You can override per account."
+        "label": "默认货币",
+        "hint": "用于显示和新账户。可按账户覆盖。"
       }
     },
     "start": {
-      "title": "How do you want to begin?",
+      "title": "你想怎么开始？",
       "scratch": {
-        "title": "Start fresh",
-        "description": "Set up your accounts and categories. Takes two minutes."
+        "title": "从头开始",
+        "description": "设置账户和分类，两分钟即可完成。"
       },
       "import": {
-        "title": "Import a backup",
-        "description": "Restore from a previous Boring Balance export."
+        "title": "导入备份",
+        "description": "从之前的 Boring Balance 导出文件恢复。"
       }
     },
     "confirm": {
-      "title": "You're set up.",
-      "subtitle": "Everything is saved locally on your device. You're in control.",
-      "import_note": "You can import your backup from Settings → Export & Import at any time.",
-      "cta": "Enter Boring Balance"
+      "title": "设置完成。",
+      "subtitle": "所有数据保存在本地设备上，由你掌控。",
+      "import_note": "可随时通过设置 → 导出与导入来恢复备份。",
+      "cta": "进入 Boring Balance"
     }
   },
   "update": {
     "modal": {
-      "title": "A new version is available",
-      "body": "You are on v{{current}}. Boring Balance v{{latest}} is now available on GitHub.",
-      "ignore": "Don't remind me again for v{{latest}}",
+      "title": "有新版本可用",
+      "body": "你当前使用的是 v{{current}}。Boring Balance v{{latest}} 已在 GitHub 上发布。",
+      "ignore": "不再提醒 v{{latest}}",
       "cta": {
-        "update": "Update on GitHub",
-        "dismiss": "Stay on v{{current}}"
+        "update": "在 GitHub 上更新",
+        "dismiss": "继续使用 v{{current}}"
       }
     },
     "sidebar": {
-      "label": "Update available · v{{latest}}"
+      "label": "有可用更新 · v{{latest}}"
     }
   }
 }
