@@ -7,21 +7,38 @@ import { APP_CONFIG } from '../../config';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <footer class="mx-auto w-full max-w-6xl border-t border-border px-6 py-6 sm:px-10">
-      <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
-        <p>&copy; Boring Balance &middot; A simple tool for simple finances.</p>
-        <a
-          [href]="repoUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
-        >
-          GitHub
-        </a>
+    <footer class="mx-auto w-full max-w-6xl border-t border-border px-6 py-8 sm:px-10">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="text-sm text-muted-foreground">
+          <p>&copy; Boring Balance</p>
+          <p class="mt-2 max-w-2xl leading-6">
+            Desktop personal finance, without the noise.
+          </p>
+        </div>
+
+        <nav aria-label="Footer links" class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+          <a
+            [href]="releaseUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Download on GitHub
+          </a>
+          <a
+            [href]="repoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm"
+          >
+            Browse the source
+          </a>
+        </nav>
       </div>
     </footer>
   `,
 })
 export class PageFooterComponent {
+  protected readonly releaseUrl = APP_CONFIG.releaseUrl;
   protected readonly repoUrl = APP_CONFIG.repoUrl;
 }
