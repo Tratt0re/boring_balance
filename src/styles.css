@@ -1,0 +1,347 @@
+@import 'tailwindcss';
+@import './styles/fonts.css';
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.66 0.23 25);
+  --chart-2: oklch(0.74 0.2 55);
+  --chart-3: oklch(0.84 0.17 95);
+  --chart-4: oklch(0.78 0.19 145);
+  --chart-5: oklch(0.73 0.16 195);
+  --chart-6: oklch(0.69 0.17 235);
+  --chart-7: oklch(0.66 0.18 275);
+  --chart-8: oklch(0.69 0.2 320);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --high-contrast-table-header-color: oklch(0.205 0 0);
+  --high-contrast-table-header-foreground-color: oklch(0.985 0 0);
+  --system-app-color-1: oklch(0.69 0.2 24);
+  --system-app-color-2: oklch(0.74 0.18 52);
+  --system-app-color-3: oklch(0.83 0.16 88);
+  --system-app-color-4: oklch(0.8 0.18 132);
+  --system-app-color-5: oklch(0.73 0.16 154);
+  --system-app-color-6: oklch(0.74 0.14 194);
+  --system-app-color-7: oklch(0.75 0.16 228);
+  --system-app-color-8: oklch(0.67 0.19 264);
+  --system-app-color-9: oklch(0.68 0.2 302);
+  --system-app-color-10: oklch(0.72 0.2 342);
+  --system-app-color-11: oklch(0.72 0 0);
+  --positive-transaction-color: oklch(0.72 0.18 260);
+  --negative-transaction-color: oklch(0.72 0.18 25);
+  --chart-income: var(--positive-transaction-color);
+  --chart-expense: var(--negative-transaction-color);
+  --chart-net-cashflow: oklch(0.72 0.18 305);
+  --chart-prior-balance: oklch(0.72 0.18 85);
+  --warning: oklch(0.60 0.16 68);
+  --success: oklch(0.55 0.17 145);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.66 0.23 25);
+  --chart-2: oklch(0.74 0.2 55);
+  --chart-3: oklch(0.84 0.17 95);
+  --chart-4: oklch(0.78 0.19 145);
+  --chart-5: oklch(0.73 0.16 195);
+  --chart-6: oklch(0.69 0.17 235);
+  --chart-7: oklch(0.66 0.18 275);
+  --chart-8: oklch(0.69 0.2 320);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.85 0 0);
+  --sidebar-primary-foreground: oklch(0.145 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --high-contrast-table-header-color: oklch(0.85 0 0);
+  --high-contrast-table-header-foreground-color: oklch(0.985 0 0);
+  --system-app-color-1: oklch(0.73 0.18 24);
+  --system-app-color-2: oklch(0.77 0.16 52);
+  --system-app-color-3: oklch(0.86 0.13 88);
+  --system-app-color-4: oklch(0.83 0.15 132);
+  --system-app-color-5: oklch(0.78 0.14 154);
+  --system-app-color-6: oklch(0.79 0.12 194);
+  --system-app-color-7: oklch(0.8 0.14 228);
+  --system-app-color-8: oklch(0.73 0.17 264);
+  --system-app-color-9: oklch(0.74 0.18 302);
+  --system-app-color-10: oklch(0.77 0.18 342);
+  --system-app-color-11: oklch(0.62 0 0);
+  --positive-transaction-color: oklch(0.78 0.16 260);
+  --negative-transaction-color: oklch(0.78 0.16 25);
+  --chart-income: var(--positive-transaction-color);
+  --chart-expense: var(--negative-transaction-color);
+  --chart-net-cashflow: oklch(0.78 0.16 305);
+  --chart-prior-balance: oklch(0.78 0.16 85);
+  --warning: oklch(0.75 0.15 68);
+  --success: oklch(0.72 0.15 145);
+}
+
+@theme inline {
+  --font-sans:
+    'Manrope',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    system-ui,
+    sans-serif;
+  --font-mono:
+    'JetBrains Mono',
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+  --font-chart:
+    var(--font-sans),
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+  --font-chart-tooltip:
+    var(--font-mono),
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+  --color-chart-prior-balance: var(--chart-prior-balance);
+  --color-chart-income: var(--chart-income);
+  --color-chart-expense: var(--chart-expense);
+  --color-chart-net-cashflow: var(--chart-net-cashflow);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-high-contrast-table-header: var(--high-contrast-table-header-color);
+  --color-high-contrast-table-header-foreground: var(--high-contrast-table-header-foreground-color);
+  --color-system-app-1: var(--system-app-color-1);
+  --color-system-app-2: var(--system-app-color-2);
+  --color-system-app-3: var(--system-app-color-3);
+  --color-system-app-4: var(--system-app-color-4);
+  --color-system-app-5: var(--system-app-color-5);
+  --color-system-app-6: var(--system-app-color-6);
+  --color-system-app-7: var(--system-app-color-7);
+  --color-system-app-8: var(--system-app-color-8);
+  --color-system-app-9: var(--system-app-color-9);
+  --color-system-app-10: var(--system-app-color-10);
+  --color-system-app-11: var(--system-app-color-11);
+  --color-positive-transaction: var(--positive-transaction-color);
+  --color-negative-transaction: var(--negative-transaction-color);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow;
+    transition-duration: 280ms;
+    transition-timing-function: ease;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
+    background: color-mix(in oklch, var(--foreground) 30%, transparent) !important;
+  }
+
+  .dark .cdk-overlay-dark-backdrop.cdk-overlay-backdrop-showing {
+    background: color-mix(in oklch, var(--foreground) 12%, transparent) !important;
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield; /* Added for general compatibility */
+  }
+
+  .transaction-row-positive {
+    background-color: color-mix(
+      in oklch,
+      var(--positive-transaction-color) 15%,
+      transparent
+    ) !important;
+  }
+
+  .transaction-row-positive:hover {
+    background-color: color-mix(
+      in oklch,
+      var(--positive-transaction-color) 21%,
+      transparent
+    ) !important;
+  }
+
+  .transaction-row-negative {
+    background-color: color-mix(
+      in oklch,
+      var(--negative-transaction-color) 15%,
+      transparent
+    ) !important;
+  }
+
+  .transaction-row-negative:hover {
+    background-color: color-mix(
+      in oklch,
+      var(--negative-transaction-color) 21%,
+      transparent
+    ) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .money {
+    @apply font-mono tabular-nums tracking-tight;
+  }
+}
+
+@supports (view-transition-name: root) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    z-index: 0;
+  }
+
+  ::view-transition-new(root) {
+    z-index: 1;
+    clip-path: circle(0 at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    animation: bb-theme-reveal 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes bb-theme-reveal {
+    to {
+      clip-path: circle(100vmax at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 999px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: var(--muted);
+}
