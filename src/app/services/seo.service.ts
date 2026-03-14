@@ -123,6 +123,11 @@ export class SeoService {
         name: APP_CONFIG.brandName,
         url: APP_CONFIG.siteUrl,
       },
+      author: {
+        '@type': 'Person',
+        name: APP_CONFIG.authorName,
+        sameAs: [APP_CONFIG.authorGithubUrl, APP_CONFIG.authorLinkedInUrl],
+      },
       sameAs: [APP_CONFIG.repoUrl],
     };
 
