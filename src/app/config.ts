@@ -3,11 +3,15 @@ const repoName = 'boring_balance';
 const repoUrl = `https://github.com/${repoOwner}/${repoName}`;
 const releaseUrl = `${repoUrl}/releases/latest`;
 const siteUrl = 'https://boringbalance.com/';
+const authorGithubUrl = `https://github.com/${repoOwner}`;
+const authorLinkedInUrl = 'https://www.linkedin.com/in/salvatdeluca/';
 
 export const APP_CONFIG = {
   brandName: 'Boring Balance',
   siteName: 'Boring Balance',
-  authorName: 'Boring Balance',
+  authorName: 'Tratt0re',
+  authorGithubUrl,
+  authorLinkedInUrl,
   homePath: './',
 
   repoOwner,
@@ -30,8 +34,8 @@ export const APP_CONFIG = {
     robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
     canonicalUrl: siteUrl,
     locale: 'en_US',
-    themeColorLight: '#f5f3ed',
-    themeColorDark: '#2a2722',
+    themeColorLight: '#fbfaf7',
+    themeColorDark: '#151410',
   },
 
   fallback: {
