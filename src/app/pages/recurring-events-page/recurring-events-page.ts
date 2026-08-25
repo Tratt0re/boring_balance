@@ -59,7 +59,7 @@ const RECURRING_EVENT_COLUMN_WIDTH = {
   startDate: '1/9',
   schedule: '3/12',
   amount: '1/12',
-  action: '1/12',
+  action: '2/12',
 } as const;
 
 const RECURRING_EVENT_TABLE_COLUMNS: readonly TableDataItem[] = [
@@ -113,12 +113,20 @@ const RECURRING_EVENT_TABLE_COLUMNS: readonly TableDataItem[] = [
 ] as const;
 
 const createRecurringEventTableStructure = (
+  onViewAction: (row: object) => void | Promise<void>,
   onEditAction: (row: object) => void | Promise<void>,
   onDeleteAction: (row: object) => void | Promise<void>,
 ): readonly TableDataItem[] =>
   [
     ...RECURRING_EVENT_TABLE_COLUMNS,
     createActionColumn(RECURRING_EVENT_COLUMN_WIDTH.action, [
+      {
+        id: 'view-items',
+        icon: 'eye',
+        label: 'recurringEvents.table.actions.viewItems',
+        buttonType: 'ghost',
+        action: onViewAction,
+      },
       {
         id: 'edit',
         icon: 'pencil',
@@ -166,6 +174,7 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     this.accountCount() === 0 ? 'accounts.table.actions.add' : 'recurringEvents.table.actions.add',
   );
   protected readonly recurringEventTableStructure = createRecurringEventTableStructure(
+    (row) => this.onViewPlannedItems(row),
     (row) => this.onEditRecurringEvent(row),
     (row) => this.onDeleteRecurringEvent(row),
   );
@@ -426,6 +435,11 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     }
 
     return translateMaybe(this.translateService, name);
+  }
+
+  private onViewPlannedItems(row: object): void {
+    const recurringEvent = row as RecurringEventTableRow;
+    void this.router.navigate(['/recurring-events', recurringEvent.id, 'items']);
   }
 
   private onEditRecurringEvent(row: object): void {

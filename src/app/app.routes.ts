@@ -55,6 +55,13 @@ export const routes: Routes = [
             (module) => module.RecurringEventsPage,
           ),
       },
+      {
+        path: 'recurring-events/:planItemId/items',
+        loadComponent: () =>
+          import('./pages/recurring-event-items-page/recurring-event-items-page').then(
+            (module) => module.RecurringEventItemsPage,
+          ),
+      },
       { path: 'settings', pathMatch: 'full', redirectTo: 'settings/general' },
       {
         path: 'settings/:section',

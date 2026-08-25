@@ -1,0 +1,110 @@
+<section class="flex min-h-full flex-col gap-4">
+  @if (isLoading()) {
+    <z-skeleton class="h-40 w-full"></z-skeleton>
+    <z-skeleton class="h-60 w-full"></z-skeleton>
+  } @else if (loadError(); as loadError) {
+    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+      {{ loadError }}
+    </div>
+  } @else if (planItem(); as plan) {
+    <div class="animate-in fade-in-0 slide-in-from-left-2 space-y-4 duration-200 ease-out">
+      <section class="rounded-lg border border-border/60 bg-card p-4 sm:p-5">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <h2 class="text-xl font-semibold tracking-tight">{{ plan.title }}</h2>
+            <span class="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
+              {{ ('recurringEvents.type.' + plan.type) | translate }}
+            </span>
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-md bg-muted/40 p-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'common.labels.startDate' | translate }}
+              </p>
+              <p class="mt-1 font-medium">{{ plan.ruleJson.start_date | date: 'mediumDate' }}</p>
+            </div>
+
+            <div class="rounded-md bg-muted/40 p-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'common.labels.occurrences' | translate }}
+              </p>
+              <p class="mt-1 font-medium">{{ plan.ruleJson.count }}</p>
+            </div>
+
+            <div class="rounded-md bg-muted/40 p-3">
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'common.labels.frequencyUnit' | translate }}
+              </p>
+              <p class="mt-1 font-medium">
+                {{ plan.ruleJson.frequency.interval }}
+                {{ ('recurringEvents.frequency.unit.' + plan.ruleJson.frequency.unit) | translate }}
+              </p>
+            </div>
+
+            @if (plan.ruleJson.month_policy; as monthPolicy) {
+              <div class="rounded-md bg-muted/40 p-3">
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'common.labels.monthPolicy' | translate }}
+                </p>
+                <p class="mt-1 font-medium">{{ ('recurringEvents.monthPolicy.' + monthPolicy) | translate }}</p>
+              </div>
+            }
+          </div>
+
+          <div class="grid gap-3 border-t pt-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div>
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'common.labels.amount' | translate }}
+              </p>
+              <p class="mt-1 font-medium money">{{ numberFormatService.formatCurrency(templateAmount()) }}</p>
+            </div>
+
+            <div>
+              <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                {{ 'common.labels.settled' | translate }}
+              </p>
+              <p class="mt-1 font-medium">
+                {{ (templateSettled() ? 'common.yes' : 'common.no') | translate }}
+              </p>
+            </div>
+
+            @if (plan.type === 'transaction') {
+              <div>
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'common.labels.account' | translate }}
+                </p>
+                <p class="mt-1 font-medium">{{ primaryAccountName() }}</p>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'common.labels.category' | translate }}
+                </p>
+                <p class="mt-1 font-medium">{{ categoryName() }}</p>
+              </div>
+            } @else {
+              <div>
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'common.labels.fromAccount' | translate }}
+                </p>
+                <p class="mt-1 font-medium">{{ primaryAccountName() }}</p>
+              </div>
+              <div>
+                <p class="text-xs uppercase tracking-wide text-muted-foreground">
+                  {{ 'common.labels.toAccount' | translate }}
+                </p>
+                <p class="mt-1 font-medium">{{ secondaryAccountName() }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      @if (plan.type === 'transaction') {
+        <app-transactions-table-section [planItemId]="plan.id" />
+      } @else {
+        <app-transfers-table-section [planItemId]="plan.id" />
+      }
+    </div>
+  }
+</section>

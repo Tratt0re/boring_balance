@@ -1322,6 +1322,7 @@
       },
       "actions": {
         "add": "Ajouter un événement récurrent",
+        "viewItems": "Voir les éléments planifiés",
         "edit": "Modifier l'événement récurrent",
         "run": "Exécuter l'événement récurrent",
         "delete": "Supprimer l'événement récurrent"
@@ -1499,6 +1500,23 @@
     "errors": {
       "loadFailedWithError": "Échec du chargement des événements récurrents : {{error}}",
       "loadUnexpected": "Erreur inattendue lors du chargement des événements récurrents."
+    }
+  },
+  "recurringEventItems": {
+    "page": {
+      "title": "Éléments planifiés"
+    },
+    "table": {
+      "transactionsTitle": "Transactions planifiées",
+      "transactionsDescription": "Transactions générées par cet événement récurrent.",
+      "transfersTitle": "Virements planifiés",
+      "transfersDescription": "Virements générés par cet événement récurrent.",
+      "emptyMessage": "Aucun élément lié n'a été trouvé pour cet événement récurrent."
+    },
+    "errors": {
+      "invalidId": "L'identifiant de l'événement récurrent n'est pas valide.",
+      "notFound": "Événement récurrent introuvable.",
+      "loadUnexpected": "Erreur inattendue lors du chargement des éléments de l'événement récurrent."
     }
   },
   "accountValuations": {

@@ -1322,6 +1322,7 @@
       },
       "actions": {
         "add": "添加定期事件",
+        "viewItems": "查看计划项目",
         "edit": "编辑定期事件",
         "run": "执行定期事件",
         "delete": "删除定期事件"
@@ -1499,6 +1500,23 @@
     "errors": {
       "loadFailedWithError": "定期事件加载失败：{{error}}",
       "loadUnexpected": "加载定期事件时发生意外错误。"
+    }
+  },
+  "recurringEventItems": {
+    "page": {
+      "title": "计划项目"
+    },
+    "table": {
+      "transactionsTitle": "计划交易",
+      "transactionsDescription": "此定期事件生成的交易。",
+      "transfersTitle": "计划转账",
+      "transfersDescription": "此定期事件生成的转账。",
+      "emptyMessage": "未找到与此定期事件关联的项目。"
+    },
+    "errors": {
+      "invalidId": "定期事件 ID 无效。",
+      "notFound": "未找到定期事件。",
+      "loadUnexpected": "加载定期事件项目时发生意外错误。"
     }
   },
   "accountValuations": {

@@ -20,7 +20,15 @@ const {
 } = require('../utils');
 
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
-const LIST_FILTER_FIELDS = new Set(['date_from', 'date_to', 'amount_from', 'amount_to', 'accounts', 'settled']);
+const LIST_FILTER_FIELDS = new Set([
+  'plan_item_id',
+  'date_from',
+  'date_to',
+  'amount_from',
+  'amount_to',
+  'accounts',
+  'settled',
+]);
 const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description', 'settled']);
 const UPDATE_FIELDS = new Set([
   'transfer_id',
@@ -45,6 +53,10 @@ function normalizeListFilters(payload) {
   return {
     filters: pickDefined({
       ...normalizeDateAmountSettledFilters(filters),
+      plan_item_id:
+        filters.plan_item_id === undefined
+          ? undefined
+          : normalizePositiveInteger(filters.plan_item_id, 'payload.filters.plan_item_id'),
       accounts: normalizeOptionalIdArray(filters.accounts, 'payload.filters.accounts'),
     }),
     pagination,

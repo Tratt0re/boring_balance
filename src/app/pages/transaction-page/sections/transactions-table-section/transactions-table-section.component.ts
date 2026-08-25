@@ -219,6 +219,7 @@ const createTransactionTableStructure = (
   onEditAction: (row: object) => void | Promise<void>,
   onDuplicateAction: (row: object) => void | Promise<void>,
   onDeleteAction: (row: object) => void | Promise<void>,
+  showDuplicateAction = true,
 ): readonly TableDataItem[] =>
   [
     ...TRANSACTION_TABLE_COLUMNS,
@@ -230,13 +231,17 @@ const createTransactionTableStructure = (
         buttonType: 'ghost',
         action: onEditAction,
       },
-      {
-        id: 'duplicate',
-        icon: 'copy',
-        label: 'transactions.table.actions.duplicate',
-        buttonType: 'ghost',
-        action: onDuplicateAction,
-      },
+      ...(showDuplicateAction
+        ? [
+            {
+              id: 'duplicate',
+              icon: 'copy' as const,
+              label: 'transactions.table.actions.duplicate',
+              buttonType: 'ghost' as const,
+              action: onDuplicateAction,
+            },
+          ]
+        : []),
       {
         id: 'delete',
         icon: 'trash',
@@ -255,6 +260,7 @@ const createTransactionTableStructure = (
 })
 export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
+  readonly planItemId = input<number | null>(null);
 
   protected readonly rows = signal<readonly TransactionTableRow[]>([]);
   protected readonly total = signal(0);
@@ -264,13 +270,22 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
+  protected readonly isPlanItemContext = computed(() => this.planItemId() !== null);
   protected readonly accountCount = computed(() => this.accountOptions().length);
-  protected readonly emptyMessageKey = computed(() =>
-    this.accountCount() === 0 ? 'transactions.table.emptyNoAccountsMessage' : 'transactions.table.emptyMessage',
-  );
-  protected readonly emptyActionLabelKey = computed(() =>
-    this.accountCount() === 0 ? 'accounts.table.actions.add' : 'transactions.table.actions.add',
-  );
+  protected readonly emptyMessageKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.emptyMessage';
+    }
+
+    return this.accountCount() === 0 ? 'transactions.table.emptyNoAccountsMessage' : 'transactions.table.emptyMessage';
+  });
+  protected readonly emptyActionLabelKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return '';
+    }
+
+    return this.accountCount() === 0 ? 'accounts.table.actions.add' : 'transactions.table.actions.add';
+  });
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);
@@ -288,6 +303,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       (row) => this.onEditTransaction(row),
       (row) => this.onDuplicateTransaction(row),
       (row) => this.onDeleteTransaction(row),
+      !this.isPlanItemContext(),
     ),
   );
   protected readonly hasActiveFilters = computed(() => {
@@ -471,8 +487,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.restorePersistedTableState();
-    this.activateToolbarActions();
+    if (!this.isPlanItemContext()) {
+      this.restorePersistedTableState();
+      this.activateToolbarActions();
+    }
     void this.loadInitialData();
   }
 
@@ -585,6 +603,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   protected onEmptyActionClick(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     if (this.accountCount() === 0) {
       void this.router.navigate(['/accounts']);
       return;
@@ -834,6 +856,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
   private buildListTransactionsPayload(): TransactionListTransactionsDto {
     const filters = this.filters();
+    const planItemId = this.planItemId() ?? undefined;
     const dateFrom = filters.dateFrom?.getTime();
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
@@ -843,6 +866,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
     const settled = filters.settled === null ? undefined : filters.settled;
     const hasFilters =
+      planItemId !== undefined ||
       dateFrom !== undefined ||
       dateTo !== undefined ||
       amountFrom !== undefined ||
@@ -863,6 +887,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       page: this.page(),
       page_size: this.pageSize(),
       filters: {
+        ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
         ...(dateFrom === undefined ? {} : { date_from: dateFrom }),
         ...(dateTo === undefined ? {} : { date_to: dateTo }),
         ...(amountFrom === undefined ? {} : { amount_from: amountFrom }),
@@ -1287,6 +1312,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private restorePersistedTableState(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     const persistedState =
       this.localPreferencesService.getTransactionsTableState<Partial<PersistedTransactionsTableState>>();
     if (!persistedState) {
@@ -1303,6 +1332,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private persistTableState(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     const filters = this.filters();
     const state: PersistedTransactionsTableState = {
       page: this.page(),
