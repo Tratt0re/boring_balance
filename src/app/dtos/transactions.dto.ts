@@ -81,6 +81,7 @@ export interface TransactionCreateTransferResponseDto {
 export interface TransactionGetDto extends IdDto<RowId> {}
 
 export interface TransactionListTransactionsFiltersDto {
+  readonly plan_item_id?: RowId;
   readonly date_from?: UnixTimestampMilliseconds;
   readonly date_to?: UnixTimestampMilliseconds;
   readonly amount_from?: number;
@@ -96,6 +97,7 @@ export interface TransactionListTransactionsDto extends PageRequestDto {
 }
 
 export interface TransactionListTransfersFiltersDto {
+  readonly plan_item_id?: RowId;
   readonly date_from?: UnixTimestampMilliseconds;
   readonly date_to?: UnixTimestampMilliseconds;
   readonly amount_from?: number;

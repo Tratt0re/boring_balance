@@ -239,6 +239,7 @@ const createTransferTableStructure = (
 })
 export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
+  readonly planItemId = input<number | null>(null);
 
   protected readonly transfers = signal<readonly TransferModel[]>([]);
   protected readonly total = signal(0);
@@ -248,8 +249,13 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly isPlanItemContext = computed(() => this.planItemId() !== null);
   protected readonly accountCount = computed(() => this.accountOptions().length);
   protected readonly emptyMessageKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.emptyMessage';
+    }
+
     const count = this.accountCount();
     if (count === 0) {
       return 'transactions.transfers.table.emptyNoAccountsMessage';
@@ -261,9 +267,13 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
     return 'transactions.transfers.table.emptyMessage';
   });
-  protected readonly emptyActionLabelKey = computed(() =>
-    this.accountCount() < 2 ? 'accounts.table.actions.add' : 'transactions.transfers.table.actions.add',
-  );
+  protected readonly emptyActionLabelKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return '';
+    }
+
+    return this.accountCount() < 2 ? 'accounts.table.actions.add' : 'transactions.transfers.table.actions.add';
+  });
   protected readonly rows = computed<readonly TransferTableRow[]>(() =>
     this.transfers().map((transfer) => this.toTransferRow(transfer)),
   );
@@ -432,8 +442,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.restorePersistedTableState();
-    this.activateToolbarActions();
+    if (!this.isPlanItemContext()) {
+      this.restorePersistedTableState();
+      this.activateToolbarActions();
+    }
     void this.loadInitialData();
   }
 
@@ -535,6 +547,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   protected onEmptyActionClick(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     if (this.accountCount() < 2) {
       void this.router.navigate(['/accounts']);
       return;
@@ -732,6 +748,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
   private buildListTransfersPayload(): TransactionListTransfersDto {
     const filters = this.filters();
+    const planItemId = this.planItemId() ?? undefined;
     const dateFrom = filters.dateFrom?.getTime();
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
@@ -739,6 +756,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     const settled = filters.settled === null ? undefined : filters.settled;
     const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
     const hasFilters =
+      planItemId !== undefined ||
       dateFrom !== undefined ||
       dateTo !== undefined ||
       amountFrom !== undefined ||
@@ -757,6 +775,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       page: this.page(),
       page_size: this.pageSize(),
       filters: {
+        ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
         ...(dateFrom === undefined ? {} : { date_from: dateFrom }),
         ...(dateTo === undefined ? {} : { date_to: dateTo }),
         ...(amountFrom === undefined ? {} : { amount_from: amountFrom }),
@@ -1007,6 +1026,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private restorePersistedTableState(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     const persistedState =
       this.localPreferencesService.getTransfersTableState<Partial<PersistedTransfersTableState>>();
     if (!persistedState) {
@@ -1023,6 +1046,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private persistTableState(): void {
+    if (this.isPlanItemContext()) {
+      return;
+    }
+
     const filters = this.filters();
     const state: PersistedTransfersTableState = {
       page: this.page(),

@@ -1322,6 +1322,7 @@
       },
       "actions": {
         "add": "Wiederkehrendes Ereignis hinzufügen",
+        "viewItems": "Geplante Einträge anzeigen",
         "edit": "Wiederkehrendes Ereignis bearbeiten",
         "run": "Wiederkehrendes Ereignis ausführen",
         "delete": "Wiederkehrendes Ereignis löschen"
@@ -1499,6 +1500,23 @@
     "errors": {
       "loadFailedWithError": "Wiederkehrende Ereignisse konnten nicht geladen werden: {{error}}",
       "loadUnexpected": "Unerwarteter Fehler beim Laden wiederkehrender Ereignisse."
+    }
+  },
+  "recurringEventItems": {
+    "page": {
+      "title": "Geplante Einträge"
+    },
+    "table": {
+      "transactionsTitle": "Geplante Transaktionen",
+      "transactionsDescription": "Von diesem wiederkehrenden Ereignis erzeugte Transaktionen.",
+      "transfersTitle": "Geplante Überweisungen",
+      "transfersDescription": "Von diesem wiederkehrenden Ereignis erzeugte Überweisungen.",
+      "emptyMessage": "Für dieses wiederkehrende Ereignis wurden keine verknüpften Einträge gefunden."
+    },
+    "errors": {
+      "invalidId": "Ungültige ID des wiederkehrenden Ereignisses.",
+      "notFound": "Wiederkehrendes Ereignis nicht gefunden.",
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge des wiederkehrenden Ereignisses."
     }
   },
   "accountValuations": {

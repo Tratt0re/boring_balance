@@ -46,6 +46,10 @@ function buildListWhere(filters = {}) {
     category_id: { ne: TRANSFER_CATEGORY_ID },
   };
 
+  if (filters.plan_item_id !== undefined) {
+    where.plan_item_id = filters.plan_item_id;
+  }
+
   const occurredAtFilter = buildDateRangeFilter(filters.date_from, filters.date_to);
   if (occurredAtFilter) {
     where.occurred_at = occurredAtFilter;

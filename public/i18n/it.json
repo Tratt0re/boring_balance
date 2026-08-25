@@ -1322,6 +1322,7 @@
       },
       "actions": {
         "add": "Aggiungi evento ricorrente",
+        "viewItems": "Visualizza elementi pianificati",
         "edit": "Modifica evento ricorrente",
         "run": "Esegui evento ricorrente",
         "delete": "Elimina evento ricorrente"
@@ -1499,6 +1500,23 @@
     "errors": {
       "loadFailedWithError": "Impossibile caricare gli eventi ricorrenti: {{error}}",
       "loadUnexpected": "Errore imprevisto durante il caricamento degli eventi ricorrenti."
+    }
+  },
+  "recurringEventItems": {
+    "page": {
+      "title": "Elementi pianificati"
+    },
+    "table": {
+      "transactionsTitle": "Transazioni pianificate",
+      "transactionsDescription": "Transazioni generate da questo evento ricorrente.",
+      "transfersTitle": "Trasferimenti pianificati",
+      "transfersDescription": "Trasferimenti generati da questo evento ricorrente.",
+      "emptyMessage": "Nessun elemento collegato trovato per questo evento ricorrente."
+    },
+    "errors": {
+      "invalidId": "ID evento ricorrente non valido.",
+      "notFound": "Evento ricorrente non trovato.",
+      "loadUnexpected": "Errore imprevisto durante il caricamento degli elementi dell'evento ricorrente."
     }
   },
   "accountValuations": {

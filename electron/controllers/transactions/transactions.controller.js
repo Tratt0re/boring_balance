@@ -37,6 +37,7 @@ const TRANSACTION_FIELDS = new Set([
 
 const LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const LIST_FILTER_FIELDS = new Set([
+  'plan_item_id',
   'date_from',
   'date_to',
   'amount_from',
@@ -124,6 +125,10 @@ function normalizeListFilters(payload) {
   return {
     filters: pickDefined({
       ...normalizeDateAmountSettledFilters(filters),
+      plan_item_id:
+        filters.plan_item_id === undefined
+          ? undefined
+          : normalizePositiveInteger(filters.plan_item_id, 'payload.filters.plan_item_id'),
       category_types: normalizeOptionalEnumArray(
         filters.category_types,
         'payload.filters.category_types',
