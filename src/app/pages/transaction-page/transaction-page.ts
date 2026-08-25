@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 import type { ToolbarItemNavigation } from '@/services/toolbar-context.service';
 import { TransfersTableSectionComponent } from './sections/transfers-table-section/transfers-table-section.component';
@@ -16,7 +19,16 @@ type TransactionsPageView = 'common' | 'transfers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionPage {
-  protected readonly activeView = signal<TransactionsPageView>('common');
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly routeView = toSignal(
+    this.activatedRoute.queryParamMap.pipe(map((params) => params.get('view'))),
+    { initialValue: 'common' },
+  );
+
+  protected readonly activeView = computed<TransactionsPageView>(() =>
+    this.routeView() === 'transfers' ? 'transfers' : 'common',
+  );
   protected readonly toolbarItemNavigation = computed<ToolbarItemNavigation>(() => ({
     id: 'transactions-page-view',
     type: 'segmented',
@@ -36,6 +48,10 @@ export class TransactionPage {
       return;
     }
 
-    this.activeView.set(nextView);
+    void this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { view: nextView },
+      queryParamsHandling: 'merge',
+    });
   }
 }

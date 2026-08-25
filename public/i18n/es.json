@@ -581,7 +581,8 @@
           "unsettled": "No liquidado"
         },
         "actions": {
-          "goToTransactionsPage": "Todos los movimientos"
+          "goToTransactionsPage": "Todos los movimientos",
+          "goToTransfersPage": "Todas las transferencias"
         },
         "unknownAccount": "Cuenta desconocida",
         "unknownCategory": "Categoria desconocida"

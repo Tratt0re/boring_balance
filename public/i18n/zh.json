@@ -651,7 +651,8 @@
           "unsettled": "未结清"
         },
         "actions": {
-          "goToTransactionsPage": "所有交易"
+          "goToTransactionsPage": "所有交易",
+          "goToTransfersPage": "所有转账"
         },
         "unknownAccount": "未知账户",
         "unknownCategory": "未知分类"

@@ -651,7 +651,8 @@
           "unsettled": "Unsettled"
         },
         "actions": {
-          "goToTransactionsPage": "All transactions"
+          "goToTransactionsPage": "All transactions",
+          "goToTransfersPage": "All transfers"
         },
         "unknownAccount": "Unknown account",
         "unknownCategory": "Unknown category"
