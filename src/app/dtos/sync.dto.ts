@@ -161,7 +161,16 @@ export interface SyncSnapshotInfoDto {
   readonly sizeBytes: number;
   readonly repoId: string;
   readonly deviceId: string;
+  readonly isDefault: boolean;
   readonly meta?: SyncSnapshotMetaDto | null;
+}
+
+export interface SyncSnapshotActionDto {
+  readonly snapshotFilePath: string;
+}
+
+export interface SyncRemoveSnapshotResponseDto {
+  readonly changed: number;
 }
 
 export type SyncGetSettingsResponse = SyncSettingsDto;
@@ -177,3 +186,5 @@ export type SyncRunNowResponse = SyncNowResultDto;
 export type SyncPullNowResponse = SyncActionResultDto;
 export type SyncPushNowResponse = SyncActionResultDto;
 export type SyncListSnapshotsResponse = readonly SyncSnapshotInfoDto[];
+export type SyncSetDefaultSnapshotResponse = SyncActionResultDto;
+export type SyncRemoveSnapshotResponse = SyncRemoveSnapshotResponseDto;

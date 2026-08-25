@@ -166,6 +166,8 @@ export interface ElectronIpcClient {
     readonly pullNow: OptionalIpcRequest<void, DTO.SyncPullNowResponse>;
     readonly pushNow: OptionalIpcRequest<void, DTO.SyncPushNowResponse>;
     readonly listSnapshots: OptionalIpcRequest<void, DTO.SyncListSnapshotsResponse>;
+    readonly setDefaultSnapshot: IpcRequest<DTO.SyncSnapshotActionDto, DTO.SyncSetDefaultSnapshotResponse>;
+    readonly removeSnapshot: IpcRequest<DTO.SyncSnapshotActionDto, DTO.SyncRemoveSnapshotResponse>;
   };
   readonly reset: {
     readonly clearFinancialData: OptionalIpcRequest<void, { ok: boolean; error?: string }>;

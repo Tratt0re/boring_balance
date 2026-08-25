@@ -3,12 +3,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
+import {
+  AppDataTableComponent,
+  type TableDataItem,
+  type TableHeaderActionItem,
+} from '@/components/data-table';
 import type * as DTO from '@/dtos';
 import {
   SYNC_INTERVAL_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
   SYNC_STATE_DEFAULTS,
   type RepoStatusDto,
+  type SyncSnapshotInfoDto,
   type SyncStateDto,
 } from '@/pages/data-backups-page/models/sync.models';
 import { SyncService } from '@/pages/data-backups-page/services/sync.service';
@@ -24,6 +30,89 @@ interface SelectOption {
   readonly label: string;
 }
 
+interface SyncSnapshotTableRow {
+  readonly id: string;
+  readonly fullPath: string;
+  readonly createdAtMs: number;
+  readonly fileName: string;
+  readonly deviceId: string;
+  readonly changeCounter: number | null;
+  readonly sizeLabel: string;
+  readonly isDefault: boolean;
+}
+
+const SYNC_SNAPSHOT_TABLE_COLUMNS: readonly TableDataItem[] = [
+  {
+    columnName: 'dataBackups.sync.files.columns.date',
+    columnKey: 'createdAtMs',
+    type: 'datetime',
+    sortable: true,
+  },
+  {
+    columnName: 'dataBackups.sync.files.columns.file',
+    columnKey: 'fileName',
+    type: 'string',
+    sortable: true,
+  },
+  {
+    columnName: 'dataBackups.sync.files.columns.device',
+    columnKey: 'deviceId',
+    type: 'string',
+    sortable: true,
+  },
+  {
+    columnName: 'dataBackups.sync.files.columns.changeCounter',
+    columnKey: 'changeCounter',
+    type: 'number',
+    sortable: true,
+    align: 'right',
+  },
+  {
+    columnName: 'dataBackups.sync.files.columns.size',
+    columnKey: 'sizeLabel',
+    type: 'string',
+    sortable: true,
+    align: 'right',
+  },
+  {
+    columnName: 'dataBackups.sync.files.columns.default',
+    columnKey: 'isDefault',
+    type: 'boolean',
+    sortable: true,
+    align: 'center',
+  },
+] as const;
+
+const createSyncSnapshotsTableStructure = (
+  onSetDefaultAction: (row: object) => void | Promise<void>,
+  onDeleteAction: (row: object) => void | Promise<void>,
+  isActionDisabled: () => boolean,
+): readonly TableDataItem[] =>
+  [
+    ...SYNC_SNAPSHOT_TABLE_COLUMNS,
+    {
+      showLabel: false,
+      actionItems: [
+        {
+          id: 'set-default-sync-file',
+          icon: 'check',
+          label: 'dataBackups.sync.files.actions.setDefault',
+          buttonType: 'ghost',
+          disabled: (row) => isActionDisabled() || Boolean((row as SyncSnapshotTableRow).isDefault),
+          action: onSetDefaultAction,
+        },
+        {
+          id: 'delete-sync-file',
+          icon: 'trash',
+          label: 'dataBackups.sync.files.actions.delete',
+          buttonType: 'ghost',
+          disabled: (row) => isActionDisabled() || Boolean((row as SyncSnapshotTableRow).isDefault),
+          action: onDeleteAction,
+        },
+      ],
+    },
+  ] as const;
+
 const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
   { value: '0', label: 'dataBackups.sync.autoSync.intervalOptions.off' },
   { value: '5', label: 'dataBackups.sync.autoSync.intervalOptions.minutes5' },
@@ -36,6 +125,7 @@ const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
 @Component({
   selector: 'app-sync-section',
   imports: [
+    AppDataTableComponent,
     TranslatePipe,
     ZardButtonComponent,
     ZardLoaderComponent,
@@ -60,6 +150,9 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly state = toSignal(this.syncService.state$, {
     initialValue: SYNC_STATE_DEFAULTS,
   });
+  protected readonly snapshots = toSignal(this.syncService.snapshots$, {
+    initialValue: [] as readonly SyncSnapshotInfoDto[],
+  });
   protected readonly settingsLoading = toSignal(this.syncService.settingsLoading$, {
     initialValue: false,
   });
@@ -81,12 +174,39 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly pushNowLoading = toSignal(this.syncService.pushNowLoading$, {
     initialValue: false,
   });
+  protected readonly snapshotsLoading = toSignal(this.syncService.snapshotsLoading$, {
+    initialValue: false,
+  });
+  protected readonly setDefaultSnapshotLoading = toSignal(this.syncService.setDefaultSnapshotLoading$, {
+    initialValue: false,
+  });
+  protected readonly removeSnapshotLoading = toSignal(this.syncService.removeSnapshotLoading$, {
+    initialValue: false,
+  });
 
   protected readonly selectedFolderPath = signal<string | null>(null);
   protected readonly selectedRepoStatus = signal<RepoStatusDto | null>(null);
   protected readonly setupModeEnabled = signal(false);
 
   protected readonly intervalOptions = SYNC_INTERVAL_SELECT_OPTIONS;
+  protected readonly snapshotsTableStructure = createSyncSnapshotsTableStructure(
+    (row) => this.onSetDefaultSnapshotRow(row),
+    (row) => this.onDeleteSnapshotRow(row),
+    () => this.isBusy(),
+  );
+  protected readonly snapshotsTableActions: readonly TableHeaderActionItem[] = [
+    {
+      id: 'refresh-sync-files',
+      label: 'dataBackups.sync.files.actions.refresh',
+      showLabel: true,
+      buttonType: 'outline',
+      disabled: () => this.snapshotsLoading() || this.isBusy(),
+      action: () => this.onRefreshSnapshots(),
+    },
+  ];
+  protected readonly snapshotRows = computed<readonly SyncSnapshotTableRow[]>(() =>
+    this.snapshots().map((snapshot) => this.toSnapshotTableRow(snapshot)),
+  );
   protected readonly syncModeEnabled = computed(() => this.settings().enabled || this.setupModeEnabled());
 
   protected readonly autoPullIntervalValue = computed(() =>
@@ -104,7 +224,9 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
       || this.disableLoading()
       || this.syncNowLoading()
       || this.pullNowLoading()
-      || this.pushNowLoading(),
+      || this.pushNowLoading()
+      || this.setDefaultSnapshotLoading()
+      || this.removeSnapshotLoading(),
   );
   protected readonly canChooseFolder = computed(
     () => this.syncModeEnabled() && !this.settings().enabled && !this.isBusy(),
@@ -262,6 +384,58 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
     void firstValueFrom(this.syncService.pushNow()).catch(() => undefined);
   }
 
+  protected onRefreshSnapshots(): void {
+    if (!this.settings().enabled || !this.settings().folderPath || this.snapshotsLoading()) {
+      return;
+    }
+
+    void firstValueFrom(this.syncService.listSnapshots());
+  }
+
+  protected onSetDefaultSnapshotRow(row: object): void {
+    const snapshot = row as SyncSnapshotTableRow;
+    if (!snapshot.fullPath || snapshot.isDefault || this.isBusy()) {
+      return;
+    }
+
+    this.alertDialogService.confirm({
+      zTitle: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.title'),
+      zDescription: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.description', {
+        fileName: snapshot.fileName,
+      }),
+      zOkText: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.actions.setDefault'),
+      zCancelText: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.actions.cancel'),
+      zOkDestructive: true,
+      zMaskClosable: true,
+      zClosable: true,
+      zOnOk: () => {
+        void firstValueFrom(this.syncService.setDefaultSnapshot(snapshot.fullPath)).catch(() => undefined);
+      },
+    });
+  }
+
+  protected onDeleteSnapshotRow(row: object): void {
+    const snapshot = row as SyncSnapshotTableRow;
+    if (!snapshot.fullPath || snapshot.isDefault || this.isBusy()) {
+      return;
+    }
+
+    this.alertDialogService.confirm({
+      zTitle: this.translateService.instant('dataBackups.sync.files.deleteAlert.title'),
+      zDescription: this.translateService.instant('dataBackups.sync.files.deleteAlert.description', {
+        fileName: snapshot.fileName,
+      }),
+      zOkText: this.translateService.instant('dataBackups.sync.files.deleteAlert.actions.delete'),
+      zCancelText: this.translateService.instant('dataBackups.sync.files.deleteAlert.actions.cancel'),
+      zOkDestructive: true,
+      zMaskClosable: true,
+      zClosable: true,
+      zOnOk: () => {
+        void firstValueFrom(this.syncService.removeSnapshot(snapshot.fullPath)).catch(() => undefined);
+      },
+    });
+  }
+
   protected statusLabel(status: SyncStateDto['status']): string {
     const keyByStatus = {
       idle: 'dataBackups.sync.status.values.idle',
@@ -389,6 +563,38 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
 
   private normalizeTimestampValue(value: number | null): number | null {
     return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : null;
+  }
+
+  private toSnapshotTableRow(snapshot: SyncSnapshotInfoDto): SyncSnapshotTableRow {
+    return {
+      id: snapshot.fullPath,
+      fullPath: snapshot.fullPath,
+      createdAtMs: snapshot.createdAtMs,
+      fileName: snapshot.fileName,
+      deviceId: snapshot.deviceId || '-',
+      changeCounter:
+        typeof snapshot.meta?.change_counter === 'number' ? snapshot.meta.change_counter : null,
+      sizeLabel: this.formatFileSize(snapshot.sizeBytes),
+      isDefault: snapshot.isDefault,
+    };
+  }
+
+  private formatFileSize(sizeBytes: number): string {
+    if (!Number.isFinite(sizeBytes) || sizeBytes <= 0) {
+      return '0 B';
+    }
+
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let size = sizeBytes;
+    let unitIndex = 0;
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+      size /= 1024;
+      unitIndex += 1;
+    }
+
+    const fixedDigits = unitIndex === 0 ? 0 : size >= 100 ? 0 : size >= 10 ? 1 : 2;
+    return `${size.toFixed(fixedDigits)} ${units[unitIndex]}`;
   }
 
   private runEnable(folderPath: string): void {

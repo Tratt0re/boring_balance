@@ -17,6 +17,7 @@ import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
+import { reloadAppShell } from '@/shared/utils/reload-app-shell';
 import {
   SYNC_INTERVAL_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
@@ -37,6 +38,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private readonly localPreferencesService = inject(LocalPreferencesService);
   private readonly settingsSubject = new BehaviorSubject<SyncSettingsDto>(SYNC_SETTINGS_DEFAULTS);
   private readonly stateSubject = new BehaviorSubject<SyncStateDto>(this.readPersistedState());
+  private readonly snapshotsSubject = new BehaviorSubject<readonly SyncSnapshotInfoDto[]>([]);
   private readonly settingsLoadingSubject = new BehaviorSubject(false);
   private readonly stateLoadingSubject = new BehaviorSubject(false);
   private readonly repoStatusLoadingSubject = new BehaviorSubject(false);
@@ -45,12 +47,16 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private readonly syncNowLoadingSubject = new BehaviorSubject(false);
   private readonly pullNowLoadingSubject = new BehaviorSubject(false);
   private readonly pushNowLoadingSubject = new BehaviorSubject(false);
+  private readonly snapshotsLoadingSubject = new BehaviorSubject(false);
+  private readonly setDefaultSnapshotLoadingSubject = new BehaviorSubject(false);
+  private readonly removeSnapshotLoadingSubject = new BehaviorSubject(false);
 
   private eventsBound = false;
   private initializationPromise: Promise<void> | null = null;
 
   readonly settings$ = this.settingsSubject.asObservable();
   readonly state$ = this.stateSubject.asObservable();
+  readonly snapshots$ = this.snapshotsSubject.asObservable();
   readonly settingsLoading$ = this.settingsLoadingSubject.asObservable();
   readonly stateLoading$ = this.stateLoadingSubject.asObservable();
   readonly repoStatusLoading$ = this.repoStatusLoadingSubject.asObservable();
@@ -59,6 +65,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   readonly syncNowLoading$ = this.syncNowLoadingSubject.asObservable();
   readonly pullNowLoading$ = this.pullNowLoadingSubject.asObservable();
   readonly pushNowLoading$ = this.pushNowLoadingSubject.asObservable();
+  readonly snapshotsLoading$ = this.snapshotsLoadingSubject.asObservable();
+  readonly setDefaultSnapshotLoading$ = this.setDefaultSnapshotLoadingSubject.asObservable();
+  readonly removeSnapshotLoading$ = this.removeSnapshotLoadingSubject.asObservable();
 
   constructor() {
     super(APIChannel.SYNC);
@@ -74,7 +83,14 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       firstValueFrom(this.getSettings()),
       firstValueFrom(this.getState()),
     ])
-      .then(() => undefined)
+      .then(([settings]) => {
+        if (settings.enabled && settings.folderPath) {
+          return firstValueFrom(this.listSnapshots()).then(() => undefined);
+        }
+
+        this.snapshotsSubject.next([]);
+        return undefined;
+      })
       .finally(() => {
         this.initializationPromise = null;
       });
@@ -260,11 +276,58 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   }
 
   listSnapshots(): Observable<readonly SyncSnapshotInfoDto[]> {
+    this.snapshotsLoadingSubject.next(true);
+
     return from(this.ipcClient.listSnapshots()).pipe(
-      map((rows) => rows.map((row) => this.normalizeSnapshotInfo(row))),
+      map((rows) =>
+        [...rows]
+          .map((row) => this.normalizeSnapshotInfo(row))
+          .sort((left, right) => right.createdAtMs - left.createdAtMs),
+      ),
+      tap((rows) => {
+        this.snapshotsSubject.next(rows);
+      }),
       catchError((error) => {
         toast.error(this.toErrorMessage(error, 'Failed to load sync snapshots.'));
-        return of([] as readonly SyncSnapshotInfoDto[]);
+        return of(this.snapshotsSubject.value);
+      }),
+      finalize(() => this.snapshotsLoadingSubject.next(false)),
+    );
+  }
+
+  setDefaultSnapshot(snapshotFilePath: string): Observable<SyncActionResultDto> {
+    this.setDefaultSnapshotLoadingSubject.next(true);
+
+    return from(this.ipcClient.setDefaultSnapshot({ snapshotFilePath })).pipe(
+      map((result) => this.normalizeActionResult(result)),
+      tap(() => {
+        toast.success('Default sync file updated. Reloading app data...');
+        void firstValueFrom(this.listSnapshots());
+        reloadAppShell(250);
+      }),
+      finalize(() => this.setDefaultSnapshotLoadingSubject.next(false)),
+      catchError((error) => {
+        toast.error(this.toErrorMessage(error, 'Failed to select the default sync file.'));
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  removeSnapshot(snapshotFilePath: string): Observable<DTO.SyncRemoveSnapshotResponse> {
+    this.removeSnapshotLoadingSubject.next(true);
+
+    return from(this.ipcClient.removeSnapshot({ snapshotFilePath })).pipe(
+      tap((result) => {
+        if (Number(result?.changed ?? 0) > 0) {
+          toast.success('Sync file deleted.');
+        }
+
+        void firstValueFrom(this.listSnapshots());
+      }),
+      finalize(() => this.removeSnapshotLoadingSubject.next(false)),
+      catchError((error) => {
+        toast.error(this.toErrorMessage(error, 'Failed to delete the sync file.'));
+        return throwError(() => error);
       }),
     );
   }
@@ -288,6 +351,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       const result = this.normalizeActionResult(payload as DTO.SyncActionResultDto);
       toast.success(`Pull completed${result.snapshotId ? ` (${result.snapshotId})` : '.'}`);
       void this.refreshSettingsAndState();
+      reloadAppShell(250);
     });
 
     onIpcEvent('sync:pullFailed', (payload) => {
@@ -318,6 +382,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       });
       toast.error('Sync conflict detected. Review the details below.');
       void this.refreshSettingsAndState();
+      reloadAppShell(250);
     });
   }
 
@@ -550,6 +615,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       sizeBytes: Math.max(0, Number(value?.sizeBytes ?? 0)),
       repoId: String(value?.repoId ?? ''),
       deviceId: String(value?.deviceId ?? ''),
+      isDefault: Boolean(value?.isDefault),
       meta: value?.meta ?? null,
     };
   }
@@ -591,9 +657,16 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   }
 
   private async refreshSettingsAndState(): Promise<void> {
-    await Promise.all([
+    const [settings] = await Promise.all([
       firstValueFrom(this.getSettings()),
       firstValueFrom(this.getState()),
-    ]).catch(() => undefined);
+    ]).catch(() => [this.settingsSubject.value, this.stateSubject.value] as const);
+
+    if (settings.enabled && settings.folderPath) {
+      await firstValueFrom(this.listSnapshots()).catch(() => undefined);
+      return;
+    }
+
+    this.snapshotsSubject.next([]);
   }
 }

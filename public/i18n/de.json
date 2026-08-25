@@ -362,9 +362,9 @@
         "description": "Einen Ordner verwenden, der bereits zwischen Geräten synchronisiert wird, z. B. ein Cloud-Laufwerk, NAS oder USB-Laufwerk.",
         "warning": "Einen vertrauenswürdigen Synchronisierungsordner auswählen. Die App arbeitet weiterhin vom eigenen Gerät und nutzt den gemeinsamen Ordner nur zum sicheren Dateiabgleich.",
         "enabled": "Synchronisierung aktivieren",
-        "chooseFolder": "Stammordner auswählen",
-        "selectedFolder": "Ausgewählter Stammordner",
-        "baseFolderPath": "Stammordner",
+        "chooseFolder": "Ordnerspeicherort auswählen",
+        "selectedFolder": "Ausgewählter Ordnerspeicherort",
+        "baseFolderPath": "Ordnerspeicherort",
         "repoPath": "App-Synchronisierungsordner",
         "notConnected": "Noch nicht verbunden",
         "enableHints": {
@@ -374,11 +374,11 @@
       },
       "setup": {
         "title": "Synchronisierungsordner verbinden",
-        "description": "Den gemeinsamen Ordner auswählen und dann entweder einen neuen Synchronisierungsbereich erstellen oder eine Verbindung zu einem vorhandenen herstellen.",
+        "description": "Auswählen, wo der App-Synchronisierungsordner liegen soll, und dann einen neuen Bereich erstellen oder einen vorhandenen verbinden.",
         "steps": {
           "rootFolder": {
-            "title": "1. Stammordner auswählen",
-            "description": "Einen vorhandenen Ordner auswählen oder einen neuen erstellen. Boring Balance legt darin seinen eigenen Synchronisierungsordner an."
+            "title": "1. Ordnerspeicherort auswählen",
+            "description": "Einen vorhandenen Ordner auswählen oder einen neuen erstellen. Der App-Synchronisierungsordner wird dort angelegt."
           },
           "create": {
             "title": "2. Auf dem ersten Gerät erstellen",
@@ -395,11 +395,11 @@
         },
         "status": {
           "checking": "Ausgewählter Ordner wird geprüft...",
-          "chooseFirst": "Stammordner auswählen, um fortzufahren.",
+          "chooseFirst": "Ordnerspeicherort auswählen, um fortzufahren.",
           "exists": "Ein vorhandener Synchronisierungsbereich wurde in diesem Ordner gefunden. \"Verbinden\" verwenden, wenn ein anderes Gerät ihn bereits verwendet.",
           "missing": "In diesem Ordner wurde noch kein Synchronisierungsbereich gefunden. \"Erstellen\" verwenden, wenn dies das erste synchronisierte Gerät ist.",
-          "repoPathPending": "Der App-Synchronisierungsordner wird hier angezeigt, nachdem der Stammordner geprüft wurde.",
-          "waitingForFolder": "Stammordner auswählen, um fortzufahren."
+          "repoPathPending": "Der App-Synchronisierungsordner wird hier angezeigt, nachdem der Speicherort geprüft wurde.",
+          "waitingForFolder": "Ordnerspeicherort auswählen, um fortzufahren."
         },
         "actionHelp": "\"Erstellen\" startet die Synchronisierung von diesem Gerät. \"Verbinden\" tritt einem Synchronisierungsbereich bei, den ein anderes Gerät bereits erstellt hat."
       },
@@ -467,7 +467,42 @@
         "conflictTitle": "Konflikt erkannt",
         "localCopyPath": "Lokale Kopie gespeichert unter",
         "remoteSnapshotPath": "Remote-Momentaufnahme wiederhergestellt von",
-        "conflictHint": "Ihre lokale Kopie wurde beibehalten und die gemeinsame Kopie wurde geöffnet, damit Sie die Unterschiede prüfen können."
+        "conflictHint": "Die lokale Version wurde als Synchronisierungsdatei und lokale Kopie erhalten. Prüfen Sie die verfügbaren Dateien und wählen Sie den richtigen Standard."
+      },
+      "files": {
+        "title": "Verfügbare Synchronisierungsdateien",
+        "description": "Gemeinsame Synchronisierungsdateien prüfen, eine als Standard auswählen oder nicht mehr benötigte Dateien löschen.",
+        "loading": "Liste der Synchronisierungsdateien wird aktualisiert...",
+        "empty": "Noch keine Synchronisierungsdateien verfügbar. Durch Übertragen kann die erste erstellt werden.",
+        "columns": {
+          "date": "Datum",
+          "file": "Datei",
+          "device": "Gerät",
+          "changeCounter": "Änderungszähler",
+          "size": "Größe",
+          "default": "Standard"
+        },
+        "actions": {
+          "refresh": "Liste aktualisieren",
+          "setDefault": "Als Standard verwenden",
+          "delete": "Löschen"
+        },
+        "setDefaultAlert": {
+          "title": "Synchronisierungsdatei als Standard verwenden",
+          "description": "\"{{fileName}}\" als Standard verwenden und die aktuellen Daten dieses Geräts damit ersetzen. Fortfahren?",
+          "actions": {
+            "setDefault": "Als Standard verwenden",
+            "cancel": "Abbrechen"
+          }
+        },
+        "deleteAlert": {
+          "title": "Synchronisierungsdatei löschen",
+          "description": "\"{{fileName}}\" aus dem Synchronisierungsordner löschen? Dies kann nicht rückgängig gemacht werden.",
+          "actions": {
+            "delete": "Löschen",
+            "cancel": "Abbrechen"
+          }
+        }
       },
       "attachAlert": {
         "title": "Vorhandenen Synchronisierungsbereich verbinden",

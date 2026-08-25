@@ -362,9 +362,9 @@
         "description": "使用已在设备间同步的文件夹，例如云盘、NAS 或 USB 驱动器。",
         "warning": "请选择可信任的同步文件夹。应用继续从你的设备运行，仅使用共享文件夹安全交换副本。",
         "enabled": "启用同步",
-        "chooseFolder": "选择根文件夹",
-        "selectedFolder": "已选根文件夹",
-        "baseFolderPath": "根文件夹",
+        "chooseFolder": "选择文件夹位置",
+        "selectedFolder": "已选文件夹位置",
+        "baseFolderPath": "文件夹位置",
         "repoPath": "应用同步文件夹",
         "notConnected": "尚未连接",
         "enableHints": {
@@ -374,11 +374,11 @@
       },
       "setup": {
         "title": "连接同步文件夹",
-        "description": "选择共享文件夹，然后创建新的同步空间或连接已有的同步空间。",
+        "description": "选择应用同步文件夹的位置，然后创建新的同步空间或连接已有空间。",
         "steps": {
           "rootFolder": {
-            "title": "1. 选择根文件夹",
-            "description": "选择已有文件夹或创建新文件夹。Boring Balance 将在其中创建自己的同步文件夹。"
+            "title": "1. 选择文件夹位置",
+            "description": "选择已有文件夹或创建新文件夹。应用同步文件夹将在此处创建。"
           },
           "create": {
             "title": "2. 在第一台设备上创建",
@@ -395,11 +395,11 @@
         },
         "status": {
           "checking": "正在检查所选文件夹...",
-          "chooseFirst": "选择根文件夹以继续。",
+          "chooseFirst": "选择文件夹位置以继续。",
           "exists": "此文件夹中发现已有同步空间。如另一台设备已在使用，请使用「连接」。",
           "missing": "此文件夹中尚未找到同步空间。如这是第一台同步设备，请使用「创建」。",
-          "repoPathPending": "检查根文件夹后，应用同步文件夹将显示在此处。",
-          "waitingForFolder": "选择根文件夹以继续。"
+          "repoPathPending": "检查文件夹位置后，应用同步文件夹将显示在此处。",
+          "waitingForFolder": "选择文件夹位置以继续。"
         },
         "actionHelp": "「创建」从本设备启动同步。「连接」加入另一台设备已创建的同步空间。"
       },
@@ -467,7 +467,42 @@
         "conflictTitle": "检测到冲突",
         "localCopyPath": "本地副本保存路径",
         "remoteSnapshotPath": "远程快照恢复自",
-        "conflictHint": "你的本地副本已保留，共享副本已打开供你查看差异。"
+        "conflictHint": "本地版本已保留为同步文件和本地副本。请查看可用同步文件并选择正确的默认文件。"
+      },
+      "files": {
+        "title": "可用同步文件",
+        "description": "查看共享同步文件、选择默认文件，或删除不再需要的文件。",
+        "loading": "正在刷新同步文件列表...",
+        "empty": "尚无同步文件。执行推送以创建第一个文件。",
+        "columns": {
+          "date": "日期",
+          "file": "文件",
+          "device": "设备",
+          "changeCounter": "更改计数",
+          "size": "大小",
+          "default": "默认"
+        },
+        "actions": {
+          "refresh": "刷新列表",
+          "setDefault": "设为默认",
+          "delete": "删除"
+        },
+        "setDefaultAlert": {
+          "title": "设为默认同步文件",
+          "description": "将“{{fileName}}”设为默认同步文件并替换本设备的当前数据。继续？",
+          "actions": {
+            "setDefault": "设为默认",
+            "cancel": "取消"
+          }
+        },
+        "deleteAlert": {
+          "title": "删除同步文件",
+          "description": "从同步文件夹删除“{{fileName}}”？此操作无法撤销。",
+          "actions": {
+            "delete": "删除",
+            "cancel": "取消"
+          }
+        }
       },
       "attachAlert": {
         "title": "连接已有同步空间",
