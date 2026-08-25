@@ -362,9 +362,9 @@
         "description": "Usa una cartella che tieni già sincronizzata tra dispositivi, come un cloud, un NAS o una chiavetta USB.",
         "warning": "Scegli una cartella di sincronizzazione affidabile. L'app continua a lavorare dal tuo dispositivo e usa la cartella condivisa solo per scambiare copie in modo sicuro.",
         "enabled": "Abilita sync",
-        "chooseFolder": "Scegli cartella radice",
-        "selectedFolder": "Cartella radice selezionata",
-        "baseFolderPath": "Cartella radice",
+        "chooseFolder": "Scegli posizione cartella",
+        "selectedFolder": "Posizione cartella selezionata",
+        "baseFolderPath": "Posizione cartella",
         "repoPath": "Cartella sync dell'app",
         "notConnected": "Non collegato ancora",
         "enableHints": {
@@ -374,11 +374,11 @@
       },
       "setup": {
         "title": "Collega una cartella sync",
-        "description": "Scegli la cartella condivisa e poi crea un nuovo spazio di sincronizzazione oppure collegati a uno già esistente.",
+        "description": "Scegli dove collocare la cartella sync dell'app, poi crea un nuovo spazio o collegati a uno esistente.",
         "steps": {
           "rootFolder": {
-            "title": "1. Scegli una cartella radice",
-            "description": "Scegli una cartella esistente o creane una nuova. Boring Balance inserirà dentro la sua cartella sync."
+            "title": "1. Scegli una posizione",
+            "description": "Scegli una cartella esistente o creane una nuova. La cartella sync dell'app verrà creata lì."
           },
           "create": {
             "title": "2. Crea sul primo dispositivo",
@@ -395,11 +395,11 @@
         },
         "status": {
           "checking": "Controllo della cartella selezionata...",
-          "chooseFirst": "Scegli una cartella radice per continuare.",
+          "chooseFirst": "Scegli una posizione per continuare.",
           "exists": "In questa cartella è stato trovato uno spazio sync. Usa Collega se un altro dispositivo la usa già.",
           "missing": "In questa cartella non esiste ancora uno spazio sync. Usa Crea se questo è il tuo primo dispositivo sincronizzato.",
-          "repoPathPending": "La cartella sync dell'app apparirà qui dopo il controllo della cartella radice.",
-          "waitingForFolder": "Scegli una cartella radice per continuare."
+          "repoPathPending": "La cartella sync dell'app apparirà qui dopo il controllo della posizione.",
+          "waitingForFolder": "Scegli una posizione per continuare."
         },
         "actionHelp": "Crea avvia la sincronizzazione da questo dispositivo. Collega si unisce a uno spazio che un altro dispositivo ha già creato."
       },
@@ -467,7 +467,42 @@
         "conflictTitle": "Conflitto rilevato",
         "localCopyPath": "Copia locale salvata in",
         "remoteSnapshotPath": "Snapshot remoto ripristinato da",
-        "conflictHint": "La tua copia locale è stata conservata e quella condivisa è stata aperta per aiutarti a confrontarle."
+        "conflictHint": "La versione locale è stata conservata come file sync e copia locale. Controlla i file disponibili e scegli quello predefinito corretto."
+      },
+      "files": {
+        "title": "File sync disponibili",
+        "description": "Controlla i file sync condivisi, scegli quello predefinito o elimina quelli che non ti servono più.",
+        "loading": "Aggiornamento elenco file sync...",
+        "empty": "Non ci sono ancora file sync. Esegui un push per creare il primo.",
+        "columns": {
+          "date": "Data",
+          "file": "File",
+          "device": "Dispositivo",
+          "changeCounter": "Contatore modifiche",
+          "size": "Dimensione",
+          "default": "Predefinito"
+        },
+        "actions": {
+          "refresh": "Aggiorna elenco",
+          "setDefault": "Usa come predefinito",
+          "delete": "Elimina"
+        },
+        "setDefaultAlert": {
+          "title": "Usa il file sync come predefinito",
+          "description": "Usare \"{{fileName}}\" come file sync predefinito e sostituire i dati attuali di questo dispositivo?",
+          "actions": {
+            "setDefault": "Usa come predefinito",
+            "cancel": "Annulla"
+          }
+        },
+        "deleteAlert": {
+          "title": "Elimina file sync",
+          "description": "Eliminare \"{{fileName}}\" dalla cartella sync? L'operazione non può essere annullata.",
+          "actions": {
+            "delete": "Elimina",
+            "cancel": "Annulla"
+          }
+        }
       },
       "attachAlert": {
         "title": "Collega spazio sync esistente",

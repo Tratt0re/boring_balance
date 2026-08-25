@@ -100,6 +100,8 @@ const CHANNELS = Object.freeze({
     pullNow: 'sync:pullNow',
     pushNow: 'sync:pushNow',
     listSnapshots: 'sync:listSnapshots',
+    setDefaultSnapshot: 'sync:setDefaultSnapshot',
+    removeSnapshot: 'sync:removeSnapshot',
   }),
   reset: Object.freeze({
     clearFinancialData: 'db:reset:clear-financial-data',

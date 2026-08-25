@@ -362,9 +362,9 @@
         "description": "Utiliser un dossier déjà synchronisé entre vos appareils, comme un disque cloud, un NAS ou une clé USB.",
         "warning": "Choisir un dossier de synchronisation de confiance. L'application continue de fonctionner depuis votre appareil et n'utilise le dossier partagé que pour échanger des copies en toute sécurité.",
         "enabled": "Activer la synchronisation",
-        "chooseFolder": "Choisir le dossier racine",
-        "selectedFolder": "Dossier racine sélectionné",
-        "baseFolderPath": "Dossier racine",
+        "chooseFolder": "Choisir l'emplacement",
+        "selectedFolder": "Emplacement sélectionné",
+        "baseFolderPath": "Emplacement du dossier",
         "repoPath": "Dossier de synchronisation de l'application",
         "notConnected": "Pas encore connecté",
         "enableHints": {
@@ -374,11 +374,11 @@
       },
       "setup": {
         "title": "Connecter un dossier de synchronisation",
-        "description": "Sélectionner le dossier partagé, puis créer un nouvel espace de synchronisation ou se connecter à un existant.",
+        "description": "Choisir l'emplacement du dossier de synchronisation de l'application, puis créer un nouvel espace ou se connecter à un espace existant.",
         "steps": {
           "rootFolder": {
-            "title": "1. Choisir un dossier racine",
-            "description": "Sélectionner un dossier existant ou en créer un nouveau. Boring Balance y placera son propre dossier de synchronisation."
+            "title": "1. Choisir un emplacement",
+            "description": "Sélectionner un dossier existant ou en créer un nouveau. Le dossier de synchronisation de l'application y sera créé."
           },
           "create": {
             "title": "2. Créer sur le premier appareil",
@@ -395,11 +395,11 @@
         },
         "status": {
           "checking": "Vérification du dossier sélectionné...",
-          "chooseFirst": "Choisir un dossier racine pour continuer.",
+          "chooseFirst": "Choisir un emplacement pour continuer.",
           "exists": "Un espace de synchronisation existant a été trouvé dans ce dossier. Utiliser Connecter si un autre appareil l'utilise déjà.",
           "missing": "Aucun espace de synchronisation trouvé dans ce dossier. Utiliser Créer s'il s'agit du premier appareil synchronisé.",
-          "repoPathPending": "Le dossier de synchronisation de l'application apparaîtra ici après la vérification du dossier racine.",
-          "waitingForFolder": "Choisir un dossier racine pour continuer."
+          "repoPathPending": "Le dossier de synchronisation de l'application apparaîtra ici après la vérification de l'emplacement.",
+          "waitingForFolder": "Choisir un emplacement pour continuer."
         },
         "actionHelp": "Créer démarre la synchronisation depuis cet appareil. Connecter rejoint un espace de synchronisation déjà créé par un autre appareil."
       },
@@ -467,7 +467,42 @@
         "conflictTitle": "Conflit détecté",
         "localCopyPath": "Copie locale enregistrée sous",
         "remoteSnapshotPath": "Instantané distant restauré depuis",
-        "conflictHint": "Votre copie locale a été conservée et la copie partagée a été ouverte pour vous permettre d'examiner la différence."
+        "conflictHint": "La version locale a été conservée comme fichier de synchronisation et copie locale. Examinez les fichiers disponibles et choisissez le bon fichier par défaut."
+      },
+      "files": {
+        "title": "Fichiers de synchronisation disponibles",
+        "description": "Examiner les fichiers partagés, choisir celui à utiliser par défaut ou supprimer ceux qui ne sont plus utiles.",
+        "loading": "Actualisation de la liste des fichiers de synchronisation...",
+        "empty": "Aucun fichier de synchronisation disponible. Effectuez un envoi pour créer le premier.",
+        "columns": {
+          "date": "Date",
+          "file": "Fichier",
+          "device": "Appareil",
+          "changeCounter": "Compteur de modifications",
+          "size": "Taille",
+          "default": "Par défaut"
+        },
+        "actions": {
+          "refresh": "Actualiser la liste",
+          "setDefault": "Utiliser par défaut",
+          "delete": "Supprimer"
+        },
+        "setDefaultAlert": {
+          "title": "Utiliser le fichier par défaut",
+          "description": "Utiliser \"{{fileName}}\" comme fichier de synchronisation par défaut et remplacer les données actuelles de cet appareil ?",
+          "actions": {
+            "setDefault": "Utiliser par défaut",
+            "cancel": "Annuler"
+          }
+        },
+        "deleteAlert": {
+          "title": "Supprimer le fichier de synchronisation",
+          "description": "Supprimer \"{{fileName}}\" du dossier de synchronisation ? Cette action est irréversible.",
+          "actions": {
+            "delete": "Supprimer",
+            "cancel": "Annuler"
+          }
+        }
       },
       "attachAlert": {
         "title": "Connecter un espace de synchronisation existant",

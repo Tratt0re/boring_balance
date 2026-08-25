@@ -35,6 +35,7 @@ const SYNC_SETTINGS_FIELDS = new Set([
   'autoPushOnQuit',
   'retentionCountPerDevice',
 ]);
+const SYNC_SNAPSHOT_ACTION_FIELDS = new Set(['snapshotFilePath']);
 const SYNC_SETTINGS_DEFAULTS = Object.freeze({
   enabled: false,
   folderPath: null,
@@ -134,6 +135,36 @@ function resolveSnapshotPath(folderPath, snapshotFile) {
   }
 
   return path.join(snapshotsDirPath, requireString(snapshotFile, 'snapshotFile', { allowEmpty: false }));
+}
+
+function resolveManagedSnapshotPath(settings, payload) {
+  const body = ensurePlainObject(payload, 'payload');
+  assertAllowedKeys(body, SYNC_SNAPSHOT_ACTION_FIELDS, 'payload');
+
+  const snapshotFilePath = path.resolve(
+    requireString(body.snapshotFilePath, 'payload.snapshotFilePath', { allowEmpty: false }),
+  );
+  const snapshotsDirPath = resolveSnapshotsDirPath(settings.folderPath);
+  if (!snapshotsDirPath) {
+    throw new Error('Sync folder is not configured.');
+  }
+
+  const normalizedSnapshotsDirPath = path.resolve(snapshotsDirPath);
+  const relativeSnapshotPath = path.relative(normalizedSnapshotsDirPath, snapshotFilePath);
+  if (
+    !relativeSnapshotPath
+    || relativeSnapshotPath.startsWith('..')
+    || path.isAbsolute(relativeSnapshotPath)
+    || path.dirname(relativeSnapshotPath) !== '.'
+  ) {
+    throw new Error('Snapshot file must be directly inside the configured sync snapshots folder.');
+  }
+
+  if (!snapshotFilePath.endsWith(syncModel.SQLITE_FILE_SUFFIX)) {
+    throw new Error(`Snapshot file must end with "${syncModel.SQLITE_FILE_SUFFIX}".`);
+  }
+
+  return snapshotFilePath;
 }
 
 function snapshotIdFromFile(snapshotFile) {
@@ -627,6 +658,15 @@ function buildConflictInfo(localCopyPath, remoteSnapshotPath, reason) {
   };
 }
 
+async function createConflictCandidateSnapshot(settings, syncPaths, localMeta) {
+  return syncModel.createSnapshot(
+    getDatabase(),
+    syncPaths.snapshotsDir,
+    settings.deviceId,
+    localMeta,
+  );
+}
+
 function resolveUniqueLocalCopyPath(localDbPath, prefix) {
   const normalizedLocalDbPath = path.resolve(localDbPath);
   const localDirectoryPath = path.dirname(normalizedLocalDbPath);
@@ -781,6 +821,7 @@ async function performPull(settings, options = {}) {
     }
 
     if (currentIndexLatest.db_uuid !== localMeta.db_uuid) {
+      await createConflictCandidateSnapshot(currentSettings, syncPaths, localMeta);
       const restoreResult = await restoreSnapshotIntoLocal(snapshotPath, { markConflict: true });
       const persistedSettings = persistSettingsPatch({
         lastPulledCounter: currentIndexLatest.change_counter,
@@ -872,6 +913,7 @@ async function performPush(settings, options = {}) {
         throw new Error(`Indexed snapshot file is missing: ${currentIndexLatest.file}`);
       }
 
+      await createConflictCandidateSnapshot(currentSettings, syncPaths, localMeta);
       const restoreResult = await restoreSnapshotIntoLocal(snapshotPath, { markConflict: true });
       const persistedSettings = persistSettingsPatch({
         lastPulledCounter: currentIndexLatest.change_counter,
@@ -1234,7 +1276,84 @@ function listSnapshots() {
     return [];
   }
 
-  return syncModel.listSnapshots(settings.folderPath);
+  const indexPath = resolveIndexPath(settings.folderPath);
+  const indexValue = indexPath ? syncModel.readIndex(indexPath) : null;
+  const defaultSnapshotFile = indexValue?.latest?.file ?? null;
+
+  return syncModel.listSnapshots(settings.folderPath).map((snapshot) => ({
+    ...snapshot,
+    isDefault: snapshot.fileName === defaultSnapshotFile,
+  }));
+}
+
+async function setDefaultSnapshot(payload) {
+  return runSyncTask(async () => {
+    const settings = readSyncSettings();
+    const syncPaths = ensureConfiguredSettings(settings);
+    const snapshotFilePath = resolveManagedSnapshotPath(settings, payload);
+    const snapshots = syncModel.listSnapshots(settings.folderPath);
+    const snapshot = snapshots.find((entry) => path.resolve(entry.fullPath) === snapshotFilePath);
+    if (!snapshot) {
+      throw new Error('Sync snapshot was not found.');
+    }
+
+    const snapshotMeta = assertCompleteLocalMeta(syncModel.readSnapshotMeta(snapshotFilePath));
+    const restoreResult = await restoreSnapshotIntoLocal(snapshotFilePath);
+    const selectedIndexLatest = {
+      file: snapshot.fileName,
+      db_uuid: snapshotMeta.db_uuid,
+      change_counter: snapshotMeta.change_counter,
+      last_write_ms: snapshotMeta.last_write_ms,
+      created_at_ms: snapshot.createdAtMs,
+      device_id: snapshot.deviceId || settings.deviceId,
+    };
+
+    syncModel.writeIndexAtomic(syncPaths.indexPath, {
+      schema_version: syncModel.SYNC_SCHEMA_VERSION,
+      updated_at_ms: Date.now(),
+      latest: selectedIndexLatest,
+    });
+
+    const persistedSettings = persistSettingsPatch({
+      lastPulledCounter: snapshotMeta.change_counter,
+      lastPublishedCounter: snapshotMeta.change_counter,
+      lastError: null,
+    });
+    const selectedAtMs = Date.now();
+    setSuccessState({
+      lastPullAtMs: selectedAtMs,
+      remoteLatest: normalizeRemoteLatest(selectedIndexLatest),
+    });
+
+    return {
+      ...buildActionBase(persistedSettings),
+      action: 'selected-default',
+      pulled: true,
+      snapshotId: snapshot.snapshotId,
+      snapshotFile: snapshot.fileName,
+      snapshotFilePath,
+      restoredFrom: restoreResult.restoredFrom,
+      restoredTo: restoreResult.restoredTo,
+      previousLocalCopyPath: restoreResult.previousLocalCopyPath,
+      createdAtMs: snapshot.createdAtMs,
+      meta: snapshotMeta,
+      indexUpdated: true,
+    };
+  });
+}
+
+async function removeSnapshot(payload) {
+  return runSyncTask(async () => {
+    const settings = readSyncSettings();
+    const syncPaths = ensureConfiguredSettings(settings);
+    const snapshotFilePath = resolveManagedSnapshotPath(settings, payload);
+    const indexValue = syncModel.readIndex(syncPaths.indexPath);
+    if (path.basename(snapshotFilePath) === indexValue?.latest?.file) {
+      throw new Error('The default sync snapshot cannot be deleted. Select another default first.');
+    }
+
+    return syncModel.removeSnapshot(snapshotFilePath);
+  });
 }
 
 async function onAppBeforeQuit() {
@@ -1271,8 +1390,10 @@ module.exports = {
   onAppBeforeQuit,
   pullNow,
   pushNow,
+  removeSnapshot,
   repoStatus,
   selectFolder,
+  setDefaultSnapshot,
   syncNow,
   updateSettings,
 };

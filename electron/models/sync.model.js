@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const Database = require('better-sqlite3');
 const { selectRows } = require('../database/core_op');
 const { formatTimestampForFilename, safeReplaceFileWithBackup } = require('../utils/file-utils');
 
@@ -354,6 +355,57 @@ function restoreSnapshotToLocal(snapshotPath, localDbPath) {
   };
 }
 
+function readSnapshotMeta(snapshotPath) {
+  const normalizedSnapshotPath = path.resolve(ensureNonEmptyString(snapshotPath, 'snapshotPath'));
+  if (!normalizedSnapshotPath.endsWith(SQLITE_FILE_SUFFIX)) {
+    throw new Error(`Snapshot file must end with "${SQLITE_FILE_SUFFIX}".`);
+  }
+
+  if (!fs.existsSync(normalizedSnapshotPath)) {
+    throw new Error(`Snapshot file does not exist: ${normalizedSnapshotPath}`);
+  }
+
+  const snapshotStats = fs.statSync(normalizedSnapshotPath);
+  if (!snapshotStats.isFile()) {
+    throw new Error(`Snapshot file is not a regular file: ${normalizedSnapshotPath}`);
+  }
+
+  const database = new Database(normalizedSnapshotPath, {
+    readonly: true,
+    fileMustExist: true,
+  });
+
+  try {
+    return getLocalDbMeta(database);
+  } finally {
+    database.close();
+  }
+}
+
+function removeSnapshot(snapshotPath) {
+  const normalizedSnapshotPath = path.resolve(ensureNonEmptyString(snapshotPath, 'snapshotPath'));
+  const snapshotFileName = path.basename(normalizedSnapshotPath);
+  if (!SNAPSHOT_FILE_PATTERN.test(snapshotFileName)) {
+    throw new Error('Invalid snapshot file name.');
+  }
+
+  if (!fs.existsSync(normalizedSnapshotPath)) {
+    return {
+      changed: 0,
+    };
+  }
+
+  const snapshotStats = fs.statSync(normalizedSnapshotPath);
+  if (!snapshotStats.isFile()) {
+    throw new Error(`Snapshot file is not a regular file: ${normalizedSnapshotPath}`);
+  }
+
+  fs.unlinkSync(normalizedSnapshotPath);
+  return {
+    changed: 1,
+  };
+}
+
 function getLocalDbMeta(database) {
   if (!database || typeof database.prepare !== 'function') {
     throw new Error('database must be an initialized better-sqlite3 Database instance.');
@@ -390,7 +442,7 @@ function listSnapshots(folderPath) {
   }
 
   const entries = fs.readdirSync(snapshotsDir, { withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith(SQLITE_FILE_SUFFIX))
+    .filter((entry) => entry.isFile() && SNAPSHOT_FILE_PATTERN.test(entry.name))
     .map((entry) => {
       const fullPath = path.join(snapshotsDir, entry.name);
       const stats = fs.statSync(fullPath);
@@ -399,6 +451,13 @@ function listSnapshots(folderPath) {
       const changeCounter = match ? normalizeIntegerOrNull(match[2]) : null;
       const deviceId = match ? normalizeNonEmptyStringOrNull(match[4]) : null;
       const dbUuid = match ? normalizeNonEmptyStringOrNull(match[1]) : null;
+      let snapshotMeta = null;
+
+      try {
+        snapshotMeta = readSnapshotMeta(fullPath);
+      } catch {
+        snapshotMeta = null;
+      }
 
       return {
         snapshotId: entry.name.slice(0, -SQLITE_FILE_SUFFIX.length),
@@ -412,10 +471,10 @@ function listSnapshots(folderPath) {
         repoId: 'snapshot-index',
         deviceId: deviceId ?? '',
         meta: {
-          db_uuid: dbUuid,
-          change_counter: changeCounter,
-          last_write_ms: null,
-          schema_version: null,
+          db_uuid: snapshotMeta?.db_uuid ?? dbUuid,
+          change_counter: snapshotMeta?.change_counter ?? changeCounter,
+          last_write_ms: snapshotMeta?.last_write_ms ?? null,
+          schema_version: snapshotMeta?.schema_version ?? null,
         },
       };
     });
@@ -446,6 +505,8 @@ module.exports = {
   isRemoteNewer,
   listSnapshots,
   readIndex,
+  readSnapshotMeta,
+  removeSnapshot,
   restoreSnapshotToLocal,
   writeIndexAtomic,
 };

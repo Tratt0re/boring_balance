@@ -108,6 +108,8 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.sync.pullNow]: syncController.pullNow,
   [CHANNELS.sync.pushNow]: syncController.pushNow,
   [CHANNELS.sync.listSnapshots]: syncController.listSnapshots,
+  [CHANNELS.sync.setDefaultSnapshot]: syncController.setDefaultSnapshot,
+  [CHANNELS.sync.removeSnapshot]: syncController.removeSnapshot,
 
   [CHANNELS.reset.clearFinancialData]: resetController.clearFinancialData,
   [CHANNELS.reset.factoryReset]: resetController.factoryReset,

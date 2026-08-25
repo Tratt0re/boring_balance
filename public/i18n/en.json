@@ -362,9 +362,9 @@
         "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
         "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
         "enabled": "Enable sync",
-        "chooseFolder": "Choose root folder",
-        "selectedFolder": "Selected root folder",
-        "baseFolderPath": "Root folder",
+        "chooseFolder": "Choose folder location",
+        "selectedFolder": "Selected folder location",
+        "baseFolderPath": "Folder location",
         "repoPath": "App sync folder",
         "notConnected": "Not connected yet",
         "enableHints": {
@@ -374,11 +374,11 @@
       },
       "setup": {
         "title": "Connect a sync folder",
-        "description": "Pick the shared folder, then either create a new sync space or connect to one that already exists.",
+        "description": "Choose where the app sync folder should live, then create a new sync space or connect to an existing one.",
         "steps": {
           "rootFolder": {
-            "title": "1. Choose a root folder",
-            "description": "Pick an existing folder or create a new one. Boring Balance will place its own sync folder inside it."
+            "title": "1. Choose a folder location",
+            "description": "Pick an existing folder or create a new one. The app sync folder will be created there."
           },
           "create": {
             "title": "2. Create on the first device",
@@ -395,11 +395,11 @@
         },
         "status": {
           "checking": "Checking the selected folder...",
-          "chooseFirst": "Choose a root folder to continue.",
+          "chooseFirst": "Choose a folder location to continue.",
           "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
           "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
-          "repoPathPending": "The app sync folder will appear here after the root folder is checked.",
-          "waitingForFolder": "Choose a root folder to continue."
+          "repoPathPending": "The app sync folder will appear here after the folder location is checked.",
+          "waitingForFolder": "Choose a folder location to continue."
         },
         "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
       },
@@ -467,7 +467,42 @@
         "conflictTitle": "Conflict detected",
         "localCopyPath": "Local copy saved at",
         "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "Your local copy was kept, and the shared copy was opened so you can review the difference."
+        "conflictHint": "Your local version was preserved as a sync file and a local copy. Review the available sync files and choose the correct default."
+      },
+      "files": {
+        "title": "Available sync files",
+        "description": "Review shared sync files, choose the one to use as the default, or remove files you no longer need.",
+        "loading": "Refreshing sync files list...",
+        "empty": "No sync files are available yet. Run a push to create the first one.",
+        "columns": {
+          "date": "Date",
+          "file": "File",
+          "device": "Device",
+          "changeCounter": "Change counter",
+          "size": "Size",
+          "default": "Default"
+        },
+        "actions": {
+          "refresh": "Refresh list",
+          "setDefault": "Use as default",
+          "delete": "Delete"
+        },
+        "setDefaultAlert": {
+          "title": "Use sync file as default",
+          "description": "Use \"{{fileName}}\" as the default sync file and replace this device's current data with it. Continue?",
+          "actions": {
+            "setDefault": "Use as default",
+            "cancel": "Cancel"
+          }
+        },
+        "deleteAlert": {
+          "title": "Delete sync file",
+          "description": "Delete \"{{fileName}}\" from the sync folder? This cannot be undone.",
+          "actions": {
+            "delete": "Delete",
+            "cancel": "Cancel"
+          }
+        }
       },
       "attachAlert": {
         "title": "Connect existing sync space",
