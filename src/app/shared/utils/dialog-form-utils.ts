@@ -60,6 +60,7 @@ export function editableOptionsToCombobox(
   return (options ?? []).map((option) => ({
     value: `${option.value}`,
     label: translateService.instant(option.label),
+    disabled: option.disabled,
     icon: option.icon,
   }));
 }

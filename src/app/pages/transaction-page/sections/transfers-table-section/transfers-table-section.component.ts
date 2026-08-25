@@ -307,6 +307,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   );
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
+  private readonly accountEditOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly accountNameById = signal<ReadonlyMap<number, string>>(new Map());
   private readonly accountIconById = signal<ReadonlyMap<number, ZardIcon | null>>(new Map());
   private readonly accountColorHexById = signal<ReadonlyMap<number, string | null>>(new Map());
@@ -933,9 +934,6 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     try {
       const [accounts, transferRows] = await Promise.all([
         this.accountsService.listAll({
-          where: {
-            archived: 0,
-          },
           options: {
             orderBy: 'id',
             orderDirection: 'ASC',
@@ -944,6 +942,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         this.transactionsService.listTransfers(this.buildListTransfersPayload()),
       ]);
 
+      const activeAccounts = accounts.filter((account) => !account.archived);
+      const archivedLabel = this.translateService.instant('common.labels.archived');
       const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
       const accountIconById = new Map(
         accounts.map((account) => [account.id, resolveIconByValue(account.icon)] as const),
@@ -956,9 +956,18 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.accountIconById.set(accountIconById);
       this.accountColorHexById.set(accountColorHexById);
       this.accountOptions.set(
-        accounts.map((account) => ({
+        activeAccounts.map((account) => ({
           label: account.name,
           value: account.id,
+          icon: resolveIconByValue(account.icon) ?? undefined,
+          colorHex: resolveColorHexByValue(account.colorKey) ?? undefined,
+        })),
+      );
+      this.accountEditOptions.set(
+        accounts.map((account) => ({
+          label: account.archived ? `${account.name} - ${archivedLabel}` : account.name,
+          value: account.id,
+          disabled: account.archived,
           icon: resolveIconByValue(account.icon) ?? undefined,
           colorHex: resolveColorHexByValue(account.colorKey) ?? undefined,
         })),
@@ -973,6 +982,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.total.set(0);
       this.page.set(1);
       this.accountOptions.set([]);
+      this.accountEditOptions.set([]);
       this.accountNameById.set(new Map());
       this.accountIconById.set(new Map());
       this.accountColorHexById.set(new Map());
@@ -1167,7 +1177,12 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('transactions.transfers.dialog.edit.description'),
       zContent: UpsertTransferDialogComponent,
       zData: {
-        accountOptions: this.accountOptions(),
+        accountOptions: this.accountEditOptions().filter(
+          (option) =>
+            !option.disabled ||
+            Number(option.value) === transfer.fromAccountId ||
+            Number(option.value) === transfer.toAccountId,
+        ),
         transfer: {
           transferId: transfer.transferId,
           occurredAt: transfer.occurredAt,

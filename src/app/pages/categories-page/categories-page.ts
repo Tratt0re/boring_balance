@@ -23,6 +23,10 @@ import {
   translateMaybe,
 } from '@/shared/utils';
 import {
+  ManageArchivedCategoriesDialogComponent,
+  type ManageArchivedCategoriesDialogData,
+} from './components/manage-archived-categories-dialog/manage-archived-categories-dialog.component';
+import {
   UpsertCategoryDialogComponent,
   type UpsertCategoryDialogData,
 } from './components/upsert-category-dialog/upsert-category-dialog.component';
@@ -156,6 +160,13 @@ export class CategoriesPage implements OnInit, OnDestroy {
     (row) => this.onArchiveCategory(row),
   );
   private readonly toolbarActions: readonly ToolbarAction[] = [
+    {
+      id: 'manage-archived-categories',
+      label: 'categories.table.actions.manageArchived',
+      icon: 'archive',
+      buttonType: 'secondary',
+      action: () => this.openManageArchivedCategoriesDialog(),
+    },
     {
       id: 'add-category',
       label: 'categories.table.actions.add',
@@ -292,6 +303,20 @@ export class CategoriesPage implements OnInit, OnDestroy {
       zOnOk: () => {
         void this.archiveCategory(category.id);
       },
+    });
+  }
+
+  private openManageArchivedCategoriesDialog(): void {
+    this.dialogService.create<ManageArchivedCategoriesDialogComponent, ManageArchivedCategoriesDialogData>({
+      zTitle: this.translateService.instant('categories.archivedDialog.title'),
+      zDescription: this.translateService.instant('categories.archivedDialog.description'),
+      zContent: ManageArchivedCategoriesDialogComponent,
+      zData: {
+        onCategoryUnarchived: () => this.loadCategories(),
+      },
+      zWidth: 'min(96vw, 900px)',
+      zMaskClosable: true,
+      zHideFooter: true,
     });
   }
 

@@ -28,7 +28,8 @@
       "occurrences": "Occurrences",
       "frequencyUnit": "Frequency unit",
       "monthPolicy": "If the day is not in the month",
-      "year": "Year"
+      "year": "Year",
+      "archived": "Archived"
     },
     "placeholders": {
       "selectType": "Select type",
@@ -840,7 +841,8 @@
         "viewDetails": "View account details",
         "edit": "Edit account",
         "archive": "Archive account",
-        "locked": "Locked account"
+        "locked": "Locked account",
+        "manageArchived": "Manage archived"
       },
       "columns": {
         "color": "Color",
@@ -882,6 +884,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Archived accounts",
+      "description": "Review archived accounts and make them available for new entries again.",
+      "emptyMessage": "There are no archived accounts.",
+      "actions": {
+        "unarchive": "Unarchive account"
+      },
+      "errors": {
+        "loadFailed": "Failed to load archived accounts: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archive account?",
       "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
@@ -896,7 +909,9 @@
       "updateSuccess": "Account updated successfully.",
       "updateError": "Failed to update account.",
       "archiveSuccess": "Account archived successfully.",
-      "archiveError": "Failed to archive account."
+      "archiveError": "Failed to archive account.",
+      "unarchiveSuccess": "Account unarchived successfully.",
+      "unarchiveError": "Failed to unarchive account."
     },
     "errors": {
       "loadFailed": "Failed to load accounts: {{error}}"
@@ -910,7 +925,8 @@
         "add": "Add category",
         "edit": "Edit category",
         "archive": "Archive category",
-        "locked": "Locked category"
+        "locked": "Locked category",
+        "manageArchived": "Manage archived"
       },
       "columns": {
         "color": "Color",
@@ -952,6 +968,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Archived categories",
+      "description": "Review archived categories and make them available for new entries again.",
+      "emptyMessage": "There are no archived categories.",
+      "actions": {
+        "unarchive": "Unarchive category"
+      },
+      "errors": {
+        "loadFailed": "Failed to load archived categories: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archive category?",
       "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
@@ -966,7 +993,9 @@
       "updateSuccess": "Category updated successfully.",
       "updateError": "Failed to update category.",
       "archiveSuccess": "Category archived successfully.",
-      "archiveError": "Failed to archive category."
+      "archiveError": "Failed to archive category.",
+      "unarchiveSuccess": "Category unarchived successfully.",
+      "unarchiveError": "Failed to unarchive category."
     },
     "errors": {
       "loadFailed": "Failed to load categories: {{error}}"

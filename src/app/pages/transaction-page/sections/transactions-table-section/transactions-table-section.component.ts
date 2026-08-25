@@ -317,6 +317,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly categoryOptions = signal<readonly EditableOptionItem[]>([]);
+  private readonly accountEditOptions = signal<readonly EditableOptionItem[]>([]);
+  private readonly categoryEditOptions = signal<readonly EditableOptionItem[]>([]);
   private readonly accountNameById = signal<ReadonlyMap<number, string>>(new Map());
   private readonly categoryNameById = signal<ReadonlyMap<number, string>>(new Map());
   private readonly categoryTypeById = signal<ReadonlyMap<number, CategoryType>>(new Map());
@@ -1015,8 +1017,12 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('transactions.dialog.edit.description'),
       zContent: UpsertTransactionDialogComponent,
       zData: {
-        accountOptions: this.accountOptions(),
-        categoryOptions: this.categoryOptions(),
+        accountOptions: this.accountEditOptions().filter(
+          (option) => !option.disabled || Number(option.value) === transaction.accountId,
+        ),
+        categoryOptions: this.categoryEditOptions().filter(
+          (option) => !option.disabled || Number(option.value) === transaction.categoryId,
+        ),
         transaction: {
           occurredAt: transaction.occurredAt,
           settled: transaction.settled,
@@ -1130,18 +1136,12 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     try {
       const [accounts, categories, transactions] = await Promise.all([
         this.accountsService.listAll({
-          where: {
-            archived: 0,
-          },
           options: {
             orderBy: 'id',
             orderDirection: 'ASC',
           },
         }),
         this.categoriesService.listAll({
-          where: {
-            archived: 0,
-          },
           options: {
             orderBy: 'id',
             orderDirection: 'ASC',
@@ -1150,7 +1150,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         this.transactionsService.listTransactions(this.buildListTransactionsPayload()),
       ]);
 
+      const activeAccounts = accounts.filter((account) => !account.archived);
       const visibleCategories = categories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
+      const activeCategories = visibleCategories.filter((category) => !category.archived);
+      const archivedLabel = this.translateService.instant('common.labels.archived');
 
       const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
       const categoryNameById = new Map(visibleCategories.map((category) => [category.id, category.name] as const));
@@ -1176,7 +1179,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.accountColorHexById.set(accountColorHexById);
       this.categoryColorHexById.set(categoryColorHexById);
       this.accountOptions.set(
-        accounts.map((account) => ({
+        activeAccounts.map((account) => ({
           label: account.name,
           value: account.id,
           icon: resolveIconByValue(account.icon) ?? undefined,
@@ -1184,9 +1187,27 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         })),
       );
       this.categoryOptions.set(
-        visibleCategories.map((category) => ({
+        activeCategories.map((category) => ({
           label: category.name,
           value: category.id,
+          icon: resolveIconByValue(category.icon) ?? undefined,
+          colorHex: resolveColorHexByValue(category.colorKey) ?? undefined,
+        })),
+      );
+      this.accountEditOptions.set(
+        accounts.map((account) => ({
+          label: account.archived ? `${account.name} - ${archivedLabel}` : account.name,
+          value: account.id,
+          disabled: account.archived,
+          icon: resolveIconByValue(account.icon) ?? undefined,
+          colorHex: resolveColorHexByValue(account.colorKey) ?? undefined,
+        })),
+      );
+      this.categoryEditOptions.set(
+        visibleCategories.map((category) => ({
+          label: category.archived ? `${category.name} - ${archivedLabel}` : category.name,
+          value: category.id,
+          disabled: category.archived,
           icon: resolveIconByValue(category.icon) ?? undefined,
           colorHex: resolveColorHexByValue(category.colorKey) ?? undefined,
         })),
@@ -1202,6 +1223,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.page.set(1);
       this.accountOptions.set([]);
       this.categoryOptions.set([]);
+      this.accountEditOptions.set([]);
+      this.categoryEditOptions.set([]);
       this.accountNameById.set(new Map());
       this.categoryNameById.set(new Map());
       this.categoryTypeById.set(new Map());

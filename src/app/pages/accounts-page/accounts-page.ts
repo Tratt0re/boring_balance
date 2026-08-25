@@ -23,6 +23,10 @@ import {
   getTargetPageAfterCreate,
 } from '@/shared/utils';
 import {
+  ManageArchivedAccountsDialogComponent,
+  type ManageArchivedAccountsDialogData,
+} from './components/manage-archived-accounts-dialog/manage-archived-accounts-dialog.component';
+import {
   UpsertAccountDialogComponent,
   type UpsertAccountDialogData,
 } from './components/upsert-account-dialog/upsert-account-dialog.component';
@@ -171,6 +175,13 @@ export class AccountsPage implements OnInit, OnDestroy {
   );
 
   private readonly toolbarActions: readonly ToolbarAction[] = [
+    {
+      id: 'manage-archived-accounts',
+      label: 'accounts.table.actions.manageArchived',
+      icon: 'archive',
+      buttonType: 'secondary',
+      action: () => this.openManageArchivedAccountsDialog(),
+    },
     {
       id: 'add-account',
       label: 'accounts.table.actions.add',
@@ -321,6 +332,20 @@ export class AccountsPage implements OnInit, OnDestroy {
       zOnOk: () => {
         void this.archiveAccount(account.id);
       },
+    });
+  }
+
+  private openManageArchivedAccountsDialog(): void {
+    this.dialogService.create<ManageArchivedAccountsDialogComponent, ManageArchivedAccountsDialogData>({
+      zTitle: this.translateService.instant('accounts.archivedDialog.title'),
+      zDescription: this.translateService.instant('accounts.archivedDialog.description'),
+      zContent: ManageArchivedAccountsDialogComponent,
+      zData: {
+        onAccountUnarchived: () => this.loadAccounts(),
+      },
+      zWidth: 'min(96vw, 900px)',
+      zMaskClosable: true,
+      zHideFooter: true,
     });
   }
 

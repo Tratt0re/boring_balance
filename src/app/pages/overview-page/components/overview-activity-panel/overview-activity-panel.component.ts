@@ -286,7 +286,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       const [accounts, categories, transactions, transfers] = await Promise.all([
         this.accountsService
           .listAll({
-            where: { archived: 0 },
             options: {
               orderBy: 'id',
               orderDirection: 'ASC',
@@ -298,7 +297,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
           }),
         this.categoriesService
           .listAll({
-            where: { archived: 0 },
             options: {
               orderBy: 'id',
               orderDirection: 'ASC',
@@ -326,6 +324,8 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         }),
       ]);
 
+      const activeAccounts = accounts.filter((account) => !account.archived);
+      const activeCategories = categories.filter((category) => !category.archived);
       const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
       const accountIconById = new Map(
         accounts.map(
@@ -344,10 +344,10 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       const categoryColorHexById = new Map(
         categories.map((category) => [category.id, this.resolveVisualColorHex(category.colorKey)] as const),
       );
-      const visibleCategories = categories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
+      const visibleCategories = activeCategories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
 
       this.accountOptions.set(
-        accounts.map((account) => ({
+        activeAccounts.map((account) => ({
           label: account.name,
           value: account.id,
           icon: accountIconById.get(account.id) ?? undefined,

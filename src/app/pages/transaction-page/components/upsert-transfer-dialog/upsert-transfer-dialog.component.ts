@@ -185,7 +185,7 @@ export class UpsertTransferDialogComponent {
 
     return this.accountOptions.map((option) => ({
       ...option,
-      disabled: option.value === selectedToAccountId,
+      disabled: option.disabled || option.value === selectedToAccountId,
     }));
   }
 
@@ -197,7 +197,7 @@ export class UpsertTransferDialogComponent {
 
     return this.accountOptions.map((option) => ({
       ...option,
-      disabled: option.value === selectedFromAccountId,
+      disabled: option.disabled || option.value === selectedFromAccountId,
     }));
   }
 

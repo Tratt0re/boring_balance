@@ -28,7 +28,8 @@
       "occurrences": "Occorrenze",
       "frequencyUnit": "Unità di frequenza",
       "monthPolicy": "Se il giorno non esiste nel mese",
-      "year": "Anno"
+      "year": "Anno",
+      "archived": "Archiviato"
     },
     "placeholders": {
       "selectType": "Seleziona tipo",
@@ -840,7 +841,8 @@
         "viewDetails": "Visualizza dettagli conto",
         "edit": "Modifica conto",
         "archive": "Archivia conto",
-        "locked": "Conto bloccato"
+        "locked": "Conto bloccato",
+        "manageArchived": "Gestisci archiviati"
       },
       "columns": {
         "color": "Colore",
@@ -882,6 +884,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Conti archiviati",
+      "description": "Visualizza i conti archiviati e rendili nuovamente disponibili per le nuove registrazioni.",
+      "emptyMessage": "Non ci sono conti archiviati.",
+      "actions": {
+        "unarchive": "Ripristina conto"
+      },
+      "errors": {
+        "loadFailed": "Impossibile caricare i conti archiviati: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archivia conto?",
       "description": "Archivia \"{{name}}\" per non mostrarlo più nelle nuove voci. Lo storico esistente manterrà il nome del conto.",
@@ -896,7 +909,9 @@
       "updateSuccess": "Conto aggiornato con successo.",
       "updateError": "Impossibile aggiornare il conto.",
       "archiveSuccess": "Conto archiviato con successo.",
-      "archiveError": "Impossibile archiviare il conto."
+      "archiveError": "Impossibile archiviare il conto.",
+      "unarchiveSuccess": "Conto ripristinato con successo.",
+      "unarchiveError": "Impossibile ripristinare il conto."
     },
     "errors": {
       "loadFailed": "Impossibile caricare i conti: {{error}}"
@@ -910,7 +925,8 @@
         "add": "Aggiungi categoria",
         "edit": "Modifica categoria",
         "archive": "Archivia categoria",
-        "locked": "Categoria bloccata"
+        "locked": "Categoria bloccata",
+        "manageArchived": "Gestisci archiviate"
       },
       "columns": {
         "color": "Colore",
@@ -952,6 +968,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Categorie archiviate",
+      "description": "Visualizza le categorie archiviate e rendile nuovamente disponibili per le nuove registrazioni.",
+      "emptyMessage": "Non ci sono categorie archiviate.",
+      "actions": {
+        "unarchive": "Ripristina categoria"
+      },
+      "errors": {
+        "loadFailed": "Impossibile caricare le categorie archiviate: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archivia categoria?",
       "description": "Archivia \"{{name}}\" per non mostrarla più nelle nuove voci. Lo storico esistente manterrà il nome della categoria.",
@@ -966,7 +993,9 @@
       "updateSuccess": "Categoria aggiornata con successo.",
       "updateError": "Impossibile aggiornare la categoria.",
       "archiveSuccess": "Categoria archiviata con successo.",
-      "archiveError": "Impossibile archiviare la categoria."
+      "archiveError": "Impossibile archiviare la categoria.",
+      "unarchiveSuccess": "Categoria ripristinata con successo.",
+      "unarchiveError": "Impossibile ripristinare la categoria."
     },
     "errors": {
       "loadFailed": "Impossibile caricare le categorie: {{error}}"

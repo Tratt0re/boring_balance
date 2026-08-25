@@ -28,7 +28,8 @@
       "occurrences": "次数",
       "frequencyUnit": "频率单位",
       "monthPolicy": "若该日不在月份中",
-      "year": "年"
+      "year": "年",
+      "archived": "已归档"
     },
     "placeholders": {
       "selectType": "选择类型",
@@ -840,7 +841,8 @@
         "viewDetails": "查看账户详情",
         "edit": "编辑账户",
         "archive": "归档账户",
-        "locked": "已锁定账户"
+        "locked": "已锁定账户",
+        "manageArchived": "管理已归档账户"
       },
       "columns": {
         "color": "颜色",
@@ -882,6 +884,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "已归档账户",
+      "description": "查看已归档账户，并将其重新用于新记录。",
+      "emptyMessage": "没有已归档账户。",
+      "actions": {
+        "unarchive": "取消归档账户"
+      },
+      "errors": {
+        "loadFailed": "加载已归档账户失败：{{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "归档账户？",
       "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留账户名称。",
@@ -896,7 +909,9 @@
       "updateSuccess": "账户更新成功。",
       "updateError": "账户更新失败。",
       "archiveSuccess": "账户归档成功。",
-      "archiveError": "账户归档失败。"
+      "archiveError": "账户归档失败。",
+      "unarchiveSuccess": "账户取消归档成功。",
+      "unarchiveError": "账户取消归档失败。"
     },
     "errors": {
       "loadFailed": "账户加载失败：{{error}}"
@@ -910,7 +925,8 @@
         "add": "添加分类",
         "edit": "编辑分类",
         "archive": "归档分类",
-        "locked": "已锁定分类"
+        "locked": "已锁定分类",
+        "manageArchived": "管理已归档分类"
       },
       "columns": {
         "color": "颜色",
@@ -952,6 +968,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "已归档分类",
+      "description": "查看已归档分类，并将其重新用于新记录。",
+      "emptyMessage": "没有已归档分类。",
+      "actions": {
+        "unarchive": "取消归档分类"
+      },
+      "errors": {
+        "loadFailed": "加载已归档分类失败：{{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "归档分类？",
       "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留分类名称。",
@@ -966,7 +993,9 @@
       "updateSuccess": "分类更新成功。",
       "updateError": "分类更新失败。",
       "archiveSuccess": "分类归档成功。",
-      "archiveError": "分类归档失败。"
+      "archiveError": "分类归档失败。",
+      "unarchiveSuccess": "分类取消归档成功。",
+      "unarchiveError": "分类取消归档失败。"
     },
     "errors": {
       "loadFailed": "分类加载失败：{{error}}"

@@ -28,7 +28,8 @@
       "occurrences": "Ocurrencias",
       "frequencyUnit": "Unidad de frecuencia",
       "monthPolicy": "Si el dia no existe en el mes",
-      "year": "Ano"
+      "year": "Ano",
+      "archived": "Archivado"
     },
     "placeholders": {
       "selectType": "Selecciona tipo",
@@ -770,7 +771,8 @@
         "viewDetails": "Ver detalles de la cuenta",
         "edit": "Editar cuenta",
         "archive": "Archivar cuenta",
-        "locked": "Cuenta bloqueada"
+        "locked": "Cuenta bloqueada",
+        "manageArchived": "Gestionar archivadas"
       },
       "columns": {
         "color": "Color",
@@ -812,6 +814,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Cuentas archivadas",
+      "description": "Revisa las cuentas archivadas y vuelve a habilitarlas para nuevas entradas.",
+      "emptyMessage": "No hay cuentas archivadas.",
+      "actions": {
+        "unarchive": "Desarchivar cuenta"
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar las cuentas archivadas: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archivar cuenta?",
       "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la cuenta.",
@@ -826,7 +839,9 @@
       "updateSuccess": "Cuenta actualizada correctamente.",
       "updateError": "No se pudo actualizar la cuenta.",
       "archiveSuccess": "Cuenta archivada correctamente.",
-      "archiveError": "No se pudo archivar la cuenta."
+      "archiveError": "No se pudo archivar la cuenta.",
+      "unarchiveSuccess": "Cuenta desarchivada correctamente.",
+      "unarchiveError": "No se pudo desarchivar la cuenta."
     },
     "errors": {
       "loadFailed": "No se pudieron cargar las cuentas: {{error}}"
@@ -840,7 +855,8 @@
         "add": "Agregar categoria",
         "edit": "Editar categoria",
         "archive": "Archivar categoria",
-        "locked": "Categoria bloqueada"
+        "locked": "Categoria bloqueada",
+        "manageArchived": "Gestionar archivadas"
       },
       "columns": {
         "color": "Color",
@@ -882,6 +898,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Categorias archivadas",
+      "description": "Revisa las categorias archivadas y vuelve a habilitarlas para nuevas entradas.",
+      "emptyMessage": "No hay categorias archivadas.",
+      "actions": {
+        "unarchive": "Desarchivar categoria"
+      },
+      "errors": {
+        "loadFailed": "No se pudieron cargar las categorias archivadas: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archivar categoria?",
       "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la categoria.",
@@ -896,7 +923,9 @@
       "updateSuccess": "Categoria actualizada correctamente.",
       "updateError": "No se pudo actualizar la categoria.",
       "archiveSuccess": "Categoria archivada correctamente.",
-      "archiveError": "No se pudo archivar la categoria."
+      "archiveError": "No se pudo archivar la categoria.",
+      "unarchiveSuccess": "Categoria desarchivada correctamente.",
+      "unarchiveError": "No se pudo desarchivar la categoria."
     },
     "errors": {
       "loadFailed": "No se pudieron cargar las categorías: {{error}}"

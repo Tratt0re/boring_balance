@@ -66,6 +66,7 @@ export interface EditableOptionItem {
   readonly label: string;
   readonly value: string | number | boolean;
   readonly translate?: boolean;
+  readonly disabled?: boolean;
   readonly icon?: ZardIcon;
   readonly colorHex?: string;
 }
