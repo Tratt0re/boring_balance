@@ -28,7 +28,8 @@
       "occurrences": "Wiederholungen",
       "frequencyUnit": "Häufigkeitseinheit",
       "monthPolicy": "Falls der Tag nicht im Monat existiert",
-      "year": "Jahr"
+      "year": "Jahr",
+      "archived": "Archiviert"
     },
     "placeholders": {
       "selectType": "Typ auswählen",
@@ -840,7 +841,8 @@
         "viewDetails": "Kontodetails anzeigen",
         "edit": "Konto bearbeiten",
         "archive": "Konto archivieren",
-        "locked": "Gesperrtes Konto"
+        "locked": "Gesperrtes Konto",
+        "manageArchived": "Archivierte verwalten"
       },
       "columns": {
         "color": "Farbe",
@@ -882,6 +884,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Archivierte Konten",
+      "description": "Archivierte Konten anzeigen und wieder für neue Einträge verfügbar machen.",
+      "emptyMessage": "Es gibt keine archivierten Konten.",
+      "actions": {
+        "unarchive": "Konto wiederherstellen"
+      },
+      "errors": {
+        "loadFailed": "Archivierte Konten konnten nicht geladen werden: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Konto archivieren?",
       "description": "\"{{name}}\" archivieren, damit es in neuen Einträgen nicht mehr erscheint. Der vorhandene Verlauf behält den Kontonamen.",
@@ -896,7 +909,9 @@
       "updateSuccess": "Konto erfolgreich aktualisiert.",
       "updateError": "Konto konnte nicht aktualisiert werden.",
       "archiveSuccess": "Konto erfolgreich archiviert.",
-      "archiveError": "Konto konnte nicht archiviert werden."
+      "archiveError": "Konto konnte nicht archiviert werden.",
+      "unarchiveSuccess": "Konto erfolgreich wiederhergestellt.",
+      "unarchiveError": "Konto konnte nicht wiederhergestellt werden."
     },
     "errors": {
       "loadFailed": "Konten konnten nicht geladen werden: {{error}}"
@@ -910,7 +925,8 @@
         "add": "Kategorie hinzufügen",
         "edit": "Kategorie bearbeiten",
         "archive": "Kategorie archivieren",
-        "locked": "Gesperrte Kategorie"
+        "locked": "Gesperrte Kategorie",
+        "manageArchived": "Archivierte verwalten"
       },
       "columns": {
         "color": "Farbe",
@@ -952,6 +968,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Archivierte Kategorien",
+      "description": "Archivierte Kategorien anzeigen und wieder für neue Einträge verfügbar machen.",
+      "emptyMessage": "Es gibt keine archivierten Kategorien.",
+      "actions": {
+        "unarchive": "Kategorie wiederherstellen"
+      },
+      "errors": {
+        "loadFailed": "Archivierte Kategorien konnten nicht geladen werden: {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Kategorie archivieren?",
       "description": "\"{{name}}\" archivieren, damit sie in neuen Einträgen nicht mehr erscheint. Der vorhandene Verlauf behält den Kategorienamen.",
@@ -966,7 +993,9 @@
       "updateSuccess": "Kategorie erfolgreich aktualisiert.",
       "updateError": "Kategorie konnte nicht aktualisiert werden.",
       "archiveSuccess": "Kategorie erfolgreich archiviert.",
-      "archiveError": "Kategorie konnte nicht archiviert werden."
+      "archiveError": "Kategorie konnte nicht archiviert werden.",
+      "unarchiveSuccess": "Kategorie erfolgreich wiederhergestellt.",
+      "unarchiveError": "Kategorie konnte nicht wiederhergestellt werden."
     },
     "errors": {
       "loadFailed": "Kategorien konnten nicht geladen werden: {{error}}"

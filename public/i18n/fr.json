@@ -28,7 +28,8 @@
       "occurrences": "Occurrences",
       "frequencyUnit": "Unité de fréquence",
       "monthPolicy": "Si le jour n'existe pas dans le mois",
-      "year": "Année"
+      "year": "Année",
+      "archived": "Archivé"
     },
     "placeholders": {
       "selectType": "Sélectionner un type",
@@ -840,7 +841,8 @@
         "viewDetails": "Afficher les détails du compte",
         "edit": "Modifier le compte",
         "archive": "Archiver le compte",
-        "locked": "Compte verrouillé"
+        "locked": "Compte verrouillé",
+        "manageArchived": "Gérer les archives"
       },
       "columns": {
         "color": "Couleur",
@@ -882,6 +884,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Comptes archivés",
+      "description": "Consulter les comptes archivés et les rendre à nouveau disponibles pour les nouvelles saisies.",
+      "emptyMessage": "Il n'y a aucun compte archivé.",
+      "actions": {
+        "unarchive": "Désarchiver le compte"
+      },
+      "errors": {
+        "loadFailed": "Échec du chargement des comptes archivés : {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archiver le compte ?",
       "description": "Archiver \"{{name}}\" pour qu'il n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom du compte.",
@@ -896,7 +909,9 @@
       "updateSuccess": "Compte mis à jour avec succès.",
       "updateError": "Échec de la mise à jour du compte.",
       "archiveSuccess": "Compte archivé avec succès.",
-      "archiveError": "Échec de l'archivage du compte."
+      "archiveError": "Échec de l'archivage du compte.",
+      "unarchiveSuccess": "Compte désarchivé avec succès.",
+      "unarchiveError": "Échec de la désarchivation du compte."
     },
     "errors": {
       "loadFailed": "Échec du chargement des comptes : {{error}}"
@@ -910,7 +925,8 @@
         "add": "Ajouter une catégorie",
         "edit": "Modifier la catégorie",
         "archive": "Archiver la catégorie",
-        "locked": "Catégorie verrouillée"
+        "locked": "Catégorie verrouillée",
+        "manageArchived": "Gérer les archives"
       },
       "columns": {
         "color": "Couleur",
@@ -952,6 +968,17 @@
         }
       }
     },
+    "archivedDialog": {
+      "title": "Catégories archivées",
+      "description": "Consulter les catégories archivées et les rendre à nouveau disponibles pour les nouvelles saisies.",
+      "emptyMessage": "Il n'y a aucune catégorie archivée.",
+      "actions": {
+        "unarchive": "Désarchiver la catégorie"
+      },
+      "errors": {
+        "loadFailed": "Échec du chargement des catégories archivées : {{error}}"
+      }
+    },
     "archiveAlert": {
       "title": "Archiver la catégorie ?",
       "description": "Archiver \"{{name}}\" pour qu'elle n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom de la catégorie.",
@@ -966,7 +993,9 @@
       "updateSuccess": "Catégorie mise à jour avec succès.",
       "updateError": "Échec de la mise à jour de la catégorie.",
       "archiveSuccess": "Catégorie archivée avec succès.",
-      "archiveError": "Échec de l'archivage de la catégorie."
+      "archiveError": "Échec de l'archivage de la catégorie.",
+      "unarchiveSuccess": "Catégorie désarchivée avec succès.",
+      "unarchiveError": "Échec de la désarchivation de la catégorie."
     },
     "errors": {
       "loadFailed": "Échec du chargement des catégories : {{error}}"
