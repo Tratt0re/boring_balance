@@ -2,8 +2,26 @@
   <div class="flex w-full items-center justify-between gap-2">
     <span>{{ titleKey | translate }}</span>
     @if (activeTab() === 'transactions') {
-      <a z-button zType="link" zSize="sm" [routerLink]="['/transactions']" class="h-auto p-0 text-xs font-normal">
+      <a
+        z-button
+        zType="link"
+        zSize="sm"
+        [routerLink]="['/transactions']"
+        [queryParams]="{ view: 'common' }"
+        class="h-auto p-0 text-xs font-normal"
+      >
         {{ 'overview.cards.recentTransactions.actions.goToTransactionsPage' | translate }}
+      </a>
+    } @else {
+      <a
+        z-button
+        zType="link"
+        zSize="sm"
+        [routerLink]="['/transactions']"
+        [queryParams]="{ view: 'transfers' }"
+        class="h-auto p-0 text-xs font-normal"
+      >
+        {{ 'overview.cards.recentTransactions.actions.goToTransfersPage' | translate }}
       </a>
     }
   </div>

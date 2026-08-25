@@ -651,7 +651,8 @@
           "unsettled": "Nicht abgerechnet"
         },
         "actions": {
-          "goToTransactionsPage": "Alle Transaktionen"
+          "goToTransactionsPage": "Alle Transaktionen",
+          "goToTransfersPage": "Alle Überträge"
         },
         "unknownAccount": "Unbekanntes Konto",
         "unknownCategory": "Unbekannte Kategorie"

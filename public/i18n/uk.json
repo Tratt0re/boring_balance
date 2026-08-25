@@ -651,7 +651,8 @@
           "unsettled": "Не проведено"
         },
         "actions": {
-          "goToTransactionsPage": "Всі транзакції"
+          "goToTransactionsPage": "Всі транзакції",
+          "goToTransfersPage": "Всі перекази"
         },
         "unknownAccount": "Невідомий рахунок",
         "unknownCategory": "Невідома категорія"

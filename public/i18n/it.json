@@ -651,7 +651,8 @@
           "unsettled": "Non regolato"
         },
         "actions": {
-          "goToTransactionsPage": "Tutti i movimenti"
+          "goToTransactionsPage": "Tutti i movimenti",
+          "goToTransfersPage": "Tutti i trasferimenti"
         },
         "unknownAccount": "Conto sconosciuto",
         "unknownCategory": "Categoria sconosciuta"

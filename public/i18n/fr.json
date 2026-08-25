@@ -651,7 +651,8 @@
           "unsettled": "Non soldé"
         },
         "actions": {
-          "goToTransactionsPage": "Toutes les transactions"
+          "goToTransactionsPage": "Toutes les transactions",
+          "goToTransfersPage": "Tous les virements"
         },
         "unknownAccount": "Compte inconnu",
         "unknownCategory": "Catégorie inconnue"
