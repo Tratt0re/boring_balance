@@ -425,7 +425,7 @@
         "title": "Sync manual",
         "description": "Usa estas acciones cuando quieras revisar o compartir cambios de inmediato.",
         "tooltips": {
-          "syncNow": "Primero revisa si hay datos compartidos mas nuevos y despues comparte este dispositivo si hace falta.",
+          "syncNow": "Primero comprueba si hay datos compartidos más recientes y después comparte las actualizaciones de este dispositivo, si las hay.",
           "pullNow": "Trae datos compartidos mas nuevos sin enviar los cambios de este dispositivo.",
           "pushNow": "Comparte los cambios mas recientes de este dispositivo sin revisar primero si hay datos mas nuevos."
         },
@@ -538,6 +538,10 @@
       "reload": "Recargar"
     },
     "banners": {
+      "syncUpdateAvailable": {
+        "title": "Hay datos de sincronización más recientes disponibles",
+        "body": "Se encontró una versión más reciente en la carpeta de sincronización. Sincroniza ahora para usar los últimos datos compartidos."
+      },
       "snapshotsOutdated": {
         "title": "Las instantaneas pueden estar desactualizadas",
         "body": "Tu ultima instantanea tiene {{days}} dias. Actualiza las instantaneas para mantener preciso el Patrimonio neto."

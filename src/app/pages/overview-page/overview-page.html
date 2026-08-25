@@ -1,4 +1,31 @@
 <div class="space-y-5">
+  @if (hasNewerSyncVersion()) {
+    <div role="alert" class="rounded-md border border-warning/25 bg-warning/10 p-3 text-sm text-warning">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="font-medium">{{ 'overview.banners.syncUpdateAvailable.title' | translate }}</p>
+          <p class="mt-1">{{ 'overview.banners.syncUpdateAvailable.body' | translate }}</p>
+        </div>
+
+        <div class="flex shrink-0 flex-wrap gap-2">
+          <button
+            z-button
+            zType="default"
+            zSize="sm"
+            class="shadow-none ring-1 ring-warning/25"
+            [zLoading]="syncNowLoading()"
+            [zDisabled]="syncNowLoading()"
+            [attr.aria-label]="'dataBackups.sync.manual.tooltips.syncNow' | translate"
+            [zTooltip]="'dataBackups.sync.manual.tooltips.syncNow' | translate"
+            (click)="onSyncNow()"
+          >
+            {{ 'dataBackups.sync.actions.syncNow' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
   @if (showSnapshotsOutdatedBanner()) {
     <div role="alert" class="rounded-md border border-warning/25 bg-warning/10 p-3 text-sm text-warning">
       <p class="font-medium">{{ 'overview.banners.snapshotsOutdated.title' | translate }}</p>

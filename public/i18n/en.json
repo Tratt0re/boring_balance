@@ -425,7 +425,7 @@
         "title": "Manual sync",
         "description": "Use these actions when you want to check or share changes immediately.",
         "tooltips": {
-          "syncNow": "Checks for newer shared data first, then shares this device if needed.",
+          "syncNow": "Checks for newer shared data first, then shares this device's updates, if any.",
           "pullNow": "Brings in newer shared data without sending this device's changes.",
           "pushNow": "Shares this device's latest changes without checking for newer shared data first."
         },
@@ -608,6 +608,10 @@
       "reload": "Reload"
     },
     "banners": {
+      "syncUpdateAvailable": {
+        "title": "Newer sync data is available",
+        "body": "A newer version was found in your sync folder. Sync now to use the latest shared data."
+      },
       "snapshotsOutdated": {
         "title": "Snapshots may be outdated",
         "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."

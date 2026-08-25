@@ -90,6 +90,7 @@ const CHANNELS = Object.freeze({
     getSettings: 'sync:getSettings',
     updateSettings: 'sync:updateSettings',
     getState: 'sync:getState',
+    checkAvailability: 'sync:checkAvailability',
     selectFolder: 'sync:selectFolder',
     enable: 'sync:enable',
     repoStatus: 'sync:repoStatus',

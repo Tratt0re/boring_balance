@@ -1060,6 +1060,36 @@ function getState() {
   return cloneState();
 }
 
+function checkAvailability() {
+  const settings = readSyncSettings();
+  if (!settings.enabled) {
+    throw new Error('Sync is disabled.');
+  }
+
+  if (!settings.folderPath) {
+    throw new Error('Sync folder is not configured.');
+  }
+
+  const syncPaths = syncModel.getSyncPaths(settings.folderPath);
+  const localMeta = assertCompleteLocalMeta(syncModel.getLocalDbMeta(getDatabase()));
+  const indexValue = syncModel.readIndex(syncPaths.indexPath);
+  const remoteLatest = indexValue?.latest ?? null;
+  const snapshotPath = remoteLatest
+    ? resolveSnapshotPath(settings.folderPath, remoteLatest.file)
+    : null;
+  const hasNewerRemoteSnapshot = Boolean(
+    remoteLatest
+    && remoteLatest.db_uuid === localMeta.db_uuid
+    && snapshotPath
+    && fs.existsSync(snapshotPath)
+    && syncModel.isRemoteNewer(remoteLatest, localMeta),
+  );
+
+  return {
+    hasNewerRemoteSnapshot,
+  };
+}
+
 async function selectFolder() {
   const result = await dialog.showOpenDialog({
     properties: ['openDirectory', 'createDirectory'],
@@ -1377,6 +1407,7 @@ async function onAppBeforeQuit() {
 }
 
 module.exports = {
+  checkAvailability,
   disable,
   disableSync: disable,
   dispose,

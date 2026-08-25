@@ -24,6 +24,7 @@ import {
   SYNC_STATE_DEFAULTS,
   type RepoStatusDto,
   type SyncActionResultDto,
+  type SyncAvailabilityDto,
   type SyncNowResultDto,
   type SyncSelectFolderResponseDto,
   type SyncSettingsDto,
@@ -143,6 +144,20 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         return of(this.stateSubject.value);
       }),
       finalize(() => this.stateLoadingSubject.next(false)),
+    );
+  }
+
+  checkAvailability(): Observable<SyncAvailabilityDto> {
+    return from(this.ipcClient.checkAvailability()).pipe(
+      map((result) => ({
+        hasNewerRemoteSnapshot: Boolean(result?.hasNewerRemoteSnapshot),
+      })),
+      catchError((error) => {
+        toast.error(this.toErrorMessage(error, 'Failed to check for newer sync data.'));
+        return of({
+          hasNewerRemoteSnapshot: false,
+        });
+      }),
     );
   }
 
