@@ -34,6 +34,7 @@
       [placeholder]="'common.placeholders.selectAccount' | translate"
       [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate"
       [options]="$any(fromAccountComboboxOptions())"
+      [disabled]="isFromAccountFixed"
     />
     @if (visibleFromAccountErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>

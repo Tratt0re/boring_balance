@@ -837,6 +837,7 @@
       "emptyMessage": "暂无账户。添加第一个账户以开始追踪余额和转账。",
       "actions": {
         "add": "添加账户",
+        "viewDetails": "查看账户详情",
         "edit": "编辑账户",
         "archive": "归档账户",
         "locked": "已锁定账户"
@@ -1556,6 +1557,26 @@
       "invalidId": "定期事件 ID 无效。",
       "notFound": "未找到定期事件。",
       "loadUnexpected": "加载定期事件项目时发生意外错误。"
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "账户详情" },
+    "header": {
+      "totalValue": "账户总值",
+      "noDescription": "未提供描述。"
+    },
+    "table": {
+      "transactionsTitle": "账户交易",
+      "transactionsDescription": "此账户记录的收入和支出。",
+      "transactionsEmptyMessage": "未找到此账户的交易。",
+      "transfersTitle": "账户转账",
+      "transfersDescription": "从此账户转出或转入此账户的转账。",
+      "transfersEmptyMessage": "未找到此账户的转账。"
+    },
+    "errors": {
+      "invalidId": "账户 ID 无效。",
+      "notFound": "未找到账户。",
+      "loadUnexpected": "加载账户详情时发生意外错误。"
     }
   },
   "accountValuations": {

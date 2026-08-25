@@ -95,6 +95,7 @@ const ACCOUNT_TABLE_COLUMNS: readonly TableDataItem[] = [
 ] as const;
 
 const createAccountTableStructure = (
+  onViewDetailsAction: (row: object) => void | Promise<void>,
   onEditAction: (row: object) => void | Promise<void>,
   onArchiveAction: (row: object) => void | Promise<void>,
   onViewValuationsAction: (row: object) => void | Promise<void>,
@@ -102,6 +103,13 @@ const createAccountTableStructure = (
   [
     ...ACCOUNT_TABLE_COLUMNS,
     createActionColumn(ACCOUNT_COLUMN_WIDTH.action, [
+      {
+        id: 'view-details',
+        icon: 'eye',
+        label: 'accounts.table.actions.viewDetails',
+        buttonType: 'ghost',
+        action: onViewDetailsAction,
+      },
       {
         id: 'view-valuations',
         icon: 'chart-line',
@@ -156,6 +164,7 @@ export class AccountsPage implements OnInit, OnDestroy {
   protected readonly accountRowClass = (row: object): string =>
     isAccountReadonly(row) ? 'bg-primary-foreground' : '';
   protected readonly accountTableStructure = createAccountTableStructure(
+    (row) => this.onViewDetails(row),
     (row) => this.onEditAccount(row),
     (row) => this.onArchiveAccount(row),
     (row) => this.onViewValuations(row),
@@ -239,6 +248,11 @@ export class AccountsPage implements OnInit, OnDestroy {
   private onViewValuations(row: object): void {
     const account = row as AccountTableRow;
     void this.router.navigate(['/account-valuations', account.id]);
+  }
+
+  private onViewDetails(row: object): void {
+    const account = row as AccountTableRow;
+    void this.router.navigate(['/accounts', account.id]);
   }
 
   private onEditAccount(row: object): void {

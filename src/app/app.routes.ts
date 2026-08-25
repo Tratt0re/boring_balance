@@ -39,6 +39,13 @@ export const routes: Routes = [
           import('./pages/accounts-page/accounts-page').then((module) => module.AccountsPage),
       },
       {
+        path: 'accounts/:accountId',
+        loadComponent: () =>
+          import('./pages/account-detail-page/account-detail-page').then(
+            (module) => module.AccountDetailPage,
+          ),
+      },
+      {
         path: 'budget',
         loadComponent: () =>
           import('./pages/budget-page/budget-page').then((module) => module.BudgetPage),

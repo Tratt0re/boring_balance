@@ -837,6 +837,7 @@
       "emptyMessage": "Aucun compte. Ajoutez votre premier compte pour commencer à suivre les soldes et les virements.",
       "actions": {
         "add": "Ajouter un compte",
+        "viewDetails": "Afficher les détails du compte",
         "edit": "Modifier le compte",
         "archive": "Archiver le compte",
         "locked": "Compte verrouillé"
@@ -1556,6 +1557,26 @@
       "invalidId": "L'identifiant de l'événement récurrent n'est pas valide.",
       "notFound": "Événement récurrent introuvable.",
       "loadUnexpected": "Erreur inattendue lors du chargement des éléments de l'événement récurrent."
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "Détails du compte" },
+    "header": {
+      "totalValue": "Valeur totale du compte",
+      "noDescription": "Aucune description fournie."
+    },
+    "table": {
+      "transactionsTitle": "Transactions du compte",
+      "transactionsDescription": "Revenus et dépenses enregistrés pour ce compte.",
+      "transactionsEmptyMessage": "Aucune transaction trouvée pour ce compte.",
+      "transfersTitle": "Virements du compte",
+      "transfersDescription": "Virements envoyés depuis ou reçus sur ce compte.",
+      "transfersEmptyMessage": "Aucun virement trouvé pour ce compte."
+    },
+    "errors": {
+      "invalidId": "Identifiant de compte non valide.",
+      "notFound": "Compte introuvable.",
+      "loadUnexpected": "Erreur inattendue lors du chargement des détails du compte."
     }
   },
   "accountValuations": {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -240,6 +240,8 @@ const createTransferTableStructure = (
 export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly planItemId = input<number | null>(null);
+  readonly accountId = input<number | null>(null);
+  readonly activityChanged = output<void>();
 
   protected readonly transfers = signal<readonly TransferModel[]>([]);
   protected readonly total = signal(0);
@@ -250,10 +252,36 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
   protected readonly isPlanItemContext = computed(() => this.planItemId() !== null);
+  protected readonly isAccountContext = computed(() => this.accountId() !== null);
+  private readonly isEmbeddedContext = computed(
+    () => this.isPlanItemContext() || this.isAccountContext(),
+  );
+  protected readonly titleKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.transfersTitle';
+    }
+
+    return this.isAccountContext()
+      ? 'accountDetails.table.transfersTitle'
+      : 'transactions.view.transfers';
+  });
+  protected readonly descriptionKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.transfersDescription';
+    }
+
+    return this.isAccountContext()
+      ? 'accountDetails.table.transfersDescription'
+      : 'transactions.transfers.table.description';
+  });
   protected readonly accountCount = computed(() => this.accountOptions().length);
   protected readonly emptyMessageKey = computed(() => {
     if (this.isPlanItemContext()) {
       return 'recurringEventItems.table.emptyMessage';
+    }
+
+    if (this.isAccountContext()) {
+      return 'accountDetails.table.transfersEmptyMessage';
     }
 
     const count = this.accountCount();
@@ -384,7 +412,21 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     return items;
   });
   protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => {
-    const actions: TableHeaderActionItem[] = [
+    const actions: TableHeaderActionItem[] = [];
+
+    if (this.isAccountContext()) {
+      actions.push({
+        id: 'add-transfer',
+        icon: 'plus',
+        label: 'transactions.transfers.table.actions.add',
+        showLabel: true,
+        buttonType: 'default',
+        disabled: () => this.accountOptions().length < 2,
+        action: () => this.openCreateTransferDialog(),
+      });
+    }
+
+    actions.push(
       {
         id: 'transfer-filters-current-month',
         icon: 'calendar',
@@ -401,7 +443,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         buttonType: 'outline',
         action: () => this.openFilterSheet(),
       },
-    ];
+    );
 
     if (this.hasActiveFilters()) {
       actions.push({
@@ -442,7 +484,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (!this.isPlanItemContext()) {
+    if (!this.isEmbeddedContext()) {
       this.restorePersistedTableState();
       this.activateToolbarActions();
     }
@@ -631,7 +673,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private buildFilterFields(): readonly AppSheetField[] {
-    return [
+    const fields: AppSheetField[] = [
       {
         id: TRANSFER_FILTER_FIELD.dateFrom,
         type: 'date-picker',
@@ -691,7 +733,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         ],
         translate: true,
       },
-      {
+    ];
+
+    if (!this.isAccountContext()) {
+      fields.push({
         id: TRANSFER_FILTER_FIELD.accountId,
         type: 'combobox',
         width: '1/1',
@@ -708,8 +753,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
           icon: option.icon,
           translate: option.translate,
         })),
-      },
-    ];
+      });
+    }
+
+    return fields;
   }
 
   private toSheetValues(filters: TransferTableFilters): AppSheetFieldValueMap {
@@ -749,12 +796,15 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   private buildListTransfersPayload(): TransactionListTransfersDto {
     const filters = this.filters();
     const planItemId = this.planItemId() ?? undefined;
+    const accountId = this.accountId() ?? undefined;
     const dateFrom = filters.dateFrom?.getTime();
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
     const amountTo = filters.amountTo ?? undefined;
     const settled = filters.settled === null ? undefined : filters.settled;
-    const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
+    const accounts = accountId === undefined
+      ? (filters.accountIds.length > 0 ? [...filters.accountIds] : undefined)
+      : [accountId];
     const hasFilters =
       planItemId !== undefined ||
       dateFrom !== undefined ||
@@ -963,6 +1013,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.transfers.update((rows) =>
         rows.map((row) => (row.transferId === transfer.transferId ? result.transfer : row)),
       );
+      this.activityChanged.emit();
       toast.success(this.translateService.instant('transactions.transfers.toasts.updateSuccess'));
     } catch (error) {
       console.error('[transfers-table-section] Failed to update transfer settled:', error);
@@ -981,6 +1032,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.page.set(1);
       this.persistTableState();
       await this.reloadTransfersPage();
+      this.activityChanged.emit();
       dialogRef.close(created);
       toast.success(this.translateService.instant('transactions.transfers.toasts.createSuccess'));
     } catch (error) {
@@ -998,6 +1050,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     try {
       const updated = await this.transactionsService.updateTransfer(payload);
       await this.reloadTransfersPage();
+      this.activityChanged.emit();
       dialogRef.close(updated);
       toast.success(this.translateService.instant('transactions.transfers.toasts.updateSuccess'));
     } catch (error) {
@@ -1012,6 +1065,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       const result = await this.transactionsService.deleteTransfer({ transfer_id: transferId });
       if (result.changed > 0) {
         await this.reloadTransfersPage();
+        this.activityChanged.emit();
         toast.success(this.translateService.instant('transactions.transfers.toasts.deleteSuccess'));
         return;
       }
@@ -1026,7 +1080,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private restorePersistedTableState(): void {
-    if (this.isPlanItemContext()) {
+    if (this.isEmbeddedContext()) {
       return;
     }
 
@@ -1046,7 +1100,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private persistTableState(): void {
-    if (this.isPlanItemContext()) {
+    if (this.isEmbeddedContext()) {
       return;
     }
 
@@ -1176,6 +1230,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zContent: UpsertTransferDialogComponent,
       zData: {
         accountOptions: this.accountOptions(),
+        ...(this.accountId() === null ? {} : { fixedFromAccountId: this.accountId()! }),
       },
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,

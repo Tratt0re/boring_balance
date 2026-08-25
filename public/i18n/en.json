@@ -837,6 +837,7 @@
       "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
       "actions": {
         "add": "Add account",
+        "viewDetails": "View account details",
         "edit": "Edit account",
         "archive": "Archive account",
         "locked": "Locked account"
@@ -1556,6 +1557,26 @@
       "invalidId": "Invalid recurring event ID.",
       "notFound": "Recurring event not found.",
       "loadUnexpected": "Unexpected error while loading recurring event items."
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "Account details" },
+    "header": {
+      "totalValue": "Total account value",
+      "noDescription": "No description provided."
+    },
+    "table": {
+      "transactionsTitle": "Account transactions",
+      "transactionsDescription": "Income and expense entries recorded for this account.",
+      "transactionsEmptyMessage": "No transactions were found for this account.",
+      "transfersTitle": "Account transfers",
+      "transfersDescription": "Transfers sent from or received by this account.",
+      "transfersEmptyMessage": "No transfers were found for this account."
+    },
+    "errors": {
+      "invalidId": "Invalid account ID.",
+      "notFound": "Account not found.",
+      "loadUnexpected": "Unexpected error while loading account details."
     }
   },
   "accountValuations": {

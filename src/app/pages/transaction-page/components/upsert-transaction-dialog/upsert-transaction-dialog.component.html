@@ -41,7 +41,9 @@
     </label>
     <z-combobox zId="transaction-account" zWidth="full" formControlName="accountId"
       [placeholder]="'common.placeholders.selectAccount' | translate"
-      [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate" [options]="$any(accountOptions)" />
+      [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate"
+      [options]="$any(accountOptions)"
+      [disabled]="isAccountFixed" />
     @if (visibleAccountIdErrorKey(); as currentError) {
     <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }

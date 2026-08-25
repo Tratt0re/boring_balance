@@ -767,6 +767,7 @@
       "emptyMessage": "Aun no hay cuentas. Agrega la primera para empezar a seguir saldos y transferencias.",
       "actions": {
         "add": "Agregar cuenta",
+        "viewDetails": "Ver detalles de la cuenta",
         "edit": "Editar cuenta",
         "archive": "Archivar cuenta",
         "locked": "Cuenta bloqueada"
@@ -1486,6 +1487,26 @@
       "invalidId": "El ID del evento recurrente no es válido.",
       "notFound": "No se encontró el evento recurrente.",
       "loadUnexpected": "Error inesperado al cargar los elementos del evento recurrente."
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "Detalles de la cuenta" },
+    "header": {
+      "totalValue": "Valor total de la cuenta",
+      "noDescription": "No se ha proporcionado una descripción."
+    },
+    "table": {
+      "transactionsTitle": "Movimientos de la cuenta",
+      "transactionsDescription": "Ingresos y gastos registrados en esta cuenta.",
+      "transactionsEmptyMessage": "No se encontraron movimientos para esta cuenta.",
+      "transfersTitle": "Transferencias de la cuenta",
+      "transfersDescription": "Transferencias enviadas desde o recibidas por esta cuenta.",
+      "transfersEmptyMessage": "No se encontraron transferencias para esta cuenta."
+    },
+    "errors": {
+      "invalidId": "ID de cuenta no válido.",
+      "notFound": "Cuenta no encontrada.",
+      "loadUnexpected": "Error inesperado al cargar los detalles de la cuenta."
     }
   },
   "accountValuations": {
