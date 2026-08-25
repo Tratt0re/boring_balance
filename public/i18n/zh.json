@@ -1390,13 +1390,28 @@
       },
       "edit": {
         "title": "编辑定期事件",
-        "description": "更新此规则，并使未来的计划项目与之保持一致。",
+        "description": "更新此定期规则，并选择哪些关联的已生成项目应接收模板更改。",
+        "applyTo": "将更改应用于",
+        "fromDate": "开始日期",
+        "applyToOptions": {
+          "all": "所有关联项目",
+          "upcoming": "未来的关联项目",
+          "fromDate": "指定日期起的关联项目",
+          "ruleOnly": "仅定期规则"
+        },
+        "applyToOptionHints": {
+          "all": "更新此定期规则已生成的所有项目，包括过去和未来的项目。",
+          "upcoming": "仅更新保存这些更改后计划发生的已生成项目。",
+          "fromDate": "更新计划在所选日期当天或之后发生的已生成项目。",
+          "ruleOnly": "仅更新定期模板，不更改任何已生成的项目。"
+        },
         "actions": {
           "cancel": "取消",
           "save": "保存更改"
         },
         "errors": {
           "fixValidation": "请修正标红字段后再保存定期事件。",
+          "fromDateRequired": "请选择开始更新关联项目的日期。",
           "updateFailed": "定期事件更新失败。"
         }
       },

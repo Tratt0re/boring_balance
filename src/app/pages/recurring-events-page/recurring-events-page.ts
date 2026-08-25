@@ -457,14 +457,14 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
           return false;
         }
 
-        const changes = dialogContent.collectUpdateChanges();
-        if (!changes) {
+        const payload = dialogContent.collectUpdatePayload();
+        if (!payload) {
           return false;
         }
 
         isUpdatingPlanItem = true;
         void this
-          .updateRecurringEventFromDialog(planItem.id, changes, dialogContent, dialogRef)
+          .updateRecurringEventFromDialog(planItem.id, payload, dialogContent, dialogRef)
           .finally(() => {
             isUpdatingPlanItem = false;
           });
@@ -603,12 +603,12 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
 
   private async updateRecurringEventFromDialog(
     id: number,
-    changes: NonNullable<ReturnType<UpsertPlanItemDialogComponent['collectUpdateChanges']>>,
+    payload: NonNullable<ReturnType<UpsertPlanItemDialogComponent['collectUpdatePayload']>>,
     dialogContent: UpsertPlanItemDialogComponent,
     dialogRef: ZardDialogRef<UpsertPlanItemDialogComponent>,
   ): Promise<void> {
     try {
-      const result = await this.planItemsService.update({ id, changes });
+      const result = await this.planItemsService.update({ id, ...payload });
 
       if (result.row) {
         const nextRows = this.rows().map((row) =>

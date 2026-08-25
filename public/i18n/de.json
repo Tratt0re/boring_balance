@@ -1390,13 +1390,28 @@
       },
       "edit": {
         "title": "Wiederkehrendes Ereignis bearbeiten",
-        "description": "Diese Regel aktualisieren und zukünftige geplante Einträge damit in Einklang halten.",
+        "description": "Diese Wiederholungsregel aktualisieren und auswählen, welche verknüpften erzeugten Einträge die Vorlagenänderungen erhalten.",
+        "applyTo": "Änderungen anwenden auf",
+        "fromDate": "Beginnend ab",
+        "applyToOptions": {
+          "all": "Alle verknüpften Einträge",
+          "upcoming": "Zukünftige verknüpfte Einträge",
+          "fromDate": "Verknüpfte Einträge ab einem Datum",
+          "ruleOnly": "Nur Wiederholungsregel"
+        },
+        "applyToOptionHints": {
+          "all": "Aktualisiert alle bereits von dieser Wiederholungsregel erzeugten Einträge, einschließlich vergangener und zukünftiger Einträge.",
+          "upcoming": "Aktualisiert nur erzeugte Einträge, die nach dem Speichern dieser Änderungen geplant sind.",
+          "fromDate": "Aktualisiert erzeugte Einträge, die am oder nach dem ausgewählten Datum geplant sind.",
+          "ruleOnly": "Aktualisiert die wiederkehrende Vorlage, ohne bereits erzeugte Einträge zu ändern."
+        },
         "actions": {
           "cancel": "Abbrechen",
           "save": "Änderungen speichern"
         },
         "errors": {
           "fixValidation": "Bitte die markierten Felder korrigieren, bevor das wiederkehrende Ereignis gespeichert wird.",
+          "fromDateRequired": "Wählen Sie das Datum aus, ab dem verknüpfte Einträge aktualisiert werden sollen.",
           "updateFailed": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden."
         }
       },

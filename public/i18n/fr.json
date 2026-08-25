@@ -1390,13 +1390,28 @@
       },
       "edit": {
         "title": "Modifier l'événement récurrent",
-        "description": "Mettre à jour cette règle et maintenir les éléments planifiés futurs en accord avec elle.",
+        "description": "Mettez à jour cette règle récurrente et choisissez quels éléments générés liés doivent recevoir les modifications du modèle.",
+        "applyTo": "Appliquer les modifications à",
+        "fromDate": "À partir du",
+        "applyToOptions": {
+          "all": "Tous les éléments liés",
+          "upcoming": "Éléments liés à venir",
+          "fromDate": "Éléments liés à partir d'une date",
+          "ruleOnly": "Règle récurrente uniquement"
+        },
+        "applyToOptionHints": {
+          "all": "Met à jour tous les éléments déjà générés par cette règle récurrente, y compris les éléments passés et à venir.",
+          "upcoming": "Met à jour uniquement les éléments générés planifiés après l'enregistrement de ces modifications.",
+          "fromDate": "Met à jour les éléments générés planifiés à la date sélectionnée ou après celle-ci.",
+          "ruleOnly": "Met à jour le modèle récurrent sans modifier les éléments déjà générés."
+        },
         "actions": {
           "cancel": "Annuler",
           "save": "Enregistrer les modifications"
         },
         "errors": {
           "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer l'événement récurrent.",
+          "fromDateRequired": "Sélectionnez la date à partir de laquelle les éléments liés doivent être mis à jour.",
           "updateFailed": "Échec de la mise à jour de l'événement récurrent."
         }
       },

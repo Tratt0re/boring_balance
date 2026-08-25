@@ -30,6 +30,48 @@
         }
       </div>
     </div>
+
+    @if (isEditMode) {
+    <div class="mt-4 grid gap-4 border-t pt-4 sm:grid-cols-2">
+      <div>
+        <label class="mb-1.5 block text-sm font-medium">
+          {{ 'recurringEvents.dialog.edit.applyTo' | translate }}
+        </label>
+        <z-select formControlName="linkedItemsUpdateScope">
+          @for (option of linkedItemsUpdateScopeOptions; track option.value) {
+          <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
+          }
+        </z-select>
+        <p class="mt-1 text-xs text-muted-foreground">
+          @switch (form.controls.linkedItemsUpdateScope.value) {
+          @case ('all') {
+          {{ 'recurringEvents.dialog.edit.applyToOptionHints.all' | translate }}
+          }
+          @case ('upcoming') {
+          {{ 'recurringEvents.dialog.edit.applyToOptionHints.upcoming' | translate }}
+          }
+          @case ('from_date') {
+          {{ 'recurringEvents.dialog.edit.applyToOptionHints.fromDate' | translate }}
+          }
+          @case ('rule_only') {
+          {{ 'recurringEvents.dialog.edit.applyToOptionHints.ruleOnly' | translate }}
+          }
+          }
+        </p>
+      </div>
+
+      @if (form.controls.linkedItemsUpdateScope.value === 'from_date') {
+      <div>
+        <label class="mb-1.5 block text-sm font-medium" for="plan-item-linked-items-from-date">
+          {{ 'recurringEvents.dialog.edit.fromDate' | translate }}
+          <span class="text-destructive">*</span>
+        </label>
+        <z-date-picker zId="plan-item-linked-items-from-date" zIconPosition="right"
+          formControlName="linkedItemsFromDate" [placeholder]="'common.placeholders.pickDate' | translate" />
+      </div>
+      }
+    </div>
+    }
   </section>
 
   <div class="grid items-start gap-5 xl:grid-cols-2">

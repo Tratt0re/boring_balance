@@ -25,9 +25,12 @@ const {
 const PLAN_TYPES = new Set(['transaction', 'transfer']);
 const FREQUENCY_UNITS = new Set(['day', 'week', 'month', 'year']);
 const MONTH_POLICIES = new Set(['clip', 'skip', 'last_day', 'first_day']);
+const LINKED_ITEMS_UPDATE_SCOPES = new Set(['all', 'upcoming', 'from_date', 'rule_only']);
 
 const PLAN_CREATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json', 'create_and_run']);
 const PLAN_UPDATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json']);
+const PLAN_UPDATE_PAYLOAD_FIELDS = new Set(['id', 'changes', 'linked_items']);
+const LINKED_ITEMS_UPDATE_FIELDS = new Set(['scope', 'from_date']);
 const PLAN_LIST_PAYLOAD_FIELDS = new Set(['filters', 'page', 'page_size']);
 const PLAN_LIST_FILTER_FIELDS = new Set(['type']);
 const PLAN_RUN_FIELDS = new Set(['id']);
@@ -93,6 +96,32 @@ function normalizeFrequencyRule(value, label) {
   return {
     unit: normalizeEnum(frequency.unit, `${label}.unit`, FREQUENCY_UNITS),
     interval: normalizePositiveInteger(frequency.interval, `${label}.interval`),
+  };
+}
+
+function normalizeLinkedItemsUpdateScope(value, label) {
+  if (value === undefined) {
+    return { scope: 'all' };
+  }
+
+  const linkedItems = ensurePlainObject(value, label);
+  assertAllowedKeys(linkedItems, LINKED_ITEMS_UPDATE_FIELDS, label);
+
+  const scope = normalizeEnum(linkedItems.scope, `${label}.scope`, LINKED_ITEMS_UPDATE_SCOPES);
+  if (scope === 'from_date') {
+    return {
+      scope,
+      from_date: normalizeUnixTimestampMilliseconds(linkedItems.from_date, `${label}.from_date`),
+    };
+  }
+
+  if (linkedItems.from_date !== undefined) {
+    throw new Error(`${label}.from_date is only supported when scope is "from_date".`);
+  }
+
+  return {
+    scope,
+    ...(scope === 'upcoming' ? { from_date: nowUnixTimestampMilliseconds() } : {}),
   };
 }
 
@@ -262,7 +291,7 @@ function list(payload) {
 
 function update(payload) {
   const body = ensurePlainObject(payload, 'payload');
-  assertAllowedKeys(body, new Set(['id', 'changes']), 'payload');
+  assertAllowedKeys(body, PLAN_UPDATE_PAYLOAD_FIELDS, 'payload');
 
   const id = extractId({ id: body.id });
   const existingRow = planItemsModel.getById(id);
@@ -272,6 +301,7 @@ function update(payload) {
 
   const changesInput = ensureNonEmptyObject(body.changes, 'payload.changes');
   assertAllowedKeys(changesInput, PLAN_UPDATE_FIELDS, 'payload.changes');
+  const linkedItemsUpdateScope = normalizeLinkedItemsUpdateScope(body.linked_items, 'payload.linked_items');
 
   let type;
   if (changesInput.type !== undefined) {
@@ -284,8 +314,10 @@ function update(payload) {
   const nextType = existingRow.type;
 
   let templateJson;
+  let shouldApplyTemplateChanges = false;
   if (changesInput.template_json !== undefined) {
     templateJson = normalizeTemplateJsonForType(changesInput.template_json, nextType, 'payload.changes.template_json');
+    shouldApplyTemplateChanges = JSON.stringify(templateJson) !== JSON.stringify(existingRow.template_json);
   }
 
   let ruleJson;
@@ -308,10 +340,17 @@ function update(payload) {
   });
 
   ensureHasKeys(changes, 'payload.changes');
-  const changed = planItemsModel.updateById(id, {
-    ...changes,
-    updated_at: nowUnixTimestampMilliseconds(),
-  });
+  const changed = planItemsModel.updateById(
+    id,
+    {
+      ...changes,
+      updated_at: nowUnixTimestampMilliseconds(),
+    },
+    {
+      apply_template_changes: shouldApplyTemplateChanges,
+      linked_items: linkedItemsUpdateScope,
+    },
+  );
 
   return {
     changed,
