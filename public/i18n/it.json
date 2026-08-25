@@ -1390,13 +1390,28 @@
       },
       "edit": {
         "title": "Modifica evento ricorrente",
-        "description": "Aggiorna questa regola e mantieni allineati i prossimi elementi pianificati.",
+        "description": "Aggiorna questa regola ricorrente e scegli quali elementi generati collegati devono ricevere le modifiche al modello.",
+        "applyTo": "Applica modifiche a",
+        "fromDate": "A partire dal",
+        "applyToOptions": {
+          "all": "Tutti gli elementi collegati",
+          "upcoming": "Elementi collegati futuri",
+          "fromDate": "Elementi collegati da una data",
+          "ruleOnly": "Solo la regola ricorrente"
+        },
+        "applyToOptionHints": {
+          "all": "Aggiorna tutti gli elementi già generati da questa regola ricorrente, inclusi quelli passati e futuri.",
+          "upcoming": "Aggiorna solo gli elementi generati pianificati dopo il salvataggio delle modifiche.",
+          "fromDate": "Aggiorna gli elementi generati pianificati a partire dalla data selezionata, inclusa.",
+          "ruleOnly": "Aggiorna il modello ricorrente senza modificare gli elementi già generati."
+        },
         "actions": {
           "cancel": "Annulla",
           "save": "Salva modifiche"
         },
         "errors": {
           "fixValidation": "Correggi i campi evidenziati prima di salvare l'evento ricorrente.",
+          "fromDateRequired": "Seleziona la data da cui aggiornare gli elementi collegati.",
           "updateFailed": "Impossibile aggiornare l'evento ricorrente."
         }
       },

@@ -15,6 +15,7 @@ import type { TransactionCreateTransferResponseDto, TransactionDto, TransferDto 
 export type PlanItemType = 'transaction' | 'transfer';
 export type PlanItemFrequencyUnit = 'day' | 'week' | 'month' | 'year';
 export type PlanItemMonthPolicy = 'clip' | 'skip' | 'last_day' | 'first_day';
+export type PlanItemLinkedItemsUpdateScope = 'all' | 'upcoming' | 'from_date' | 'rule_only';
 
 export interface PlanItemRuleFrequencyDto {
   readonly unit: PlanItemFrequencyUnit;
@@ -106,6 +107,15 @@ export type PlanItemCreateDto = PlanItemCreateTransactionDto | PlanItemCreateTra
 
 export interface PlanItemGetDto extends IdDto<RowId> {}
 
+export type PlanItemLinkedItemsUpdateDto =
+  | {
+      readonly scope: Exclude<PlanItemLinkedItemsUpdateScope, 'from_date'>;
+    }
+  | {
+      readonly scope: 'from_date';
+      readonly from_date: UnixTimestampMilliseconds;
+    };
+
 export interface PlanItemUpdateDto extends IdDto<RowId> {
   readonly changes: {
     readonly title?: string | null;
@@ -113,6 +123,7 @@ export interface PlanItemUpdateDto extends IdDto<RowId> {
     readonly template_json?: PlanItemTemplateJsonInputDto;
     readonly rule_json?: PlanItemRuleJsonDto;
   };
+  readonly linked_items?: PlanItemLinkedItemsUpdateDto;
 }
 
 export interface PlanItemRemoveDto extends IdDto<RowId> {

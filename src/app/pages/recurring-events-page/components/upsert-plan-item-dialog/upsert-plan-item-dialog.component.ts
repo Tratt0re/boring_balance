@@ -7,6 +7,7 @@ import type { EditableOptionItem } from '@/components/data-table';
 import type {
   PlanItemCreateDto,
   PlanItemFrequencyUnit,
+  PlanItemLinkedItemsUpdateScope,
   PlanItemMonthPolicy,
   PlanItemRuleJsonDto,
   PlanItemTransactionTemplateJsonInputDto,
@@ -46,6 +47,13 @@ const PLAN_ITEM_MONTH_POLICY_OPTIONS = [
   { label: 'recurringEvents.monthPolicy.skip', value: 'skip' },
   { label: 'recurringEvents.monthPolicy.last_day', value: 'last_day' },
   { label: 'recurringEvents.monthPolicy.first_day', value: 'first_day' },
+] as const;
+
+const PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS = [
+  { label: 'recurringEvents.dialog.edit.applyToOptions.all', value: 'all' },
+  { label: 'recurringEvents.dialog.edit.applyToOptions.upcoming', value: 'upcoming' },
+  { label: 'recurringEvents.dialog.edit.applyToOptions.fromDate', value: 'from_date' },
+  { label: 'recurringEvents.dialog.edit.applyToOptions.ruleOnly', value: 'rule_only' },
 ] as const;
 
 interface NormalizedPlanItemValues {
@@ -110,6 +118,7 @@ export class UpsertPlanItemDialogComponent {
   protected readonly typeOptions = PLAN_ITEM_TYPE_OPTIONS;
   protected readonly frequencyUnitOptions = PLAN_ITEM_FREQUENCY_UNIT_OPTIONS;
   protected readonly monthPolicyOptions = PLAN_ITEM_MONTH_POLICY_OPTIONS;
+  protected readonly linkedItemsUpdateScopeOptions = PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS;
   protected readonly descriptionMaxLength = PLAN_ITEM_DESCRIPTION_MAX_LENGTH;
   protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
   protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
@@ -166,6 +175,8 @@ export class UpsertPlanItemDialogComponent {
     ),
     amount: new FormControl(this.initialPlanItem ? `${this.initialPlanItem.amount}` : '', { nonNullable: true }),
     description: new FormControl(this.initialPlanItem?.description ?? '', { nonNullable: true }),
+    linkedItemsUpdateScope: new FormControl<PlanItemLinkedItemsUpdateScope>('upcoming', { nonNullable: true }),
+    linkedItemsFromDate: new FormControl<Date | null>(new Date(new Date().setHours(0, 0, 0, 0))),
   });
 
   protected readonly submitAttempted = signal(false);
@@ -216,11 +227,23 @@ export class UpsertPlanItemDialogComponent {
     };
   }
 
-  public collectUpdateChanges(): PlanItemUpdateDto['changes'] | null {
+  public collectUpdatePayload(): Omit<PlanItemUpdateDto, 'id'> | null {
     const values = this.collectNormalizedValues('recurringEvents.dialog.edit.errors.fixValidation');
     if (!values) {
       return null;
     }
+
+    const linkedItemsUpdateScope = this.form.controls.linkedItemsUpdateScope.value;
+    const linkedItemsFromDate = dateToUnixMs(this.form.controls.linkedItemsFromDate.value);
+    if (linkedItemsUpdateScope === 'from_date' && linkedItemsFromDate === null) {
+      this.errorKey.set('recurringEvents.dialog.edit.errors.fromDateRequired');
+      return null;
+    }
+
+    const linkedItems =
+      linkedItemsUpdateScope === 'from_date'
+        ? { scope: linkedItemsUpdateScope, from_date: linkedItemsFromDate! }
+        : { scope: linkedItemsUpdateScope };
 
     if (values.type === 'transaction') {
       const templateJson: PlanItemTransactionTemplateJsonInputDto = {
@@ -230,11 +253,21 @@ export class UpsertPlanItemDialogComponent {
         description: values.template.description,
         settled: values.template.settled,
       };
+      const hasTemplateChanges =
+        !this.initialPlanItem ||
+        this.initialPlanItem.type !== values.type ||
+        amountToCents(this.initialPlanItem.amount) !== templateJson.amount_cents ||
+        this.initialPlanItem.accountId !== templateJson.account_id ||
+        this.initialPlanItem.categoryId !== templateJson.category_id ||
+        (this.initialPlanItem.description ?? '') !== templateJson.description ||
+        this.initialPlanItem.settled !== templateJson.settled;
 
       return {
-        title: values.title,
-        rule_json: values.ruleJson,
-        template_json: templateJson,
+        changes: {
+          title: values.title,
+          ...(hasTemplateChanges ? { template_json: templateJson } : {}),
+        },
+        linked_items: linkedItems,
       };
     }
 
@@ -245,11 +278,21 @@ export class UpsertPlanItemDialogComponent {
       description: values.template.description,
       settled: values.template.settled,
     };
+    const hasTemplateChanges =
+      !this.initialPlanItem ||
+      this.initialPlanItem.type !== values.type ||
+      amountToCents(this.initialPlanItem.amount) !== templateJson.amount_cents ||
+      this.initialPlanItem.fromAccountId !== templateJson.from_account_id ||
+      this.initialPlanItem.toAccountId !== templateJson.to_account_id ||
+      (this.initialPlanItem.description ?? '') !== templateJson.description ||
+      this.initialPlanItem.settled !== templateJson.settled;
 
     return {
-      title: values.title,
-      rule_json: values.ruleJson,
-      template_json: templateJson,
+      changes: {
+        title: values.title,
+        ...(hasTemplateChanges ? { template_json: templateJson } : {}),
+      },
+      linked_items: linkedItems,
     };
   }
 

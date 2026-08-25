@@ -1320,13 +1320,28 @@
       },
       "edit": {
         "title": "Editar evento recurrente",
-        "description": "Actualiza esta regla y manten alineados los proximos elementos planificados.",
+        "description": "Actualiza esta regla recurrente y elige qué elementos generados vinculados deben recibir los cambios de la plantilla.",
+        "applyTo": "Aplicar cambios a",
+        "fromDate": "A partir de",
+        "applyToOptions": {
+          "all": "Todos los elementos vinculados",
+          "upcoming": "Próximos elementos vinculados",
+          "fromDate": "Elementos vinculados desde una fecha",
+          "ruleOnly": "Solo la regla recurrente"
+        },
+        "applyToOptionHints": {
+          "all": "Actualiza todos los elementos ya generados por esta regla recurrente, incluidos los pasados y futuros.",
+          "upcoming": "Actualiza solo los elementos generados programados después de guardar estos cambios.",
+          "fromDate": "Actualiza los elementos generados programados en la fecha seleccionada o después.",
+          "ruleOnly": "Actualiza la plantilla recurrente sin modificar ningún elemento ya generado."
+        },
         "actions": {
           "cancel": "Cancelar",
           "save": "Guardar cambios"
         },
         "errors": {
           "fixValidation": "Corrige los campos resaltados antes de guardar el evento recurrente.",
+          "fromDateRequired": "Selecciona la fecha desde la que se actualizarán los elementos vinculados.",
           "updateFailed": "No se pudo actualizar el evento recurrente."
         }
       },

@@ -298,10 +298,13 @@ function buildLinkedTransferChangesFromPlanTemplate(templateJson, updatedAt) {
   };
 }
 
-function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt) {
-  if (!planItem?.template_json) {
+function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt, linkedItems = { scope: 'all' }) {
+  if (!planItem?.template_json || linkedItems.scope === 'rule_only') {
     return;
   }
+
+  const occurredAtFilter =
+    linkedItems.from_date === undefined ? {} : { occurred_at: { gte: Number(linkedItems.from_date) } };
 
   if (planItem.type === 'transaction') {
     updateRows(
@@ -311,6 +314,7 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt)
       {
         plan_item_id: Number(planItem.id),
         transfer_id: { isNull: true },
+        ...occurredAtFilter,
       },
     );
     return;
@@ -321,6 +325,7 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt)
 
     updateRows(database, 'transfers', transferTemplateChanges.transfer, {
       plan_item_id: Number(planItem.id),
+      ...occurredAtFilter,
     });
 
     updateRows(database, 'transactions', transferTemplateChanges.outgoingTransaction, {
@@ -328,6 +333,7 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt)
       transfer_id: { isNull: false },
       category_id: TRANSFER_CATEGORY_ID,
       amount_cents: { lt: 0 },
+      ...occurredAtFilter,
     });
 
     updateRows(database, 'transactions', transferTemplateChanges.incomingTransaction, {
@@ -335,6 +341,7 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt)
       transfer_id: { isNull: false },
       category_id: TRANSFER_CATEGORY_ID,
       amount_cents: { gt: 0 },
+      ...occurredAtFilter,
     });
     return;
   }
@@ -342,7 +349,7 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt)
   throw new Error(`Unsupported plan item type "${planItem.type}".`);
 }
 
-function updateById(planItemId, changes) {
+function updateById(planItemId, changes, options = {}) {
   const database = getDatabase();
   const updatePlanItemTx = database.transaction((payload) => {
     const changed = planItemsBaseModel.updateById(planItemId, payload);
@@ -350,10 +357,10 @@ function updateById(planItemId, changes) {
       return changed;
     }
 
-    if (payload.template_json !== undefined) {
+    if (payload.template_json !== undefined && options.apply_template_changes !== false) {
       const updatedPlanItem = getById(planItemId);
       const updatedAt = Number(payload.updated_at ?? Date.now());
-      applyTemplateChangesToLinkedPlannedItems(database, updatedPlanItem, updatedAt);
+      applyTemplateChangesToLinkedPlannedItems(database, updatedPlanItem, updatedAt, options.linked_items);
     }
 
     return changed;
