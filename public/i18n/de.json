@@ -837,6 +837,7 @@
       "emptyMessage": "Noch keine Konten. Das erste Konto hinzufügen, um Salden und Überträge zu verfolgen.",
       "actions": {
         "add": "Konto hinzufügen",
+        "viewDetails": "Kontodetails anzeigen",
         "edit": "Konto bearbeiten",
         "archive": "Konto archivieren",
         "locked": "Gesperrtes Konto"
@@ -1556,6 +1557,26 @@
       "invalidId": "Ungültige ID des wiederkehrenden Ereignisses.",
       "notFound": "Wiederkehrendes Ereignis nicht gefunden.",
       "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge des wiederkehrenden Ereignisses."
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "Kontodetails" },
+    "header": {
+      "totalValue": "Gesamtkontowert",
+      "noDescription": "Keine Beschreibung vorhanden."
+    },
+    "table": {
+      "transactionsTitle": "Kontotransaktionen",
+      "transactionsDescription": "Für dieses Konto erfasste Einnahmen und Ausgaben.",
+      "transactionsEmptyMessage": "Für dieses Konto wurden keine Transaktionen gefunden.",
+      "transfersTitle": "Kontoübertragungen",
+      "transfersDescription": "Von diesem Konto gesendete oder empfangene Übertragungen.",
+      "transfersEmptyMessage": "Für dieses Konto wurden keine Übertragungen gefunden."
+    },
+    "errors": {
+      "invalidId": "Ungültige Konto-ID.",
+      "notFound": "Konto nicht gefunden.",
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der Kontodetails."
     }
   },
   "accountValuations": {

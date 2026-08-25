@@ -3,7 +3,10 @@
     <z-skeleton class="h-40 w-full"></z-skeleton>
     <z-skeleton class="h-60 w-full"></z-skeleton>
   } @else if (loadError(); as loadError) {
-    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    <div
+      role="alert"
+      class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+    >
       {{ loadError }}
     </div>
   } @else if (planItem(); as plan) {
@@ -12,8 +15,10 @@
         <div class="flex flex-col gap-4">
           <div class="flex flex-wrap items-center gap-2.5">
             <h2 class="text-xl font-semibold tracking-tight">{{ plan.title }}</h2>
-            <span class="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
-              {{ ('recurringEvents.type.' + plan.type) | translate }}
+            <span
+              class="rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground"
+            >
+              {{ 'recurringEvents.type.' + plan.type | translate }}
             </span>
           </div>
 
@@ -38,7 +43,7 @@
               </p>
               <p class="mt-1 font-medium">
                 {{ plan.ruleJson.frequency.interval }}
-                {{ ('recurringEvents.frequency.unit.' + plan.ruleJson.frequency.unit) | translate }}
+                {{ 'recurringEvents.frequency.unit.' + plan.ruleJson.frequency.unit | translate }}
               </p>
             </div>
 
@@ -47,7 +52,9 @@
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'common.labels.monthPolicy' | translate }}
                 </p>
-                <p class="mt-1 font-medium">{{ ('recurringEvents.monthPolicy.' + monthPolicy) | translate }}</p>
+                <p class="mt-1 font-medium">
+                  {{ 'recurringEvents.monthPolicy.' + monthPolicy | translate }}
+                </p>
               </div>
             }
           </div>
@@ -57,7 +64,14 @@
               <p class="text-xs uppercase tracking-wide text-muted-foreground">
                 {{ 'common.labels.amount' | translate }}
               </p>
-              <p class="mt-1 font-medium money">{{ numberFormatService.formatCurrency(templateAmount()) }}</p>
+              <p class="mt-1 inline-flex items-center gap-1.5 font-medium money">
+                <z-icon
+                  [zType]="templateAmountIcon()"
+                  class="size-3.5 shrink-0"
+                  [style.color]="templateAmountIconColor()"
+                />
+                <span>{{ numberFormatService.formatCurrency(templateAmount()) }}</span>
+              </p>
             </div>
 
             <div>
@@ -74,26 +88,54 @@
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'common.labels.account' | translate }}
                 </p>
-                <p class="mt-1 font-medium">{{ primaryAccountName() }}</p>
+                <p class="mt-1 inline-flex items-center gap-1.5 font-medium">
+                  <z-icon
+                    [zType]="primaryAccountIcon()"
+                    class="size-3.5 shrink-0 opacity-80"
+                    [style.color]="primaryAccountColorHex()"
+                  />
+                  <span>{{ primaryAccountName() }}</span>
+                </p>
               </div>
               <div>
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'common.labels.category' | translate }}
                 </p>
-                <p class="mt-1 font-medium">{{ categoryName() }}</p>
+                <p class="mt-1 inline-flex items-center gap-1.5 font-medium">
+                  <z-icon
+                    [zType]="categoryIcon()"
+                    class="size-3.5 shrink-0 opacity-80"
+                    [style.color]="categoryColorHex()"
+                  />
+                  <span>{{ categoryName() }}</span>
+                </p>
               </div>
             } @else {
               <div>
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'common.labels.fromAccount' | translate }}
                 </p>
-                <p class="mt-1 font-medium">{{ primaryAccountName() }}</p>
+                <p class="mt-1 inline-flex items-center gap-1.5 font-medium">
+                  <z-icon
+                    [zType]="primaryAccountIcon()"
+                    class="size-3.5 shrink-0 opacity-80"
+                    [style.color]="primaryAccountColorHex()"
+                  />
+                  <span>{{ primaryAccountName() }}</span>
+                </p>
               </div>
               <div>
                 <p class="text-xs uppercase tracking-wide text-muted-foreground">
                   {{ 'common.labels.toAccount' | translate }}
                 </p>
-                <p class="mt-1 font-medium">{{ secondaryAccountName() }}</p>
+                <p class="mt-1 inline-flex items-center gap-1.5 font-medium">
+                  <z-icon
+                    [zType]="secondaryAccountIcon()"
+                    class="size-3.5 shrink-0 opacity-80"
+                    [style.color]="secondaryAccountColorHex()"
+                  />
+                  <span>{{ secondaryAccountName() }}</span>
+                </p>
               </div>
             }
           </div>

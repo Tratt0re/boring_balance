@@ -37,6 +37,7 @@ export interface UpsertTransactionDialogData {
   readonly accountOptions: readonly EditableOptionItem[];
   readonly categoryOptions: readonly EditableOptionItem[];
   readonly transaction?: TransactionDialogInitialValue;
+  readonly fixedAccountId?: number;
 }
 
 @Component({
@@ -61,6 +62,7 @@ export class UpsertTransactionDialogComponent {
   protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
   protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
   protected readonly descriptionMaxLength = TRANSACTION_DESCRIPTION_MAX_LENGTH;
+  protected readonly isAccountFixed = !this.initialTransaction && this.data?.fixedAccountId !== undefined;
 
   protected readonly form = new FormGroup({
     occurredAt: new FormControl<Date | null>(
@@ -68,7 +70,11 @@ export class UpsertTransactionDialogComponent {
     ),
     settled: new FormControl(this.initialTransaction?.settled ?? false, { nonNullable: true }),
     accountId: new FormControl<string | null>(
-      this.initialTransaction ? `${this.initialTransaction.accountId}` : null,
+      this.initialTransaction
+        ? `${this.initialTransaction.accountId}`
+        : this.data?.fixedAccountId !== undefined
+          ? `${this.data.fixedAccountId}`
+          : null,
     ),
     amount: new FormControl(this.initialTransaction ? `${this.initialTransaction.amount}` : '', { nonNullable: true }),
     categoryId: new FormControl<string | null>(

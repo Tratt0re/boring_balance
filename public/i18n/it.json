@@ -837,6 +837,7 @@
       "emptyMessage": "Non ci sono ancora conti. Aggiungi il primo per iniziare a seguire saldi e trasferimenti.",
       "actions": {
         "add": "Aggiungi conto",
+        "viewDetails": "Visualizza dettagli conto",
         "edit": "Modifica conto",
         "archive": "Archivia conto",
         "locked": "Conto bloccato"
@@ -1556,6 +1557,26 @@
       "invalidId": "ID evento ricorrente non valido.",
       "notFound": "Evento ricorrente non trovato.",
       "loadUnexpected": "Errore imprevisto durante il caricamento degli elementi dell'evento ricorrente."
+    }
+  },
+  "accountDetails": {
+    "page": { "title": "Dettagli conto" },
+    "header": {
+      "totalValue": "Valore totale del conto",
+      "noDescription": "Nessuna descrizione disponibile."
+    },
+    "table": {
+      "transactionsTitle": "Movimenti del conto",
+      "transactionsDescription": "Entrate e uscite registrate per questo conto.",
+      "transactionsEmptyMessage": "Nessun movimento trovato per questo conto.",
+      "transfersTitle": "Trasferimenti del conto",
+      "transfersDescription": "Trasferimenti inviati da o ricevuti su questo conto.",
+      "transfersEmptyMessage": "Nessun trasferimento trovato per questo conto."
+    },
+    "errors": {
+      "invalidId": "ID conto non valido.",
+      "notFound": "Conto non trovato.",
+      "loadUnexpected": "Errore imprevisto durante il caricamento dei dettagli del conto."
     }
   },
   "accountValuations": {

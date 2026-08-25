@@ -28,6 +28,7 @@ export interface TransferDialogInitialValue {
 export interface UpsertTransferDialogData {
   readonly accountOptions: readonly EditableOptionItem[];
   readonly transfer?: TransferDialogInitialValue;
+  readonly fixedFromAccountId?: number;
 }
 
 @Component({
@@ -51,6 +52,7 @@ export class UpsertTransferDialogComponent {
 
   protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
   protected readonly descriptionMaxLength = TRANSFER_DESCRIPTION_MAX_LENGTH;
+  protected readonly isFromAccountFixed = !this.initialTransfer && this.data?.fixedFromAccountId !== undefined;
 
   protected readonly form = new FormGroup({
     occurredAt: new FormControl<Date | null>(
@@ -58,7 +60,11 @@ export class UpsertTransferDialogComponent {
     ),
     settled: new FormControl(this.initialTransfer?.settled ?? true, { nonNullable: true }),
     fromAccountId: new FormControl<string | null>(
-      this.initialTransfer ? `${this.initialTransfer.fromAccountId}` : null,
+      this.initialTransfer
+        ? `${this.initialTransfer.fromAccountId}`
+        : this.data?.fixedFromAccountId !== undefined
+          ? `${this.data.fixedFromAccountId}`
+          : null,
     ),
     toAccountId: new FormControl<string | null>(
       this.initialTransfer ? `${this.initialTransfer.toAccountId}` : null,

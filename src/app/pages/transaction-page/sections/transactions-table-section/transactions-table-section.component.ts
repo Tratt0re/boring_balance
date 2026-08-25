@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -261,6 +261,8 @@ const createTransactionTableStructure = (
 export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly planItemId = input<number | null>(null);
+  readonly accountId = input<number | null>(null);
+  readonly activityChanged = output<void>();
 
   protected readonly rows = signal<readonly TransactionTableRow[]>([]);
   protected readonly total = signal(0);
@@ -271,10 +273,36 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
   protected readonly isPlanItemContext = computed(() => this.planItemId() !== null);
+  protected readonly isAccountContext = computed(() => this.accountId() !== null);
+  private readonly isEmbeddedContext = computed(
+    () => this.isPlanItemContext() || this.isAccountContext(),
+  );
+  protected readonly titleKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.transactionsTitle';
+    }
+
+    return this.isAccountContext()
+      ? 'accountDetails.table.transactionsTitle'
+      : 'transactions.view.commonTransactions';
+  });
+  protected readonly descriptionKey = computed(() => {
+    if (this.isPlanItemContext()) {
+      return 'recurringEventItems.table.transactionsDescription';
+    }
+
+    return this.isAccountContext()
+      ? 'accountDetails.table.transactionsDescription'
+      : 'transactions.table.description';
+  });
   protected readonly accountCount = computed(() => this.accountOptions().length);
   protected readonly emptyMessageKey = computed(() => {
     if (this.isPlanItemContext()) {
       return 'recurringEventItems.table.emptyMessage';
+    }
+
+    if (this.isAccountContext()) {
+      return 'accountDetails.table.transactionsEmptyMessage';
     }
 
     return this.accountCount() === 0 ? 'transactions.table.emptyNoAccountsMessage' : 'transactions.table.emptyMessage';
@@ -428,7 +456,21 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     return items;
   });
   protected readonly tableActions = computed<readonly TableHeaderActionItem[]>(() => {
-    const actions: TableHeaderActionItem[] = [
+    const actions: TableHeaderActionItem[] = [];
+
+    if (this.isAccountContext()) {
+      actions.push({
+        id: 'add-transaction',
+        icon: 'plus',
+        label: 'transactions.table.actions.add',
+        showLabel: true,
+        buttonType: 'default',
+        disabled: () => this.accountOptions().length === 0 || this.categoryOptions().length === 0,
+        action: () => this.openAddTransactionDialog(),
+      });
+    }
+
+    actions.push(
       {
         id: 'transaction-filters-current-month',
         icon: 'calendar',
@@ -445,7 +487,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         buttonType: 'outline',
         action: () => this.openFilterSheet(),
       },
-    ];
+    );
 
     if (this.hasActiveFilters()) {
       actions.push({
@@ -487,7 +529,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (!this.isPlanItemContext()) {
+    if (!this.isEmbeddedContext()) {
       this.restorePersistedTableState();
       this.activateToolbarActions();
     }
@@ -687,7 +729,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private buildFilterFields(): readonly AppSheetField[] {
-    return [
+    const fields: AppSheetField[] = [
       {
         id: TRANSACTION_FILTER_FIELD.dateFrom,
         type: 'date-picker',
@@ -795,7 +837,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
           translate: option.translate,
         })),
       },
-      {
+    ];
+
+    if (!this.isAccountContext()) {
+      fields.push({
         id: TRANSACTION_FILTER_FIELD.accountId,
         type: 'combobox',
         width: '1/1',
@@ -812,8 +857,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
           icon: option.icon,
           translate: option.translate,
         })),
-      },
-    ];
+      });
+    }
+
+    return fields;
   }
 
   private toSheetValues(filters: TransactionTableFilters): AppSheetFieldValueMap {
@@ -857,13 +904,16 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private buildListTransactionsPayload(): TransactionListTransactionsDto {
     const filters = this.filters();
     const planItemId = this.planItemId() ?? undefined;
+    const accountId = this.accountId() ?? undefined;
     const dateFrom = filters.dateFrom?.getTime();
     const dateTo = filters.dateTo?.getTime();
     const amountFrom = filters.amountFrom ?? undefined;
     const amountTo = filters.amountTo ?? undefined;
     const categoryTypes = filters.categoryType ? [filters.categoryType] : undefined;
     const categories = filters.categoryIds.length > 0 ? [...filters.categoryIds] : undefined;
-    const accounts = filters.accountIds.length > 0 ? [...filters.accountIds] : undefined;
+    const accounts = accountId === undefined
+      ? (filters.accountIds.length > 0 ? [...filters.accountIds] : undefined)
+      : [accountId];
     const settled = filters.settled === null ? undefined : filters.settled;
     const hasFilters =
       planItemId !== undefined ||
@@ -1045,6 +1095,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       zData: {
         accountOptions: this.accountOptions(),
         categoryOptions: this.categoryOptions(),
+        ...(this.accountId() === null ? {} : { fixedAccountId: this.accountId()! }),
       },
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
@@ -1187,12 +1238,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       if (result.row) {
         const updatedRow = this.toTransactionRow(result.row);
         this.rows.update((rows) => rows.map((row) => (row.id === id ? updatedRow : row)));
+        this.activityChanged.emit();
         toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
       }
 
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        this.activityChanged.emit();
         toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
       }
@@ -1216,6 +1269,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
       if (result.row) {
         await this.reloadTransactionsPage();
+        this.activityChanged.emit();
         dialogRef.close(result.row);
         toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
@@ -1223,6 +1277,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        this.activityChanged.emit();
         dialogRef.close({ id, changes });
         toast.success(this.translateService.instant('transactions.toasts.updateSuccess'));
         return;
@@ -1252,6 +1307,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
       this.page.set(1);
       await this.reloadTransactionsPage();
+      this.activityChanged.emit();
       dialogRef.close(created);
       toast.success(this.translateService.instant('transactions.toasts.createSuccess'));
     } catch (error) {
@@ -1285,6 +1341,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       }
 
       await this.reloadTransactionsPage();
+      this.activityChanged.emit();
       toast.success(this.translateService.instant('transactions.toasts.duplicateSuccess'));
     } catch (error) {
       console.error('[transactions-table-section] Failed to duplicate transaction:', error);
@@ -1298,6 +1355,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       const result = await this.transactionsService.remove({ id });
       if (result.changed > 0) {
         await this.reloadTransactionsPage();
+        this.activityChanged.emit();
         toast.success(this.translateService.instant('transactions.toasts.deleteSuccess'));
         return;
       }
@@ -1312,7 +1370,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private restorePersistedTableState(): void {
-    if (this.isPlanItemContext()) {
+    if (this.isEmbeddedContext()) {
       return;
     }
 
@@ -1332,7 +1390,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   }
 
   private persistTableState(): void {
-    if (this.isPlanItemContext()) {
+    if (this.isEmbeddedContext()) {
       return;
     }
 
