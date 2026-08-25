@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 
 import type { AnalyticsNetWorthSnapshotsDto } from '@/dtos';
+import { SyncService } from '@/pages/data-backups-page/services/sync.service';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
+import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { OverviewActivityPanelComponent } from './components/overview-activity-panel/overview-activity-panel.component';
 import { OverviewAllocationCardComponent } from './components/overview-allocation-card/overview-allocation-card.component';
 import { OverviewCashflowCardComponent } from './components/overview-charts-card/overview-cashflow-card/overview-cashflow-card.component';
@@ -31,6 +35,8 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
   selector: 'app-overview-page',
   imports: [
     TranslatePipe,
+    ZardButtonComponent,
+    ...ZardTooltipImports,
     OverviewNetWorthCardComponent,
     OverviewAllocationCardComponent,
     OverviewCashflowCardComponent,
@@ -45,13 +51,18 @@ export class OverviewPage implements OnInit, OnDestroy {
   @ViewChild(OverviewCashflowCardComponent) private overviewCashflowCardComponent?: OverviewCashflowCardComponent;
 
   private releaseToolbarActions: (() => void) | null = null;
+  private readonly syncService = inject(SyncService);
   private languageChangeSubscription: Subscription | null = null;
   private overviewActivityChangeReloadTimeout: ReturnType<typeof setTimeout> | null = null;
+  private syncEnabled = false;
+  private syncAvailabilityCheckRunning = false;
   private readonly currentDateReference = new Date();
 
   protected readonly isSingleColumnLayout = signal(false);
   protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
   protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
+  protected readonly hasNewerSyncVersion = signal(false);
+  protected readonly syncNowLoading = toSignal(this.syncService.syncNowLoading$, { initialValue: false });
   protected readonly showSnapshotsOutdatedBanner = computed(() =>
     this.netWorthMode() === 'valued'
     && this.snapshotRecency().hasSnapshots
@@ -73,6 +84,7 @@ export class OverviewPage implements OnInit, OnDestroy {
       this.activateToolbarActions();
     });
     this.activateToolbarActions();
+    void this.initializeSyncBanner();
   }
 
   ngOnDestroy(): void {
@@ -89,6 +101,21 @@ export class OverviewPage implements OnInit, OnDestroy {
   @HostListener('window:resize')
   protected onWindowResize(): void {
     this.updateResponsiveState();
+  }
+
+  @HostListener('window:focus')
+  protected onWindowFocus(): void {
+    void this.refreshSyncAvailability();
+  }
+
+  protected onSyncNow(): void {
+    if (!this.hasNewerSyncVersion() || this.syncNowLoading()) {
+      return;
+    }
+
+    void firstValueFrom(this.syncService.syncNow())
+      .then(() => this.refreshSyncAvailability())
+      .catch(() => undefined);
   }
 
   protected onOverviewActivityChanged(): void {
@@ -118,6 +145,33 @@ export class OverviewPage implements OnInit, OnDestroy {
       title: 'nav.items.overview',
       itemActions: this.buildToolbarActions(),
     });
+  }
+
+  private async initializeSyncBanner(): Promise<void> {
+    const settings = await firstValueFrom(this.syncService.getSettings());
+    this.syncEnabled = settings.enabled && Boolean(settings.folderPath);
+
+    if (!this.syncEnabled) {
+      this.hasNewerSyncVersion.set(false);
+      return;
+    }
+
+    await this.refreshSyncAvailability();
+  }
+
+  private async refreshSyncAvailability(): Promise<void> {
+    if (!this.syncEnabled || this.syncAvailabilityCheckRunning || this.syncNowLoading()) {
+      return;
+    }
+
+    this.syncAvailabilityCheckRunning = true;
+
+    try {
+      const availability = await firstValueFrom(this.syncService.checkAvailability());
+      this.hasNewerSyncVersion.set(availability.hasNewerRemoteSnapshot);
+    } finally {
+      this.syncAvailabilityCheckRunning = false;
+    }
   }
 
   private buildToolbarActions(): readonly ToolbarAction[] {

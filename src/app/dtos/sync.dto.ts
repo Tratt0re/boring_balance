@@ -38,6 +38,10 @@ export interface SyncStateDto {
   readonly conflictInfo?: SyncConflictInfoDto | null;
 }
 
+export interface SyncAvailabilityDto {
+  readonly hasNewerRemoteSnapshot: boolean;
+}
+
 export interface SyncRepoMetaResponseDto {
   readonly repoId: string;
   readonly createdAtMs: number;
@@ -176,6 +180,7 @@ export interface SyncRemoveSnapshotResponseDto {
 export type SyncGetSettingsResponse = SyncSettingsDto;
 export type SyncUpdateSettingsResponse = SyncSettingsDto;
 export type SyncGetStateResponse = SyncStateDto;
+export type SyncCheckAvailabilityResponse = SyncAvailabilityDto;
 export type SyncSelectFolderResponse = SyncSelectFolderResponseDto | null;
 export type SyncRepoStatusResponse = SyncRepoStatusResponseDto;
 export type SyncEnableResponse = SyncEnableResponseDto;

@@ -98,6 +98,7 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.sync.getSettings]: syncController.getSettings,
   [CHANNELS.sync.updateSettings]: syncController.updateSettings,
   [CHANNELS.sync.getState]: syncController.getState,
+  [CHANNELS.sync.checkAvailability]: syncController.checkAvailability,
   [CHANNELS.sync.selectFolder]: syncController.selectFolder,
   [CHANNELS.sync.enable]: syncController.enable,
   [CHANNELS.sync.repoStatus]: syncController.repoStatus,

@@ -425,7 +425,7 @@
         "title": "Synchronisation manuelle",
         "description": "Utiliser ces actions pour vérifier ou partager des modifications immédiatement.",
         "tooltips": {
-          "syncNow": "Vérifie d'abord les données partagées plus récentes, puis envoie cet appareil si nécessaire.",
+          "syncNow": "Vérifie d'abord si des données partagées plus récentes sont disponibles, puis partage les mises à jour de cet appareil, le cas échéant.",
           "pullNow": "Récupère les données partagées plus récentes sans envoyer les modifications de cet appareil.",
           "pushNow": "Envoie les dernières modifications de cet appareil sans vérifier d'abord les données partagées plus récentes."
         },
@@ -608,6 +608,10 @@
       "reload": "Actualiser"
     },
     "banners": {
+      "syncUpdateAvailable": {
+        "title": "Des données de synchronisation plus récentes sont disponibles",
+        "body": "Une version plus récente a été trouvée dans votre dossier de synchronisation. Synchronisez maintenant pour utiliser les dernières données partagées."
+      },
       "snapshotsOutdated": {
         "title": "Les instantanés sont peut-être obsolètes",
         "body": "Votre dernier instantané date de {{days}} jours. Mettez à jour les instantanés pour maintenir la précision de la valeur nette."

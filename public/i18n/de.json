@@ -425,7 +425,7 @@
         "title": "Manuelle Synchronisierung",
         "description": "Diese Aktionen verwenden, wenn Änderungen sofort geprüft oder geteilt werden sollen.",
         "tooltips": {
-          "syncNow": "Prüft zuerst auf neuere gemeinsame Daten und überträgt dieses Gerät bei Bedarf.",
+          "syncNow": "Prüft zuerst, ob neuere gemeinsame Daten verfügbar sind, und überträgt anschließend die Aktualisierungen dieses Geräts, falls vorhanden.",
           "pullNow": "Ruft neuere gemeinsame Daten ab, ohne die Änderungen dieses Geräts zu senden.",
           "pushNow": "Überträgt die neuesten Änderungen dieses Geräts, ohne zuerst auf neuere gemeinsame Daten zu prüfen."
         },
@@ -608,6 +608,10 @@
       "reload": "Neu laden"
     },
     "banners": {
+      "syncUpdateAvailable": {
+        "title": "Neuere Synchronisierungsdaten sind verfügbar",
+        "body": "Im Synchronisierungsordner wurde eine neuere Version gefunden. Jetzt synchronisieren, um die neuesten gemeinsamen Daten zu verwenden."
+      },
       "snapshotsOutdated": {
         "title": "Momentaufnahmen möglicherweise veraltet",
         "body": "Ihre neueste Momentaufnahme ist {{days}} Tage alt. Momentaufnahmen aktualisieren, um das Nettovermögen korrekt zu halten."

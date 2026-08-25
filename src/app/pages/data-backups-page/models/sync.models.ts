@@ -13,6 +13,7 @@ export interface RepoStatusDto {
 }
 
 export type SyncConflictInfoDto = DTO.SyncConflictInfoDto;
+export type SyncAvailabilityDto = DTO.SyncAvailabilityDto;
 export type SyncRemoteLatestDto = DTO.SyncRemoteLatestDto;
 export type SyncSettingsDto = DTO.SyncSettingsDto;
 export type SyncStateDto = DTO.SyncStateDto;
