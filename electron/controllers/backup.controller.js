@@ -10,7 +10,11 @@ const {
 const { backupModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
-const { createAuthorizedPath, isDirectChildOf } = require('../utils/authorized-path');
+const {
+  createAuthorizedPath,
+  isDirectChildOf,
+  normalizeFilePath,
+} = require('../utils/authorized-path');
 const {
   assertAllowedKeys,
   ensureNonEmptyObject,
@@ -56,6 +60,7 @@ const BACKUP_EVENT_CHANNELS = Object.freeze({
 // The one file the user picked for a restore. The renderer may name any path in a request, so a path
 // that is neither this file nor a backup in the configured folder is refused.
 const pickedRestoreFile = createAuthorizedPath();
+const pickedBackupFolder = createAuthorizedPath();
 
 let schedulerTimer = null;
 let runningBackupPromise = null;
@@ -193,6 +198,20 @@ function persistBackupSettings(settings) {
   return setSettingsSection(BACKUP_SETTINGS_SECTION_KEY, cloneSettings(settings));
 }
 
+// The renderer may only point backups at the folder the user chose in the folder dialog, or keep the
+// one already saved. Clearing the folder is always allowed.
+function assertBackupFolderAllowed(folderPath, savedFolderPath) {
+  if (folderPath === null || pickedBackupFolder.isAuthorized(folderPath)) {
+    return;
+  }
+
+  if (savedFolderPath && normalizeFilePath(folderPath) === normalizeFilePath(savedFolderPath)) {
+    return;
+  }
+
+  throw new Error('Choose the backup folder with the folder picker.');
+}
+
 function applyBackupSettingsPatch(currentSettings, patch) {
   const nextSettings = {
     ...currentSettings,
@@ -205,6 +224,7 @@ function applyBackupSettingsPatch(currentSettings, patch) {
   if (patch.folderPath !== undefined) {
     nextSettings.folderPath =
       normalizeOptionalString(patch.folderPath, 'payload.folderPath', { allowNull: true }) ?? null;
+    assertBackupFolderAllowed(nextSettings.folderPath, currentSettings.folderPath);
   }
 
   if (patch.autoBackupOnQuit !== undefined) {
@@ -405,7 +425,8 @@ async function selectFolder() {
     properties: ['openDirectory', 'createDirectory'],
   });
 
-  if (result.canceled || result.filePaths.length === 0) {
+  const folderPath = result.canceled ? null : (result.filePaths[0] ?? null);
+  if (!pickedBackupFolder.authorize(folderPath)) {
     return null;
   }
 

@@ -11,6 +11,7 @@ const {
 } = require('../database');
 const { syncModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
+const { createAuthorizedPath, normalizeFilePath } = require('../utils/authorized-path');
 const { formatTimestampForFilename } = require('../utils/file-utils');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
 const {
@@ -95,6 +96,22 @@ function normalizeOptionalCounter(value, label) {
   return normalizedValue;
 }
 
+const pickedSyncFolder = createAuthorizedPath();
+
+// The renderer may only point sync at the folder the user chose in the folder dialog, or keep the
+// one already saved.
+function assertSyncFolderAllowed(folderPath, savedFolderPath) {
+  if (pickedSyncFolder.isAuthorized(folderPath)) {
+    return folderPath;
+  }
+
+  if (savedFolderPath && normalizeFilePath(folderPath) === normalizeFilePath(savedFolderPath)) {
+    return folderPath;
+  }
+
+  throw new Error('Choose the sync folder with the folder picker.');
+}
+
 function resolveFolderPath(value, label = 'folderPath') {
   const normalizedFolderPath = path.resolve(requireString(value, label, { allowEmpty: false }));
   if (!fs.existsSync(normalizedFolderPath)) {
@@ -134,7 +151,10 @@ function resolveSnapshotPath(folderPath, snapshotFile) {
     return null;
   }
 
-  return path.join(snapshotsDirPath, requireString(snapshotFile, 'snapshotFile', { allowEmpty: false }));
+  return path.join(
+    snapshotsDirPath,
+    requireString(snapshotFile, 'snapshotFile', { allowEmpty: false }),
+  );
 }
 
 function resolveManagedSnapshotPath(settings, payload) {
@@ -152,10 +172,10 @@ function resolveManagedSnapshotPath(settings, payload) {
   const normalizedSnapshotsDirPath = path.resolve(snapshotsDirPath);
   const relativeSnapshotPath = path.relative(normalizedSnapshotsDirPath, snapshotFilePath);
   if (
-    !relativeSnapshotPath
-    || relativeSnapshotPath.startsWith('..')
-    || path.isAbsolute(relativeSnapshotPath)
-    || path.dirname(relativeSnapshotPath) !== '.'
+    !relativeSnapshotPath ||
+    relativeSnapshotPath.startsWith('..') ||
+    path.isAbsolute(relativeSnapshotPath) ||
+    path.dirname(relativeSnapshotPath) !== '.'
   ) {
     throw new Error('Snapshot file must be directly inside the configured sync snapshots folder.');
   }
@@ -231,7 +251,9 @@ function normalizeRemoteLatest(indexLatest) {
   const changeCounter = normalizeIntegerOrNull(indexLatest.change_counter);
   const lastWriteMs = normalizeIntegerOrNull(indexLatest.last_write_ms);
   const file =
-    typeof indexLatest.file === 'string' && indexLatest.file.trim().length > 0 ? indexLatest.file.trim() : null;
+    typeof indexLatest.file === 'string' && indexLatest.file.trim().length > 0
+      ? indexLatest.file.trim()
+      : null;
 
   if (!Number.isInteger(changeCounter) || !Number.isInteger(lastWriteMs) || !file) {
     return null;
@@ -340,7 +362,8 @@ function normalizeSettingsFromStore(value) {
 
   try {
     if (storedValue.enabled !== undefined) {
-      normalizedSettings.enabled = normalizeBooleanFlag(storedValue.enabled, 'settings.enabled') === 1;
+      normalizedSettings.enabled =
+        normalizeBooleanFlag(storedValue.enabled, 'settings.enabled') === 1;
     }
   } catch {
     normalizedSettings.enabled = SYNC_SETTINGS_DEFAULTS.enabled;
@@ -438,7 +461,8 @@ function normalizeSettingsFromStore(value) {
   try {
     if (storedValue.lastError !== undefined) {
       normalizedSettings.lastError =
-        normalizeOptionalString(storedValue.lastError, 'settings.lastError', { allowNull: true }) ?? null;
+        normalizeOptionalString(storedValue.lastError, 'settings.lastError', { allowNull: true }) ??
+        null;
     }
   } catch {
     normalizedSettings.lastError = SYNC_SETTINGS_DEFAULTS.lastError;
@@ -465,7 +489,9 @@ function readSyncSettings() {
 }
 
 function persistSyncSettings(settings) {
-  return normalizeSettingsFromStore(setSettingsSection(SYNC_SETTINGS_SECTION_KEY, cloneSettings(settings)));
+  return normalizeSettingsFromStore(
+    setSettingsSection(SYNC_SETTINGS_SECTION_KEY, cloneSettings(settings)),
+  );
 }
 
 function persistSettingsPatch(patch) {
@@ -485,12 +511,17 @@ function applySyncSettingsPatch(currentSettings, patch) {
     nextSettings.enabled = normalizeBooleanFlag(patch.enabled, 'payload.enabled') === 1;
   }
 
-  const nextFolderPathValue = patch.folderPath !== undefined ? patch.folderPath : patch.baseFolderPath;
+  const nextFolderPathValue =
+    patch.folderPath !== undefined ? patch.folderPath : patch.baseFolderPath;
   if (nextFolderPathValue !== undefined) {
     nextSettings.folderPath =
-      normalizeOptionalString(nextFolderPathValue, 'payload.folderPath', { allowNull: true }) ?? null;
+      normalizeOptionalString(nextFolderPathValue, 'payload.folderPath', { allowNull: true }) ??
+      null;
     if (nextSettings.folderPath) {
-      nextSettings.folderPath = resolveFolderPath(nextSettings.folderPath);
+      nextSettings.folderPath = assertSyncFolderAllowed(
+        resolveFolderPath(nextSettings.folderPath),
+        currentSettings.folderPath,
+      );
     }
   }
 
@@ -509,7 +540,8 @@ function applySyncSettingsPatch(currentSettings, patch) {
   }
 
   if (patch.autoPushOnQuit !== undefined) {
-    nextSettings.autoPushOnQuit = normalizeBooleanFlag(patch.autoPushOnQuit, 'payload.autoPushOnQuit') === 1;
+    nextSettings.autoPushOnQuit =
+      normalizeBooleanFlag(patch.autoPushOnQuit, 'payload.autoPushOnQuit') === 1;
   }
 
   if (nextSettings.enabled && !nextSettings.folderPath) {
@@ -539,19 +571,25 @@ function restartSchedulers(settings = readSyncSettings()) {
   }
 
   if (settings.autoPullIntervalMin > 0) {
-    autoPullTimer = setInterval(() => {
-      void pullNow().catch((error) => {
-        console.error('[electron] Scheduled sync pull failed:', error);
-      });
-    }, settings.autoPullIntervalMin * 60 * 1000);
+    autoPullTimer = setInterval(
+      () => {
+        void pullNow().catch((error) => {
+          console.error('[electron] Scheduled sync pull failed:', error);
+        });
+      },
+      settings.autoPullIntervalMin * 60 * 1000,
+    );
   }
 
   if (settings.autoPushIntervalMin > 0) {
-    autoPushTimer = setInterval(() => {
-      void pushNow().catch((error) => {
-        console.error('[electron] Scheduled sync push failed:', error);
-      });
-    }, settings.autoPushIntervalMin * 60 * 1000);
+    autoPushTimer = setInterval(
+      () => {
+        void pushNow().catch((error) => {
+          console.error('[electron] Scheduled sync push failed:', error);
+        });
+      },
+      settings.autoPushIntervalMin * 60 * 1000,
+    );
   }
 }
 
@@ -597,13 +635,17 @@ function ensureConfiguredSettings(settings, options = {}) {
 
 function assertCompleteLocalMeta(localMeta) {
   const dbUuid =
-    typeof localMeta?.db_uuid === 'string' && localMeta.db_uuid.trim().length > 0 ? localMeta.db_uuid.trim() : null;
+    typeof localMeta?.db_uuid === 'string' && localMeta.db_uuid.trim().length > 0
+      ? localMeta.db_uuid.trim()
+      : null;
   const changeCounter = normalizeIntegerOrNull(localMeta?.change_counter);
   const lastWriteMs = normalizeIntegerOrNull(localMeta?.last_write_ms);
   const schemaVersion = normalizeIntegerOrNull(localMeta?.schema_version);
 
   if (!dbUuid || !Number.isInteger(changeCounter) || changeCounter < 0) {
-    throw new Error('Local database metadata is missing a valid app_meta.db_uuid or app_meta.change_counter.');
+    throw new Error(
+      'Local database metadata is missing a valid app_meta.db_uuid or app_meta.change_counter.',
+    );
   }
 
   if (!Number.isInteger(lastWriteMs) || lastWriteMs < 0) {
@@ -677,7 +719,10 @@ function resolveUniqueLocalCopyPath(localDbPath, prefix) {
   let index = 1;
 
   while (fs.existsSync(candidatePath)) {
-    candidatePath = path.join(localDirectoryPath, `${normalizedPrefix}-${suffix}-${index}${extension}`);
+    candidatePath = path.join(
+      localDirectoryPath,
+      `${normalizedPrefix}-${suffix}-${index}${extension}`,
+    );
     index += 1;
   }
 
@@ -723,7 +768,10 @@ async function restoreSnapshotIntoLocal(snapshotPath, options = {}) {
         const database = createDatabase();
         runMigrations(database);
       } catch (reopenError) {
-        console.error('[electron] Failed to reopen database after sync restore error:', reopenError);
+        console.error(
+          '[electron] Failed to reopen database after sync restore error:',
+          reopenError,
+        );
       }
     }
 
@@ -878,7 +926,12 @@ async function performPull(settings, options = {}) {
       lastPublishedCounter: currentIndexLatest.change_counter,
       lastError: null,
     });
-    const pullResult = buildPullCompletedResult(persistedSettings, currentIndexLatest, snapshotPath, restoreResult);
+    const pullResult = buildPullCompletedResult(
+      persistedSettings,
+      currentIndexLatest,
+      snapshotPath,
+      restoreResult,
+    );
 
     setSuccessState({
       lastPullAtMs: Date.now(),
@@ -950,7 +1003,10 @@ async function performPush(settings, options = {}) {
       return conflictResult;
     }
 
-    if (!forceSnapshot && !hasLocalChangesSinceLastPublish(localMeta, currentSettings.lastPublishedCounter)) {
+    if (
+      !forceSnapshot &&
+      !hasLocalChangesSinceLastPublish(localMeta, currentSettings.lastPublishedCounter)
+    ) {
       const persistedSettings = persistSettingsPatch({ lastError: null });
       setSuccessState({
         remoteLatest: normalizeRemoteLatest(currentIndexLatest),
@@ -1078,11 +1134,11 @@ function checkAvailability() {
     ? resolveSnapshotPath(settings.folderPath, remoteLatest.file)
     : null;
   const hasNewerRemoteSnapshot = Boolean(
-    remoteLatest
-    && remoteLatest.db_uuid === localMeta.db_uuid
-    && snapshotPath
-    && fs.existsSync(snapshotPath)
-    && syncModel.isRemoteNewer(remoteLatest, localMeta),
+    remoteLatest &&
+    remoteLatest.db_uuid === localMeta.db_uuid &&
+    snapshotPath &&
+    fs.existsSync(snapshotPath) &&
+    syncModel.isRemoteNewer(remoteLatest, localMeta),
   );
 
   return {
@@ -1095,7 +1151,8 @@ async function selectFolder() {
     properties: ['openDirectory', 'createDirectory'],
   });
 
-  if (result.canceled || result.filePaths.length === 0) {
+  const folderPath = result.canceled ? null : (result.filePaths[0] ?? null);
+  if (!pickedSyncFolder.authorize(folderPath)) {
     return null;
   }
 
@@ -1105,13 +1162,18 @@ async function selectFolder() {
 }
 
 function resolveEnableFolderPath(payload) {
+  const savedFolderPath = readSyncSettings().folderPath;
+
   if (typeof payload === 'string') {
-    return resolveFolderPath(payload, 'folderPath');
+    return assertSyncFolderAllowed(resolveFolderPath(payload, 'folderPath'), savedFolderPath);
   }
 
   const body = ensurePlainObject(payload, 'payload');
   const rawFolderPath = body.folderPath !== undefined ? body.folderPath : body.baseFolderPath;
-  return resolveFolderPath(rawFolderPath, 'payload.folderPath');
+  return assertSyncFolderAllowed(
+    resolveFolderPath(rawFolderPath, 'payload.folderPath'),
+    savedFolderPath,
+  );
 }
 
 async function enable(payload) {
@@ -1180,7 +1242,9 @@ async function syncNow() {
     }
 
     if (pullResult.action === 'conflict') {
-      skipped.push('Push skipped because a db_uuid mismatch was resolved from the remote snapshot.');
+      skipped.push(
+        'Push skipped because a db_uuid mismatch was resolved from the remote snapshot.',
+      );
       return {
         pulled: true,
         pushed: false,
@@ -1229,17 +1293,24 @@ async function pushNow() {
 }
 
 function repoStatus(payload) {
-  let folderPath = readSyncSettings().folderPath;
+  const savedFolderPath = readSyncSettings().folderPath;
+  let folderPath = savedFolderPath;
 
   if (payload !== undefined && payload !== null) {
     if (typeof payload === 'string') {
-      folderPath = resolveFolderPath(payload, 'folderPath');
+      folderPath = assertSyncFolderAllowed(
+        resolveFolderPath(payload, 'folderPath'),
+        savedFolderPath,
+      );
     } else {
       const body = ensurePlainObject(payload, 'payload');
       if (body.folderPath !== undefined || body.baseFolderPath !== undefined) {
-        folderPath = resolveFolderPath(
-          body.folderPath !== undefined ? body.folderPath : body.baseFolderPath,
-          'payload.folderPath',
+        folderPath = assertSyncFolderAllowed(
+          resolveFolderPath(
+            body.folderPath !== undefined ? body.folderPath : body.baseFolderPath,
+            'payload.folderPath',
+          ),
+          savedFolderPath,
         );
       }
     }

@@ -68,8 +68,12 @@ async function backupThenChangeData(folder) {
   return backupPath;
 }
 
-const configureBackupFolder = (folder) =>
+// Same path the UI takes: the user picks the folder in the dialog, then the settings are saved.
+async function configureBackupFolder(folder) {
+  setOpenDialogResult({ canceled: false, filePaths: [folder] });
+  await backupController.selectFolder();
   backupController.updateSettings({ enabled: true, folderPath: folder });
+}
 
 const pick = (...filePaths) => setOpenDialogResult({ canceled: false, filePaths });
 
@@ -198,7 +202,7 @@ describe('backup restore', () => {
     ])('is refused: %s', async (_label, buildPath) => {
       const original = await backupThenChangeData(backupFolder);
       fs.copyFileSync(original, path.join(desktop, 'planted.sqlite'));
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
 
       await expect(
         backupController.restore({ backupFilePath: buildPath(desktop) }),
@@ -232,7 +236,7 @@ describe('backup restore', () => {
   describe('a backup in the configured backup folder', () => {
     it('can be restored without picking it, as the list in the UI does', async () => {
       const original = await backupThenChangeData(backupFolder);
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
 
       await backupController.restore({ backupFilePath: original });
 
@@ -253,7 +257,7 @@ describe('backup restore', () => {
       const wrongSuffix = path.join(backupFolder, `${path.basename(original, '.sqlite')}.txt`);
       fs.copyFileSync(original, imposter);
       fs.copyFileSync(original, wrongSuffix);
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
 
       await expect(backupController.restore({ backupFilePath: imposter })).rejects.toThrow();
       await expect(backupController.restore({ backupFilePath: wrongSuffix })).rejects.toThrow();
@@ -265,7 +269,7 @@ describe('backup restore', () => {
       const original = await backupThenChangeData(desktop);
       const name = path.basename(original);
       const outside = path.join(backupFolder, '..', 'Desktop', name);
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
 
       await expect(backupController.restore({ backupFilePath: outside })).rejects.toThrow();
 
@@ -276,7 +280,7 @@ describe('backup restore', () => {
       const lookalike = `${backupFolder}-evil`;
       fs.mkdirSync(lookalike);
       const original = await backupThenChangeData(lookalike);
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
 
       await expect(backupController.restore({ backupFilePath: original })).rejects.toThrow();
 
@@ -287,7 +291,7 @@ describe('backup restore', () => {
   describe('delete keeps its own, stricter rule', () => {
     it('refuses to delete a file chosen with the picker, because it is outside the backup folder', async () => {
       const original = await backupThenChangeData(desktop);
-      configureBackupFolder(backupFolder);
+      await configureBackupFolder(backupFolder);
       pick(original);
       await backupController.selectRestoreFile();
 

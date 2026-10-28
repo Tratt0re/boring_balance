@@ -56,7 +56,7 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 - [x] 2.9 Import: file size cap and row cap in `excel-utils.js`. **(agent)**
 - [x] 2.10 Update fetch: `AbortSignal.timeout`; validate returned `releaseUrl`.
 - [x] 2.11 Ignore `ELECTRON_RENDERER_URL` when `app.isPackaged`.
-- [ ] 2.12 Tie backup/sync `folderPath` to the folder dialog result.
+- [x] 2.12 Tie backup/sync `folderPath` to the folder dialog result.
 - [ ] 2.13 (owner approved; do last in Phase 2) Electron fuses (`RunAsNode`, `EnableNodeCliInspectArguments`, `OnlyLoadAppFromAsar`). **Dependency question** (`@electron/fuses`).
 
 ## Phase 3: Data safety
@@ -150,3 +150,4 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 | 2026-10-28 | 2 | 2.9 done: `excel-utils.js` refuses a workbook over 10 MB before parsing it and a sheet over 20,000 data rows before reading any row. Both surface through `prepareImport` as the existing `WORKBOOK_READ_FAILED` error, so the UI needs no change. The shipped template still imports. 8 tests (708 total), 6/6 mutants killed after one survivor exposed a missing trim test. A formatting-only commit for the file came first. |
 | 2026-10-28 | 2 | 2.10 done: the GitHub release request now aborts after 10 s (`AbortSignal.timeout`), and a stalled or failed request already ends as the quiet "no update" answer. `releaseUrl` is passed on only if it passes the external-link allow-list, otherwise it becomes null while the update itself is still reported. 12 tests (720 total), 5/5 mutants killed. Note: PLAN 4.8 (renderer shows nothing when the check fails) is still open. |
 | 2026-10-28 | 2 | 2.11 done: `window.js` reads `ELECTRON_RENDERER_URL` only when the app is not packaged, so whatever launches a packaged app cannot choose the page that gets IPC (it was already excluded from the trusted sources, but the window itself would still have been pointed there in dev mode). 7 tests (727 total), mutant killed. The Electron test stub gained `getAppPath`. |
+| 2026-10-28 | 2 | 2.12 done: backup and sync accept a folder only if the user just chose it in the folder dialog, or it is the folder already saved (clearing is always allowed). Sync also checks it on `enable`, `repoStatus` and `updateSettings`, so a crafted request cannot create the sync folder structure in an arbitrary place. The backup restore tests now pick the folder first, as the UI does. 16 new tests (743 total); 9/9 mutants killed. |
