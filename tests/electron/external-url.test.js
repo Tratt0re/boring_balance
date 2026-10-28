@@ -23,6 +23,11 @@ describe('isAllowedExternalUrl', () => {
       ['https://boringbalance.com'],
       ['https://boringbalance.com/'],
       ['https://boringbalance.com/docs/getting-started?lang=es#top'],
+      ['https://www.boringbalance.com'],
+      ['https://www.boringbalance.com/download'],
+      ['https://docs.boringbalance.com/en/guide?x=1#y'],
+      ['https://a.b.c.boringbalance.com/'],
+      ['https://WWW.BoringBalance.COM/Download'],
     ])('accepts %s', (url) => {
       expect(isAllowedExternalUrl(url)).toBe(true);
     });
@@ -83,7 +88,13 @@ describe('isAllowedExternalUrl', () => {
       ['https://gıthub.com/Tratt0re/boring_balance'],
       ['https://api.github.com/repos/Tratt0re/boring_balance'],
       ['https://www.github.com/Tratt0re/boring_balance'],
-      ['https://sub.boringbalance.com/'],
+      ['https://notboringbalance.com/'],
+      ['https://boringbalance.com.au/'],
+      ['https://boringbalance-com.evil.com/'],
+      ['https://www.boringbalance.com.evil.com/docs'],
+      ['https://boringbalance.com..evil.com/'],
+      ['https://xn--boringbalance-9ec.com/'],
+      ['https://boringbalance.co/'],
       ['https://boringbalance.org/'],
       ['https://github.io/Tratt0re/boring_balance'],
     ])('refuses %s', (url) => {
@@ -139,7 +150,15 @@ describe('isAllowedExternalUrl', () => {
     });
 
     it('answers false instead of throwing, whatever the renderer sends', () => {
-      for (const value of [undefined, null, 42, {}, [], Symbol('x'), () => 'https://boringbalance.com/']) {
+      for (const value of [
+        undefined,
+        null,
+        42,
+        {},
+        [],
+        Symbol('x'),
+        () => 'https://boringbalance.com/',
+      ]) {
         expect(() => isAllowedExternalUrl(value)).not.toThrow();
       }
     });

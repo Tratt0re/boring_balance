@@ -49,8 +49,20 @@ async function fetchLatestRelease() {
   };
 }
 
-function buildResult({ updateAvailable, currentVersion, latestVersion, releaseUrl, popupDismissedForThisVersion }) {
-  return { updateAvailable, currentVersion, latestVersion, releaseUrl, popupDismissedForThisVersion };
+function buildResult({
+  updateAvailable,
+  currentVersion,
+  latestVersion,
+  releaseUrl,
+  popupDismissedForThisVersion,
+}) {
+  return {
+    updateAvailable,
+    currentVersion,
+    latestVersion,
+    releaseUrl,
+    popupDismissedForThisVersion,
+  };
 }
 
 function errorResult(currentVersion) {

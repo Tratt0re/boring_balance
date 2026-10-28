@@ -27,6 +27,11 @@ function parseHttpsUrl(value) {
   return url;
 }
 
+// The site itself and any subdomain of it. The leading dot is what keeps evilboringbalance.com out.
+function isWebsiteHost(hostname) {
+  return hostname === WEBSITE_HOST || hostname.endsWith(`.${WEBSITE_HOST}`);
+}
+
 function isInsideRepository(url) {
   const segments = url.pathname.split('/').filter((segment) => segment.length > 0);
   return GITHUB_REPOSITORY_SEGMENTS.every(
@@ -36,7 +41,7 @@ function isInsideRepository(url) {
 
 /**
  * True for https URLs under https://github.com/Tratt0re/boring_balance/ and anywhere on
- * https://boringbalance.com (no subdomains, no credentials, no custom port).
+ * boringbalance.com or its subdomains (never with credentials or a custom port).
  *
  * @param {unknown} value
  * @returns {boolean}
@@ -47,7 +52,7 @@ function isAllowedExternalUrl(value) {
     return false;
   }
 
-  if (url.hostname === WEBSITE_HOST) {
+  if (isWebsiteHost(url.hostname)) {
     return true;
   }
 
