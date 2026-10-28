@@ -65,7 +65,9 @@ function touchDatabaseWriteMeta(database, tableName, changedRows) {
       .get(APP_META_CHANGE_COUNTER_KEY);
     const currentChangeCounter = Number(changeCounterRow?.value);
     const nextChangeCounter =
-      (Number.isInteger(currentChangeCounter) && currentChangeCounter >= 0 ? currentChangeCounter : 0) + changedRows;
+      (Number.isInteger(currentChangeCounter) && currentChangeCounter >= 0
+        ? currentChangeCounter
+        : 0) + changedRows;
 
     upsertAppMetaValue(database, APP_META_CHANGE_COUNTER_KEY, nextChangeCounter);
     upsertAppMetaValue(database, APP_META_LAST_WRITE_MS_KEY, Date.now());
@@ -388,7 +390,12 @@ function countRows(database, tableName, where = {}) {
  * @param {Record<string, unknown>} [where={}] - Column/value filters.
  * @returns {number[]} Distinct years sorted in descending order.
  */
-function selectDistinctYearsFromUnixTimestampColumn(database, tableName, timestampColumn, where = {}) {
+function selectDistinctYearsFromUnixTimestampColumn(
+  database,
+  tableName,
+  timestampColumn,
+  where = {},
+) {
   ensureObject(where, 'where');
   assertIdentifier(tableName, 'table name');
   assertIdentifier(timestampColumn, 'timestamp column');
@@ -396,17 +403,17 @@ function selectDistinctYearsFromUnixTimestampColumn(database, tableName, timesta
   const quotedTableName = quoteIdentifier(tableName);
   const quotedTimestampColumn = quoteIdentifier(timestampColumn);
   const { clause, params } = buildWhereClause(where);
-  const whereSql = clause.length > 0
-    ? `${clause} AND ${quotedTimestampColumn} IS NOT NULL`
-    : ` WHERE ${quotedTimestampColumn} IS NOT NULL`;
-  const sql = `SELECT DISTINCT CAST(strftime('%Y', ${quotedTimestampColumn} / 1000, 'unixepoch') AS INTEGER) AS "year"`
-    + ` FROM ${quotedTableName}${whereSql}`
-    + ' ORDER BY "year" DESC';
+  const whereSql =
+    clause.length > 0
+      ? `${clause} AND ${quotedTimestampColumn} IS NOT NULL`
+      : ` WHERE ${quotedTimestampColumn} IS NOT NULL`;
+  const sql =
+    `SELECT DISTINCT CAST(strftime('%Y', ${quotedTimestampColumn} / 1000, 'unixepoch') AS INTEGER) AS "year"` +
+    ` FROM ${quotedTableName}${whereSql}` +
+    ' ORDER BY "year" DESC';
   const rows = database.prepare(sql).all(params);
 
-  return rows
-    .map((row) => Number(row?.year))
-    .filter((year) => Number.isInteger(year));
+  return rows.map((row) => Number(row?.year)).filter((year) => Number.isInteger(year));
 }
 
 /**
@@ -470,6 +477,7 @@ function deleteRows(database, tableName, where) {
 
 module.exports = {
   countRows,
+  touchDatabaseWriteMeta,
   deleteRows,
   insertRow,
   selectDistinctYearsFromUnixTimestampColumn,
