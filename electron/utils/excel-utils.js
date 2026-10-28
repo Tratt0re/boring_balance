@@ -5,7 +5,10 @@ function normalizeLookupKey(value) {
     return '';
   }
 
-  return value.trim().toLocaleLowerCase().replace(/[\s-]+/g, '_');
+  return value
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[\s-]+/g, '_');
 }
 
 function ensureWorkbook(workbook) {
@@ -33,7 +36,9 @@ function normalizeColumnKeys(columnKeys) {
 function createWorkbook(options = {}) {
   const workbook = new ExcelJS.Workbook();
   workbook.creator =
-    typeof options.creator === 'string' && options.creator.trim().length > 0 ? options.creator.trim() : 'Boring Balance';
+    typeof options.creator === 'string' && options.creator.trim().length > 0
+      ? options.creator.trim()
+      : 'Boring Balance';
   workbook.created = new Date();
 
   return workbook;
@@ -56,8 +61,14 @@ function findWorksheetByAliases(workbook, sheetNames = []) {
     throw new Error('sheetNames must be a non-empty array.');
   }
 
-  const normalizedSheetNames = new Set(sheetNames.map((sheetName) => normalizeLookupKey(String(sheetName ?? ''))));
-  return normalizedWorkbook.worksheets.find((worksheet) => normalizedSheetNames.has(normalizeLookupKey(worksheet.name))) ?? null;
+  const normalizedSheetNames = new Set(
+    sheetNames.map((sheetName) => normalizeLookupKey(String(sheetName ?? ''))),
+  );
+  return (
+    normalizedWorkbook.worksheets.find((worksheet) =>
+      normalizedSheetNames.has(normalizeLookupKey(worksheet.name)),
+    ) ?? null
+  );
 }
 
 function readWorksheetHeaderMap(worksheet) {
@@ -67,7 +78,11 @@ function readWorksheetHeaderMap(worksheet) {
 
   const headerRow = worksheet.getRow(1);
   const headerMap = new Map();
-  const maxColumnCount = Math.max(headerRow.cellCount, headerRow.actualCellCount, worksheet.columnCount);
+  const maxColumnCount = Math.max(
+    headerRow.cellCount,
+    headerRow.actualCellCount,
+    worksheet.columnCount,
+  );
 
   for (let columnIndex = 1; columnIndex <= maxColumnCount; columnIndex += 1) {
     const headerText = String(headerRow.getCell(columnIndex).text ?? '').trim();
