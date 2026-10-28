@@ -314,6 +314,7 @@
         "chooseFolder": "Обрати папку",
         "backupNow": "Зробити копію зараз",
         "refreshList": "Оновити список",
+        "restoreFromFile": "Відновити з файлу…",
         "restore": "Відновити",
         "delete": "Видалити"
       },

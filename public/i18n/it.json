@@ -314,6 +314,7 @@
         "chooseFolder": "Scegli cartella",
         "backupNow": "Esegui backup",
         "refreshList": "Aggiorna elenco",
+        "restoreFromFile": "Ripristina da file…",
         "restore": "Ripristina",
         "delete": "Elimina"
       },

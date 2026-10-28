@@ -104,6 +104,11 @@
         [zLoading]="backupsLoading()" (click)="onRefreshList()">
         {{ 'dataBackups.backups.actions.refreshList' | translate }}
       </button>
+
+      <button z-button zType="outline" [zDisabled]="isBusy()" [zLoading]="restoreLoading()"
+        (click)="onRestoreFromFile()">
+        {{ 'dataBackups.backups.actions.restoreFromFile' | translate }}
+      </button>
     </div>
 
     <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

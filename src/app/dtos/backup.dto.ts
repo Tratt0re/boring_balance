@@ -65,6 +65,11 @@ export interface BackupSelectFolderResponseDto {
   readonly folderPath: string;
 }
 
+export interface BackupSelectRestoreFileResponseDto {
+  readonly filePath: string;
+  readonly fileName: string;
+}
+
 export interface BackupRemoveResponseDto {
   readonly changed: number;
 }
@@ -73,6 +78,7 @@ export type BackupGetSettingsResponse = BackupSettingsDto;
 export type BackupUpdateSettingsResponse = BackupSettingsDto;
 export type BackupGetStateResponse = BackupStateDto;
 export type BackupSelectFolderResponse = BackupSelectFolderResponseDto | null;
+export type BackupSelectRestoreFileResponse = BackupSelectRestoreFileResponseDto | null;
 export type BackupListResponse = readonly BackupFileInfoDto[];
 export type BackupRunNowResponse = CreateBackupResultDto;
 export type BackupRestoreResponse = RestoreBackupResultDto;

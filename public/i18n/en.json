@@ -314,6 +314,7 @@
         "chooseFolder": "Choose folder",
         "backupNow": "Backup now",
         "refreshList": "Refresh list",
+        "restoreFromFile": "Restore from file…",
         "restore": "Restore",
         "delete": "Delete"
       },

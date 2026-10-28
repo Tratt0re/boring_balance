@@ -314,6 +314,7 @@
         "chooseFolder": "选择文件夹",
         "backupNow": "立即备份",
         "refreshList": "刷新列表",
+        "restoreFromFile": "从文件恢复…",
         "restore": "恢复",
         "delete": "删除"
       },

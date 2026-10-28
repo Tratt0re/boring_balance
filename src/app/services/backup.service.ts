@@ -187,6 +187,25 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
     );
   }
 
+  selectRestoreFile(): Observable<DTO.BackupSelectRestoreFileResponse> {
+    return from(this.ipcClient.selectRestoreFile()).pipe(
+      map((result) => {
+        if (!result?.filePath) {
+          return null;
+        }
+
+        return {
+          filePath: String(result.filePath),
+          fileName: String(result.fileName ?? ''),
+        };
+      }),
+      catchError((error) => {
+        toast.error(this.toErrorMessage(error, 'Failed to select a backup file.'));
+        return of(null);
+      }),
+    );
+  }
+
   runNow(): Observable<DTO.CreateBackupResultDto> {
     this.runNowLoadingSubject.next(true);
 

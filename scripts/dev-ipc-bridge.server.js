@@ -54,10 +54,24 @@ function makeDialogResult(options = {}) {
     fs.mkdirSync(folder, { recursive: true });
     return { canceled: false, filePaths: [folder] };
   }
+  if (/restore/i.test(options.title ?? '')) {
+    return { canceled: false, filePaths: [makeSampleBackupOnDesktop()] };
+  }
   return {
     canceled: false,
     filePaths: [path.join(projectRoot, 'electron', 'files', 'boring-balance-import-template.xlsx')],
   };
+}
+
+// A real backup of the current data, written outside any configured backup folder (like a file
+// copied to the Desktop), so the "restore from file" flow can be tried end to end.
+function makeSampleBackupOnDesktop() {
+  const desktop = path.join(userDataDir, 'Desktop');
+  fs.mkdirSync(desktop, { recursive: true });
+  const file = path.join(desktop, 'old-finances.sqlite');
+  fs.rmSync(file, { force: true });
+  database.getDatabase().exec(`VACUUM INTO '${file.replace(/'/g, "''")}'`);
+  return file;
 }
 
 const electronStub = {

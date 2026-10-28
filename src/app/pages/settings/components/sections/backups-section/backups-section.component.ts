@@ -253,6 +253,20 @@ export class BackupsSectionComponent implements OnInit {
     void firstValueFrom(this.backupService.listBackups());
   }
 
+  protected onRestoreFromFile(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
+    void firstValueFrom(this.backupService.selectRestoreFile()).then((file) => {
+      if (!file?.filePath) {
+        return;
+      }
+
+      this.onRestoreBackup(file.filePath, file.fileName);
+    });
+  }
+
   protected onRestoreBackupRow(row: object): void {
     const backup = row as BackupTableRow;
     this.onRestoreBackup(backup.fullPath, backup.fileName);

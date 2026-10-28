@@ -138,6 +138,7 @@ export interface ElectronIpcClient {
     readonly updateSettings: IpcRequest<DTO.BackupUpdateSettingsDto, DTO.BackupUpdateSettingsResponse>;
     readonly getState: OptionalIpcRequest<void, DTO.BackupGetStateResponse>;
     readonly selectFolder: OptionalIpcRequest<void, DTO.BackupSelectFolderResponse>;
+    readonly selectRestoreFile: OptionalIpcRequest<void, DTO.BackupSelectRestoreFileResponse>;
     readonly list: OptionalIpcRequest<void, DTO.BackupListResponse>;
     readonly runNow: OptionalIpcRequest<void, DTO.BackupRunNowResponse>;
     readonly remove: IpcRequest<DTO.BackupRemoveDto, DTO.BackupRemoveResponse>;
