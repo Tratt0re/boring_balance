@@ -274,14 +274,14 @@ describe.each(['Europe/Rome', 'America/New_York'])(
       '2026-11-10 00:00',
     ];
 
-    it.fails('keeps every occurrence at local midnight (PLAN 3.5)', () => {
+    it('keeps every occurrence at local midnight (PLAN 3.5)', () => {
       expect(schedule({ start: local(2026, 10, 20), count: 4, unit: 'week' })).toEqual(expected);
     });
 
-    it('today the occurrences after the change drift to the previous evening', () => {
+    it('keeps the local time after the change, so the last occurrence is at midnight too', () => {
       const result = schedule({ start: local(2026, 10, 20), count: 4, unit: 'week' });
       expect(result[0]).toBe('2026-10-20 00:00');
-      expect(result.slice(-1)[0]).toMatch(/23:00$/);
+      expect(result.slice(-1)[0]).toBe('2026-11-10 00:00');
     });
   },
 );
@@ -289,7 +289,7 @@ describe.each(['Europe/Rome', 'America/New_York'])(
 describe('daily and weekly schedules across the spring DST change in Europe/Rome', () => {
   withTimeZone('Europe/Rome');
 
-  it.fails('keeps weekly occurrences at local midnight (PLAN 3.5)', () => {
+  it('keeps weekly occurrences at local midnight (PLAN 3.5)', () => {
     expect(schedule({ start: local(2024, 3, 18), count: 4, unit: 'week' })).toEqual([
       '2024-03-18 00:00',
       '2024-03-25 00:00',
@@ -298,7 +298,7 @@ describe('daily and weekly schedules across the spring DST change in Europe/Rome
     ]);
   });
 
-  it.fails('keeps daily occurrences at local midnight (PLAN 3.5)', () => {
+  it('keeps daily occurrences at local midnight (PLAN 3.5)', () => {
     expect(schedule({ start: local(2024, 3, 29), count: 4, unit: 'day' })).toEqual([
       '2024-03-29 00:00',
       '2024-03-30 00:00',
@@ -464,6 +464,37 @@ describe('create', () => {
       expect(() => plans.create(buildPayload())).toThrow(message);
       expect(countRows('plan_items')).toBe(0);
     });
+  });
+});
+
+describe('run after the DST fix, for rows stored before it', () => {
+  withTimeZone('Europe/Rome');
+
+  it('does not duplicate a stored occurrence that sits an hour away from the fixed time', () => {
+    const start = local(2024, 9, 20); // weekly, starts in CEST
+    const plan = createPlan({ start, count: 3, unit: 'week' });
+    // The old code stored the third occurrence an hour late (23:00 the day before, after DST ended).
+    const storedThird = local(2024, 10, 4) - 60 * 60 * 1000;
+    db.prepare(
+      'INSERT INTO transactions (account_id, category_id, amount_cents, description, occurred_at, settled, created_at, updated_at, plan_item_id) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?)',
+    ).run(cash, EXPENSE_CATEGORY_ID, -500, 'old', storedThird, 1, 1, plan.id);
+
+    const result = plans.run(plan.id);
+
+    expect(result.summary).toMatchObject({ created: 2, skipped_existing: 1 });
+    expect(linkedTransactions(plan.id)).toHaveLength(3);
+  });
+
+  it('still creates an occurrence that is a whole day away from every stored one', () => {
+    const start = local(2024, 9, 20);
+    const plan = createPlan({ start, count: 2, unit: 'week' });
+    db.prepare(
+      'INSERT INTO transactions (account_id, category_id, amount_cents, description, occurred_at, settled, created_at, updated_at, plan_item_id) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?)',
+    ).run(cash, EXPENSE_CATEGORY_ID, -500, 'other', local(2024, 9, 21), 1, 1, plan.id);
+
+    const result = plans.run(plan.id);
+
+    expect(result.summary).toMatchObject({ created: 2, skipped_existing: 0 });
   });
 });
 

@@ -105,11 +105,24 @@ function generatePlanOccurrenceTimestamps(rule) {
   const frequency = rule.frequency ?? {};
 
   if (frequency.unit === 'day' || frequency.unit === 'week') {
+    // Step by calendar days in local time, not by 24-hour multiples, so an occurrence stays at the
+    // same local time across a daylight-saving change.
     const unitMultiplier = frequency.unit === 'week' ? 7 : 1;
-    const stepMs = DAY_MS * unitMultiplier * Number(frequency.interval);
+    const dayStep = unitMultiplier * Number(frequency.interval);
+    const start = new Date(Number(rule.start_date));
 
     for (let index = 0; index < count; index += 1) {
-      occurrences.push(Number(rule.start_date) + stepMs * index);
+      occurrences.push(
+        new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate() + dayStep * index,
+          start.getHours(),
+          start.getMinutes(),
+          start.getSeconds(),
+          start.getMilliseconds(),
+        ).getTime(),
+      );
     }
 
     return occurrences;
@@ -150,6 +163,26 @@ function buildExistingOccurrencesMapForPlan(database, planItem) {
   }
 
   throw new Error(`Unsupported plan item type "${planItem.type}".`);
+}
+
+// Rows created before the DST fix were stored a DST hour away from the occurrence the fixed code
+// computes, so an exact-match lookup would duplicate them. An occurrence counts as existing when a
+// stored one falls within the same local day, a few hours either side.
+const EXISTING_OCCURRENCE_TOLERANCE_MS = 6 * 60 * 60 * 1000;
+
+function findExistingOccurrence(existingOccurrencesMap, occurredAt) {
+  const exact = existingOccurrencesMap.get(occurredAt);
+  if (exact) {
+    return exact;
+  }
+
+  for (const [storedAt, row] of existingOccurrencesMap) {
+    if (Math.abs(storedAt - occurredAt) <= EXISTING_OCCURRENCE_TOLERANCE_MS) {
+      return row;
+    }
+  }
+
+  return null;
 }
 
 function buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow) {
@@ -203,7 +236,7 @@ function run(planItemId, options = {}) {
     let created = 0;
 
     for (const occurredAt of occurrenceTimestamps) {
-      const existingRow = existingOccurrencesMap.get(Number(occurredAt));
+      const existingRow = findExistingOccurrence(existingOccurrencesMap, Number(occurredAt));
       if (existingRow) {
         skippedExisting += 1;
         results.push(buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow));
