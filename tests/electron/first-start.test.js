@@ -1,10 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import {
-  closeTestDatabase,
-  loadElectronModule,
-  openTestDatabase,
-} from './helpers/electron-db.js';
+import { closeTestDatabase, loadElectronModule, openTestDatabase } from './helpers/electron-db.js';
 
 // Startup reads and sets the first-start flag through the database layer. The renderer-facing app-meta
 // controller refuses that key, so startup must never depend on it: a launch that goes through the

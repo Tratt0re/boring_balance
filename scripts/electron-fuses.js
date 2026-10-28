@@ -5,7 +5,8 @@
 // - EnableNodeCliInspectArguments: stops --inspect and friends from opening a debugger port.
 // - EnableNodeOptionsEnvironmentVariable: stops NODE_OPTIONS from injecting code at startup.
 // - OnlyLoadAppFromAsar: the main process loads only app.asar, never a loose folder beside it.
-// - GrantFileProtocolExtraPrivileges: the renderer loads over file://, so this stays off.
+// GrantFileProtocolExtraPrivileges is left at its default (on): the renderer is loaded over file://, and
+// without that privilege its module scripts are blocked and the window stays white.
 
 const path = require('node:path');
 const { flipFuses, FuseV1Options, FuseVersion } = require('@electron/fuses');
@@ -16,7 +17,6 @@ const FUSES = {
   [FuseV1Options.EnableNodeCliInspectArguments]: false,
   [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
   [FuseV1Options.OnlyLoadAppFromAsar]: true,
-  [FuseV1Options.GrantFileProtocolExtraPrivileges]: false,
 };
 
 /** electron-builder calls this after the app folder is assembled and before it is archived. */
