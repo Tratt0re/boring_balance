@@ -125,6 +125,27 @@ function remove(payload) {
     throw new Error('Locked accounts cannot be deleted.');
   }
 
+  if (existingAccount) {
+    const references = accountsModel.countReferences(id);
+    if (references.transactions > 0) {
+      throw new Error(
+        `This account has ${references.transactions} transaction(s) and cannot be deleted. Archive it instead, or delete its transactions first.`,
+      );
+    }
+
+    if (references.transfers > 0) {
+      throw new Error(
+        `This account is part of ${references.transfers} transfer(s) and cannot be deleted. Archive it instead, or delete those transfers first.`,
+      );
+    }
+
+    if (references.valuations > 0) {
+      throw new Error(
+        `This account has ${references.valuations} balance valuation(s) and cannot be deleted. Archive it instead, or delete its valuations first.`,
+      );
+    }
+  }
+
   const changed = accountsModel.deleteById(id);
 
   return { changed };

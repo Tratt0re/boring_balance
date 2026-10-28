@@ -167,6 +167,21 @@ function remove(payload) {
     throw new Error('Locked categories cannot be deleted.');
   }
 
+  if (existingCategory) {
+    const references = categoriesModel.countReferences(id);
+    if (references.transactions > 0) {
+      throw new Error(
+        `This category is used by ${references.transactions} transaction(s) and cannot be deleted. Archive it instead, or move those transactions to another category first.`,
+      );
+    }
+
+    if (references.subcategories > 0) {
+      throw new Error(
+        `This category has ${references.subcategories} subcategory(ies) and cannot be deleted. Archive it instead, or delete its subcategories first.`,
+      );
+    }
+  }
+
   const changed = categoriesModel.deleteById(id);
 
   return { changed };
