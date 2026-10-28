@@ -127,7 +127,9 @@ function listFilteredTransferRows(database, filters = {}, pagination = {}) {
 function list(filters = {}, pagination = {}) {
   const database = getDatabase();
   const totalTransfers = countFilteredTransfers(database, filters);
-  const paginationWindow = resolvePaginationWindow(totalTransfers, pagination, { defaultPage: DEFAULT_PAGE });
+  const paginationWindow = resolvePaginationWindow(totalTransfers, pagination, {
+    defaultPage: DEFAULT_PAGE,
+  });
   if (totalTransfers === 0) {
     return {
       rows: [],
@@ -164,7 +166,9 @@ function create(payload) {
       description: transferPayload.description ?? null,
       settled,
       created_at: transferPayload.created_at,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
     };
     transfersBaseModel.create(transferRow);
 
@@ -178,7 +182,9 @@ function create(payload) {
       transfer_id: transferId,
       settled,
       created_at: transferPayload.created_at,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
     };
 
     const incomingTransferRow = {
@@ -191,7 +197,9 @@ function create(payload) {
       transfer_id: transferId,
       settled,
       created_at: transferPayload.created_at,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
     };
 
     const outgoingTransferId = Number(transactionsBaseModel.create(outgoingTransferRow));
@@ -235,7 +243,9 @@ function update(payload) {
     const outgoingTransfer = transferRows.find((row) => Number(row.amount_cents) < 0);
     const incomingTransfer = transferRows.find((row) => Number(row.amount_cents) > 0);
     if (!outgoingTransfer || !incomingTransfer) {
-      throw new Error(`Transfer transactions not found for transfer_id "${transferPayload.transfer_id}".`);
+      throw new Error(
+        `Transfer transactions not found for transfer_id "${transferPayload.transfer_id}".`,
+      );
     }
 
     const settled =
@@ -250,7 +260,9 @@ function update(payload) {
       amount_cents: Math.abs(transferPayload.amount_cents),
       description: transferPayload.description ?? null,
       settled,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     });
 
@@ -262,7 +274,9 @@ function update(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       settled,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     };
 
@@ -274,14 +288,18 @@ function update(payload) {
       description: null,
       tags: EMPTY_TAGS_JSON,
       settled,
-      ...(transferPayload.plan_item_id === undefined ? {} : { plan_item_id: transferPayload.plan_item_id }),
+      ...(transferPayload.plan_item_id === undefined
+        ? {}
+        : { plan_item_id: transferPayload.plan_item_id }),
       updated_at: transferPayload.updated_at,
     };
 
     transactionsBaseModel.updateById(outgoingTransfer.id, outgoingChanges);
     transactionsBaseModel.updateById(incomingTransfer.id, incomingChanges);
 
-    const updatedTransfer = normalizeTransferRow(transfersBaseModel.getById(transferPayload.transfer_id));
+    const updatedTransfer = normalizeTransferRow(
+      transfersBaseModel.getById(transferPayload.transfer_id),
+    );
     const updatedOutgoingTransfer = normalizeRowTags(
       transactionsBaseModel.getById(Number(outgoingTransfer.id)),
     );
