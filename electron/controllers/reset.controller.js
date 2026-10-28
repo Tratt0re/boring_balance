@@ -73,7 +73,7 @@ function factoryResetNow() {
 
     const db = createDatabase();
     initSchema(db);
-    runMigrations(db);
+    runMigrations(db, { isNewDatabase: true, stampOnly: true });
     clearSettingsStore();
 
     for (const suffix of movedAside) {

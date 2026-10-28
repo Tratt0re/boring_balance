@@ -35,7 +35,8 @@ app
       initSchema(database);
     }
 
-    runMigrations(database);
+    // A new database was just built from the latest schema files, so it is stamped as up to date.
+    runMigrations(database, { isNewDatabase: firstStart, stampOnly: firstStart });
 
     if (firstStart) {
       markFirstStartCompleted();
