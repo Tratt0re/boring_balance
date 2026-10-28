@@ -10,6 +10,7 @@ import {
 } from './helpers/electron-db.js';
 
 const TRANSFER_CATEGORY_ID = 2;
+const EXPENSE_CATEGORY_ID = 3;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const DAY0 = Date.UTC(2024, 0, 10, 12);
 
@@ -572,10 +573,10 @@ describe('list', () => {
   });
 });
 
-// KNOWN ISSUES (PLAN 3.8). The generic transactions API knows nothing about transfers, so it can
-// leave a transfer half-edited. These tests describe what happens TODAY. Once the API refuses to
-// touch transfer legs they will start failing: replace each with an assertion that the call throws.
-describe('transfer legs through the generic transactions API (known issues, PLAN 3.8)', () => {
+// The generic transactions API knows nothing about transfers, so it must refuse to touch transfer
+// legs (and to invent one): a leg edited on its own breaks the pair, and a leg detached or deleted
+// leaves the transfer half there. Transfers are changed only through the transfers API.
+describe('transfer legs through the generic transactions API (PLAN 3.8)', () => {
   const legs = (id) => {
     const rows = legsOf(id);
     return {
@@ -583,50 +584,139 @@ describe('transfer legs through the generic transactions API (known issues, PLAN
       incoming: rows.find((row) => row.amount_cents > 0) ?? rows[1],
     };
   };
+  const refused = /transfer/i;
 
-  it('lets a single leg be edited, so the pair stops cancelling out', () => {
+  it('refuses to edit a single leg, so the pair keeps cancelling out', () => {
     const { transfer_id: id } = createTransfer({ amount: 12.5 });
+
+    expect(() =>
+      transactions.update({ id: legs(id).outgoing.id, changes: { amount: 500 } }),
+    ).toThrow(refused);
+
     expect(sumOfTransferLegs()).toBe(0);
-
-    transactions.update({ id: legs(id).outgoing.id, changes: { amount: 500 } });
-
-    expect(sumOfTransferLegs()).not.toBe(0);
+    expect(legs(id).outgoing.amount_cents).toBe(-1250);
     expect(transferRow(id).amount_cents).toBe(1250);
   });
 
-  it('lets a leg be detached, after which the transfer can no longer be edited', () => {
+  it('refuses every kind of edit to a leg, including detaching it', () => {
     const { transfer_id: id } = createTransfer();
+    const leg = legs(id).outgoing;
 
-    transactions.update({ id: legs(id).outgoing.id, changes: { transfer_id: null } });
+    for (const changes of [
+      { transfer_id: null },
+      { description: 'x' },
+      { account_id: bank },
+      { settled: true },
+    ]) {
+      expect(() => transactions.update({ id: leg.id, changes })).toThrow(refused);
+    }
 
-    expect(() => transfers.update(updatePayload(id, { amount: 3 }))).toThrow(
-      'Transfer transactions not found',
-    );
+    expect(legsOf(id)).toHaveLength(2);
+    expect(() => transfers.update(updatePayload(id, { amount: 3 }))).not.toThrow();
   });
 
-  it('lets a single leg be deleted, orphaning the transfer row', () => {
+  it('refuses to delete a single leg, so no transfer row is orphaned', () => {
     const { transfer_id: id } = createTransfer();
 
-    expect(transactions.remove(legs(id).incoming.id)).toEqual({ changed: 1 });
+    expect(() => transactions.remove(legs(id).incoming.id)).toThrow(refused);
 
-    expect(transferRow(id)).toBeTruthy();
-    expect(legsOf(id)).toHaveLength(1);
-    expect(sumOfTransferLegs()).not.toBe(0);
-    // Removing the transfer still cleans up what is left.
-    expect(transfers.remove(id)).toEqual({ changed: 1 });
+    expect(legsOf(id)).toHaveLength(2);
     expect(sumOfTransferLegs()).toBe(0);
   });
 
-  it('accepts a transfer-category row that belongs to no transfer', () => {
+  it('refuses to create a transfer-category row that belongs to no transfer', () => {
+    expect(() =>
+      transactions.create({
+        occurred_at: DAY0,
+        account_id: cash,
+        category_id: TRANSFER_CATEGORY_ID,
+        amount: 5,
+      }),
+    ).toThrow(refused);
+
+    expect(sumOfTransferLegs()).toBe(0);
+    expect(countRows('transactions')).toBe(0);
+  });
+
+  it('refuses to move an ordinary transaction into the transfer category', () => {
     const row = transactions.create({
       occurred_at: DAY0,
       account_id: cash,
-      category_id: TRANSFER_CATEGORY_ID,
+      category_id: EXPENSE_CATEGORY_ID,
       amount: 5,
     });
 
-    expect(row.transfer_id).toBeNull();
-    expect(sumOfTransferLegs()).toBe(500);
-    expect(countRows('transfers')).toBe(0);
+    expect(() =>
+      transactions.update({ id: row.id, changes: { category_id: TRANSFER_CATEGORY_ID } }),
+    ).toThrow(refused);
+
+    expect(transactions.get(row.id).category_id).toBe(EXPENSE_CATEGORY_ID);
+  });
+
+  it('refuses to attach an ordinary transaction to a transfer', () => {
+    const { transfer_id: id } = createTransfer();
+    const row = transactions.create({
+      occurred_at: DAY0,
+      account_id: cash,
+      category_id: EXPENSE_CATEGORY_ID,
+      amount: 5,
+    });
+
+    expect(() => transactions.update({ id: row.id, changes: { transfer_id: id } })).toThrow(
+      refused,
+    );
+    expect(() =>
+      transactions.create({
+        occurred_at: DAY0,
+        account_id: cash,
+        category_id: EXPENSE_CATEGORY_ID,
+        amount: 5,
+        transfer_id: id,
+      }),
+    ).toThrow(refused);
+
+    expect(legsOf(id)).toHaveLength(2);
+  });
+
+  it('also guards a row that is half a transfer, as older or damaged data can contain', () => {
+    const { transfer_id: id } = createTransfer();
+    const [first, second] = legsOf(id);
+    // A leg whose category is no longer the transfer category, and a stray transfer-category row.
+    db.prepare('UPDATE transactions SET category_id = ? WHERE id = ?').run(
+      EXPENSE_CATEGORY_ID,
+      first.id,
+    );
+    db.prepare('UPDATE transactions SET transfer_id = NULL WHERE id = ?').run(second.id);
+
+    expect(() => transactions.update({ id: first.id, changes: { amount: 1 } })).toThrow(refused);
+    expect(() => transactions.remove(first.id)).toThrow(refused);
+    expect(() => transactions.update({ id: second.id, changes: { amount: 1 } })).toThrow(refused);
+    expect(() => transactions.remove(second.id)).toThrow(refused);
+  });
+
+  it('still lets ordinary transactions be created, edited and deleted', () => {
+    const row = transactions.create({
+      occurred_at: DAY0,
+      account_id: cash,
+      category_id: EXPENSE_CATEGORY_ID,
+      amount: 5,
+    });
+
+    const updated = transactions.update({ id: row.id, changes: { amount: 7 } });
+    expect(updated.row.amount_cents).toBe(700);
+    expect(transactions.remove(row.id)).toEqual({ changed: 1 });
+  });
+
+  it('still lets the transfers API edit and delete a whole transfer', () => {
+    const { transfer_id: id } = createTransfer({ amount: 4 });
+
+    transfers.update(updatePayload(id, { amount: 9 }));
+    expect(sumOfTransferLegs()).toBe(0);
+    expect(transfers.remove(id)).toEqual({ changed: 1 });
+    expect(legsOf(id)).toHaveLength(0);
+  });
+
+  it('treats a missing id as before: nothing to delete', () => {
+    expect(transactions.remove(999999)).toEqual({ changed: 0 });
   });
 });

@@ -1,4 +1,5 @@
 const { transactionsModel } = require('../../models');
+const { TRANSFER_CATEGORY_ID } = require('../../models/transactions/constants');
 const { ALLOWED_CATEGORY_TYPES } = require('../constants');
 const {
   assertAllowedKeys,
@@ -64,7 +65,9 @@ function normalizeOptionalTags(value, label) {
 }
 
 function normalizeTransactionChanges(value, label, options = {}) {
-  const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
+  const changesInput = options.partial
+    ? ensureNonEmptyObject(value, label)
+    : ensurePlainObject(value, label);
   assertAllowedKeys(changesInput, TRANSACTION_FIELDS, label);
   const normalizedTags = normalizeOptionalTags(changesInput.tags, `${label}.tags`);
 
@@ -141,10 +144,29 @@ function normalizeListFilters(payload) {
   };
 }
 
+// Transfers are two linked rows that must stay in step, so they are only ever changed through the
+// transfers API. The generic API refuses to touch a transfer leg or to create/turn a row into one.
+const TRANSFER_ONLY_ERROR = 'Transfers can only be changed through the transfers API.';
+
+function assertNotTransferChanges(changes) {
+  if (changes.category_id === TRANSFER_CATEGORY_ID || changes.transfer_id !== undefined) {
+    throw new Error(TRANSFER_ONLY_ERROR);
+  }
+}
+
+function assertNotTransferLeg(id) {
+  const existing = transactionsModel.getById(id);
+  if (existing && (existing.transfer_id || existing.category_id === TRANSFER_CATEGORY_ID)) {
+    throw new Error(TRANSFER_ONLY_ERROR);
+  }
+}
+
 function create(payload, options = {}) {
   const planItemId = normalizeInternalPlanItemId(options);
+  const changes = normalizeTransactionChanges(payload, 'payload');
+  assertNotTransferChanges(changes);
   const row = {
-    ...normalizeTransactionChanges(payload, 'payload'),
+    ...changes,
     created_at: nowUnixTimestampMilliseconds(),
     ...(planItemId === undefined ? {} : { plan_item_id: planItemId }),
   };
@@ -168,6 +190,8 @@ function update(payload, options = {}) {
   const id = extractId({ id: body.id });
   const changes = normalizeTransactionChanges(body.changes, 'changes', { partial: true });
   const planItemId = normalizeInternalPlanItemId(options);
+  assertNotTransferChanges(changes);
+  assertNotTransferLeg(id);
 
   const changed = transactionsModel.updateById(id, {
     ...changes,
@@ -183,6 +207,7 @@ function update(payload, options = {}) {
 
 function remove(payload) {
   const id = extractId(payload);
+  assertNotTransferLeg(id);
   const changed = transactionsModel.deleteById(id);
 
   return { changed };
