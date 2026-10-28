@@ -515,6 +515,9 @@
       }
     },
     "exportImport": {
+      "overview": {
+        "description": "Conserva una copia de Excel ordenada de tus datos, o empieza desde la plantilla oficial cuando quieras traer información de forma segura."
+      },
       "export": {
         "title": "Exportar",
         "description": "Exporta transacciones y transferencias a un archivo de Excel para revisarlo, compartirlo o guardarlo.",
@@ -522,11 +525,78 @@
       },
       "import": {
         "title": "Importar",
-        "placeholder": "Las herramientas de importacion aun no estan disponibles. Mientras tanto, usa la exportacion para tener una copia portable."
+        "description": "Empieza con la plantilla oficial, revisa todo primero e importa solo cuando el archivo esté listo.",
+        "warning": "Las importaciones se validan primero. Si hay errores, no se importa nada.",
+        "selectedFileLabel": "Archivo seleccionado",
+        "template": {
+          "title": "Plantilla de importación",
+          "description": "Descarga la plantilla de Excel, rellénala con calma y vuelve aquí para importarla.",
+          "messages": {
+            "success": "Plantilla guardada: {{fileName}}",
+            "error": "No se pudo guardar la plantilla de importación."
+          }
+        },
+        "actions": {
+          "title": "Importar archivo de datos",
+          "description": "Elige el libro completado, revisa los problemas que detecte la aplicación e importa solo cuando todo esté correcto."
+        },
+        "validation": {
+          "previewTitle": "Vista previa de la validación",
+          "previewDescription": "Estas filas están listas para importarse.",
+          "errorTitle": "Errores de validación",
+          "errorDescription": "Corrige las filas de abajo y vuelve a validar antes de importar."
+        },
+        "summary": {
+          "accounts": "Cuentas",
+          "categories": "Categorías",
+          "transactions": "Transacciones",
+          "transfers": "Transferencias"
+        },
+        "errors": {
+          "count": "{{count}} errores encontrados",
+          "tableTitle": "Errores de importación",
+          "tableDescription": "Cada error indica la hoja y la fila exacta que hay que corregir.",
+          "empty": "No hay errores de importación.",
+          "columns": {
+            "sheet": "Hoja",
+            "row": "Fila",
+            "column": "Columna",
+            "message": "Mensaje"
+          }
+        },
+        "result": {
+          "title": "Último resultado de importación",
+          "description": "La aplicación se recargará tras una importación correcta.",
+          "labels": {
+            "inserted": "Insertados",
+            "updated": "Actualizados",
+            "skipped": "Omitidos"
+          }
+        },
+        "confirm": {
+          "title": "¿Importar datos desde Excel?",
+          "description": "Esto importará datos en tu base de datos.",
+          "actions": {
+            "import": "Importar",
+            "cancel": "Cancelar"
+          }
+        },
+        "messages": {
+          "fileRequired": "Selecciona primero un archivo de Excel.",
+          "selectError": "No se pudo seleccionar un archivo de Excel.",
+          "validateError": "No se pudo validar el archivo de Excel seleccionado.",
+          "importSuccess": "Importación completada. Recargando los datos de la aplicación...",
+          "importError": "La importación ha fallado."
+        }
       },
       "controls": {
         "exportExcel": "Exportar a Excel",
-        "importData": "Importar DB / CSV"
+        "importData": "Importar DB / CSV",
+        "downloadTemplate": "Descargar plantilla",
+        "selectFile": "Seleccionar archivo de Excel",
+        "removeSelectedFile": "Quitar archivo",
+        "validateImport": "Validar",
+        "importExcel": "Importar"
       },
       "messages": {
         "success": "Exportacion completada: {{fileName}}",
@@ -1027,74 +1097,6 @@
     "pagination": {
       "summary": "{{start}}-{{end}} de {{total}}"
     },
-    "table": {
-      "description": "Revisa los ingresos y gastos que afectan saldos, presupuestos y flujo neto de caja.",
-      "emptyMessage": "Aun no hay movimientos. Agrega uno para empezar a seguir gastos, ingresos y flujo neto de caja.",
-      "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de registrar movimientos.",
-      "actions": {
-        "add": "Agregar movimiento",
-        "filter": "Filtrar movimientos",
-        "edit": "Editar movimiento",
-        "duplicate": "Duplicar movimiento",
-        "delete": "Eliminar movimiento"
-      }
-    },
-    "filters": {
-      "title": "Filtrar movimientos",
-      "description": "Reduce la lista segun fechas, categorias, cuentas o importes para revisar solo lo que necesitas.",
-      "empty": {
-        "category": "Aun no hay categorias. Agrega una antes de filtrar movimientos.",
-        "account": "Aun no hay cuentas. Agrega una antes de filtrar movimientos."
-      }
-    },
-    "dialog": {
-      "add": {
-        "title": "Agregar movimiento",
-        "description": "Registra un ingreso o un gasto para que aparezca en saldos, presupuestos y reportes.",
-        "actions": {
-          "cancel": "Cancelar",
-          "create": "Crear movimiento"
-        },
-        "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear el movimiento.",
-          "dateRequired": "La fecha es obligatoria.",
-          "accountRequired": "La cuenta es obligatoria.",
-          "amountRequired": "El importe es obligatorio.",
-          "amountInvalid": "El importe debe ser un numero valido.",
-          "categoryRequired": "La categoria es obligatoria.",
-          "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
-          "createFailed": "No se pudo crear el movimiento."
-        }
-      },
-      "edit": {
-        "title": "Editar movimiento",
-        "description": "Actualiza los detalles de este ingreso o gasto.",
-        "actions": {
-          "cancel": "Cancelar",
-          "save": "Guardar cambios"
-        },
-        "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar el movimiento.",
-          "updateFailed": "No se pudo actualizar el movimiento."
-        }
-      }
-    },
-    "deleteAlert": {
-      "title": "Eliminar movimiento?",
-      "description": "Elimina este movimiento de tu historial. Esta accion no se puede deshacer.",
-      "actions": {
-        "cancel": "Cancelar",
-        "delete": "Eliminar"
-      }
-    },
-    "duplicateAlert": {
-      "title": "Duplicar movimiento?",
-      "description": "Crea una copia de este movimiento para editarla sin volver a escribirlo todo.",
-      "actions": {
-        "cancel": "Cancelar",
-        "duplicate": "Duplicar"
-      }
-    },
     "transfers": {
       "title": "Transferencias",
       "table": {
@@ -1167,6 +1169,74 @@
       },
       "errors": {
         "loadFailed": "No se pudieron cargar las transferencias: {{error}}"
+      }
+    },
+    "table": {
+      "description": "Revisa los ingresos y gastos que afectan saldos, presupuestos y flujo neto de caja.",
+      "emptyMessage": "Aun no hay movimientos. Agrega uno para empezar a seguir gastos, ingresos y flujo neto de caja.",
+      "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de registrar movimientos.",
+      "actions": {
+        "add": "Agregar movimiento",
+        "filter": "Filtrar movimientos",
+        "edit": "Editar movimiento",
+        "duplicate": "Duplicar movimiento",
+        "delete": "Eliminar movimiento"
+      }
+    },
+    "filters": {
+      "title": "Filtrar movimientos",
+      "description": "Reduce la lista segun fechas, categorias, cuentas o importes para revisar solo lo que necesitas.",
+      "empty": {
+        "category": "Aun no hay categorias. Agrega una antes de filtrar movimientos.",
+        "account": "Aun no hay cuentas. Agrega una antes de filtrar movimientos."
+      }
+    },
+    "dialog": {
+      "add": {
+        "title": "Agregar movimiento",
+        "description": "Registra un ingreso o un gasto para que aparezca en saldos, presupuestos y reportes.",
+        "actions": {
+          "cancel": "Cancelar",
+          "create": "Crear movimiento"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de crear el movimiento.",
+          "dateRequired": "La fecha es obligatoria.",
+          "accountRequired": "La cuenta es obligatoria.",
+          "amountRequired": "El importe es obligatorio.",
+          "amountInvalid": "El importe debe ser un numero valido.",
+          "categoryRequired": "La categoria es obligatoria.",
+          "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
+          "createFailed": "No se pudo crear el movimiento."
+        }
+      },
+      "edit": {
+        "title": "Editar movimiento",
+        "description": "Actualiza los detalles de este ingreso o gasto.",
+        "actions": {
+          "cancel": "Cancelar",
+          "save": "Guardar cambios"
+        },
+        "errors": {
+          "fixValidation": "Corrige los campos resaltados antes de guardar el movimiento.",
+          "updateFailed": "No se pudo actualizar el movimiento."
+        }
+      }
+    },
+    "deleteAlert": {
+      "title": "Eliminar movimiento?",
+      "description": "Elimina este movimiento de tu historial. Esta accion no se puede deshacer.",
+      "actions": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "duplicateAlert": {
+      "title": "Duplicar movimiento?",
+      "description": "Crea una copia de este movimiento para editarla sin volver a escribirlo todo.",
+      "actions": {
+        "cancel": "Cancelar",
+        "duplicate": "Duplicar"
       }
     },
     "toasts": {
