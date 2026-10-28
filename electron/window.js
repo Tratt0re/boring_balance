@@ -5,7 +5,9 @@ const { openExternalIfAllowed } = require('./utils/external-url');
 
 const isMac = process.platform === 'darwin';
 
-const DEV_SERVER_URL = process.env.ELECTRON_RENDERER_URL ?? 'http://localhost:4200';
+// A packaged app never reads the variable: whatever launched it must not pick the page that gets IPC.
+const DEV_SERVER_URL =
+  (!app.isPackaged && process.env.ELECTRON_RENDERER_URL) || 'http://localhost:4200';
 const RENDERER_BUILD_SEGMENTS = ['dist', 'boringbalance', 'browser'];
 const PRODUCTION_MODE_FLAGS = new Set(['--prod', '--production']);
 const openWindows = new Set();

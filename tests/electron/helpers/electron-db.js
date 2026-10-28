@@ -53,6 +53,7 @@ function installElectronStub() {
         isPackaged: false,
         getPath: () => userDataDir,
         getVersion: () => '1.0.2',
+        getAppPath: () => projectRoot,
       },
       dialog: {
         showOpenDialog: async (options) => {
