@@ -1,10 +1,11 @@
 const { app, shell } = require('electron');
 const semver = require('semver');
 const { appMetaModel } = require('../models');
-const { openExternalIfAllowed } = require('../utils/external-url');
+const { isAllowedExternalUrl, openExternalIfAllowed } = require('../utils/external-url');
 const { ensurePlainObject } = require('./utils');
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
+const FETCH_TIMEOUT_MS = 10 * 1000;
 
 function getOwnerRepo() {
   try {
@@ -39,6 +40,7 @@ async function fetchLatestRelease() {
   const url = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
   const response = await fetch(url, {
     headers: { 'User-Agent': 'boring-balance-app' },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
 
   if (!response.ok) return null;
@@ -46,7 +48,8 @@ async function fetchLatestRelease() {
   const data = await response.json();
   return {
     tagName: data.tag_name ?? null,
-    htmlUrl: data.html_url ?? null,
+    // The link is shown to the user and opened on click, so it must be one the app would open.
+    htmlUrl: isAllowedExternalUrl(data.html_url) ? data.html_url : null,
   };
 }
 
