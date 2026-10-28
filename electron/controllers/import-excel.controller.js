@@ -119,10 +119,7 @@ async function commit(filePath) {
     return {
       ok: false,
       errors: [
-        createImportError(
-          'IMPORT_FAILED',
-          error instanceof Error ? error.message : String(error),
-        ),
+        createImportError('IMPORT_FAILED', error instanceof Error ? error.message : String(error)),
       ],
     };
   }

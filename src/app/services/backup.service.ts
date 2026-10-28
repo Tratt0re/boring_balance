@@ -41,7 +41,9 @@ const BACKUP_RETENTION_OPTIONS = [1, 2, 3, 4, 5];
   providedIn: 'root',
 })
 export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
-  private readonly settingsSubject = new BehaviorSubject<DTO.BackupSettingsDto>(BACKUP_SETTINGS_DEFAULTS);
+  private readonly settingsSubject = new BehaviorSubject<DTO.BackupSettingsDto>(
+    BACKUP_SETTINGS_DEFAULTS,
+  );
   private readonly stateSubject = new BehaviorSubject<DTO.BackupStateDto>(BACKUP_STATE_DEFAULTS);
   private readonly backupsSubject = new BehaviorSubject<readonly DTO.BackupFileInfoDto[]>([]);
   private readonly settingsLoadingSubject = new BehaviorSubject(false);
@@ -304,13 +306,14 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
             : null,
       autoBackupOnQuit: Boolean(value?.autoBackupOnQuit),
       autoBackupIntervalMin:
-        Number.isInteger(autoBackupIntervalMin) && BACKUP_AUTO_INTERVAL_OPTIONS.includes(autoBackupIntervalMin)
-        ? autoBackupIntervalMin
-        : BACKUP_SETTINGS_DEFAULTS.autoBackupIntervalMin,
+        Number.isInteger(autoBackupIntervalMin) &&
+        BACKUP_AUTO_INTERVAL_OPTIONS.includes(autoBackupIntervalMin)
+          ? autoBackupIntervalMin
+          : BACKUP_SETTINGS_DEFAULTS.autoBackupIntervalMin,
       retentionCount:
         Number.isInteger(retentionCount) && BACKUP_RETENTION_OPTIONS.includes(retentionCount)
-        ? retentionCount
-        : BACKUP_SETTINGS_DEFAULTS.retentionCount,
+          ? retentionCount
+          : BACKUP_SETTINGS_DEFAULTS.retentionCount,
     };
   }
 
@@ -376,7 +379,8 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
       restoredFrom: String(value?.restoredFrom ?? ''),
       restoredTo: String(value?.restoredTo ?? ''),
       previousLocalCopyPath:
-        typeof value?.previousLocalCopyPath === 'string' && value.previousLocalCopyPath.trim().length > 0
+        typeof value?.previousLocalCopyPath === 'string' &&
+        value.previousLocalCopyPath.trim().length > 0
           ? value.previousLocalCopyPath.trim()
           : null,
     };

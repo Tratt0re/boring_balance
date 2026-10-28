@@ -160,16 +160,18 @@ export class BackupsSectionComponent implements OnInit {
   );
   protected readonly isBusy = computed(
     () =>
-      this.state().lastBackupStatus === 'running'
-      || this.runNowLoading()
-      || this.restoreLoading()
-      || this.removeLoading()
-      || this.settingsLoading(),
+      this.state().lastBackupStatus === 'running' ||
+      this.runNowLoading() ||
+      this.restoreLoading() ||
+      this.removeLoading() ||
+      this.settingsLoading(),
   );
   protected readonly canManageBackups = computed(
     () => this.settings().enabled && Boolean(this.settings().folderPath) && !this.isBusy(),
   );
-  protected readonly canRunBackup = computed(() => this.canManageBackups() && !this.runNowLoading());
+  protected readonly canRunBackup = computed(
+    () => this.canManageBackups() && !this.runNowLoading(),
+  );
   protected readonly canChooseFolder = computed(() => this.settings().enabled && !this.isBusy());
   protected readonly showMissingFolderWarning = computed(
     () => this.settings().enabled && !this.settings().folderPath,

@@ -41,7 +41,10 @@ export interface ElectronIpcClient {
   readonly accountValuations: {
     readonly create: IpcRequest<DTO.AccountValuationCreateDto, DTO.AccountValuationCreateResponse>;
     readonly get: IpcRequest<DTO.AccountValuationGetDto, DTO.AccountValuationGetResponse>;
-    readonly list: OptionalIpcRequest<DTO.AccountValuationListDto, DTO.AccountValuationListResponse>;
+    readonly list: OptionalIpcRequest<
+      DTO.AccountValuationListDto,
+      DTO.AccountValuationListResponse
+    >;
     readonly update: IpcRequest<DTO.AccountValuationUpdateDto, DTO.AccountValuationUpdateResponse>;
     readonly remove: IpcRequest<DTO.AccountValuationRemoveDto, DTO.AccountValuationRemoveResponse>;
     readonly getLatestByAccount: IpcRequest<
@@ -79,12 +82,18 @@ export interface ElectronIpcClient {
     readonly remove: IpcRequest<DTO.BudgetRemoveDto, DTO.BudgetRemoveResponse>;
   };
   readonly analytics: {
-    readonly availableYears: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsAvailableYearsResponse>;
+    readonly availableYears: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsAvailableYearsResponse
+    >;
     readonly budgetVsExpensesByCategoryByYear: IpcRequest<
       DTO.AnalyticsBudgetVsExpensesByCategoryByYearPayload,
       DTO.AnalyticsBudgetVsExpensesByCategoryByYearResponse
     >;
-    readonly compareMonths: IpcRequest<DTO.AnalyticsCompareMonthsPayload, DTO.AnalyticsCompareMonthsResponse>;
+    readonly compareMonths: IpcRequest<
+      DTO.AnalyticsCompareMonthsPayload,
+      DTO.AnalyticsCompareMonthsResponse
+    >;
     readonly expensesIncomesNetCashflowByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsExpensesIncomesNetCashflowByMonthResponse
@@ -93,7 +102,10 @@ export interface ElectronIpcClient {
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsReceivablesPayablesResponse
     >;
-    readonly netWorthByAccount: OptionalIpcRequest<DTO.AnalyticsFilterPayload, DTO.AnalyticsNetWorthByAccountResponse>;
+    readonly netWorthByAccount: OptionalIpcRequest<
+      DTO.AnalyticsFilterPayload,
+      DTO.AnalyticsNetWorthByAccountResponse
+    >;
     readonly expensesByCategoryByMonth: OptionalIpcRequest<
       DTO.AnalyticsFilterPayload,
       DTO.AnalyticsExpensesByCategoryByMonthResponse
@@ -121,21 +133,36 @@ export interface ElectronIpcClient {
   };
   readonly transactions: {
     readonly create: IpcRequest<DTO.TransactionCreateDto, DTO.TransactionCreateResponse>;
-    readonly createTransfer: IpcRequest<DTO.TransactionCreateTransferDto, DTO.TransactionCreateTransferResponse>;
-    readonly updateTransfer: IpcRequest<DTO.TransactionUpdateTransferDto, DTO.TransactionUpdateTransferResponse>;
-    readonly deleteTransfer: IpcRequest<DTO.TransactionDeleteTransferDto, DTO.TransactionDeleteTransferResponse>;
+    readonly createTransfer: IpcRequest<
+      DTO.TransactionCreateTransferDto,
+      DTO.TransactionCreateTransferResponse
+    >;
+    readonly updateTransfer: IpcRequest<
+      DTO.TransactionUpdateTransferDto,
+      DTO.TransactionUpdateTransferResponse
+    >;
+    readonly deleteTransfer: IpcRequest<
+      DTO.TransactionDeleteTransferDto,
+      DTO.TransactionDeleteTransferResponse
+    >;
     readonly get: IpcRequest<DTO.TransactionGetDto, DTO.TransactionGetResponse>;
     readonly listTransactions: OptionalIpcRequest<
       DTO.TransactionListTransactionsDto,
       DTO.TransactionListTransactionsResponse
     >;
-    readonly listTransfers: OptionalIpcRequest<DTO.TransactionListTransfersDto, DTO.TransactionListTransfersResponse>;
+    readonly listTransfers: OptionalIpcRequest<
+      DTO.TransactionListTransfersDto,
+      DTO.TransactionListTransfersResponse
+    >;
     readonly update: IpcRequest<DTO.TransactionUpdateDto, DTO.TransactionUpdateResponse>;
     readonly remove: IpcRequest<DTO.TransactionRemoveDto, DTO.TransactionRemoveResponse>;
   };
   readonly backup: {
     readonly getSettings: OptionalIpcRequest<void, DTO.BackupGetSettingsResponse>;
-    readonly updateSettings: IpcRequest<DTO.BackupUpdateSettingsDto, DTO.BackupUpdateSettingsResponse>;
+    readonly updateSettings: IpcRequest<
+      DTO.BackupUpdateSettingsDto,
+      DTO.BackupUpdateSettingsResponse
+    >;
     readonly getState: OptionalIpcRequest<void, DTO.BackupGetStateResponse>;
     readonly selectFolder: OptionalIpcRequest<void, DTO.BackupSelectFolderResponse>;
     readonly selectRestoreFile: OptionalIpcRequest<void, DTO.BackupSelectRestoreFileResponse>;
@@ -160,15 +187,27 @@ export interface ElectronIpcClient {
     readonly checkAvailability: OptionalIpcRequest<void, DTO.SyncCheckAvailabilityResponse>;
     readonly selectFolder: OptionalIpcRequest<void, DTO.SyncSelectFolderResponse>;
     readonly enable: IpcRequest<DTO.SyncEnableDto, DTO.SyncEnableResponse>;
-    readonly repoStatus: OptionalIpcRequest<DTO.SyncRepoStatusRequestDto, DTO.SyncRepoStatusResponse>;
-    readonly enableCreateRepo: IpcRequest<DTO.SyncEnableCreateRepoDto, DTO.SyncEnableCreateRepoResponse>;
-    readonly enableAttachRepo: IpcRequest<DTO.SyncEnableAttachRepoDto, DTO.SyncEnableAttachRepoResponse>;
+    readonly repoStatus: OptionalIpcRequest<
+      DTO.SyncRepoStatusRequestDto,
+      DTO.SyncRepoStatusResponse
+    >;
+    readonly enableCreateRepo: IpcRequest<
+      DTO.SyncEnableCreateRepoDto,
+      DTO.SyncEnableCreateRepoResponse
+    >;
+    readonly enableAttachRepo: IpcRequest<
+      DTO.SyncEnableAttachRepoDto,
+      DTO.SyncEnableAttachRepoResponse
+    >;
     readonly disable: OptionalIpcRequest<void, DTO.SyncDisableResponse>;
     readonly syncNow: OptionalIpcRequest<void, DTO.SyncRunNowResponse>;
     readonly pullNow: OptionalIpcRequest<void, DTO.SyncPullNowResponse>;
     readonly pushNow: OptionalIpcRequest<void, DTO.SyncPushNowResponse>;
     readonly listSnapshots: OptionalIpcRequest<void, DTO.SyncListSnapshotsResponse>;
-    readonly setDefaultSnapshot: IpcRequest<DTO.SyncSnapshotActionDto, DTO.SyncSetDefaultSnapshotResponse>;
+    readonly setDefaultSnapshot: IpcRequest<
+      DTO.SyncSnapshotActionDto,
+      DTO.SyncSetDefaultSnapshotResponse
+    >;
     readonly removeSnapshot: IpcRequest<DTO.SyncSnapshotActionDto, DTO.SyncRemoveSnapshotResponse>;
   };
   readonly reset: {

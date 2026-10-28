@@ -26,11 +26,11 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.appMeta.remove]: appMetaController.remove,
   [CHANNELS.appMeta.upsert]: appMetaController.upsert,
 
-  [CHANNELS.accountValuations.create]:             accountValuationsController.create,
-  [CHANNELS.accountValuations.get]:                accountValuationsController.get,
-  [CHANNELS.accountValuations.list]:               accountValuationsController.list,
-  [CHANNELS.accountValuations.update]:             accountValuationsController.update,
-  [CHANNELS.accountValuations.remove]:             accountValuationsController.remove,
+  [CHANNELS.accountValuations.create]: accountValuationsController.create,
+  [CHANNELS.accountValuations.get]: accountValuationsController.get,
+  [CHANNELS.accountValuations.list]: accountValuationsController.list,
+  [CHANNELS.accountValuations.update]: accountValuationsController.update,
+  [CHANNELS.accountValuations.remove]: accountValuationsController.remove,
   [CHANNELS.accountValuations.getLatestByAccount]: accountValuationsController.getLatestByAccount,
 
   [CHANNELS.accounts.create]: accountsController.create,
@@ -52,9 +52,11 @@ const IPC_HANDLERS = Object.freeze({
   [CHANNELS.budgets.remove]: budgetsController.remove,
 
   [CHANNELS.analytics.availableYears]: analyticsController.availableYears,
-  [CHANNELS.analytics.budgetVsExpensesByCategoryByYear]: analyticsController.budgetVsExpensesByCategoryByYear,
+  [CHANNELS.analytics.budgetVsExpensesByCategoryByYear]:
+    analyticsController.budgetVsExpensesByCategoryByYear,
   [CHANNELS.analytics.compareMonths]: analyticsController.compareMonths,
-  [CHANNELS.analytics.expensesIncomesNetCashflowByMonth]: analyticsController.expensesIncomesNetCashflowByMonth,
+  [CHANNELS.analytics.expensesIncomesNetCashflowByMonth]:
+    analyticsController.expensesIncomesNetCashflowByMonth,
   [CHANNELS.analytics.receivablesPayables]: analyticsController.receivablesPayables,
   [CHANNELS.analytics.netWorthByAccount]: analyticsController.netWorthByAccount,
   [CHANNELS.analytics.expensesByCategoryByMonth]: analyticsController.expensesByCategoryByMonth,

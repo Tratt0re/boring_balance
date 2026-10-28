@@ -354,7 +354,10 @@ describe('Excel import', () => {
     );
 
     it('does not write anything to the database when commit is refused', async () => {
-      const before = databaseModule.getDatabase().prepare('SELECT COUNT(*) c FROM accounts').get().c;
+      const before = databaseModule
+        .getDatabase()
+        .prepare('SELECT COUNT(*) c FROM accounts')
+        .get().c;
 
       await importController.commit(IMPORT_TEMPLATE);
 

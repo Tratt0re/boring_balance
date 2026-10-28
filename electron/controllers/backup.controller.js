@@ -124,7 +124,8 @@ function normalizeSettingsFromStore(value) {
 
   try {
     if (storedValue.enabled !== undefined) {
-      normalizedSettings.enabled = normalizeBooleanFlag(storedValue.enabled, 'settings.enabled') === 1;
+      normalizedSettings.enabled =
+        normalizeBooleanFlag(storedValue.enabled, 'settings.enabled') === 1;
     }
   } catch {
     normalizedSettings.enabled = BACKUP_SETTINGS_DEFAULTS.enabled;
@@ -133,7 +134,9 @@ function normalizeSettingsFromStore(value) {
   try {
     if (storedValue.folderPath !== undefined) {
       normalizedSettings.folderPath =
-        normalizeOptionalString(storedValue.folderPath, 'settings.folderPath', { allowNull: true }) ?? null;
+        normalizeOptionalString(storedValue.folderPath, 'settings.folderPath', {
+          allowNull: true,
+        }) ?? null;
     }
   } catch {
     normalizedSettings.folderPath = BACKUP_SETTINGS_DEFAULTS.folderPath;
@@ -205,7 +208,8 @@ function applyBackupSettingsPatch(currentSettings, patch) {
   }
 
   if (patch.autoBackupOnQuit !== undefined) {
-    nextSettings.autoBackupOnQuit = normalizeBooleanFlag(patch.autoBackupOnQuit, 'payload.autoBackupOnQuit') === 1;
+    nextSettings.autoBackupOnQuit =
+      normalizeBooleanFlag(patch.autoBackupOnQuit, 'payload.autoBackupOnQuit') === 1;
   }
 
   if (patch.autoBackupIntervalMin !== undefined) {
@@ -245,11 +249,14 @@ function restartScheduler(settings = readBackupSettings()) {
     return;
   }
 
-  schedulerTimer = setInterval(() => {
-    void runAutomaticBackup('interval').catch((error) => {
-      console.error('[electron] Scheduled backup failed:', error);
-    });
-  }, settings.autoBackupIntervalMin * 60 * 1000);
+  schedulerTimer = setInterval(
+    () => {
+      void runAutomaticBackup('interval').catch((error) => {
+        console.error('[electron] Scheduled backup failed:', error);
+      });
+    },
+    settings.autoBackupIntervalMin * 60 * 1000,
+  );
 }
 
 function hasChangesSinceLastBackup(changeCounter) {
@@ -286,7 +293,9 @@ async function executeBackup(options = {}) {
 
   if (options.requireChangeCounterAdvance) {
     const currentChangeCounter =
-      options.currentChangeCounter === undefined ? readCurrentChangeCounter() : options.currentChangeCounter;
+      options.currentChangeCounter === undefined
+        ? readCurrentChangeCounter()
+        : options.currentChangeCounter;
     if (!hasChangesSinceLastBackup(currentChangeCounter)) {
       return null;
     }
@@ -298,7 +307,11 @@ async function executeBackup(options = {}) {
   });
 
   try {
-    const backupResult = await backupModel.createBackup(getDatabase(), settings.folderPath, app.getVersion());
+    const backupResult = await backupModel.createBackup(
+      getDatabase(),
+      settings.folderPath,
+      app.getVersion(),
+    );
     backupModel.pruneBackups(settings.folderPath, settings.retentionCount);
 
     setRuntimeState({
@@ -439,7 +452,10 @@ function isBackupInConfiguredFolder(backupFilePath) {
 }
 
 function assertRestoreSourceAllowed(backupFilePath) {
-  if (pickedRestoreFile.isAuthorized(backupFilePath) || isBackupInConfiguredFolder(backupFilePath)) {
+  if (
+    pickedRestoreFile.isAuthorized(backupFilePath) ||
+    isBackupInConfiguredFolder(backupFilePath)
+  ) {
     return;
   }
 
