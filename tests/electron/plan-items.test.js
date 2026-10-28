@@ -663,7 +663,7 @@ describe('run', () => {
       expect(() => plans.run(plan.id)).toThrow('boom occurrence');
     });
 
-    it.fails('leaves nothing behind when an occurrence fails (PLAN 3.4)', () => {
+    it('leaves nothing behind when an occurrence fails (PLAN 3.4)', () => {
       const plan = createPlan({ start, count: 5, unit: 'day' });
       failOnOccurrence(start + 3 * DAY_MS);
 
@@ -672,33 +672,30 @@ describe('run', () => {
       expect(linkedTransactions(plan.id)).toHaveLength(0);
     });
 
-    it('today the occurrences created before the failure stay, and a re-run completes the rest', () => {
+    it('rolls back the occurrences created before the failure, so a re-run starts clean', () => {
       const plan = createPlan({ start, count: 5, unit: 'day' });
       failOnOccurrence(start + 3 * DAY_MS);
       expect(() => plans.run(plan.id)).toThrow('boom occurrence');
-      expect(linkedTransactions(plan.id)).toHaveLength(3);
+      expect(linkedTransactions(plan.id)).toHaveLength(0);
 
       db.exec('DROP TRIGGER fail_one_occurrence');
       const rerun = plans.run(plan.id);
 
-      expect(rerun.summary).toMatchObject({ created: 2, skipped_existing: 3 });
+      expect(rerun.summary).toMatchObject({ created: 5, skipped_existing: 0 });
       expect(linkedTransactions(plan.id)).toHaveLength(5);
     });
 
-    it.fails(
-      'create_and_run does not leave a plan item behind when the run fails (PLAN 3.4)',
-      () => {
-        failOnOccurrence(start + 3 * DAY_MS);
+    it('create_and_run does not leave a plan item behind when the run fails (PLAN 3.4)', () => {
+      failOnOccurrence(start + 3 * DAY_MS);
 
-        expect(() =>
-          plans.create(planPayload({ start, count: 5, unit: 'day', run: true })),
-        ).toThrow('boom occurrence');
+      expect(() => plans.create(planPayload({ start, count: 5, unit: 'day', run: true }))).toThrow(
+        'boom occurrence',
+      );
 
-        expect(countRows('plan_items')).toBe(0);
-      },
-    );
+      expect(countRows('plan_items')).toBe(0);
+    });
 
-    it.fails('rejects an absurd occurrence count instead of accepting it (PLAN 3.4)', () => {
+    it('rejects an absurd occurrence count instead of accepting it (PLAN 3.4)', () => {
       expect(() => createPlan({ start, count: 10_000_000, unit: 'day' })).toThrow();
     });
   });

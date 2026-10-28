@@ -23,11 +23,19 @@ const {
 } = require('./utils');
 
 const PLAN_TYPES = new Set(['transaction', 'transfer']);
+// Enough for daily plans for about 27 years; anything larger is a mistake or an attempt to exhaust the database.
+const MAX_PLAN_OCCURRENCES = 10000;
 const FREQUENCY_UNITS = new Set(['day', 'week', 'month', 'year']);
 const MONTH_POLICIES = new Set(['clip', 'skip', 'last_day', 'first_day']);
 const LINKED_ITEMS_UPDATE_SCOPES = new Set(['all', 'upcoming', 'from_date', 'rule_only']);
 
-const PLAN_CREATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json', 'create_and_run']);
+const PLAN_CREATE_FIELDS = new Set([
+  'title',
+  'type',
+  'template_json',
+  'rule_json',
+  'create_and_run',
+]);
 const PLAN_UPDATE_FIELDS = new Set(['title', 'type', 'template_json', 'rule_json']);
 const PLAN_UPDATE_PAYLOAD_FIELDS = new Set(['id', 'changes', 'linked_items']);
 const LINKED_ITEMS_UPDATE_FIELDS = new Set(['scope', 'from_date']);
@@ -38,7 +46,13 @@ const PLAN_REMOVE_FIELDS = new Set(['id', 'delete_planned_items']);
 
 const RULE_JSON_FIELDS = new Set(['start_date', 'count', 'frequency', 'month_policy']);
 const RULE_FREQUENCY_FIELDS = new Set(['unit', 'interval']);
-const TRANSACTION_TEMPLATE_FIELDS = new Set(['amount_cents', 'account_id', 'category_id', 'description', 'settled']);
+const TRANSACTION_TEMPLATE_FIELDS = new Set([
+  'amount_cents',
+  'account_id',
+  'category_id',
+  'description',
+  'settled',
+]);
 const TRANSFER_TEMPLATE_FIELDS = new Set([
   'amount_cents',
   'from_account_id',
@@ -125,21 +139,34 @@ function normalizeLinkedItemsUpdateScope(value, label) {
   };
 }
 
+function normalizeOccurrenceCount(value, label) {
+  const count = normalizePositiveInteger(value, label);
+  if (count > MAX_PLAN_OCCURRENCES) {
+    throw new Error(`${label} must be at most ${MAX_PLAN_OCCURRENCES}.`);
+  }
+
+  return count;
+}
+
 function normalizeRuleJson(value, label) {
   const rule = ensurePlainObject(value, label);
   assertAllowedKeys(rule, RULE_JSON_FIELDS, label);
 
   const frequency = normalizeFrequencyRule(rule.frequency, `${label}.frequency`);
   const monthPolicy =
-    rule.month_policy === undefined ? undefined : normalizeEnum(rule.month_policy, `${label}.month_policy`, MONTH_POLICIES);
+    rule.month_policy === undefined
+      ? undefined
+      : normalizeEnum(rule.month_policy, `${label}.month_policy`, MONTH_POLICIES);
 
   if (monthPolicy !== undefined && frequency.unit !== 'month' && frequency.unit !== 'year') {
-    throw new Error(`${label}.month_policy is only supported when frequency.unit is "month" or "year".`);
+    throw new Error(
+      `${label}.month_policy is only supported when frequency.unit is "month" or "year".`,
+    );
   }
 
   const normalizedRule = {
     start_date: normalizeUnixTimestampMilliseconds(rule.start_date, `${label}.start_date`),
-    count: normalizePositiveInteger(rule.count, `${label}.count`),
+    count: normalizeOccurrenceCount(rule.count, `${label}.count`),
     frequency,
   };
 
@@ -178,7 +205,10 @@ function normalizeTransferTemplateJson(value, label) {
   assertAllowedKeys(template, TRANSFER_TEMPLATE_FIELDS, label);
 
   const amountCents = normalizePositiveInteger(template.amount_cents, `${label}.amount_cents`);
-  const fromAccountId = normalizePositiveInteger(template.from_account_id, `${label}.from_account_id`);
+  const fromAccountId = normalizePositiveInteger(
+    template.from_account_id,
+    `${label}.from_account_id`,
+  );
   const toAccountId = normalizePositiveInteger(template.to_account_id, `${label}.to_account_id`);
   if (fromAccountId === toAccountId) {
     throw new Error(`${label}.from_account_id and ${label}.to_account_id must be different.`);
@@ -225,7 +255,10 @@ function normalizeListPayload(payload) {
   });
 
   const normalizedFilters = pickDefined({
-    type: filters.type === undefined ? undefined : normalizeEnum(filters.type, 'payload.filters.type', PLAN_TYPES),
+    type:
+      filters.type === undefined
+        ? undefined
+        : normalizeEnum(filters.type, 'payload.filters.type', PLAN_TYPES),
   });
 
   return {
@@ -240,26 +273,31 @@ function create(payload) {
 
   const type = normalizeEnum(body.type, 'payload.type', PLAN_TYPES);
   const row = {
-    title: requireString(body.title, 'payload.title', { allowEmpty: false, maxLength: TITLE_MAX_LENGTH }),
+    title: requireString(body.title, 'payload.title', {
+      allowEmpty: false,
+      maxLength: TITLE_MAX_LENGTH,
+    }),
     type,
-    template_json: JSON.stringify(normalizeTemplateJsonForType(body.template_json, type, 'payload.template_json')),
+    template_json: JSON.stringify(
+      normalizeTemplateJsonForType(body.template_json, type, 'payload.template_json'),
+    ),
     rule_json: JSON.stringify(normalizeRuleJson(body.rule_json, 'payload.rule_json')),
     created_at: nowUnixTimestampMilliseconds(),
   };
 
-  const createAndRun = normalizeOptionalBooleanFlag(body.create_and_run, 'payload.create_and_run') === 1;
-  const insertedId = Number(planItemsModel.create(row));
-  const createdRow = planItemsModel.getById(insertedId);
+  const createAndRun =
+    normalizeOptionalBooleanFlag(body.create_and_run, 'payload.create_and_run') === 1;
 
   if (!createAndRun) {
-    return createdRow;
+    const insertedId = Number(planItemsModel.create(row));
+    return planItemsModel.getById(insertedId);
   }
 
+  // Creating and running are one step: a failed run must not leave the plan item behind.
+  const { insertedId, run } = planItemsModel.createAndRun(row, buildPlanRunExecutors());
   return {
-    row: createdRow,
-    run: planItemsModel.run(insertedId, {
-      ...buildPlanRunExecutors(),
-    }),
+    row: planItemsModel.getById(insertedId),
+    run,
   };
 }
 
@@ -271,7 +309,9 @@ function get(payload) {
 function list(payload) {
   const { filters, pagination } = normalizeListPayload(payload);
   const total = planItemsModel.count(filters);
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
+  const { page, offset } = resolvePaginationWindow(total, pagination, {
+    defaultPage: DEFAULT_PAGE,
+  });
   const rows = planItemsModel.list(filters, {
     orderBy: [
       { column: 'created_at', direction: 'DESC' },
@@ -301,7 +341,10 @@ function update(payload) {
 
   const changesInput = ensureNonEmptyObject(body.changes, 'payload.changes');
   assertAllowedKeys(changesInput, PLAN_UPDATE_FIELDS, 'payload.changes');
-  const linkedItemsUpdateScope = normalizeLinkedItemsUpdateScope(body.linked_items, 'payload.linked_items');
+  const linkedItemsUpdateScope = normalizeLinkedItemsUpdateScope(
+    body.linked_items,
+    'payload.linked_items',
+  );
 
   let type;
   if (changesInput.type !== undefined) {
@@ -316,8 +359,13 @@ function update(payload) {
   let templateJson;
   let shouldApplyTemplateChanges = false;
   if (changesInput.template_json !== undefined) {
-    templateJson = normalizeTemplateJsonForType(changesInput.template_json, nextType, 'payload.changes.template_json');
-    shouldApplyTemplateChanges = JSON.stringify(templateJson) !== JSON.stringify(existingRow.template_json);
+    templateJson = normalizeTemplateJsonForType(
+      changesInput.template_json,
+      nextType,
+      'payload.changes.template_json',
+    );
+    shouldApplyTemplateChanges =
+      JSON.stringify(templateJson) !== JSON.stringify(existingRow.template_json);
   }
 
   let ruleJson;
@@ -367,7 +415,8 @@ function remove(payload) {
   assertAllowedKeys(body, PLAN_REMOVE_FIELDS, 'payload');
 
   const id = extractId({ id: body.id });
-  const deletePlannedItems = normalizeOptionalBooleanFlag(body.delete_planned_items, 'payload.delete_planned_items') === 1;
+  const deletePlannedItems =
+    normalizeOptionalBooleanFlag(body.delete_planned_items, 'payload.delete_planned_items') === 1;
 
   return planItemsModel.removePlanItem(id, {
     delete_planned_items: deletePlannedItems,

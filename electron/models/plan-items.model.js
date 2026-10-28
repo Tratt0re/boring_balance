@@ -183,8 +183,10 @@ function run(planItemId, options = {}) {
   const database = getDatabase();
   const occurrenceTimestamps = generatePlanOccurrenceTimestamps(planItem.rule_json);
   const existingOccurrencesMap = buildExistingOccurrencesMapForPlan(database, planItem);
-  const injectedCreateTransaction = typeof options.createTransaction === 'function' ? options.createTransaction : null;
-  const injectedCreateTransfer = typeof options.createTransfer === 'function' ? options.createTransfer : null;
+  const injectedCreateTransaction =
+    typeof options.createTransaction === 'function' ? options.createTransaction : null;
+  const injectedCreateTransfer =
+    typeof options.createTransfer === 'function' ? options.createTransfer : null;
 
   if (planItem.type === 'transaction' && !injectedCreateTransaction) {
     throw new Error('Plan run requires options.createTransaction for transaction plans.');
@@ -194,57 +196,62 @@ function run(planItemId, options = {}) {
     throw new Error('Plan run requires options.createTransfer for transfer plans.');
   }
 
-  const results = [];
-  let skippedExisting = 0;
-  let created = 0;
+  // One transaction: if any occurrence fails, every occurrence created by this run is rolled back.
+  const runTx = database.transaction(() => {
+    const results = [];
+    let skippedExisting = 0;
+    let created = 0;
 
-  for (const occurredAt of occurrenceTimestamps) {
-    const existingRow = existingOccurrencesMap.get(Number(occurredAt));
-    if (existingRow) {
-      skippedExisting += 1;
-      results.push(buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow));
-      continue;
+    for (const occurredAt of occurrenceTimestamps) {
+      const existingRow = existingOccurrencesMap.get(Number(occurredAt));
+      if (existingRow) {
+        skippedExisting += 1;
+        results.push(buildRunResultEntryForSkippedExisting(planItem, occurredAt, existingRow));
+        continue;
+      }
+
+      if (planItem.type === 'transaction') {
+        const transaction = injectedCreateTransaction(planItem, occurredAt);
+        results.push({
+          occurred_at: occurredAt,
+          status: 'created',
+          created: {
+            type: 'transaction',
+            row: transaction,
+          },
+        });
+      } else if (planItem.type === 'transfer') {
+        const transferResult = injectedCreateTransfer(planItem, occurredAt);
+        results.push({
+          occurred_at: occurredAt,
+          status: 'created',
+          created: {
+            type: 'transfer',
+            ...transferResult,
+          },
+        });
+      } else {
+        throw new Error(`Unsupported plan item type "${planItem.type}".`);
+      }
+
+      created += 1;
+      existingOccurrencesMap.set(Number(occurredAt), { occurred_at: occurredAt });
     }
 
-    if (planItem.type === 'transaction') {
-      const transaction = injectedCreateTransaction(planItem, occurredAt);
-      results.push({
-        occurred_at: occurredAt,
-        status: 'created',
-        created: {
-          type: 'transaction',
-          row: transaction,
-        },
-      });
-    } else if (planItem.type === 'transfer') {
-      const transferResult = injectedCreateTransfer(planItem, occurredAt);
-      results.push({
-        occurred_at: occurredAt,
-        status: 'created',
-        created: {
-          type: 'transfer',
-          ...transferResult,
-        },
-      });
-    } else {
-      throw new Error(`Unsupported plan item type "${planItem.type}".`);
-    }
+    return {
+      plan_item: planItem,
+      dry_run: false,
+      summary: {
+        total_occurrences: occurrenceTimestamps.length,
+        skipped_existing: skippedExisting,
+        would_create: 0,
+        created,
+      },
+      results,
+    };
+  });
 
-    created += 1;
-    existingOccurrencesMap.set(Number(occurredAt), { occurred_at: occurredAt });
-  }
-
-  return {
-    plan_item: planItem,
-    dry_run: false,
-    summary: {
-      total_occurrences: occurrenceTimestamps.length,
-      skipped_existing: skippedExisting,
-      would_create: 0,
-      created,
-    },
-    results,
-  };
+  return runTx();
 }
 
 function buildLinkedTransactionChangesFromPlanTemplate(templateJson, updatedAt) {
@@ -298,13 +305,20 @@ function buildLinkedTransferChangesFromPlanTemplate(templateJson, updatedAt) {
   };
 }
 
-function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt, linkedItems = { scope: 'all' }) {
+function applyTemplateChangesToLinkedPlannedItems(
+  database,
+  planItem,
+  updatedAt,
+  linkedItems = { scope: 'all' },
+) {
   if (!planItem?.template_json || linkedItems.scope === 'rule_only') {
     return;
   }
 
   const occurredAtFilter =
-    linkedItems.from_date === undefined ? {} : { occurred_at: { gte: Number(linkedItems.from_date) } };
+    linkedItems.from_date === undefined
+      ? {}
+      : { occurred_at: { gte: Number(linkedItems.from_date) } };
 
   if (planItem.type === 'transaction') {
     updateRows(
@@ -321,7 +335,10 @@ function applyTemplateChangesToLinkedPlannedItems(database, planItem, updatedAt,
   }
 
   if (planItem.type === 'transfer') {
-    const transferTemplateChanges = buildLinkedTransferChangesFromPlanTemplate(planItem.template_json, updatedAt);
+    const transferTemplateChanges = buildLinkedTransferChangesFromPlanTemplate(
+      planItem.template_json,
+      updatedAt,
+    );
 
     updateRows(database, 'transfers', transferTemplateChanges.transfer, {
       plan_item_id: Number(planItem.id),
@@ -360,7 +377,12 @@ function updateById(planItemId, changes, options = {}) {
     if (payload.template_json !== undefined && options.apply_template_changes !== false) {
       const updatedPlanItem = getById(planItemId);
       const updatedAt = Number(payload.updated_at ?? Date.now());
-      applyTemplateChangesToLinkedPlannedItems(database, updatedPlanItem, updatedAt, options.linked_items);
+      applyTemplateChangesToLinkedPlannedItems(
+        database,
+        updatedPlanItem,
+        updatedAt,
+        options.linked_items,
+      );
     }
 
     return changed;
@@ -403,7 +425,9 @@ function deletePlannedItemsInternal(database, planItemId) {
 
 function deletePlannedItems(planItemId) {
   const database = getDatabase();
-  const deletePlannedItemsTx = database.transaction((id) => deletePlannedItemsInternal(database, id));
+  const deletePlannedItemsTx = database.transaction((id) =>
+    deletePlannedItemsInternal(database, id),
+  );
   return deletePlannedItemsTx(planItemId);
 }
 
@@ -428,8 +452,21 @@ function removePlanItem(planItemId, options = {}) {
   });
 }
 
+/** Inserts a plan item and runs it in one transaction: if the run fails, the plan item is not kept. */
+function createAndRun(row, options = {}) {
+  const database = getDatabase();
+  const createAndRunTx = database.transaction(() => {
+    const insertedId = Number(planItemsBaseModel.create(row));
+    const runResult = run(insertedId, options);
+    return { insertedId, run: runResult };
+  });
+
+  return createAndRunTx();
+}
+
 module.exports = {
   ...planItemsBaseModel,
+  createAndRun,
   getById,
   list,
   updateById,
