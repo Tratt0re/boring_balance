@@ -84,7 +84,8 @@ function planPayload({
   return {
     title,
     type,
-    template_json: template ?? (type === 'transaction' ? transactionTemplate() : transferTemplate()),
+    template_json:
+      template ?? (type === 'transaction' ? transactionTemplate() : transferTemplate()),
     rule_json: {
       start_date: start,
       count,
@@ -104,7 +105,9 @@ function schedule(options) {
 const createPlan = (options) => plans.create(planPayload(options));
 const linkedTransactions = (planId) =>
   db
-    .prepare('SELECT * FROM transactions WHERE plan_item_id = ? AND transfer_id IS NULL ORDER BY occurred_at')
+    .prepare(
+      'SELECT * FROM transactions WHERE plan_item_id = ? AND transfer_id IS NULL ORDER BY occurred_at',
+    )
     .all(planId);
 const linkedTransfers = (planId) =>
   db.prepare('SELECT * FROM transfers WHERE plan_item_id = ? ORDER BY occurred_at').all(planId);
@@ -185,26 +188,21 @@ describe.each(['UTC', 'Europe/Rome', 'America/New_York', 'Pacific/Auckland'])(
     });
 
     it('first_day always lands on the first day of the month', () => {
-      expect(schedule({ start: local(2024, 1, 31, 9, 30), count: 3, policy: 'first_day' })).toEqual([
-        '2024-01-01 09:30',
-        '2024-02-01 09:30',
-        '2024-03-01 09:30',
-      ]);
+      expect(schedule({ start: local(2024, 1, 31, 9, 30), count: 3, policy: 'first_day' })).toEqual(
+        ['2024-01-01 09:30', '2024-02-01 09:30', '2024-03-01 09:30'],
+      );
     });
 
     it('yearly plans step by twelve months and clip Feb 29 outside leap years', () => {
-      expect(schedule({ start: local(2024, 2, 29), count: 3, unit: 'year', policy: 'clip' })).toEqual([
-        '2024-02-29 00:00',
-        '2025-02-28 00:00',
-        '2026-02-28 00:00',
-      ]);
+      expect(
+        schedule({ start: local(2024, 2, 29), count: 3, unit: 'year', policy: 'clip' }),
+      ).toEqual(['2024-02-29 00:00', '2025-02-28 00:00', '2026-02-28 00:00']);
     });
 
     it('yearly skip keeps only real Feb 29 dates', () => {
-      expect(schedule({ start: local(2024, 2, 29), count: 2, unit: 'year', policy: 'skip' })).toEqual([
-        '2024-02-29 00:00',
-        '2028-02-29 00:00',
-      ]);
+      expect(
+        schedule({ start: local(2024, 2, 29), count: 2, unit: 'year', policy: 'skip' }),
+      ).toEqual(['2024-02-29 00:00', '2028-02-29 00:00']);
     });
 
     it('crosses year boundaries and large intervals', () => {
@@ -269,7 +267,12 @@ describe.each(['Europe/Rome', 'America/New_York'])(
   (timeZone) => {
     withTimeZone(timeZone);
 
-    const expected = ['2026-10-20 00:00', '2026-10-27 00:00', '2026-11-03 00:00', '2026-11-10 00:00'];
+    const expected = [
+      '2026-10-20 00:00',
+      '2026-10-27 00:00',
+      '2026-11-03 00:00',
+      '2026-11-10 00:00',
+    ];
 
     it.fails('keeps every occurrence at local midnight (PLAN 3.5)', () => {
       expect(schedule({ start: local(2026, 10, 20), count: 4, unit: 'week' })).toEqual(expected);
@@ -325,7 +328,12 @@ describe('create', () => {
   it('defaults a missing description to an empty string and keeps an explicit settled flag', () => {
     const plan = createPlan({
       start: local(2024, 1, 15),
-      template: { amount_cents: 100, account_id: cash, category_id: EXPENSE_CATEGORY_ID, settled: true },
+      template: {
+        amount_cents: 100,
+        account_id: cash,
+        category_id: EXPENSE_CATEGORY_ID,
+        settled: true,
+      },
     });
     expect(plan.template_json).toEqual({
       amount_cents: 100,
@@ -365,7 +373,11 @@ describe('create', () => {
 
     // Every case builds its payload lazily: account ids only exist once beforeEach has run.
     it.each([
-      ['unknown payload field', () => ({ ...base(), extra: 1 }), 'Unsupported payload field: "extra"'],
+      [
+        'unknown payload field',
+        () => ({ ...base(), extra: 1 }),
+        'Unsupported payload field: "extra"',
+      ],
       [
         'unknown type',
         () => ({ ...base(), type: 'budget' }),
@@ -378,7 +390,11 @@ describe('create', () => {
         'payload.title must be at most 100 characters.',
       ],
       ['non-object payload', () => null, 'payload must be a plain object.'],
-      ['zero count', () => withRule({ count: 0 }), 'payload.rule_json.count must be a positive integer.'],
+      [
+        'zero count',
+        () => withRule({ count: 0 }),
+        'payload.rule_json.count must be a positive integer.',
+      ],
       [
         'fractional count',
         () => withRule({ count: 1.5 }),
@@ -669,15 +685,18 @@ describe('run', () => {
       expect(linkedTransactions(plan.id)).toHaveLength(5);
     });
 
-    it.fails('create_and_run does not leave a plan item behind when the run fails (PLAN 3.4)', () => {
-      failOnOccurrence(start + 3 * DAY_MS);
+    it.fails(
+      'create_and_run does not leave a plan item behind when the run fails (PLAN 3.4)',
+      () => {
+        failOnOccurrence(start + 3 * DAY_MS);
 
-      expect(() => plans.create(planPayload({ start, count: 5, unit: 'day', run: true }))).toThrow(
-        'boom occurrence',
-      );
+        expect(() =>
+          plans.create(planPayload({ start, count: 5, unit: 'day', run: true })),
+        ).toThrow('boom occurrence');
 
-      expect(countRows('plan_items')).toBe(0);
-    });
+        expect(countRows('plan_items')).toBe(0);
+      },
+    );
 
     it.fails('rejects an absurd occurrence count instead of accepting it (PLAN 3.4)', () => {
       expect(() => createPlan({ start, count: 10_000_000, unit: 'day' })).toThrow();
@@ -730,7 +749,8 @@ describe('update', () => {
       return plan;
     }
 
-    const manualRow = () => db.prepare("SELECT * FROM transactions WHERE description = 'manual'").get();
+    const manualRow = () =>
+      db.prepare("SELECT * FROM transactions WHERE description = 'manual'").get();
 
     it('all (the default) rewrites every linked row', () => {
       const plan = setup();
@@ -740,7 +760,9 @@ describe('update', () => {
       expect(linkedTransactions(plan.id).map((row) => row.amount_cents)).toEqual([
         5000, 5000, 5000, 5000,
       ]);
-      expect(linkedTransactions(plan.id).map((row) => row.description)).toEqual(Array(4).fill('new'));
+      expect(linkedTransactions(plan.id).map((row) => row.description)).toEqual(
+        Array(4).fill('new'),
+      );
       expect(manualRow().amount_cents).toBe(1999);
     });
 
@@ -800,7 +822,9 @@ describe('update', () => {
         linked_items: { scope: 'upcoming' },
       });
 
-      expect(linkedTransactions(past.id).map((row) => row.amount_cents)).toEqual([1999, 1999, 1999]);
+      expect(linkedTransactions(past.id).map((row) => row.amount_cents)).toEqual([
+        1999, 1999, 1999,
+      ]);
       expect(linkedTransactions(future.id).map((row) => row.amount_cents)).toEqual([
         5000, 5000, 5000,
       ]);
@@ -828,13 +852,19 @@ describe('update', () => {
       });
 
       expect(
-        linkedTransfers(plan.id).map((row) => [row.from_account_id, row.to_account_id, row.amount_cents]),
+        linkedTransfers(plan.id).map((row) => [
+          row.from_account_id,
+          row.to_account_id,
+          row.amount_cents,
+        ]),
       ).toEqual([
         [cash, savings, 9000],
         [cash, savings, 9000],
       ]);
       const legs = db
-        .prepare('SELECT account_id, amount_cents FROM transactions WHERE plan_item_id = ? ORDER BY id')
+        .prepare(
+          'SELECT account_id, amount_cents FROM transactions WHERE plan_item_id = ? ORDER BY id',
+        )
         .all(plan.id);
       expect(legs).toEqual([
         { account_id: cash, amount_cents: -9000 },
@@ -885,7 +915,9 @@ describe('update', () => {
       const { month_policy: _monthPolicy, ...weeklyRule } = plan.rule_json;
       const result = plans.update({
         id: plan.id,
-        changes: { rule_json: { ...weeklyRule, count: 6, frequency: { unit: 'week', interval: 2 } } },
+        changes: {
+          rule_json: { ...weeklyRule, count: 6, frequency: { unit: 'week', interval: 2 } },
+        },
       });
       expect(result.row.rule_json).toMatchObject({
         count: 6,
@@ -928,7 +960,13 @@ describe('remove and deletePlannedItems', () => {
 
   it('with delete_planned_items it also deletes generated transactions, transfers and their legs', () => {
     const transactionPlan = createPlan({ start, count: 3, run: true }).row;
-    const transferPlan = createPlan({ type: 'transfer', start, count: 2, unit: 'week', run: true }).row;
+    const transferPlan = createPlan({
+      type: 'transfer',
+      start,
+      count: 2,
+      unit: 'week',
+      run: true,
+    }).row;
     const otherPlan = createPlan({ start, count: 2, run: true, title: 'Other' }).row;
     db.prepare(
       'INSERT INTO transactions (account_id, category_id, occurred_at, amount_cents) VALUES (?, ?, ?, ?)',

@@ -24,9 +24,25 @@ function createTables({ withAppMeta = true } = {}) {
 }
 
 function seed() {
-  core.insertRow(db, 'items', { name: 'apple', qty: 5, note: null, occurred_at: Date.UTC(2023, 5, 15) });
-  core.insertRow(db, 'items', { name: 'banana', qty: -3, note: 'ripe', occurred_at: Date.UTC(2024, 0, 1) });
-  core.insertRow(db, 'items', { name: 'cherry', qty: 10, note: 'red', archived: 1, occurred_at: Date.UTC(2024, 11, 31) });
+  core.insertRow(db, 'items', {
+    name: 'apple',
+    qty: 5,
+    note: null,
+    occurred_at: Date.UTC(2023, 5, 15),
+  });
+  core.insertRow(db, 'items', {
+    name: 'banana',
+    qty: -3,
+    note: 'ripe',
+    occurred_at: Date.UTC(2024, 0, 1),
+  });
+  core.insertRow(db, 'items', {
+    name: 'cherry',
+    qty: 10,
+    note: 'red',
+    archived: 1,
+    occurred_at: Date.UTC(2024, 11, 31),
+  });
   core.insertRow(db, 'items', { name: 'date', qty: 0, note: null, occurred_at: null });
 }
 
@@ -60,17 +76,25 @@ describe('identifier safety', () => {
     expect(() => core.selectRows(db, tableName)).toThrow(/Invalid table name/);
     expect(() => core.countRows(db, tableName)).toThrow(/Invalid table name/);
     expect(() => core.insertRow(db, tableName, { name: 'x' })).toThrow(/Invalid table name/);
-    expect(() => core.updateRows(db, tableName, { name: 'x' }, { id: 1 })).toThrow(/Invalid table name/);
+    expect(() => core.updateRows(db, tableName, { name: 'x' }, { id: 1 })).toThrow(
+      /Invalid table name/,
+    );
     expect(() => core.deleteRows(db, tableName, { id: 1 })).toThrow(/Invalid table name/);
   });
 
   it.each(evil)('rejects column name %j in where, insert, update and order by', (column) => {
     expect(() => core.selectRows(db, 'items', { [column]: 1 })).toThrow(/Invalid identifier/);
     expect(() => core.insertRow(db, 'items', { [column]: 1 })).toThrow(/Invalid identifier/);
-    expect(() => core.updateRows(db, 'items', { [column]: 1 }, { id: 1 })).toThrow(/Invalid identifier/);
-    expect(() => core.selectRows(db, 'items', {}, { orderBy: [{ column }] })).toThrow(/Invalid orderBy/);
+    expect(() => core.updateRows(db, 'items', { [column]: 1 }, { id: 1 })).toThrow(
+      /Invalid identifier/,
+    );
+    expect(() => core.selectRows(db, 'items', {}, { orderBy: [{ column }] })).toThrow(
+      /Invalid orderBy/,
+    );
     if (column !== '') {
-      expect(() => core.selectRows(db, 'items', {}, { orderBy: column })).toThrow(/Invalid orderBy/);
+      expect(() => core.selectRows(db, 'items', {}, { orderBy: column })).toThrow(
+        /Invalid orderBy/,
+      );
     }
   });
 
@@ -82,7 +106,9 @@ describe('identifier safety', () => {
   it('rejects non-string identifiers', () => {
     expect(() => core.selectRows(db, null)).toThrow(/Invalid table name/);
     expect(() => core.selectRows(db, 5)).toThrow(/Invalid table name/);
-    expect(() => core.selectRows(db, 'items', {}, { orderBy: [{ column: 5 }] })).toThrow(/Invalid orderBy/);
+    expect(() => core.selectRows(db, 'items', {}, { orderBy: [{ column: 5 }] })).toThrow(
+      /Invalid orderBy/,
+    );
   });
 
   it('never executes injected SQL', () => {
@@ -100,15 +126,19 @@ describe('identifier safety', () => {
 
   it('orderDirection is whitelisted, anything but DESC means ASC', () => {
     seed();
-    const asc = names(core.selectRows(db, 'items', {}, { orderBy: 'name', orderDirection: 'DESC; DROP TABLE items' }));
+    const asc = names(
+      core.selectRows(
+        db,
+        'items',
+        {},
+        { orderBy: 'name', orderDirection: 'DESC; DROP TABLE items' },
+      ),
+    );
     expect(asc).toEqual(['apple', 'banana', 'cherry', 'date']);
     expect(core.countRows(db, 'items')).toBe(4);
-    expect(names(core.selectRows(db, 'items', {}, { orderBy: 'name', orderDirection: 'DESC' }))).toEqual([
-      'date',
-      'cherry',
-      'banana',
-      'apple',
-    ]);
+    expect(
+      names(core.selectRows(db, 'items', {}, { orderBy: 'name', orderDirection: 'DESC' })),
+    ).toEqual(['date', 'cherry', 'banana', 'apple']);
   });
 });
 
@@ -170,7 +200,9 @@ describe('where operators', () => {
   });
 
   it('rejects unsupported operators, empty operator objects and null bounds', () => {
-    expect(() => find({ qty: { like: '%5%' } })).toThrow('Unsupported operator "like" in where.qty.');
+    expect(() => find({ qty: { like: '%5%' } })).toThrow(
+      'Unsupported operator "like" in where.qty.',
+    );
     expect(() => find({ qty: { '1=1; --': 1 } })).toThrow(/Unsupported operator/);
     expect(() => find({ qty: {} })).toThrow('where.qty cannot be an empty operator object.');
     expect(() => find({ qty: { gt: null } })).toThrow('where.qty.gt cannot be null.');
@@ -197,12 +229,17 @@ describe('selectRows ordering and paging', () => {
     core.insertRow(db, 'items', { name: 'elder', qty: 5 });
     expect(
       names(
-        core.selectRows(db, 'items', {}, {
-          orderBy: [
-            { column: 'qty', direction: 'DESC' },
-            { column: 'name', direction: 'DESC' },
-          ],
-        }),
+        core.selectRows(
+          db,
+          'items',
+          {},
+          {
+            orderBy: [
+              { column: 'qty', direction: 'DESC' },
+              { column: 'name', direction: 'DESC' },
+            ],
+          },
+        ),
       ),
     ).toEqual(['cherry', 'elder', 'apple', 'date', 'banana']);
   });
@@ -220,7 +257,8 @@ describe('selectRows ordering and paging', () => {
   });
 
   it('limit and offset work together or alone', () => {
-    const page = (options) => names(core.selectRows(db, 'items', {}, { orderBy: 'id', ...options }));
+    const page = (options) =>
+      names(core.selectRows(db, 'items', {}, { orderBy: 'id', ...options }));
     expect(page({ limit: 2 })).toEqual(['apple', 'banana']);
     expect(page({ limit: 2, offset: 2 })).toEqual(['cherry', 'date']);
     expect(page({ offset: 3 })).toEqual(['date']);
@@ -341,7 +379,9 @@ describe('selectDistinctYearsFromUnixTimestampColumn', () => {
 
   it('returns distinct years, newest first, ignoring NULL timestamps', () => {
     core.insertRow(db, 'items', { name: 'again', qty: 1, occurred_at: Date.UTC(2024, 5, 1) });
-    expect(core.selectDistinctYearsFromUnixTimestampColumn(db, 'items', 'occurred_at')).toEqual([2024, 2023]);
+    expect(core.selectDistinctYearsFromUnixTimestampColumn(db, 'items', 'occurred_at')).toEqual([
+      2024, 2023,
+    ]);
   });
 
   it('applies the where filter', () => {
@@ -354,9 +394,9 @@ describe('selectDistinctYearsFromUnixTimestampColumn', () => {
     expect(() => core.selectDistinctYearsFromUnixTimestampColumn(db, 'items', 'x; DROP')).toThrow(
       /Invalid timestamp column/,
     );
-    expect(() => core.selectDistinctYearsFromUnixTimestampColumn(db, 'bad name', 'occurred_at')).toThrow(
-      /Invalid table name/,
-    );
+    expect(() =>
+      core.selectDistinctYearsFromUnixTimestampColumn(db, 'bad name', 'occurred_at'),
+    ).toThrow(/Invalid table name/);
   });
 
   it('returns an empty list when there are no timestamps', () => {

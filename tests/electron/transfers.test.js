@@ -58,7 +58,8 @@ function updatePayload(transferId, overrides = {}) {
 const legsOf = (transferId) =>
   db.prepare('SELECT * FROM transactions WHERE transfer_id = ? ORDER BY id').all(transferId);
 
-const transferRow = (transferId) => db.prepare('SELECT * FROM transfers WHERE id = ?').get(transferId);
+const transferRow = (transferId) =>
+  db.prepare('SELECT * FROM transfers WHERE id = ?').get(transferId);
 
 const countRows = (table) => db.prepare(`SELECT COUNT(*) AS c FROM "${table}"`).get().c;
 
@@ -327,9 +328,9 @@ describe('update', () => {
     `);
     const before = snapshotTables(db);
 
-    expect(() => transfers.update(updatePayload(id, { amount: 99, to_account_id: savings }))).toThrow(
-      'boom update',
-    );
+    expect(() =>
+      transfers.update(updatePayload(id, { amount: 99, to_account_id: savings })),
+    ).toThrow('boom update');
 
     expect(snapshotTables(db)).toBe(before);
     expect(transferRow(id).amount_cents).toBe(1250);
@@ -373,7 +374,9 @@ describe('update', () => {
   });
 
   it('requires a transfer id', () => {
-    expect(() => transfers.update(updatePayload(undefined))).toThrow('transfer_id must be a string.');
+    expect(() => transfers.update(updatePayload(undefined))).toThrow(
+      'transfer_id must be a string.',
+    );
     expect(() => transfers.update(updatePayload('   '))).toThrow('transfer_id cannot be empty.');
   });
 });
@@ -446,7 +449,12 @@ describe('list', () => {
 
   beforeEach(() => {
     ids = {
-      t1: createTransfer({ occurred_at: DAY0, from_account_id: cash, to_account_id: bank, amount: 10 }),
+      t1: createTransfer({
+        occurred_at: DAY0,
+        from_account_id: cash,
+        to_account_id: bank,
+        amount: 10,
+      }),
       t2: createTransfer({
         occurred_at: DAY0 + DAY_MS,
         from_account_id: bank,

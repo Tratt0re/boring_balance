@@ -79,7 +79,10 @@ export function readChangeCounter(database) {
 /** Serializes the given tables plus the change counter, to assert that a failed write left no trace. */
 export function snapshotTables(database, tables = ['transfers', 'transactions']) {
   const rows = Object.fromEntries(
-    tables.map((table) => [table, database.prepare(`SELECT * FROM "${table}" ORDER BY rowid`).all()]),
+    tables.map((table) => [
+      table,
+      database.prepare(`SELECT * FROM "${table}" ORDER BY rowid`).all(),
+    ]),
   );
   return JSON.stringify({ rows, changeCounter: readChangeCounter(database) });
 }

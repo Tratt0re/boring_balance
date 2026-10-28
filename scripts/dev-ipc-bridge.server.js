@@ -129,7 +129,8 @@ async function seed() {
   const broker = await account('Broker', 'brokerage');
   const card = await account('Credit card', 'credit');
 
-  const category = async (name, type) => (await call(CHANNELS.categories.create, { name, type })).id;
+  const category = async (name, type) =>
+    (await call(CHANNELS.categories.create, { name, type })).id;
   const salary = await category('Salary', 'income');
   const groceries = await category('Groceries', 'expense');
   const rent = await category('Rent', 'expense');
@@ -181,7 +182,12 @@ async function seed() {
   await call(CHANNELS.planItems.create, {
     title: 'Gym membership',
     type: 'transaction',
-    template_json: { amount_cents: -2999, account_id: bank, category_id: leisure, description: 'Gym' },
+    template_json: {
+      amount_cents: -2999,
+      account_id: bank,
+      category_id: leisure,
+      description: 'Gym',
+    },
     rule_json: { start_date: at(0, 10), count: 6, frequency: { unit: 'month', interval: 1 } },
     create_and_run: true,
   });
@@ -274,7 +280,9 @@ function sendJson(response, status, body) {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',
   });
-  response.end(JSON.stringify(body, (_key, value) => (typeof value === 'bigint' ? Number(value) : value)));
+  response.end(
+    JSON.stringify(body, (_key, value) => (typeof value === 'bigint' ? Number(value) : value)),
+  );
 }
 
 function readJsonBody(request) {
@@ -352,7 +360,10 @@ async function handleInvoke(response, body) {
     const result = await handler(payload);
     sendJson(response, 200, { ok: true, result: result === undefined ? null : result });
   } catch (error) {
-    sendJson(response, 200, { ok: false, error: error instanceof Error ? error.message : String(error) });
+    sendJson(response, 200, {
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 }
 
@@ -467,7 +478,9 @@ async function main() {
   process.on('SIGTERM', shutdown);
 
   server.listen(PORT, HOST, () => {
-    console.log(`[bridge] serving ${path.relative(projectRoot, DIST_DIR)} on http://${HOST}:${PORT}`);
+    console.log(
+      `[bridge] serving ${path.relative(projectRoot, DIST_DIR)} on http://${HOST}:${PORT}`,
+    );
     console.log(`[bridge] temporary data in ${userDataDir} (deleted on exit)`);
   });
 }
