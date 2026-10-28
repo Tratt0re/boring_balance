@@ -1,6 +1,7 @@
 const { app, shell } = require('electron');
 const semver = require('semver');
 const { appMetaModel } = require('../models');
+const { openExternalIfAllowed } = require('../utils/external-url');
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -118,8 +119,10 @@ async function forceCheck() {
 }
 
 async function openRelease(payload) {
-  const url = payload?.url;
-  if (url) await shell.openExternal(url);
+  const opened = await openExternalIfAllowed(payload?.url, (url) => shell.openExternal(url));
+  if (!opened) {
+    console.warn('[electron] Refused to open a link outside the allowed list.');
+  }
 }
 
 function ignoreVersion(payload) {

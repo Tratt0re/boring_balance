@@ -1,6 +1,7 @@
 const { app, BrowserWindow, shell } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+const { openExternalIfAllowed } = require('./utils/external-url');
 
 const isMac = process.platform === 'darwin';
 
@@ -102,9 +103,15 @@ function registerWindowLifecycle(mainWindow) {
   });
 }
 
+function openAllowedExternalLink(url) {
+  openExternalIfAllowed(url, (allowedUrl) => shell.openExternal(allowedUrl)).catch((error) => {
+    console.error('[electron] Failed to open external link:', error);
+  });
+}
+
 function registerNavigationGuards(mainWindow, isDev) {
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
+    openAllowedExternalLink(url);
     return { action: 'deny' };
   });
 
@@ -115,7 +122,7 @@ function registerNavigationGuards(mainWindow, isDev) {
     }
 
     event.preventDefault();
-    void shell.openExternal(url);
+    openAllowedExternalLink(url);
   });
 }
 
