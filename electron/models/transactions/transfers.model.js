@@ -1,4 +1,10 @@
-const { countRows, deleteRows, getDatabase, selectRows } = require('../../database');
+const {
+  buildWhereClause,
+  countRows,
+  deleteRows,
+  getDatabase,
+  selectRows,
+} = require('../../database');
 const { randomUUID } = require('node:crypto');
 const { createBaseModel } = require('../base-model');
 const { DEFAULT_PAGE, resolvePaginationWindow } = require('../pagination');
@@ -58,70 +64,45 @@ function hasAccountsFilter(filters = {}) {
   return Array.isArray(filters.accounts);
 }
 
-function toAccountsFilterSet(filters = {}) {
+/**
+ * The WHERE clause for a transfers query: the plain filters, plus "either account is one of the
+ * selected ones" when an accounts filter is present. The ids travel as one JSON parameter, so the
+ * size of the selection can never hit SQLite's limit on bound variables.
+ */
+function buildTransfersQuery(filters = {}) {
+  const { clause, params } = buildWhereClause(buildFilteredTransferWhereClause(filters));
   if (!hasAccountsFilter(filters)) {
-    return null;
+    return { clause, params };
   }
 
-  return new Set(filters.accounts.map((accountId) => Number(accountId)));
-}
+  const accountIds = JSON.stringify(Array.from(new Set(filters.accounts.map(Number))));
+  const accountsCondition =
+    '("from_account_id" IN (SELECT value FROM json_each(?)) OR "to_account_id" IN (SELECT value FROM json_each(?)))';
 
-function matchesAccountsFilter(row, accountsFilterSet) {
-  if (!accountsFilterSet) {
-    return true;
-  }
-
-  return (
-    accountsFilterSet.has(Number(row.from_account_id)) ||
-    accountsFilterSet.has(Number(row.to_account_id))
-  );
+  return {
+    clause: clause === '' ? ` WHERE ${accountsCondition}` : `${clause} AND ${accountsCondition}`,
+    params: [...params, accountIds, accountIds],
+  };
 }
 
 function countFilteredTransfers(database, filters = {}) {
-  if (hasAccountsFilter(filters)) {
-    const accountsFilterSet = toAccountsFilterSet(filters);
-    if (!accountsFilterSet || accountsFilterSet.size === 0) {
-      return 0;
-    }
+  const { clause, params } = buildTransfersQuery(filters);
 
-    const rows = selectRows(database, 'transfers', buildFilteredTransferWhereClause(filters), {
-      orderBy: [
-        { column: 'occurred_at', direction: 'DESC' },
-        { column: 'id', direction: 'DESC' },
-      ],
-    });
-
-    return rows.filter((row) => matchesAccountsFilter(row, accountsFilterSet)).length;
-  }
-
-  return countRows(database, 'transfers', buildFilteredTransferWhereClause(filters));
+  return Number(
+    database.prepare(`SELECT COUNT(*) AS "total" FROM "transfers"${clause}`).get(params).total,
+  );
 }
 
 function listFilteredTransferRows(database, filters = {}, pagination = {}) {
-  const where = buildFilteredTransferWhereClause(filters);
-  const orderBy = [
-    { column: 'occurred_at', direction: 'DESC' },
-    { column: 'id', direction: 'DESC' },
-  ];
+  const { clause, params } = buildTransfersQuery(filters);
+  const limit = Number(pagination.page_size);
+  const offset = (Number(pagination.page) - 1) * limit;
 
-  if (hasAccountsFilter(filters)) {
-    const accountsFilterSet = toAccountsFilterSet(filters);
-    if (!accountsFilterSet || accountsFilterSet.size === 0) {
-      return [];
-    }
-
-    const rows = selectRows(database, 'transfers', where, { orderBy });
-    const filteredRows = rows.filter((row) => matchesAccountsFilter(row, accountsFilterSet));
-    const offset = (pagination.page - 1) * pagination.page_size;
-
-    return filteredRows.slice(offset, offset + pagination.page_size);
-  }
-
-  return selectRows(database, 'transfers', where, {
-    orderBy,
-    limit: pagination.page_size,
-    offset: (pagination.page - 1) * pagination.page_size,
-  });
+  return database
+    .prepare(
+      `SELECT * FROM "transfers"${clause} ORDER BY "occurred_at" DESC, "id" DESC LIMIT ? OFFSET ?`,
+    )
+    .all([...params, limit, offset]);
 }
 
 function list(filters = {}, pagination = {}) {

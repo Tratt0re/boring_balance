@@ -524,6 +524,72 @@ describe('list', () => {
     );
   });
 
+  it('orders transfers made at the same instant by id, newest id first, with or without an account filter', () => {
+    const tied = [
+      createTransfer({
+        occurred_at: DAY0 + 9 * DAY_MS,
+        from_account_id: cash,
+        to_account_id: bank,
+      }),
+      createTransfer({
+        occurred_at: DAY0 + 9 * DAY_MS,
+        from_account_id: cash,
+        to_account_id: bank,
+      }),
+      createTransfer({
+        occurred_at: DAY0 + 9 * DAY_MS,
+        from_account_id: bank,
+        to_account_id: cash,
+      }),
+    ].map((created) => created.transfer_id);
+    const newestFirst = [...tied].sort((a, b) => (a < b ? 1 : -1));
+
+    expect(transfers.list({ page_size: 3 }).rows.map((row) => row.id)).toEqual(newestFirst);
+    expect(
+      transfers.list({ filters: { accounts: [cash] }, page_size: 3 }).rows.map((row) => row.id),
+    ).toEqual(newestFirst);
+  });
+
+  it('does not repeat a transfer whose two accounts are both selected', () => {
+    const result = transfers.list({ filters: { accounts: [cash, bank, savings] } });
+    expect(result.total).toBe(5);
+    expect(new Set(idsOf(result)).size).toBe(5);
+  });
+
+  it('accepts the same account twice in the selection', () => {
+    const once = transfers.list({ filters: { accounts: [savings] } });
+    const twice = transfers.list({ filters: { accounts: [savings, savings] } });
+    expect(idsOf(twice)).toEqual(idsOf(once));
+    expect(twice.total).toBe(once.total);
+  });
+
+  it('ignores an account that does not exist in the selection', () => {
+    const result = transfers.list({ filters: { accounts: [savings, 99999] } });
+    expect(idsOf(result)).toEqual(expected('t4', 't3', 't2'));
+  });
+
+  it('copes with a very long account selection', () => {
+    const accountIds = Array.from({ length: 5000 }, (_, index) => index + 1);
+    const result = transfers.list({ filters: { accounts: accountIds } });
+    expect(result.total).toBe(5);
+  });
+
+  it('keeps the count and the page window consistent when a filter narrows the result', () => {
+    const everything = transfers.list({
+      filters: { accounts: [cash, bank, savings] },
+      page_size: 2,
+    });
+    expect(everything).toMatchObject({ total: 5, page: 1, page_size: 2 });
+    expect(everything.rows).toHaveLength(2);
+
+    const last = transfers.list({
+      filters: { accounts: [cash, bank, savings] },
+      page: 3,
+      page_size: 2,
+    });
+    expect(last.rows).toHaveLength(1);
+  });
+
   it('returns nothing for an empty account selection', () => {
     expect(transfers.list({ filters: { accounts: [] } })).toMatchObject({ rows: [], total: 0 });
   });

@@ -47,7 +47,8 @@ const liveAccountNames = () =>
 
 /**
  * A backup that passes the validity check (healthy, has an identity) but cannot be brought up to date:
- * it lacks a change counter and a trigger refuses to let one be added.
+ * it lacks a change counter and a trigger refuses to let one be added. It has the tables the shipped
+ * migrations touch, so they apply and the failure comes from the trigger.
  */
 function backupThatCannotBeOpened() {
   const filePath = path.join(workDir, 'cannot-open.sqlite');
@@ -56,6 +57,7 @@ function backupThatCannotBeOpened() {
     CREATE TABLE app_meta (key TEXT PRIMARY KEY, value TEXT);
     INSERT INTO app_meta VALUES ('db_uuid', 'abc');
     CREATE TABLE accounts (id INTEGER PRIMARY KEY, name TEXT);
+    CREATE TABLE transactions (id INTEGER PRIMARY KEY, occurred_at INTEGER);
     INSERT INTO accounts (name) VALUES ('From the backup');
     CREATE TRIGGER refuse_inserts BEFORE INSERT ON app_meta
     BEGIN SELECT RAISE(ABORT, 'refused on purpose'); END;

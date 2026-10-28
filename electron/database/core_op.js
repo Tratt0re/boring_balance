@@ -476,6 +476,7 @@ function deleteRows(database, tableName, where) {
 }
 
 module.exports = {
+  buildWhereClause,
   countRows,
   touchDatabaseWriteMeta,
   deleteRows,

@@ -1,5 +1,6 @@
 const { closeDatabase, createDatabase, getDatabase, getDatabasePath } = require('./db');
 const {
+  buildWhereClause,
   countRows,
   deleteRows,
   insertRow,
@@ -13,6 +14,7 @@ const { getSchemaFilePaths, initSchema } = require('./schema');
 const { isFirstStart, markFirstStartCompleted } = require('./system');
 
 module.exports = {
+  buildWhereClause,
   closeDatabase,
   countRows,
   createDatabase,

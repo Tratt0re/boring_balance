@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+CREATE INDEX IF NOT EXISTS idx_tx_occurred_at ON transactions(occurred_at);
 CREATE INDEX IF NOT EXISTS idx_tx_account_date ON transactions(account_id, occurred_at);
 CREATE INDEX IF NOT EXISTS idx_tx_category_date ON transactions(category_id, occurred_at);
 CREATE INDEX IF NOT EXISTS idx_tx_transfer_id ON transactions(transfer_id);
