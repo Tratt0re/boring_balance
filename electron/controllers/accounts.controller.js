@@ -32,7 +32,9 @@ const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'a
 const DESCRIPTION_MAX_LENGTH = 50;
 
 function normalizeAccountChanges(value, label, options = {}) {
-  const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
+  const changesInput = options.partial
+    ? ensureNonEmptyObject(value, label)
+    : ensurePlainObject(value, label);
   assertAllowedKeys(changesInput, ACCOUNT_FIELDS, label);
 
   const changes = pickDefined({
@@ -41,7 +43,9 @@ function normalizeAccountChanges(value, label, options = {}) {
         ? undefined
         : requireString(changesInput.name, `${label}.name`, { allowEmpty: false }),
     type:
-      changesInput.type === undefined ? undefined : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_ACCOUNT_TYPES),
+      changesInput.type === undefined
+        ? undefined
+        : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_ACCOUNT_TYPES),
     description: normalizeOptionalString(changesInput.description, `${label}.description`, {
       maxLength: DESCRIPTION_MAX_LENGTH,
     }),

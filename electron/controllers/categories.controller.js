@@ -67,7 +67,9 @@ function mergeSystemCategoryFilter(where = {}) {
 }
 
 function normalizeCategoryChanges(value, label, options = {}) {
-  const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
+  const changesInput = options.partial
+    ? ensureNonEmptyObject(value, label)
+    : ensurePlainObject(value, label);
   assertAllowedKeys(changesInput, CATEGORY_FIELDS, label);
 
   const changes = pickDefined({
@@ -82,7 +84,9 @@ function normalizeCategoryChanges(value, label, options = {}) {
     color_key: normalizeOptionalString(changesInput.color_key, `${label}.color_key`),
     icon: normalizeOptionalString(changesInput.icon, `${label}.icon`),
     type:
-      changesInput.type === undefined ? undefined : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_TYPES),
+      changesInput.type === undefined
+        ? undefined
+        : normalizeEnum(changesInput.type, `${label}.type`, ALLOWED_TYPES),
     locked: normalizeOptionalBooleanFlag(changesInput.locked, `${label}.locked`),
     archived: normalizeOptionalBooleanFlag(changesInput.archived, `${label}.archived`),
   });
@@ -126,7 +130,12 @@ function list(payload) {
   const effectiveWhere = mergeSystemCategoryFilter(where);
   const { limit: _ignoredLimit, offset: _ignoredOffset, ...listOptions } = options;
 
-  return executeWhereOptionsListQuery(categoriesModel, { where: effectiveWhere, listOptions, pagination, all });
+  return executeWhereOptionsListQuery(categoriesModel, {
+    where: effectiveWhere,
+    listOptions,
+    pagination,
+    all,
+  });
 }
 
 function update(payload) {
