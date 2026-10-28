@@ -1,4 +1,9 @@
+const fs = require('node:fs');
 const ExcelJS = require('exceljs');
+
+// Generous for a personal finance workbook, small enough that parsing cannot exhaust memory.
+const MAX_IMPORT_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_IMPORT_ROWS_PER_SHEET = 20000;
 
 function normalizeLookupKey(value) {
   if (typeof value !== 'string') {
@@ -49,8 +54,15 @@ async function readWorkbookFromFile(filePath) {
     throw new Error('filePath must be a non-empty string.');
   }
 
+  const resolvedPath = filePath.trim();
+  if (fs.statSync(resolvedPath).size > MAX_IMPORT_FILE_BYTES) {
+    throw new Error(
+      `The workbook is too large to import (the limit is ${MAX_IMPORT_FILE_BYTES / (1024 * 1024)} MB).`,
+    );
+  }
+
   const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.readFile(filePath.trim());
+  await workbook.xlsx.readFile(resolvedPath);
 
   return workbook;
 }
@@ -160,6 +172,13 @@ function mapWorksheetRows(worksheet, fieldColumns = {}) {
     throw new Error('fieldColumns must be a plain object.');
   }
 
+  // rowCount includes the header row.
+  if (worksheet.rowCount - 1 > MAX_IMPORT_ROWS_PER_SHEET) {
+    throw new Error(
+      `The sheet has too many rows to import (the limit is ${MAX_IMPORT_ROWS_PER_SHEET}).`,
+    );
+  }
+
   const rows = [];
   const fieldNames = Object.keys(fieldColumns);
 
@@ -245,6 +264,8 @@ async function writeWorkbookToBuffer(workbook) {
 }
 
 module.exports = {
+  MAX_IMPORT_FILE_BYTES,
+  MAX_IMPORT_ROWS_PER_SHEET,
   addWorksheetFromObjects,
   createWorkbook,
   findWorksheetByAliases,
