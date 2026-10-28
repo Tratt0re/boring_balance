@@ -22,9 +22,21 @@ describe('ensurePlainObject / ensureNonEmptyObject / ensureHasKeys', () => {
     expect(() => u.ensurePlainObject(Object.create(null), 'x')).not.toThrow();
   });
 
-  it.fails('rejects Date and Map instances (PLAN 3.13)', () => {
-    expect(() => u.ensurePlainObject(new Date(), 'x')).toThrow();
-    expect(() => u.ensurePlainObject(new Map(), 'x')).toThrow();
+  it.each([
+    ['a Date', () => new Date()],
+    ['a Map', () => new Map()],
+    ['a Set', () => new Set()],
+    ['a RegExp', () => /x/],
+    ['a class instance', () => new (class Thing {})()],
+    ['a function', () => () => 1],
+  ])('rejects %s (PLAN 3.13)', (_label, make) => {
+    expect(() => u.ensurePlainObject(make(), 'x')).toThrow('x must be a plain object.');
+  });
+
+  it('accepts an object with no prototype, as structured clone and JSON.parse can produce', () => {
+    const value = Object.assign(Object.create(null), { a: 1 });
+    expect(u.ensurePlainObject(value, 'x')).toBe(value);
+    expect(u.ensurePlainObject(JSON.parse('{"a":1}'), 'x')).toEqual({ a: 1 });
   });
 
   it('ensureNonEmptyObject rejects {} but accepts any key', () => {
@@ -176,15 +188,37 @@ describe('normalizePositiveInteger', () => {
   });
 
   // Number() coercion lets these through the IPC trust boundary.
-  it.fails('rejects booleans (PLAN 3.13)', () => {
-    expect(() => u.normalizePositiveInteger(true, 'id')).toThrow();
+  it.each([
+    [true],
+    [[5]],
+    [['5']],
+    ['0x10'],
+    ['1e3'],
+    ['1.0'],
+    ['5.'],
+    ['.5'],
+    ['1_000'],
+    ['Infinity'],
+    ['5 5'],
+    [new Date(5)],
+  ])('rejects %j (PLAN 3.13)', (input) => {
+    expect(() => u.normalizePositiveInteger(input, 'id')).toThrow('id must be a positive integer.');
   });
-  it.fails('rejects single-element arrays (PLAN 3.13)', () => {
-    expect(() => u.normalizePositiveInteger([5], 'id')).toThrow();
+
+  it('rejects a BigInt, which Number() would otherwise convert', () => {
+    expect(() => u.normalizePositiveInteger(5n, 'id')).toThrow('id must be a positive integer.');
   });
-  it.fails('rejects hex and exponent strings (PLAN 3.13)', () => {
-    expect(() => u.normalizePositiveInteger('0x10', 'id')).toThrow();
-    expect(() => u.normalizePositiveInteger('1e3', 'id')).toThrow();
+
+  it('rejects integers too large to be exact', () => {
+    expect(u.normalizePositiveInteger(Number.MAX_SAFE_INTEGER, 'id')).toBe(Number.MAX_SAFE_INTEGER);
+    expect(() => u.normalizePositiveInteger(Number.MAX_SAFE_INTEGER + 1, 'id')).toThrow();
+    expect(() => u.normalizePositiveInteger('9007199254740993', 'id')).toThrow();
+    expect(() => u.normalizePositiveInteger(1e300, 'id')).toThrow();
+  });
+
+  it('still accepts a leading plus and leading zeros, as before', () => {
+    expect(u.normalizePositiveInteger('+7', 'id')).toBe(7);
+    expect(u.normalizePositiveInteger('007', 'id')).toBe(7);
   });
 });
 
@@ -218,14 +252,37 @@ describe('normalizeInteger / normalizeNonNegativeInteger', () => {
   });
 
   // Number(null), Number(''), Number(false) and Number([]) are all 0, so "missing" becomes zero.
-  it.fails('normalizeInteger rejects null, empty string and false (PLAN 3.13)', () => {
-    expect(() => u.normalizeInteger(null, 'n')).toThrow();
-    expect(() => u.normalizeInteger('', 'n')).toThrow();
-    expect(() => u.normalizeInteger(false, 'n')).toThrow();
+  it.each([[null], [undefined], [''], ['  '], [false], [true], [[]], [[3]], ['0x10'], ['1e3']])(
+    'normalizeInteger rejects %j (PLAN 3.13)',
+    (input) => {
+      expect(() => u.normalizeInteger(input, 'n')).toThrow('n must be an integer.');
+    },
+  );
+
+  it.each([[null], [undefined], [''], ['  '], [false], [true], [[]], [[3]], ['0x10'], ['1e3']])(
+    'normalizeNonNegativeInteger rejects %j (PLAN 3.13)',
+    (input) => {
+      expect(() => u.normalizeNonNegativeInteger(input, 'n')).toThrow(
+        'n must be a non-negative integer.',
+      );
+    },
+  );
+
+  it('rejects a BigInt in both non-positive integer validators', () => {
+    expect(() => u.normalizeInteger(5n, 'n')).toThrow('n must be an integer.');
+    expect(() => u.normalizeNonNegativeInteger(5n, 'n')).toThrow(
+      'n must be a non-negative integer.',
+    );
   });
-  it.fails('normalizeNonNegativeInteger rejects null, empty string and false (PLAN 3.13)', () => {
-    expect(() => u.normalizeNonNegativeInteger(null, 'n')).toThrow();
-    expect(() => u.normalizeNonNegativeInteger('', 'n')).toThrow();
+
+  it('keeps accepting signed digit strings and the safe-integer range', () => {
+    expect(u.normalizeInteger(' -12 ', 'n')).toBe(-12);
+    expect(u.normalizeInteger('+3', 'n')).toBe(3);
+    expect(u.normalizeInteger(-0, 'n')).toBe(0);
+    expect(Object.is(u.normalizeInteger('-0', 'n'), 0)).toBe(true);
+    expect(u.normalizeNonNegativeInteger('0', 'n')).toBe(0);
+    expect(() => u.normalizeInteger(Number.MAX_SAFE_INTEGER + 1, 'n')).toThrow();
+    expect(() => u.normalizeNonNegativeInteger('-0x1', 'n')).toThrow();
   });
 });
 

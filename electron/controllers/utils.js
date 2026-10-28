@@ -4,6 +4,36 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
 
+const INTEGER_STRING_PATTERN = /^[+-]?\d+$/;
+
+/** True for `{}` literals, `JSON.parse` results and prototype-less objects; false for Date, Map, class instances, arrays. */
+function isPlainObject(value) {
+  if (value === null || typeof value !== 'object') {
+    return false;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
+/**
+ * Converts an IPC value to an integer, or returns NaN. Only a number or a string made of an optional
+ * sign and digits counts: Number() alone would also turn true, null, '', [], [5], '0x10' and '1e3'
+ * into numbers. The result must be a safe integer, so it is exact.
+ */
+function toStrictInteger(value) {
+  let candidate;
+  if (typeof value === 'number') {
+    candidate = value;
+  } else if (typeof value === 'string' && INTEGER_STRING_PATTERN.test(value.trim())) {
+    candidate = Number(value);
+  } else {
+    return Number.NaN;
+  }
+
+  return Number.isSafeInteger(candidate) ? candidate + 0 : Number.NaN;
+}
+
 /**
  * Ensures a value is a plain object (not null and not an array).
  *
@@ -14,7 +44,7 @@ const MAX_PAGE_SIZE = 250;
  * @throws {Error} If the value is not a plain object.
  */
 function ensurePlainObject(value, label) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+  if (!isPlainObject(value)) {
     throw new Error(`${label} must be a plain object.`);
   }
 
@@ -156,7 +186,7 @@ function normalizeOptionalBooleanFlag(value, label) {
  * @throws {Error} If value is not a positive integer.
  */
 function normalizePositiveInteger(value, label) {
-  const normalizedValue = Number(value);
+  const normalizedValue = toStrictInteger(value);
   if (!Number.isInteger(normalizedValue) || normalizedValue <= 0) {
     throw new Error(`${label} must be a positive integer.`);
   }
@@ -192,7 +222,7 @@ function normalizeOptionalInteger(value, label) {
  * @throws {Error} If value is not an integer.
  */
 function normalizeInteger(value, label) {
-  const normalizedValue = Number(value);
+  const normalizedValue = toStrictInteger(value);
   if (!Number.isInteger(normalizedValue)) {
     throw new Error(`${label} must be an integer.`);
   }
@@ -209,7 +239,7 @@ function normalizeInteger(value, label) {
  * @throws {Error} If value is not a non-negative integer.
  */
 function normalizeNonNegativeInteger(value, label) {
-  const normalizedValue = Number(value);
+  const normalizedValue = toStrictInteger(value);
   if (!Number.isInteger(normalizedValue) || normalizedValue < 0) {
     throw new Error(`${label} must be a non-negative integer.`);
   }
