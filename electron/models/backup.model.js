@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const Database = require('better-sqlite3');
 const { selectRows } = require('../database/core_op');
 const {
   formatTimestampForFilename,
@@ -11,7 +12,12 @@ const {
 const BACKUP_FILE_PREFIX = 'boring-balance-backup-';
 const SQLITE_FILE_SUFFIX = '.sqlite';
 const SIDECAR_FILE_SUFFIX = '.json';
-const APP_META_KEYS = Object.freeze(['db_uuid', 'change_counter', 'last_write_ms', 'schema_version']);
+const APP_META_KEYS = Object.freeze([
+  'db_uuid',
+  'change_counter',
+  'last_write_ms',
+  'schema_version',
+]);
 
 function normalizeIntegerOrNull(value) {
   const normalizedValue = Number(value);
@@ -56,19 +62,25 @@ function readBackupSidecarMeta(sidecarPath) {
     }
 
     const parsedSidecarValue = JSON.parse(rawSidecarValue);
-    if (!parsedSidecarValue || typeof parsedSidecarValue !== 'object' || Array.isArray(parsedSidecarValue)) {
+    if (
+      !parsedSidecarValue ||
+      typeof parsedSidecarValue !== 'object' ||
+      Array.isArray(parsedSidecarValue)
+    ) {
       return null;
     }
 
     return {
       created_at_ms: normalizeIntegerOrNull(parsedSidecarValue.created_at_ms),
       app_version:
-        typeof parsedSidecarValue.app_version === 'string' && parsedSidecarValue.app_version.trim().length > 0
+        typeof parsedSidecarValue.app_version === 'string' &&
+        parsedSidecarValue.app_version.trim().length > 0
           ? parsedSidecarValue.app_version.trim()
           : null,
       schema_version: normalizeIntegerOrNull(parsedSidecarValue.schema_version),
       db_uuid:
-        typeof parsedSidecarValue.db_uuid === 'string' && parsedSidecarValue.db_uuid.trim().length > 0
+        typeof parsedSidecarValue.db_uuid === 'string' &&
+        parsedSidecarValue.db_uuid.trim().length > 0
           ? parsedSidecarValue.db_uuid.trim()
           : null,
       change_counter: normalizeIntegerOrNull(parsedSidecarValue.change_counter),
@@ -90,7 +102,8 @@ function readBackupMeta(database) {
 
     return {
       dbUuid:
-        typeof valuesByKey.get('db_uuid') === 'string' && valuesByKey.get('db_uuid').trim().length > 0
+        typeof valuesByKey.get('db_uuid') === 'string' &&
+        valuesByKey.get('db_uuid').trim().length > 0
           ? valuesByKey.get('db_uuid').trim()
           : null,
       changeCounter: normalizeIntegerOrNull(valuesByKey.get('change_counter')),
@@ -170,7 +183,8 @@ async function createBackup(database, folderPath, appVersion) {
   const resolvedAppVersion =
     typeof appVersion === 'string' && appVersion.trim().length > 0 ? appVersion.trim() : 'unknown';
   const backupMeta = readBackupMeta(database);
-  const { timestampMs, sqliteFileName, sqlitePath, sidecarPath } = resolveBackupFilePaths(normalizedFolderPath);
+  const { timestampMs, sqliteFileName, sqlitePath, sidecarPath } =
+    resolveBackupFilePaths(normalizedFolderPath);
   const sqliteTemporaryPath = `${sqlitePath}.tmp-${process.pid}-${Date.now()}`;
   const sidecarPayload = {
     created_at_ms: timestampMs,
@@ -247,6 +261,40 @@ function pruneBackups(folderPath, retentionCount) {
   };
 }
 
+/**
+ * Throws unless `filePath` is a healthy Boring Balance database. The file is opened read-only, so
+ * checking it never changes it. Call this BEFORE the live database is closed or moved aside.
+ */
+function assertUsableDatabaseFile(filePath) {
+  let database;
+  // Opening a WAL-mode file, even read-only, can leave -wal and -shm files behind. Remove the ones
+  // this check created so a backup folder is not littered, and never touch ones that were there.
+  const sideFiles = [`${filePath}-wal`, `${filePath}-shm`].filter(
+    (sidePath) => !fs.existsSync(sidePath),
+  );
+
+  try {
+    database = new Database(filePath, { readonly: true, fileMustExist: true });
+    const integrity = database.pragma('integrity_check', { simple: true });
+    if (integrity !== 'ok') {
+      throw new Error('integrity check failed');
+    }
+
+    const identity = database.prepare("SELECT value FROM app_meta WHERE key = 'db_uuid'").get();
+    if (!identity || String(identity.value ?? '').trim().length === 0) {
+      throw new Error('it has no Boring Balance data');
+    }
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    throw new Error(`The file is not a usable Boring Balance database (${reason}).`);
+  } finally {
+    database?.close();
+    for (const sidePath of sideFiles) {
+      fs.rmSync(sidePath, { force: true });
+    }
+  }
+}
+
 function restoreBackup(backupFilePath, localDbPath) {
   if (typeof backupFilePath !== 'string' || backupFilePath.trim().length === 0) {
     throw new Error('backupFilePath must be a non-empty string.');
@@ -266,6 +314,8 @@ function restoreBackup(backupFilePath, localDbPath) {
   if (!backupFileStats.isFile()) {
     throw new Error(`Backup file is not a regular file: ${normalizedBackupFilePath}`);
   }
+
+  assertUsableDatabaseFile(normalizedBackupFilePath);
 
   const previousLocalCopyPath = safeReplaceFileWithBackup(
     normalizedLocalDbPath,
@@ -318,6 +368,7 @@ function removeBackup(backupFilePath) {
 module.exports = {
   BACKUP_FILE_PREFIX,
   SQLITE_FILE_SUFFIX,
+  assertUsableDatabaseFile,
   createBackup,
   listBackups,
   pruneBackups,

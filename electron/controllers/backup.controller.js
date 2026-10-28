@@ -505,6 +505,9 @@ async function restore(payload) {
     throw new Error('A restore operation is already running.');
   }
 
+  // Refuse a file that is not a healthy backup while the live database is still open and untouched.
+  backupModel.assertUsableDatabaseFile(path.resolve(backupFilePath));
+
   // A picked file is good for one restore. Asking again means picking it again.
   pickedRestoreFile.revoke();
   restoreInProgress = true;
