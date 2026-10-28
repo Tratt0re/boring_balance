@@ -235,9 +235,13 @@ describe('normalizeAmountToCents', () => {
     [0, 0],
     [12, 1200],
     [0.01, 1],
-    [2.675, 268],
     [-1.5, -150],
     [-0.01, -1],
+    [1234567.89, 123456789],
+    [-1234567.89, -123456789],
+    [0.1, 10],
+    [99.99, 9999],
+    [123456789.12, 12345678912],
   ])('converts %j to %i cents', (input, expected) => {
     expect(u.normalizeAmountToCents(input, 'a')).toBe(expected);
   });
@@ -259,12 +263,30 @@ describe('normalizeAmountToCents', () => {
     },
   );
 
-  // Divergence from the strict parseDecimalToCents used by the Excel import.
-  it.fails('rejects more than two decimals instead of rounding silently (PLAN 3.9)', () => {
-    expect(() => u.normalizeAmountToCents(1.005, 'a')).toThrow();
+  it.each([[1.005], [2.675], [-2.675], [0.001], [0.1 + 0.2], [1e-7], [-0.005]])(
+    'rejects more than two decimals instead of rounding silently: %j (PLAN 3.9)',
+    (input) => {
+      expect(() => u.normalizeAmountToCents(input, 'a')).toThrow(/2 decimal places/);
+    },
+  );
+
+  it.each([[1e20], [-1e20], [1e21], [2 ** 60]])(
+    'rejects values beyond the safe integer range: %j (PLAN 3.9)',
+    (input) => {
+      expect(() => u.normalizeAmountToCents(input, 'a')).toThrow();
+    },
+  );
+
+  it('accepts amounts up to the safe-integer limit of cents, and refuses beyond it', () => {
+    // 90071992547409.9 is the largest two-decimal amount a double can hold below 2^53 cents.
+    expect(u.normalizeAmountToCents(90071992547409.9, 'a')).toBe(9007199254740990);
+    expect(u.normalizeAmountToCents(-90071992547409.9, 'a')).toBe(-9007199254740990);
+    expect(() => u.normalizeAmountToCents(90071992547409.92, 'a')).toThrow(/too large/);
+    expect(() => u.normalizeAmountToCents(-90071992547409.92, 'a')).toThrow(/too large/);
   });
-  it.fails('rejects values beyond the safe integer range (PLAN 3.9)', () => {
-    expect(() => u.normalizeAmountToCents(1e20, 'a')).toThrow();
+
+  it('names the field in the error', () => {
+    expect(() => u.normalizeAmountToCents(1.005, 'payload.amount')).toThrow(/^payload\.amount /);
   });
 });
 

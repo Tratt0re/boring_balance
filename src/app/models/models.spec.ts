@@ -53,17 +53,25 @@ describe('common.model', () => {
       expect(amountToCents(2.675)).toBe(268);
     });
 
-    // KNOWN DIVERGENCE (PLAN 3.9 / 6.6): Math.round rounds negative half cents toward +infinity,
-    // while the main process (normalizeAmountToCents) rounds them away from zero. The two disagree on
-    // -0.005, -0.015, -2.675 and similar, so a value entered here can be stored one cent off.
-    it('rounds negative half cents toward zero, unlike the main process', () => {
-      expect(amountToCents(-0.005)).toBe(-0);
-      expect(amountToCents(-0.015)).toBe(-1);
-      expect(amountToCents(-2.675)).toBe(-267);
+    // The main process (normalizeAmountToCents) rounds half cents away from zero; so does this, so a
+    // value converted here is never one cent off from what the main process would store.
+    it('rounds negative half cents away from zero, like the main process', () => {
+      expect(amountToCents(-0.005)).toBe(-1);
+      expect(amountToCents(-0.015)).toBe(-2);
+      expect(amountToCents(-2.675)).toBe(-268);
+      expect(amountToCents(-1234567.895)).toBe(-123456790);
     });
 
-    it('can return negative zero for tiny negative amounts', () => {
-      expect(Object.is(amountToCents(-0.004), -0)).toBe(true);
+    it('is symmetric: the negative of an amount converts to the negative of its cents', () => {
+      for (const amount of [0.005, 0.015, 0.07, 2.675, 3.14, 99.99, 1234.565, 1234567.895]) {
+        expect(amountToCents(-amount)).toBe(-amountToCents(amount));
+      }
+    });
+
+    it('never returns negative zero', () => {
+      expect(Object.is(amountToCents(-0.004), 0)).toBe(true);
+      expect(Object.is(amountToCents(-0), 0)).toBe(true);
+      expect(Object.is(amountToCents(0), 0)).toBe(true);
     });
 
     it('does not guard against NaN or Infinity', () => {

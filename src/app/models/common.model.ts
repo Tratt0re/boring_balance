@@ -40,5 +40,12 @@ export function centsToAmount(valueInCents: number): number {
 }
 
 export function amountToCents(value: number): number {
-  return Math.round(value * AMOUNT_CENTS_DIVISOR);
+  // Round the magnitude and put the sign back, so half cents round away from zero for negative
+  // amounts too (Math.round alone rounds -0.005 towards +infinity), exactly like the main process.
+  const cents = Math.round(Math.abs(value) * AMOUNT_CENTS_DIVISOR);
+  if (cents === 0) {
+    return 0;
+  }
+
+  return value < 0 ? -cents : cents;
 }

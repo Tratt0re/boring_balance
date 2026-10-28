@@ -1,3 +1,5 @@
+const { parseDecimalToCents } = require('../utils/money-parse');
+
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const MAX_PAGE_SIZE = 250;
@@ -228,10 +230,9 @@ function normalizeAmountToCents(value, label) {
     throw new Error(`${label} must be a number.`);
   }
 
-  const scaledAmount = Math.abs(value) * 100;
-  const roundedAmount = Math.round(scaledAmount + Number.EPSILON);
-
-  return value < 0 ? -roundedAmount : roundedAmount;
+  // The same strict parser the Excel import uses: at most two decimals and a safe-integer result,
+  // so a value is never rounded silently or turned into an unsafe number of cents.
+  return parseDecimalToCents(value, label, { allowNegative: true });
 }
 
 /**
