@@ -34,11 +34,8 @@ function parseDdMmYyyyToUnixMilliseconds(value, label) {
   }
 
   const date = new Date(year, month - 1, day);
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
+  // A day that overflows its month always rolls into the next month, so year and month are enough.
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1) {
     throw new Error(`${label} must be a valid calendar date.`);
   }
 
