@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "Simple personal finance, without the noise",
   "author": "Tratt0re",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Tratt0re/boring_balance.git"
@@ -126,6 +127,7 @@
     "electron": "^40.4.0",
     "electron-builder": "^26.7.0",
     "electronmon": "^2.0.4",
+    "esbuild": "0.27.2",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",

@@ -46,3 +46,13 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Local secrets and databases (safety net)
+.env
+.env.*
+*.db
+*.sqlite
+*.sqlite3
