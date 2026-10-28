@@ -29,12 +29,54 @@ function getSettingsFilePath() {
   return path.join(userDataPath, SETTINGS_FILE_NAME);
 }
 
-function readSettingsStore() {
+// Set when settings.json was found damaged, so the app can tell the user instead of quietly starting
+// from defaults. Cleared when acknowledged or when the settings are deliberately reset.
+let settingsProblem = null;
+
+function findFreeCorruptCopyPath(settingsFilePath) {
+  const base = `${settingsFilePath}.corrupt-${Date.now()}`;
+  let candidate = base;
+  let index = 1;
+  while (fs.existsSync(candidate)) {
+    candidate = `${base}-${index}`;
+    index += 1;
+  }
+
+  return candidate;
+}
+
+/**
+ * Moves a damaged settings file aside, keeping its content, so it is neither lost nor read again.
+ * Returns true when the file is out of the way.
+ */
+function moveDamagedFileAside(settingsFilePath, reason) {
+  try {
+    const corruptCopyPath = findFreeCorruptCopyPath(settingsFilePath);
+    fs.renameSync(settingsFilePath, corruptCopyPath);
+    settingsProblem = { at: Date.now(), corruptCopyPath, reason };
+    console.error(
+      `[electron] settings.json was damaged; kept as ${path.basename(corruptCopyPath)} and started from defaults.`,
+      reason,
+    );
+    return true;
+  } catch (error) {
+    settingsProblem = { at: Date.now(), corruptCopyPath: null, reason };
+    console.error(
+      `[electron] settings.json is damaged (${reason}) and could not be moved aside:`,
+      error,
+    );
+    return false;
+  }
+}
+
+/** Reads the store. A damaged file is moved aside; a write refuses to continue if that fails. */
+function readSettingsStore({ forWrite = false } = {}) {
   const settingsFilePath = getSettingsFilePath();
   if (!fs.existsSync(settingsFilePath)) {
     return {};
   }
 
+  let reason;
   try {
     const rawValue = fs.readFileSync(settingsFilePath, 'utf8').trim();
     if (!rawValue) {
@@ -42,10 +84,30 @@ function readSettingsStore() {
     }
 
     const parsedValue = JSON.parse(rawValue);
-    return isPlainObject(parsedValue) ? parsedValue : {};
-  } catch {
-    return {};
+    if (isPlainObject(parsedValue)) {
+      return parsedValue;
+    }
+
+    reason = 'it does not contain a settings object';
+  } catch (error) {
+    reason = error instanceof Error ? error.message : String(error);
   }
+
+  if (!moveDamagedFileAside(settingsFilePath, reason) && forWrite) {
+    throw new Error(
+      'settings.json is damaged and could not be moved aside, so it was not overwritten.',
+    );
+  }
+
+  return {};
+}
+
+function getSettingsProblem() {
+  return settingsProblem;
+}
+
+function acknowledgeSettingsProblem() {
+  settingsProblem = null;
 }
 
 function writeSettingsStore(value) {
@@ -58,6 +120,7 @@ function writeSettingsStore(value) {
 }
 
 function clearSettingsStore() {
+  settingsProblem = null;
   const settingsFilePath = getSettingsFilePath();
   if (!fs.existsSync(settingsFilePath)) {
     return;
@@ -86,7 +149,7 @@ function getSettingsSection(sectionKey, defaults = {}) {
 function setSettingsSection(sectionKey, sectionValue) {
   const normalizedSectionKey = ensureSectionKey(sectionKey);
   const normalizedSectionValue = normalizeSectionValue(sectionValue);
-  const settingsStore = readSettingsStore();
+  const settingsStore = readSettingsStore({ forWrite: true });
 
   settingsStore[normalizedSectionKey] = normalizedSectionValue;
   writeSettingsStore(settingsStore);
@@ -100,7 +163,7 @@ function patchSettingsSection(sectionKey, patchValue, defaults = {}) {
   }
 
   const normalizedSectionKey = ensureSectionKey(sectionKey);
-  const settingsStore = readSettingsStore();
+  const settingsStore = readSettingsStore({ forWrite: true });
   const currentSection = normalizeSectionValue(settingsStore[normalizedSectionKey], defaults);
   const nextSection = {
     ...currentSection,
@@ -114,8 +177,10 @@ function patchSettingsSection(sectionKey, patchValue, defaults = {}) {
 }
 
 module.exports = {
+  acknowledgeSettingsProblem,
   clearSettingsStore,
   getSettingsFilePath,
+  getSettingsProblem,
   getSettingsSection,
   patchSettingsSection,
   setSettingsSection,
