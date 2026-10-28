@@ -251,7 +251,9 @@ function normalizeOptionalIdArray(value, label, options = {}) {
     throw new Error(`${label} must be an array.`);
   }
 
-  const normalizedEntries = value.map((entry, index) => normalizePositiveInteger(entry, `${label}[${index}]`));
+  const normalizedEntries = value.map((entry, index) =>
+    normalizePositiveInteger(entry, `${label}[${index}]`),
+  );
   return options.dedupe ? Array.from(new Set(normalizedEntries)) : normalizedEntries;
 }
 
@@ -276,7 +278,9 @@ function normalizeOptionalEnumArray(value, label, allowedValues, options = {}) {
   const normalizedEntries = value.map((entry, index) => {
     const normalizedValue = requireString(entry, `${label}[${index}]`, { allowEmpty: false });
     if (!allowedValues.has(normalizedValue)) {
-      throw new Error(`${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`);
+      throw new Error(
+        `${label}[${index}] must be one of: ${Array.from(allowedValues).join(', ')}.`,
+      );
     }
 
     return normalizedValue;
@@ -335,7 +339,9 @@ function normalizePaginationFromBody(body, options = {}) {
   const payloadLabel = options.payloadLabel ?? 'payload';
 
   const page =
-    body.page === undefined ? defaultPage : normalizePositiveInteger(body.page, `${payloadLabel}.page`);
+    body.page === undefined
+      ? defaultPage
+      : normalizePositiveInteger(body.page, `${payloadLabel}.page`);
   const pageSize =
     body.page_size === undefined
       ? defaultPageSize
@@ -442,7 +448,8 @@ function normalizeFiltersListPayload(payload, config) {
 
   const body = ensurePlainObject(payload, 'payload');
   assertAllowedKeys(body, config.allowedPayloadFields, 'payload');
-  const filters = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
+  const filters =
+    body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
   assertAllowedKeys(filters, config.allowedFilterFields, 'payload.filters');
 
   return {
@@ -466,7 +473,8 @@ function normalizeFiltersListPayload(payload, config) {
  */
 function resolvePaginationWindow(total, pagination, options = {}) {
   const defaultPage = options.defaultPage ?? 1;
-  const pageSize = Number.isInteger(pagination?.page_size) && pagination.page_size > 0 ? pagination.page_size : 10;
+  const pageSize =
+    Number.isInteger(pagination?.page_size) && pagination.page_size > 0 ? pagination.page_size : 10;
   const requestedPage =
     Number.isInteger(pagination?.page) && pagination.page > 0 ? pagination.page : defaultPage;
   const totalPages = total === 0 ? defaultPage : Math.max(defaultPage, Math.ceil(total / pageSize));
@@ -623,7 +631,11 @@ function normalizeCalendarYear(value, label, options = {}) {
   const maxYear = Number.isInteger(options.max) ? options.max : 9999;
   const normalizedValue = Number(value);
 
-  if (!Number.isInteger(normalizedValue) || normalizedValue < minYear || normalizedValue > maxYear) {
+  if (
+    !Number.isInteger(normalizedValue) ||
+    normalizedValue < minYear ||
+    normalizedValue > maxYear
+  ) {
     throw new Error(`${label} must be an integer between ${minYear} and ${maxYear}.`);
   }
 
@@ -652,10 +664,17 @@ function executeWhereOptionsListQuery(model, { where, listOptions, pagination, a
 
   if (all) {
     const rows = model.list(where, listOptions);
-    return { rows, total, page: DEFAULT_PAGE, page_size: rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE };
+    return {
+      rows,
+      total,
+      page: DEFAULT_PAGE,
+      page_size: rows.length > 0 ? rows.length : DEFAULT_PAGE_SIZE,
+    };
   }
 
-  const { page, offset } = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
+  const { page, offset } = resolvePaginationWindow(total, pagination, {
+    defaultPage: DEFAULT_PAGE,
+  });
   const rows = model.list(where, { ...listOptions, limit: pagination.page_size, offset });
 
   return { rows, total, page, page_size: pagination.page_size };
