@@ -46,8 +46,8 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 
 ## Phase 2: Security hardening
 - [x] 2.1 H1 `shell.openExternal`: allow every `https://github.com/Tratt0re/boring_balance/...` URL and anything on `boringbalance.com` including every subdomain and path (never credentials or custom ports; owner widened this after the first version), via `electron/utils/external-url.js` (owner-confirmed; the local folder name `expense_tracker` is irrelevant) in `update.controller.js openRelease`; same check in `setWindowOpenHandler` and `will-navigate`, which today open ANY url. **(verified)**
-- [ ] 2.2 H2 Restore confined to files listed in the configured backup folder (reuse the checks from `remove`). **(verified)**
-- [ ] 2.3 H2 Import: main process remembers the path returned by `selectFile`; ignore payload paths.
+- [x] 2.2 H2 Restore no longer trusts a renderer-supplied path. Owner requirement: restore must work from ANY location (e.g. the Desktop), so instead of confining it to the backup folder, a file is accepted only if the user picked it in a native dialog (`backup:selectRestoreFile`, single use) or it is a `boring-balance-backup-*.sqlite` file directly inside the configured backup folder (what the list in the UI offers). New UI button "Restore from file…" in all 7 languages. **(done, verified in Chrome)**
+- [x] 2.3 H2 Import: `validate` and `commit` only read the file returned by `selectFile`; anything else returns a regular `FILE_NOT_SELECTED` import error and reads nothing. **(done, verified in Chrome)**
 - [ ] 2.4 H3 Add CSP (meta tag or `onHeadersReceived`); inline theme script needs a hash or move to a file. **(verified: none exists)** Manual Electron check.
 - [ ] 2.5 `session.setPermissionRequestHandler` deny-all. Manual Electron check.
 - [ ] 2.6 IPC sender validation in `electron/ipc/index.js`. **(agent)**
@@ -57,7 +57,7 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 - [ ] 2.10 Update fetch: `AbortSignal.timeout`; validate returned `releaseUrl`.
 - [ ] 2.11 Ignore `ELECTRON_RENDERER_URL` when `app.isPackaged`.
 - [ ] 2.12 Tie backup/sync `folderPath` to the folder dialog result.
-- [ ] 2.13 Electron fuses (`RunAsNode`, `EnableNodeCliInspectArguments`, `OnlyLoadAppFromAsar`). **Dependency question** (`@electron/fuses`).
+- [ ] 2.13 (owner approved; do last in Phase 2) Electron fuses (`RunAsNode`, `EnableNodeCliInspectArguments`, `OnlyLoadAppFromAsar`). **Dependency question** (`@electron/fuses`).
 
 ## Phase 3: Data safety
 - [ ] 3.1 H4 Restore: open candidate read-only, run `integrity_check`, require `app_meta`, before closing the live DB. **(verified gap)**
@@ -142,3 +142,4 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 | 2026-10-28 | 1 | Phase 1 committed (9 commits, not pushed). Owner decisions for Phase 2: release links are limited to `https://github.com/Tratt0re/boring_balance/releases`; CSP approved (tested in the bridge, then a manual Electron check list); Electron fuses pending explanation. |
 | 2026-10-28 | 2 | 2.1 done: `electron/utils/external-url.js` allow-list with 79 tests, 11/11 mutants killed (one survivor exposed a missing no-throw test). Wired into `openRelease`, `setWindowOpenHandler` and `will-navigate`; no raw `shell.openExternal` is left. Verified with the real `openRelease` and a stubbed shell: only the repo and boringbalance.com URLs open. Handles `..`, `%2e%2e`, backslashes, `user@host`, lookalike and subdomain hosts, `file:`/`smb:`/`javascript:` and non-string input. Manual Electron check: click "Open on GitHub" and a release link. |
 | 2026-10-28 | 2 | 2.1 widened by owner request: `boringbalance.com` now allows all subdomains and paths (90 tests; 4 more mutants killed, incl. the missing-dot suffix bug that would admit `evilboringbalance.com`). Owner also approved Electron fuses (2.13) and confirmed restore must accept a file from ANY location (e.g. the Desktop). |
+| 2026-10-28 | 2 | 2.2 and 2.3 done: `electron/utils/authorized-path.js`, `backup:selectRestoreFile`, guards in the backup and import controllers; 41 tests (567 total), 14/14 mutants killed after one survivor exposed that respelled paths (`./`, `..`) were untested. Chrome check against the real controllers: restoring from a Desktop copy outside the backup folder works and replaces the data; `/etc/hosts`, a planted `/tmp` file, a reused file and arbitrary xlsx paths are all refused, and importing the picked template still validates. Known follow-up: restore still does not check that the file is a valid SQLite database (PLAN 3.1). |

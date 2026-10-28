@@ -72,6 +72,7 @@ const CHANNELS = Object.freeze({
     updateSettings: 'backup:updateSettings',
     getState: 'backup:getState',
     selectFolder: 'backup:selectFolder',
+    selectRestoreFile: 'backup:selectRestoreFile',
     list: 'backup:list',
     runNow: 'backup:runNow',
     remove: 'backup:remove',

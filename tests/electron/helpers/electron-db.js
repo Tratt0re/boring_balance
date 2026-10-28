@@ -16,13 +16,55 @@ let databaseModule = null;
 
 // electron/database/db.js does `require('electron')` for `app`. Under ELECTRON_RUN_AS_NODE that only
 // returns the path of the binary, so install a minimal stand-in before the module is first loaded.
+// Everything the controllers read from electron lives behind stable objects, because modules keep the
+// references they destructured when they were first loaded. Tests steer them through the helpers below.
+export const sentEvents = [];
+const dialogState = { openResult: { canceled: true, filePaths: [] }, openCalls: [] };
+const fakeWindow = {
+  isDestroyed: () => false,
+  webContents: {
+    isDestroyed: () => false,
+    send: (channel, payload) => sentEvents.push({ channel, payload }),
+  },
+};
+
+export function setOpenDialogResult(result) {
+  dialogState.openResult = result;
+}
+
+export function getOpenDialogCalls() {
+  return dialogState.openCalls;
+}
+
+function resetElectronStubState() {
+  sentEvents.length = 0;
+  dialogState.openCalls.length = 0;
+  dialogState.openResult = { canceled: true, filePaths: [] };
+}
+
 function installElectronStub() {
   const electronPath = require.resolve('electron');
   require.cache[electronPath] = {
     id: electronPath,
     filename: electronPath,
     loaded: true,
-    exports: { app: { isPackaged: false, getPath: () => userDataDir } },
+    exports: {
+      app: {
+        isPackaged: false,
+        getPath: () => userDataDir,
+        getVersion: () => '1.0.2',
+      },
+      dialog: {
+        showOpenDialog: async (options) => {
+          dialogState.openCalls.push(options);
+          return dialogState.openResult;
+        },
+        showSaveDialog: async () => ({ canceled: true }),
+      },
+      BrowserWindow: { getAllWindows: () => [fakeWindow] },
+      shell: { openExternal: async () => {} },
+      ipcMain: { handle: () => {} },
+    },
   };
 }
 
@@ -40,6 +82,13 @@ export function loadElectronModule(relativePath) {
   return require(path.join(projectRoot, relativePath));
 }
 
+/** Like loadElectronModule, but drops the cached copy first so module-level state starts empty. */
+export function loadFreshElectronModule(relativePath) {
+  const resolved = require.resolve(path.join(projectRoot, relativePath));
+  delete require.cache[resolved];
+  return require(resolved);
+}
+
 export function closeTestDatabase() {
   if (databaseModule) {
     quietly(() => databaseModule.closeDatabase());
@@ -55,6 +104,7 @@ export function closeTestDatabase() {
 export function openTestDatabase() {
   closeTestDatabase();
   userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bb-test-'));
+  resetElectronStubState();
   installElectronStub();
 
   return quietly(() => {

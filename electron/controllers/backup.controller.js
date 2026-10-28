@@ -10,6 +10,7 @@ const {
 const { backupModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
+const { createAuthorizedPath, isDirectChildOf } = require('../utils/authorized-path');
 const {
   assertAllowedKeys,
   ensureNonEmptyObject,
@@ -51,6 +52,10 @@ const BACKUP_EVENT_CHANNELS = Object.freeze({
   restoreCompleted: 'backup:restoreCompleted',
   restoreFailed: 'backup:restoreFailed',
 });
+
+// The one file the user picked for a restore. The renderer may name any path in a request, so a path
+// that is neither this file nor a backup in the configured folder is refused.
+const pickedRestoreFile = createAuthorizedPath();
 
 let schedulerTimer = null;
 let runningBackupPromise = null;
@@ -405,6 +410,44 @@ function list() {
   return backupModel.listBackups(settings.folderPath);
 }
 
+async function selectRestoreFile() {
+  const result = await dialog.showOpenDialog({
+    title: 'Select a backup to restore',
+    properties: ['openFile'],
+  });
+
+  const filePath = result.canceled ? null : (result.filePaths[0] ?? null);
+  const authorizedPath = pickedRestoreFile.authorize(filePath);
+  if (!authorizedPath) {
+    return null;
+  }
+
+  return { filePath: authorizedPath, fileName: path.basename(authorizedPath) };
+}
+
+function isBackupInConfiguredFolder(backupFilePath) {
+  const { folderPath } = readBackupSettings();
+  if (!folderPath || !isDirectChildOf(folderPath, backupFilePath)) {
+    return false;
+  }
+
+  const fileName = path.basename(backupFilePath);
+  return (
+    fileName.startsWith(backupModel.BACKUP_FILE_PREFIX) &&
+    fileName.endsWith(backupModel.SQLITE_FILE_SUFFIX)
+  );
+}
+
+function assertRestoreSourceAllowed(backupFilePath) {
+  if (pickedRestoreFile.isAuthorized(backupFilePath) || isBackupInConfiguredFolder(backupFilePath)) {
+    return;
+  }
+
+  throw new Error(
+    'This file was not chosen with the file picker and is not a backup in the configured backup folder.',
+  );
+}
+
 async function runNow() {
   return runBackup({
     automatic: false,
@@ -415,6 +458,8 @@ async function runNow() {
 
 async function restore(payload) {
   const backupFilePath = extractString(payload, 'backupFilePath');
+  assertRestoreSourceAllowed(backupFilePath);
+
   if (runningBackupPromise) {
     throw new Error('Cannot restore while a backup operation is running.');
   }
@@ -423,6 +468,8 @@ async function restore(payload) {
     throw new Error('A restore operation is already running.');
   }
 
+  // A picked file is good for one restore. Asking again means picking it again.
+  pickedRestoreFile.revoke();
   restoreInProgress = true;
   const localDbPath = getDatabasePath();
 
@@ -507,5 +554,6 @@ module.exports = {
   restore,
   runNow,
   selectFolder,
+  selectRestoreFile,
   updateSettings,
 };
