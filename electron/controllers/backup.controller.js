@@ -9,6 +9,7 @@ const {
 } = require('../database');
 const { backupModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
+const { restoreReplacedFile } = require('../utils/file-utils');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
 const {
   createAuthorizedPath,
@@ -513,9 +514,11 @@ async function restore(payload) {
   restoreInProgress = true;
   const localDbPath = getDatabasePath();
 
+  let restoreResult = null;
+
   try {
     closeDatabase();
-    const restoreResult = backupModel.restoreBackup(backupFilePath, localDbPath);
+    restoreResult = backupModel.restoreBackup(backupFilePath, localDbPath);
     const database = createDatabase();
     runMigrations(database);
 
@@ -524,6 +527,16 @@ async function restore(payload) {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     broadcastIpcEvent(BACKUP_EVENT_CHANNELS.restoreFailed, { error: errorMessage });
+
+    // The restored file could not be opened: put the user's previous database back, then reopen it.
+    closeDatabase();
+    if (restoreResult) {
+      try {
+        restoreReplacedFile(localDbPath, restoreResult.previousLocalCopyPath);
+      } catch (rollbackError) {
+        console.error('[electron] Failed to put the previous database back:', rollbackError);
+      }
+    }
 
     try {
       const database = createDatabase();

@@ -87,22 +87,23 @@ function safeReplaceFileWithBackup(oldPath, newPath, backupSuffix) {
   const targetShmPath = `${targetPath}-shm`;
   let movedExistingFile = false;
 
-  if (fs.existsSync(targetPath)) {
-    fs.renameSync(targetPath, previousLocalCopyPath);
-    movedExistingFile = true;
-  }
-
-  if (fs.existsSync(targetWalPath)) {
-    fs.unlinkSync(targetWalPath);
-  }
-
-  if (fs.existsSync(targetShmPath)) {
-    fs.unlinkSync(targetShmPath);
-  }
-
   try {
+    if (fs.existsSync(targetPath)) {
+      fs.renameSync(targetPath, previousLocalCopyPath);
+      movedExistingFile = true;
+    }
+
+    if (fs.existsSync(targetWalPath)) {
+      fs.unlinkSync(targetWalPath);
+    }
+
+    if (fs.existsSync(targetShmPath)) {
+      fs.unlinkSync(targetShmPath);
+    }
+
     fs.copyFileSync(sourcePath, targetPath);
   } catch (error) {
+    // Whatever failed, the original file goes back where it was.
     if (movedExistingFile && !fs.existsSync(targetPath) && fs.existsSync(previousLocalCopyPath)) {
       fs.renameSync(previousLocalCopyPath, targetPath);
     }
@@ -111,6 +112,31 @@ function safeReplaceFileWithBackup(oldPath, newPath, backupSuffix) {
   }
 
   return movedExistingFile ? previousLocalCopyPath : null;
+}
+
+/**
+ * Undoes safeReplaceFileWithBackup: puts `previousLocalCopyPath` back over `targetPath` and drops the
+ * replacement's -wal/-shm files. With no previous copy (there was nothing to replace) the replacement
+ * is removed. Refuses, leaving everything as it is, when the previous copy is missing.
+ */
+function restoreReplacedFile(targetPath, previousLocalCopyPath) {
+  const wasReplacingNothing = previousLocalCopyPath === null || previousLocalCopyPath === undefined;
+  if (!wasReplacingNothing && !fs.existsSync(previousLocalCopyPath)) {
+    throw new Error(
+      `The previous copy is missing, so the replacement was kept: ${previousLocalCopyPath}`,
+    );
+  }
+
+  for (const sidePath of [`${targetPath}-wal`, `${targetPath}-shm`]) {
+    fs.rmSync(sidePath, { force: true });
+  }
+
+  if (wasReplacingNothing) {
+    fs.rmSync(targetPath, { force: true });
+    return;
+  }
+
+  fs.renameSync(previousLocalCopyPath, targetPath);
 }
 
 function listFilesSortedByMtime(directoryPath, options = {}) {
@@ -156,6 +182,7 @@ function listFilesSortedByMtime(directoryPath, options = {}) {
 module.exports = {
   formatTimestampForFilename,
   listFilesSortedByMtime,
+  restoreReplacedFile,
   safeReplaceFileWithBackup,
   safeWriteFileAtomic,
 };

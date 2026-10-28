@@ -12,7 +12,7 @@ const {
 const { syncModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { createAuthorizedPath, normalizeFilePath } = require('../utils/authorized-path');
-const { formatTimestampForFilename } = require('../utils/file-utils');
+const { formatTimestampForFilename, restoreReplacedFile } = require('../utils/file-utils');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
 const {
   assertAllowedKeys,
@@ -746,33 +746,39 @@ function movePreviousLocalCopyToConflict(previousLocalCopyPath, localDbPath) {
 
 async function restoreSnapshotIntoLocal(snapshotPath, options = {}) {
   const localDbPath = getDatabasePath();
-  let databaseReopened = false;
+  let restoreResult = null;
 
   try {
     closeDatabase();
-    const restoreResult = syncModel.restoreSnapshotToLocal(snapshotPath, localDbPath);
+    restoreResult = syncModel.restoreSnapshotToLocal(snapshotPath, localDbPath);
+    const database = createDatabase();
+    runMigrations(database);
+
+    // Only after the new data opened cleanly is the old copy kept aside as a conflict copy.
     const conflictLocalCopyPath = options.markConflict
       ? movePreviousLocalCopyToConflict(restoreResult.previousLocalCopyPath, localDbPath)
       : null;
-    const database = createDatabase();
-    runMigrations(database);
-    databaseReopened = true;
 
     return {
       ...restoreResult,
       conflictLocalCopyPath,
     };
   } catch (error) {
-    if (!databaseReopened) {
+    // The pulled file could not be opened: put the user's previous database back, then reopen it.
+    closeDatabase();
+    if (restoreResult) {
       try {
-        const database = createDatabase();
-        runMigrations(database);
-      } catch (reopenError) {
-        console.error(
-          '[electron] Failed to reopen database after sync restore error:',
-          reopenError,
-        );
+        restoreReplacedFile(localDbPath, restoreResult.previousLocalCopyPath);
+      } catch (rollbackError) {
+        console.error('[electron] Failed to put the previous database back:', rollbackError);
       }
+    }
+
+    try {
+      const database = createDatabase();
+      runMigrations(database);
+    } catch (reopenError) {
+      console.error('[electron] Failed to reopen database after sync restore error:', reopenError);
     }
 
     throw error;
