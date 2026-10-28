@@ -13,6 +13,7 @@ const { syncModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { createAuthorizedPath, normalizeFilePath } = require('../utils/authorized-path');
 const { formatTimestampForFilename, restoreReplacedFile } = require('../utils/file-utils');
+const { runExclusive } = require('../utils/operation-lock');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
 const {
   assertAllowedKeys,
@@ -598,7 +599,7 @@ async function runSyncTask(task) {
     throw new Error('A sync operation is already running.');
   }
 
-  runningSyncPromise = Promise.resolve().then(task);
+  runningSyncPromise = Promise.resolve().then(() => runExclusive('sync', task));
 
   try {
     return await runningSyncPromise;

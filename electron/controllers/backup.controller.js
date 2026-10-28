@@ -10,6 +10,7 @@ const {
 const { backupModel } = require('../models');
 const { broadcastIpcEvent } = require('../ipc/broadcast');
 const { restoreReplacedFile } = require('../utils/file-utils');
+const { runExclusive } = require('../utils/operation-lock');
 const { getSettingsSection, setSettingsSection } = require('../utils/settings-store');
 const {
   createAuthorizedPath,
@@ -65,7 +66,6 @@ const pickedBackupFolder = createAuthorizedPath();
 
 let schedulerTimer = null;
 let runningBackupPromise = null;
-let restoreInProgress = false;
 let initialized = false;
 let runtimeState = {
   ...BACKUP_STATE_DEFAULTS,
@@ -365,7 +365,7 @@ function runBackup(options = {}) {
     return runningBackupPromise;
   }
 
-  runningBackupPromise = executeBackup(options).finally(() => {
+  runningBackupPromise = runExclusive('backup', () => executeBackup(options)).finally(() => {
     runningBackupPromise = null;
   });
 
@@ -498,57 +498,48 @@ async function restore(payload) {
   const backupFilePath = extractString(payload, 'backupFilePath');
   assertRestoreSourceAllowed(backupFilePath);
 
-  if (runningBackupPromise) {
-    throw new Error('Cannot restore while a backup operation is running.');
-  }
+  return runExclusive('restore', async () => {
+    // Refuse a file that is not a healthy backup while the live database is still open and untouched.
+    backupModel.assertUsableDatabaseFile(path.resolve(backupFilePath));
 
-  if (restoreInProgress) {
-    throw new Error('A restore operation is already running.');
-  }
+    // A picked file is good for one restore. Asking again means picking it again.
+    pickedRestoreFile.revoke();
+    const localDbPath = getDatabasePath();
 
-  // Refuse a file that is not a healthy backup while the live database is still open and untouched.
-  backupModel.assertUsableDatabaseFile(path.resolve(backupFilePath));
-
-  // A picked file is good for one restore. Asking again means picking it again.
-  pickedRestoreFile.revoke();
-  restoreInProgress = true;
-  const localDbPath = getDatabasePath();
-
-  let restoreResult = null;
-
-  try {
-    closeDatabase();
-    restoreResult = backupModel.restoreBackup(backupFilePath, localDbPath);
-    const database = createDatabase();
-    runMigrations(database);
-
-    broadcastIpcEvent(BACKUP_EVENT_CHANNELS.restoreCompleted, restoreResult);
-    return restoreResult;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    broadcastIpcEvent(BACKUP_EVENT_CHANNELS.restoreFailed, { error: errorMessage });
-
-    // The restored file could not be opened: put the user's previous database back, then reopen it.
-    closeDatabase();
-    if (restoreResult) {
-      try {
-        restoreReplacedFile(localDbPath, restoreResult.previousLocalCopyPath);
-      } catch (rollbackError) {
-        console.error('[electron] Failed to put the previous database back:', rollbackError);
-      }
-    }
+    let restoreResult = null;
 
     try {
+      closeDatabase();
+      restoreResult = backupModel.restoreBackup(backupFilePath, localDbPath);
       const database = createDatabase();
       runMigrations(database);
-    } catch (reopenError) {
-      console.error('[electron] Failed to reopen database after restore error:', reopenError);
-    }
 
-    throw error;
-  } finally {
-    restoreInProgress = false;
-  }
+      broadcastIpcEvent(BACKUP_EVENT_CHANNELS.restoreCompleted, restoreResult);
+      return restoreResult;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      broadcastIpcEvent(BACKUP_EVENT_CHANNELS.restoreFailed, { error: errorMessage });
+
+      // The restored file could not be opened: put the user's previous database back, then reopen it.
+      closeDatabase();
+      if (restoreResult) {
+        try {
+          restoreReplacedFile(localDbPath, restoreResult.previousLocalCopyPath);
+        } catch (rollbackError) {
+          console.error('[electron] Failed to put the previous database back:', rollbackError);
+        }
+      }
+
+      try {
+        const database = createDatabase();
+        runMigrations(database);
+      } catch (reopenError) {
+        console.error('[electron] Failed to reopen database after restore error:', reopenError);
+      }
+
+      throw error;
+    }
+  });
 }
 
 function remove(payload) {

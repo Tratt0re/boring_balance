@@ -3,6 +3,7 @@ const { closeDatabase, createDatabase, getDatabasePath, getDatabase } = require(
 const { deleteRows, touchDatabaseWriteMeta } = require('../database/core_op');
 const { initSchema } = require('../database/schema');
 const { runMigrations } = require('../database/migrations');
+const { runExclusive } = require('../utils/operation-lock');
 const { clearSettingsStore } = require('../utils/settings-store');
 
 // Tables cleared in full (no filter) — deleteRows requires a non-empty where,
@@ -16,7 +17,15 @@ const FULL_CLEAR_TABLES = [
   'accounts',
 ];
 
-function clearFinancialData(_event, _payload) {
+async function clearFinancialData(_event, _payload) {
+  try {
+    return await runExclusive('reset', () => clearFinancialDataNow());
+  } catch (err) {
+    return { ok: false, error: err?.message ?? 'Unknown error' };
+  }
+}
+
+function clearFinancialDataNow() {
   try {
     const db = getDatabase();
     db.transaction(() => {
@@ -36,7 +45,15 @@ function clearFinancialData(_event, _payload) {
   }
 }
 
-function factoryReset(_event, _payload) {
+async function factoryReset(_event, _payload) {
+  try {
+    return await runExclusive('reset', () => factoryResetNow());
+  } catch (err) {
+    return { ok: false, error: err?.message ?? 'Unknown error' };
+  }
+}
+
+function factoryResetNow() {
   const dbPath = getDatabasePath();
   const sideSuffixes = ['', '-wal', '-shm'];
   const asideSuffix = `.reset-${Date.now()}`;
