@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, session } = require('electron');
 const path = require('node:path');
 const {
   closeDatabase,
@@ -10,7 +10,8 @@ const {
 } = require('./database');
 const { backupController, syncController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
-const { createWindow } = require('./window');
+const { installPermissionPolicy } = require('./utils/trusted-sender');
+const { createWindow, getTrustedRendererSources } = require('./window');
 
 const APP_NAME = 'Boring Balance';
 const APP_STORAGE_DIR_NAME = 'boringbalance';
@@ -22,7 +23,8 @@ app.setAboutPanelOptions({
 });
 app.setPath('userData', path.join(app.getPath('appData'), APP_STORAGE_DIR_NAME));
 
-app.whenReady()
+app
+  .whenReady()
   .then(() => {
     const database = createDatabase();
     const firstStart = isFirstStart();
@@ -39,7 +41,8 @@ app.whenReady()
       markFirstStartCompleted();
     }
 
-    registerIpcHandlers();
+    installPermissionPolicy(session.defaultSession);
+    registerIpcHandlers(getTrustedRendererSources());
     backupController.init();
     syncController.init();
     createWindow();

@@ -152,6 +152,16 @@ function isProductionCliMode() {
   return process.argv.some((flag) => PRODUCTION_MODE_FLAGS.has(flag));
 }
 
+/** Where the app's own pages come from: the built renderer, plus the dev server when developing. */
+function getTrustedRendererSources() {
+  const isDev = !app.isPackaged && !isProductionCliMode();
+
+  return {
+    rendererDir: resolveAppPath(...RENDERER_BUILD_SEGMENTS),
+    devServerUrl: isDev ? DEV_SERVER_URL : null,
+  };
+}
+
 function createWindow() {
   const isDev = !app.isPackaged && !isProductionCliMode();
   const iconPath = resolveAppIconPath(isDev);
@@ -192,6 +202,7 @@ function reloadOpenWindows() {
 
 module.exports = {
   createWindow,
+  getTrustedRendererSources,
   initMainWindow,
   reloadOpenWindows,
 };
