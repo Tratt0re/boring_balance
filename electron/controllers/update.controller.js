@@ -2,6 +2,7 @@ const { app, shell } = require('electron');
 const semver = require('semver');
 const { appMetaModel } = require('../models');
 const { openExternalIfAllowed } = require('../utils/external-url');
+const { ensurePlainObject } = require('./utils');
 
 const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -138,8 +139,16 @@ async function openRelease(payload) {
 }
 
 function ignoreVersion(payload) {
-  const version = payload?.version;
-  if (!version) return;
+  if (payload === undefined || payload === null) return;
+
+  const body = ensurePlainObject(payload, 'payload');
+  if (body.version === undefined || body.version === null || body.version === '') return;
+
+  // Stored in the form the update check compares against, so only a valid semver string qualifies.
+  const version = semver.valid(body.version);
+  if (!version) {
+    throw new Error('version must be a valid version string.');
+  }
 
   const existing = appMetaModel.getByKey('ignoredUpdateVersion');
   if (!existing) {
