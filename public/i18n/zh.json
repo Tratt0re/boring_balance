@@ -252,6 +252,8 @@
       "openSourceNote": "核心应用为开源项目，你可以在下方仓库中查看代码或跟进开发进展。",
       "openSourceCta": "在 GitHub 上查看",
       "checkForUpdates": "检查更新",
+      "upToDate": "已是最新版本 (v{{version}})",
+      "updateCheckFailed": "无法检查更新。请检查网络连接后重试。",
       "footer": "由 {{authorName}} 用 ❤️ 制作",
       "runtime": {
         "title": "运行时",

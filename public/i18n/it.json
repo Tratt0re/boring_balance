@@ -252,6 +252,8 @@
       "openSourceNote": "L'app principale è open source, quindi puoi controllare il progetto o seguirne lo sviluppo dal repository qui sotto.",
       "openSourceCta": "Apri su GitHub",
       "checkForUpdates": "Controlla aggiornamenti",
+      "upToDate": "Sei aggiornato (v{{version}})",
+      "updateCheckFailed": "Impossibile controllare gli aggiornamenti. Verifica la connessione e riprova.",
       "footer": "Creato con ❤️ da {{authorName}}",
       "runtime": {
         "title": "Runtime",

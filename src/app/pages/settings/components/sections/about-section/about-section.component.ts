@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppMetadataService } from '@/services/app-metadata.service';
@@ -16,6 +16,7 @@ import { UpdateService } from '@/core/services/update.service';
 })
 export class AboutSectionComponent {
   private readonly appMetadataService = inject(AppMetadataService);
+  private readonly translateService = inject(TranslateService);
   protected readonly updateService = inject(UpdateService);
   protected readonly checkingUpdates = signal(false);
 
@@ -30,9 +31,14 @@ export class AboutSectionComponent {
       await this.updateService.forceCheckForUpdates();
       if (!this.updateService.updateAvailable()) {
         toast.success(
-          `You're up to date (v${this.updateService.updateResult()?.currentVersion ?? this.appVersion})`,
+          this.translateService.instant('settings.about.upToDate', {
+            version: this.updateService.updateResult()?.currentVersion ?? this.appVersion,
+          }),
         );
       }
+    } catch (error) {
+      console.error('[about-section] Could not check for updates:', error);
+      toast.error(this.translateService.instant('settings.about.updateCheckFailed'));
     } finally {
       this.checkingUpdates.set(false);
     }

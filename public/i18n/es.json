@@ -252,6 +252,8 @@
       "openSourceNote": "La app principal es open source, asi que puedes revisar el proyecto o seguir su desarrollo desde el repositorio de abajo.",
       "openSourceCta": "Abrir en GitHub",
       "checkForUpdates": "Buscar actualizaciones",
+      "upToDate": "Estás al día (v{{version}})",
+      "updateCheckFailed": "No se pudo buscar actualizaciones. Revisa tu conexión e inténtalo de nuevo.",
       "footer": "Hecho con ❤️ por {{authorName}}",
       "runtime": {
         "title": "Runtime",

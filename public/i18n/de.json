@@ -252,6 +252,8 @@
       "openSourceNote": "Die Kern-App ist Open Source, sodass Sie das Projekt einsehen oder seiner Entwicklung im folgenden Repository folgen können.",
       "openSourceCta": "Auf GitHub öffnen",
       "checkForUpdates": "Nach Updates suchen",
+      "upToDate": "Du bist auf dem neuesten Stand (v{{version}})",
+      "updateCheckFailed": "Die Suche nach Updates ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
       "footer": "Erstellt mit ❤️ von {{authorName}}",
       "runtime": {
         "title": "Laufzeitumgebung",

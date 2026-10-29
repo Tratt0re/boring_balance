@@ -252,6 +252,8 @@
       "openSourceNote": "L'application principale est open source, vous pouvez donc consulter le projet ou suivre son développement depuis le dépôt ci-dessous.",
       "openSourceCta": "Ouvrir sur GitHub",
       "checkForUpdates": "Vérifier les mises à jour",
+      "upToDate": "Vous êtes à jour (v{{version}})",
+      "updateCheckFailed": "Impossible de vérifier les mises à jour. Vérifiez votre connexion et réessayez.",
       "footer": "Fait avec ❤️ par {{authorName}}",
       "runtime": {
         "title": "Environnement d'exécution",

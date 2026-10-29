@@ -252,6 +252,8 @@
       "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
       "openSourceCta": "Open on GitHub",
       "checkForUpdates": "Check for updates",
+      "upToDate": "You're up to date (v{{version}})",
+      "updateCheckFailed": "Couldn't check for updates. Check your connection and try again.",
       "footer": "Made with ❤️ by {{authorName}}",
       "runtime": {
         "title": "Runtime",
