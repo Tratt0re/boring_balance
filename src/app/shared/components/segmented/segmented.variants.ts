@@ -38,4 +38,3 @@ export const segmentedItemVariants = cva(
 );
 
 export type ZardSegmentedVariants = VariantProps<typeof segmentedVariants>;
-export type ZardSegmentedItemVariants = VariantProps<typeof segmentedItemVariants>;

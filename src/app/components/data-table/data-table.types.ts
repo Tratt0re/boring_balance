@@ -125,7 +125,6 @@ export interface ActionDataItem extends TableDataStructureItem {
 }
 
 export type TableDataItem = ColumnDataItem | EditableColumnDataItem | ActionDataItem;
-export type TableDataStructure = TableDataItem;
 
 export interface TableSortState {
   readonly columnKey: string;

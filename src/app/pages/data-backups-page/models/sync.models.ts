@@ -18,7 +18,6 @@ export type SyncRemoteLatestDto = DTO.SyncRemoteLatestDto;
 export type SyncSettingsDto = DTO.SyncSettingsDto;
 export type SyncStateDto = DTO.SyncStateDto;
 export type SyncSelectFolderResponseDto = DTO.SyncSelectFolderResponseDto;
-export type EnableSyncResultDto = DTO.SyncEnableResultDto;
 
 export interface SyncActionResultDto {
   readonly action: string;
@@ -53,7 +52,6 @@ export interface SyncNowResultDto {
 export type SyncSnapshotInfoDto = DTO.SyncSnapshotInfoDto;
 
 export const SYNC_INTERVAL_OPTIONS = [0, 5, 10, 15, 30, 60] as const;
-export const SYNC_RETENTION_COUNT_OPTIONS = [1, 2, 3, 5, 10] as const;
 
 export const SYNC_SETTINGS_DEFAULTS: SyncSettingsDto = {
   enabled: false,

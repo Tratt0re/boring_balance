@@ -4,7 +4,6 @@ export * from '@/shared/components/menu/menu-content.directive';
 export * from '@/shared/components/menu/menu-item.directive';
 export * from '@/shared/components/menu/menu.directive';
 export * from '@/shared/components/menu/menu.variants';
-export * from '@/shared/components/menu/menu.imports';
 export * from '@/shared/components/menu/menu-positions';
 export * from '@/shared/components/menu/menu-shortcut.component';
 export * from '@/shared/components/menu/menu-label.component';

@@ -32,11 +32,6 @@ export const menuItemVariants = cva(
   },
 );
 
-export const submenuArrowVariants = cva([
-  'ml-auto opacity-60 transition-opacity duration-150',
-  'text-muted-foreground dark:text-gray-400',
-  'group-hover:opacity-100 group-focus:opacity-100',
-]);
 
 export const menuLabelVariants = cva(
   'relative flex items-center px-2 py-1.5 text-sm font-medium text-muted-foreground',

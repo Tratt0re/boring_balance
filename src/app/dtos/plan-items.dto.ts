@@ -10,7 +10,7 @@ import type {
   UnixTimestampMilliseconds,
   UpdateResponseDto,
 } from './common.dto';
-import type { TransactionCreateTransferResponseDto, TransactionDto, TransferDto } from './transactions.dto';
+import type { TransactionCreateTransferResponseDto, TransactionDto } from './transactions.dto';
 
 export type PlanItemType = 'transaction' | 'transfer';
 export type PlanItemFrequencyUnit = 'day' | 'week' | 'month' | 'year';
@@ -226,5 +226,4 @@ export type PlanItemRunResponse = PlanItemRunResponseDto;
 export type PlanItemDeletePlannedItemsResponse = PlanItemDeletePlannedItemsResponseDto;
 export type PlanItemListResponse = PlanItemListResponseDto;
 
-export type PlanItemRunCreatedTransactionResponse = TransactionDto;
-export type PlanItemRunCreatedTransferResponse = TransferDto;
+

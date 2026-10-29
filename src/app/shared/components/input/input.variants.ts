@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
-export type zInputIcon = 'email' | 'password' | 'text';
 
 export const inputVariants = cva('w-full', {
   variants: {

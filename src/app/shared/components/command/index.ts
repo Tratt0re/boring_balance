@@ -5,5 +5,4 @@ export * from '@/shared/components/command/command-empty.component';
 export * from '@/shared/components/command/command-option.component';
 export * from '@/shared/components/command/command-option-group.component';
 export * from '@/shared/components/command/command-divider.component';
-export * from '@/shared/components/command/command.imports';
 export * from '@/shared/components/command/command.variants';

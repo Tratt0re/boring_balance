@@ -36,13 +36,6 @@ export interface ZardCommandGroup {
   options: ZardCommandOption[];
 }
 
-export interface ZardCommandConfig {
-  placeholder?: string;
-  emptyText?: string;
-  groups: ZardCommandGroup[];
-  dividers?: boolean;
-  onSelect?: (option: ZardCommandOption) => void;
-}
 
 export abstract class ZardCommand {
   abstract registerOption(option: ZardCommandOptionComponent): void;
