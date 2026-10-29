@@ -6,6 +6,7 @@ import { Sidebar } from '../sidebar/sidebar';
 import { Toolbar } from '../toolbar/toolbar';
 import { MenuConfiguration, type MenuSectionConfig } from '@/config/menu.config';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
+import { WindowEventsService } from '@/services/window-events.service';
 import { detectSmallScreenViewport } from '@/shared/utils';
 
 @Component({
@@ -22,6 +23,8 @@ import { detectSmallScreenViewport } from '@/shared/utils';
 })
 export class RootLayout implements OnInit, OnDestroy {
   private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly windowEvents = inject(WindowEventsService);
+  private stopFullscreenEvents: () => void = () => undefined;
   private readonly handleFullscreenChangeEvent = (payload: unknown) => {
     this.isFullscreen.set(this.resolveFullscreenState(payload));
   };
@@ -46,11 +49,13 @@ export class RootLayout implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isFullscreen.set(this.readDocumentFullscreenState());
-    window.electronAPI?.onIpcEvent?.('window:fullscreenChanged', this.handleFullscreenChangeEvent);
+    this.stopFullscreenEvents = this.windowEvents.onFullscreenChanged(
+      this.handleFullscreenChangeEvent,
+    );
   }
 
   ngOnDestroy(): void {
-    window.electronAPI?.offIpcEvent?.('window:fullscreenChanged', this.handleFullscreenChangeEvent);
+    this.stopFullscreenEvents();
   }
 
   protected setSidebarCollapsed(isCollapsed: boolean): void {

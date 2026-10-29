@@ -18,6 +18,7 @@ import type * as DTO from '@/dtos';
 import { BaseIpcService } from '@/services/base-ipc.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { reloadAppShell } from '@/shared/utils/reload-app-shell';
+import { WindowService } from '@/services/window.service';
 import {
   SYNC_INTERVAL_OPTIONS,
   SYNC_SETTINGS_DEFAULTS,
@@ -37,6 +38,7 @@ import {
 })
 export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly windowService = inject(WindowService);
   private readonly settingsSubject = new BehaviorSubject<SyncSettingsDto>(SYNC_SETTINGS_DEFAULTS);
   private readonly stateSubject = new BehaviorSubject<SyncStateDto>(this.readPersistedState());
   private readonly snapshotsSubject = new BehaviorSubject<readonly SyncSnapshotInfoDto[]>([]);
@@ -318,7 +320,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       tap(() => {
         toast.success('Default sync file updated. Reloading app data...');
         void firstValueFrom(this.listSnapshots());
-        reloadAppShell(250);
+        reloadAppShell(this.windowService, 250);
       }),
       finalize(() => this.setDefaultSnapshotLoadingSubject.next(false)),
       catchError((error) => {
@@ -366,7 +368,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       const result = this.normalizeActionResult(payload as DTO.SyncActionResultDto);
       toast.success(`Pull completed${result.snapshotId ? ` (${result.snapshotId})` : '.'}`);
       void this.refreshSettingsAndState();
-      reloadAppShell(250);
+      reloadAppShell(this.windowService, 250);
     });
 
     onIpcEvent('sync:pullFailed', (payload) => {
@@ -397,7 +399,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       });
       toast.error('Sync conflict detected. Review the details below.');
       void this.refreshSettingsAndState();
-      reloadAppShell(250);
+      reloadAppShell(this.windowService, 250);
     });
   }
 

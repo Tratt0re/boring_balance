@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -16,6 +16,7 @@ import { toast } from 'ngx-sonner';
 import { APIChannel } from '@/config/api';
 import type * as DTO from '@/dtos';
 import { reloadAppShell } from '@/shared/utils/reload-app-shell';
+import { WindowService } from './window.service';
 import { BaseIpcService } from './base-ipc.service';
 
 const BACKUP_SETTINGS_DEFAULTS: DTO.BackupSettingsDto = {
@@ -43,6 +44,7 @@ const BACKUP_RETENTION_OPTIONS = [1, 2, 3, 4, 5];
   providedIn: 'root',
 })
 export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
+  private readonly windowService = inject(WindowService);
   private readonly settingsSubject = new BehaviorSubject<DTO.BackupSettingsDto>(
     BACKUP_SETTINGS_DEFAULTS,
   );
@@ -423,6 +425,6 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
   }
 
   private triggerApplicationRefreshAfterRestore(): void {
-    reloadAppShell(250);
+    reloadAppShell(this.windowService, 250);
   }
 }

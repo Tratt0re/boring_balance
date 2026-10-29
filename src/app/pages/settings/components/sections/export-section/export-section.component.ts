@@ -19,6 +19,7 @@ import { ImportExcelService } from '@/pages/data-backups-page/services/import-ex
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { reloadAppShell } from '@/shared/utils/reload-app-shell';
+import { WindowService } from '@/services/window.service';
 
 interface ImportErrorTableRow {
   readonly id: string;
@@ -65,6 +66,7 @@ export class ExportSectionComponent {
   private readonly exportService = inject(ExportService);
   private readonly importExcelService = inject(ImportExcelService);
   private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly windowService = inject(WindowService);
   private readonly translateService = inject(TranslateService);
 
   protected readonly exportLoading = toSignal(this.exportService.loading$, {
@@ -328,7 +330,7 @@ export class ExportSectionComponent {
   }
 
   private triggerApplicationRefreshAfterImport(): void {
-    reloadAppShell(800);
+    reloadAppShell(this.windowService, 800);
   }
 
   private showTemplateDownloadSuccess(result: DownloadImportTemplateResultDto): void {
