@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   HostListener,
@@ -23,6 +24,7 @@ import { detectSmallScreenViewport } from '@/shared/utils';
   imports: [...LayoutImports, TranslatePipe, Header, Toolbar, Sidebar],
   templateUrl: './root-layout.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RootLayout implements OnInit, OnDestroy {
   private readonly toolbarContextService = inject(ToolbarContextService);

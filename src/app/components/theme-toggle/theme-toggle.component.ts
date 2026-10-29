@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -10,6 +10,7 @@ import { applyThemeTransition } from '@/shared/utils/theme-transition';
   selector: 'app-theme-toggle',
   imports: [ZardButtonComponent, ZardIconComponent, TranslatePipe],
   templateUrl: './theme-toggle.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeToggleComponent {
   protected readonly EDarkModes = EDarkModes;

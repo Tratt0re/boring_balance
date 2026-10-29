@@ -1,5 +1,13 @@
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Component, computed, inject, input, output, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 
@@ -20,6 +28,7 @@ interface BreadcrumbItem {
   imports: [HeaderComponent, RouterLink, SidebarToggleComponent, ZardIconComponent, TranslatePipe],
   templateUrl: './breadcrumb.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Breadcrumb {
   readonly sidebarCollapsed = input(false);

@@ -1,4 +1,12 @@
-import { Component, HostListener, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AnalyticsService } from '@/services/analytics.service';
@@ -21,6 +29,7 @@ const BREAKDOWN_YEAR_SELECTOR_MIN_YEAR = 2000;
     ZardSwitchComponent,
   ],
   templateUrl: './breakdown-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreakdownPage implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;

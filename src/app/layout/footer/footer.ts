@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 import { FooterComponent } from '@/shared/components/layout/footer.component';
 
@@ -7,6 +7,7 @@ import { FooterComponent } from '@/shared/components/layout/footer.component';
   imports: [FooterComponent],
   templateUrl: './footer.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {
   protected readonly currentYear = new Date().getFullYear();

@@ -1,4 +1,15 @@
-import { Component, DestroyRef, computed, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -30,6 +41,7 @@ import type { MenuSectionConfig } from '@/config/menu.config';
   ],
   templateUrl: './sidebar.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Sidebar {
   private readonly destroyRef = inject(DestroyRef);

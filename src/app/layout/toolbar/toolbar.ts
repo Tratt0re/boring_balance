@@ -1,4 +1,10 @@
-import { Component, input, output, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { RouterLink } from '@angular/router';
 
@@ -34,6 +40,7 @@ import type {
   ],
   templateUrl: './toolbar.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Toolbar {
   readonly sidebarCollapsed = input(false);

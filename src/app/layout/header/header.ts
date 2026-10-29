@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { LanguageSelectorComponent } from '@/components/language-selector/language-selector.component';
@@ -10,5 +10,6 @@ import { HeaderComponent } from '@/shared/components/layout/header.component';
   imports: [HeaderComponent, TranslatePipe],
   templateUrl: './header.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {}

@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import type { CurrencyFormatStyle, CurrencySymbol } from '@/config/local-preferences.config';
 import { formatCurrency } from '@/shared/utils/number-format';
@@ -9,6 +9,7 @@ import { formatCurrency } from '@/shared/utils/number-format';
   host: {
     class: 'block text-sm font-medium money',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CurrencyPreviewComponent {
   readonly symbol = input.required<CurrencySymbol>();

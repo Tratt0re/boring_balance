@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -14,6 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
       </p>
     </header>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsSectionHeaderComponent {
   readonly titleKey = input.required<string>();

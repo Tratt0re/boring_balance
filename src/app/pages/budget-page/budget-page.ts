@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -168,6 +175,7 @@ interface BudgetAnalysisTotals {
     ZardSkeletonComponent,
   ],
   templateUrl: './budget-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetPage implements OnInit, OnDestroy {
   private readonly currentCalendarYear = new Date().getFullYear();

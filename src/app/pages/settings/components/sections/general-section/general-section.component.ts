@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { CurrencyFormatStyle } from '@/config/local-preferences.config';
@@ -23,6 +23,7 @@ type DashboardValuationMode = (typeof DASHBOARD_VALUATION_MODE_VALUES)[number];
   imports: [TranslatePipe, CurrencyPreviewComponent, ZardInputDirective, ...ZardSelectImports],
   templateUrl: './general-section.component.html',
   styleUrl: './general-section.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GeneralSectionComponent {
   protected readonly darkMode = inject(ZardDarkMode);

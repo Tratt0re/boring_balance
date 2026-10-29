@@ -1,4 +1,12 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -135,6 +143,7 @@ const SYNC_INTERVAL_SELECT_OPTIONS: readonly SelectOption[] = [
   ],
   templateUrl: './sync-section.component.html',
   styleUrl: './sync-section.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SyncSectionComponent implements OnInit, OnDestroy {
   private readonly syncService = inject(SyncService);

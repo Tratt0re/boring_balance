@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -143,6 +150,7 @@ const createCategoryTableStructure = (
   selector: 'app-categories-page',
   imports: [AppDataTableComponent, TranslatePipe, ZardSkeletonComponent],
   templateUrl: './categories-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesPage implements OnInit, OnDestroy {
   protected readonly categories = signal<readonly CategoryTableRow[]>([]);

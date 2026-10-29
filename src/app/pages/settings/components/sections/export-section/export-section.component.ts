@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -61,6 +61,7 @@ const IMPORT_ERROR_TABLE_STRUCTURE: readonly TableDataItem[] = [
   imports: [AppDataTableComponent, TranslatePipe, ZardButtonComponent],
   templateUrl: './export-section.component.html',
   styleUrl: './export-section.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExportSectionComponent {
   private readonly exportService = inject(ExportService);

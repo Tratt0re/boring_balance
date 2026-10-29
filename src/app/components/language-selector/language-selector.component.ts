@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
@@ -21,6 +21,7 @@ import { ZardIconComponent } from '@/shared/components/icon';
     TranslatePipe,
   ],
   templateUrl: './language-selector.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguageSelectorComponent {
   private readonly i18nService = inject(I18nService);

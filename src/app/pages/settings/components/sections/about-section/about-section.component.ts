@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -13,6 +13,7 @@ import { UpdateService } from '@/core/services/update.service';
   imports: [TranslatePipe, AppBrandIconComponent, ZardButtonComponent, ZardIconComponent],
   templateUrl: './about-section.component.html',
   styleUrl: './about-section.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutSectionComponent {
   private readonly appMetadataService = inject(AppMetadataService);

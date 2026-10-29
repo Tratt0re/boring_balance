@@ -41,6 +41,7 @@ interface SegmentedActiveIndicatorState {
     <ng-content />
   `,
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ZardSegmentedItemComponent {
   readonly value = input.required<string>();

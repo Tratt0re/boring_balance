@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import type { SettingsNavItem, SettingsSectionKey } from '../../models/settings-nav.models';
@@ -8,6 +8,7 @@ import type { SettingsNavItem, SettingsSectionKey } from '../../models/settings-
   imports: [TranslatePipe],
   templateUrl: './contextual-sidebar.component.html',
   styleUrl: './contextual-sidebar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContextualSidebarComponent {
   readonly items = input.required<readonly SettingsNavItem[]>();

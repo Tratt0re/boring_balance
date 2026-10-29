@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
@@ -112,6 +112,7 @@ const createBackupsTableStructure = (
   ],
   templateUrl: './backups-section.component.html',
   styleUrl: './backups-section.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BackupsSectionComponent implements OnInit {
   private readonly backupService = inject(BackupService);

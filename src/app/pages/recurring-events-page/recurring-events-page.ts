@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -154,6 +161,7 @@ function isPlanItemCreateAndRunResult(
   selector: 'app-recurring-events-page',
   imports: [AppDataTableComponent, TranslatePipe, ZardSkeletonComponent],
   templateUrl: './recurring-events-page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecurringEventsPage implements OnInit, OnDestroy {
   protected readonly rows = signal<readonly RecurringEventTableRow[]>([]);
