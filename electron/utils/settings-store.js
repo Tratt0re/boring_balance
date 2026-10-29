@@ -2,17 +2,9 @@ const { app } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { safeWriteFileAtomic } = require('./file-utils');
+const { isPlainObject } = require('./object-utils');
 
 const SETTINGS_FILE_NAME = 'settings.json';
-
-function isPlainObject(value) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return false;
-  }
-
-  const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
-}
 
 function ensureSectionKey(sectionKey) {
   if (typeof sectionKey !== 'string' || sectionKey.trim().length === 0) {

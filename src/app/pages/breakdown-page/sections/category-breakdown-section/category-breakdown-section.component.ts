@@ -24,6 +24,7 @@ import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
+import { toAmount } from '@/pages/overview-page/components/overview-cards.utils';
 
 type BreakdownCategoryType = Extract<CategoryType, 'expense' | 'income'>;
 
@@ -92,10 +93,6 @@ const CATEGORY_SUMMARY_TABLE_STRUCTURE: readonly TableDataItem[] = [
     },
   },
 ] as const;
-
-function toAmount(amountCents: number): number {
-  return amountCents / AMOUNT_CENTS_DIVISOR;
-}
 
 function toYearRangeTimestamps(year: number): { from: number; to: number } {
   return {

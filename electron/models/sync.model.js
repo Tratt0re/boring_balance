@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Database = require('better-sqlite3');
 const { selectRows } = require('../database/core_op');
+const { isPlainObject } = require('../utils/object-utils');
 const {
   formatTimestampForFilename,
   removeTemporaryFileQuietly,
@@ -21,15 +22,6 @@ const APP_META_KEYS = Object.freeze([
   'schema_version',
 ]);
 const SNAPSHOT_FILE_PATTERN = /^snap_(.+)_(\d+)_(\d+)_(.+)\.sqlite$/;
-
-function isPlainObject(value) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return false;
-  }
-
-  const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
-}
 
 function ensureNonEmptyString(value, label) {
   if (typeof value !== 'string' || value.trim().length === 0) {

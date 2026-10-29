@@ -1,9 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-
-function pad2(value) {
-  return String(value).padStart(2, '0');
-}
+const { pad2 } = require('./date-utils');
 
 function formatTimestampForFilename(unixTimestampMilliseconds = Date.now()) {
   const date = new Date(Number(unixTimestampMilliseconds));

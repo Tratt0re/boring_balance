@@ -59,6 +59,7 @@ function elapsedDaysBetweenUnixTimestampMilliseconds(startUnixTimestampMilliseco
 }
 
 module.exports = {
+  pad2,
   elapsedDaysBetweenUnixTimestampMilliseconds,
   formatUnixTimestampMillisecondsToDate,
 };

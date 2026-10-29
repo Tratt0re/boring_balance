@@ -28,15 +28,15 @@ import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
+import {
+  allocateBucketsToTargetTotalCents,
+  toAmount,
+} from '@/pages/overview-page/components/overview-cards.utils';
 
 const AMOUNT_CENTS_DIVISOR = 100;
 const MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP = 'max(24rem, calc(100dvh - 17rem))';
 const MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE = 'max(20rem, calc(100dvh - 18rem))';
 const MONEY_FLOW_EXPENSE_CATEGORY_GROUP_THRESHOLD = 0.02;
-
-function toAmount(amountCents: number): number {
-  return amountCents / AMOUNT_CENTS_DIVISOR;
-}
 
 function toYearRangeTimestamps(year: number): { from: number; to: number } {
   return {
@@ -52,64 +52,6 @@ function resolveVisualColorHex(colorKey: string | null | undefined): string {
   }
 
   return resolveChartCssColor(`--${colorKey}`, fallbackColor);
-}
-
-function allocateBucketsToTargetTotalCents<TBucket extends { readonly totalCents: number }>(
-  buckets: readonly TBucket[],
-  targetTotalCents: number,
-): Array<TBucket & { totalCents: number }> {
-  const normalizedTarget = Math.max(0, Math.round(Number(targetTotalCents)));
-  if (normalizedTarget <= 0 || buckets.length === 0) {
-    return [];
-  }
-
-  const positiveBuckets = buckets.filter((bucket) => Number(bucket.totalCents) > 0);
-  if (positiveBuckets.length === 0) {
-    return [];
-  }
-
-  const rawTotal = positiveBuckets.reduce((sum, bucket) => sum + Math.max(0, Number(bucket.totalCents)), 0);
-  if (rawTotal <= 0) {
-    return [];
-  }
-
-  const allocations = positiveBuckets.map((bucket, index) => {
-    const rawValue = Math.max(0, Number(bucket.totalCents));
-    const scaledValue = (rawValue * normalizedTarget) / rawTotal;
-    const flooredValue = Math.floor(scaledValue);
-
-    return {
-      bucket,
-      index,
-      totalCents: flooredValue,
-      fractional: scaledValue - flooredValue,
-    };
-  });
-
-  const remaining = normalizedTarget - allocations.reduce((sum, entry) => sum + entry.totalCents, 0);
-  if (remaining > 0) {
-    allocations
-      .slice()
-      .sort((left, right) => {
-        const fractionComparison = right.fractional - left.fractional;
-        if (fractionComparison !== 0) {
-          return fractionComparison;
-        }
-
-        return left.index - right.index;
-      })
-      .slice(0, remaining)
-      .forEach((entry) => {
-        entry.totalCents += 1;
-      });
-  }
-
-  return allocations
-    .map((entry) => ({
-      ...entry.bucket,
-      totalCents: entry.totalCents,
-    }))
-    .filter((entry) => entry.totalCents > 0);
 }
 
 function groupMoneyFlowExpenseCategoriesByThreshold(

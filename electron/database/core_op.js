@@ -1,3 +1,5 @@
+const { isPlainObject } = require('../utils/object-utils');
+
 const IDENTIFIER_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const APP_META_TABLE_NAME = 'app_meta';
 const APP_META_CHANGE_COUNTER_KEY = 'change_counter';
@@ -79,15 +81,6 @@ function touchDatabaseWriteMeta(database, tableName, changedRows) {
 
     throw error;
   }
-}
-
-function isPlainObject(value) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    return false;
-  }
-
-  const prototype = Object.getPrototypeOf(value);
-  return prototype === Object.prototype || prototype === null;
 }
 
 /**
