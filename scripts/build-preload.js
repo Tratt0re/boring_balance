@@ -15,7 +15,7 @@ const buildOptions = {
   bundle: true,
   platform: 'node',
   format: 'cjs',
-  target: 'node20',
+  target: 'node24',
   external: ['electron'],
   sourcemap: !isProdMode,
   logLevel: 'info',
