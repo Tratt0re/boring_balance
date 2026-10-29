@@ -605,6 +605,50 @@
         "success": "Export abgeschlossen: {{fileName}}",
         "error": "Daten konnten nicht exportiert werden."
       }
+    },
+    "toasts": {
+      "backup": {
+        "loadSettingsFailed": "Backup-Einstellungen konnten nicht geladen werden.",
+        "updateSettingsFailed": "Backup-Einstellungen konnten nicht aktualisiert werden.",
+        "loadStateFailed": "Backup-Status konnte nicht geladen werden.",
+        "selectFolderFailed": "Backup-Ordner konnte nicht ausgewählt werden.",
+        "loadListFailed": "Backup-Liste konnte nicht geladen werden.",
+        "selectFileFailed": "Backup-Datei konnte nicht ausgewählt werden.",
+        "backupFailed": "Backup fehlgeschlagen.",
+        "restoreFailed": "Wiederherstellung fehlgeschlagen.",
+        "deleted": "Backup gelöscht.",
+        "deleteFailed": "Backup konnte nicht gelöscht werden.",
+        "completed": "Backup abgeschlossen: {{fileName}}",
+        "restoreCompleted": "Wiederherstellung abgeschlossen. App-Daten werden neu geladen..."
+      },
+      "sync": {
+        "loadSettingsFailed": "Sync-Einstellungen konnten nicht geladen werden.",
+        "updateSettingsFailed": "Sync-Einstellungen konnten nicht aktualisiert werden.",
+        "loadStateFailed": "Sync-Status konnte nicht geladen werden.",
+        "checkNewerFailed": "Die Suche nach neueren Sync-Daten ist fehlgeschlagen.",
+        "selectFolderFailed": "Sync-Ordner konnte nicht ausgewählt werden.",
+        "inspectFolderFailed": "Der ausgewählte Sync-Ordner konnte nicht geprüft werden.",
+        "enabled": "Sync aktiviert.",
+        "enableFailed": "Sync konnte nicht aktiviert werden.",
+        "disabled": "Sync deaktiviert.",
+        "disableFailed": "Sync konnte nicht deaktiviert werden.",
+        "syncNothingChanged": "Sync-Prüfung abgeschlossen. Nichts hat sich geändert.",
+        "syncFailed": "Sync fehlgeschlagen.",
+        "pullNothingNewer": "Es wurde kein neuerer Remote-Snapshot gefunden.",
+        "pullFailed": "Abruf fehlgeschlagen.",
+        "pushNothingToPublish": "Es mussten keine lokalen Änderungen veröffentlicht werden.",
+        "pushFailed": "Senden fehlgeschlagen.",
+        "loadSnapshotsFailed": "Sync-Snapshots konnten nicht geladen werden.",
+        "defaultFileUpdated": "Standard-Sync-Datei aktualisiert. App-Daten werden neu geladen...",
+        "selectDefaultFileFailed": "Standard-Sync-Datei konnte nicht ausgewählt werden.",
+        "fileDeleted": "Sync-Datei gelöscht.",
+        "deleteFileFailed": "Sync-Datei konnte nicht gelöscht werden.",
+        "pullCompleted": "Abruf abgeschlossen.",
+        "pullCompletedWithId": "Abruf abgeschlossen ({{snapshotId}})",
+        "pushCompleted": "Senden abgeschlossen.",
+        "pushCompletedWithId": "Senden abgeschlossen ({{snapshotId}})",
+        "conflictDetected": "Sync-Konflikt erkannt. Prüfe die Details unten."
+      }
     }
   },
   "overview": {

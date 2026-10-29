@@ -605,6 +605,50 @@
         "success": "Exportacion completada: {{fileName}}",
         "error": "No se pudieron exportar los datos."
       }
+    },
+    "toasts": {
+      "backup": {
+        "loadSettingsFailed": "No se pudo cargar la configuración del respaldo.",
+        "updateSettingsFailed": "No se pudo actualizar la configuración del respaldo.",
+        "loadStateFailed": "No se pudo cargar el estado del respaldo.",
+        "selectFolderFailed": "No se pudo seleccionar una carpeta de respaldo.",
+        "loadListFailed": "No se pudo cargar la lista de respaldos.",
+        "selectFileFailed": "No se pudo seleccionar un archivo de respaldo.",
+        "backupFailed": "Falló el respaldo.",
+        "restoreFailed": "Falló la restauración.",
+        "deleted": "Respaldo eliminado.",
+        "deleteFailed": "No se pudo eliminar el respaldo.",
+        "completed": "Respaldo completado: {{fileName}}",
+        "restoreCompleted": "Restauración completada. Recargando los datos de la aplicación..."
+      },
+      "sync": {
+        "loadSettingsFailed": "No se pudo cargar la configuración de sincronización.",
+        "updateSettingsFailed": "No se pudo actualizar la configuración de sincronización.",
+        "loadStateFailed": "No se pudo cargar el estado de la sincronización.",
+        "checkNewerFailed": "No se pudo buscar datos de sincronización más recientes.",
+        "selectFolderFailed": "No se pudo seleccionar una carpeta de sincronización.",
+        "inspectFolderFailed": "No se pudo inspeccionar la carpeta de sincronización seleccionada.",
+        "enabled": "Sincronización activada.",
+        "enableFailed": "No se pudo activar la sincronización.",
+        "disabled": "Sincronización desactivada.",
+        "disableFailed": "No se pudo desactivar la sincronización.",
+        "syncNothingChanged": "Comprobación completada. No ha cambiado nada.",
+        "syncFailed": "Falló la sincronización.",
+        "pullNothingNewer": "No se encontró ninguna instantánea remota más reciente.",
+        "pullFailed": "Falló la descarga.",
+        "pushNothingToPublish": "No había cambios locales que publicar.",
+        "pushFailed": "Falló el envío.",
+        "loadSnapshotsFailed": "No se pudieron cargar las instantáneas de sincronización.",
+        "defaultFileUpdated": "Archivo de sincronización predeterminado actualizado. Recargando los datos de la aplicación...",
+        "selectDefaultFileFailed": "No se pudo seleccionar el archivo de sincronización predeterminado.",
+        "fileDeleted": "Archivo de sincronización eliminado.",
+        "deleteFileFailed": "No se pudo eliminar el archivo de sincronización.",
+        "pullCompleted": "Descarga completada.",
+        "pullCompletedWithId": "Descarga completada ({{snapshotId}})",
+        "pushCompleted": "Envío completado.",
+        "pushCompletedWithId": "Envío completado ({{snapshotId}})",
+        "conflictDetected": "Se detectó un conflicto de sincronización. Revisa los detalles abajo."
+      }
     }
   },
   "overview": {

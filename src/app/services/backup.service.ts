@@ -11,6 +11,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { APIChannel } from '@/config/api';
@@ -45,6 +46,7 @@ const BACKUP_RETENTION_OPTIONS = [1, 2, 3, 4, 5];
 })
 export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
   private readonly windowService = inject(WindowService);
+  private readonly translateService = inject(TranslateService);
   private readonly settingsSubject = new BehaviorSubject<DTO.BackupSettingsDto>(
     BACKUP_SETTINGS_DEFAULTS,
   );
@@ -108,7 +110,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         this.settingsSubject.next(settings);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load backup settings.'));
+        toast.error(this.toErrorMessage(error, this.text('loadSettingsFailed')));
         return of(this.settingsSubject.value);
       }),
       finalize(() => this.settingsLoadingSubject.next(false)),
@@ -132,7 +134,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         this.backupsSubject.next([]);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to update backup settings.'));
+        toast.error(this.toErrorMessage(error, this.text('updateSettingsFailed')));
         return of(this.settingsSubject.value);
       }),
       finalize(() => this.settingsLoadingSubject.next(false)),
@@ -148,7 +150,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         this.stateSubject.next(state);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load backup state.'));
+        toast.error(this.toErrorMessage(error, this.text('loadStateFailed')));
         return of(this.stateSubject.value);
       }),
       finalize(() => this.stateLoadingSubject.next(false)),
@@ -167,7 +169,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         };
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to select a backup folder.'));
+        toast.error(this.toErrorMessage(error, this.text('selectFolderFailed')));
         return of(null);
       }),
     );
@@ -186,7 +188,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         this.backupsSubject.next(rows);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load backups list.'));
+        toast.error(this.toErrorMessage(error, this.text('loadListFailed')));
         return of(this.backupsSubject.value);
       }),
       finalize(() => this.backupsLoadingSubject.next(false)),
@@ -206,7 +208,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
         };
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to select a backup file.'));
+        toast.error(this.toErrorMessage(error, this.text('selectFileFailed')));
         return of(null);
       }),
     );
@@ -219,7 +221,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
       map((result) => this.normalizeCreateBackupResult(result)),
       finalize(() => this.runNowLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Backup failed.'));
+        toast.error(this.toErrorMessage(error, this.text('backupFailed')));
         return throwError(() => error);
       }),
     );
@@ -232,7 +234,7 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
       map((result) => this.normalizeRestoreResult(result)),
       finalize(() => this.restoreLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Restore failed.'));
+        toast.error(this.toErrorMessage(error, this.text('restoreFailed')));
         return throwError(() => error);
       }),
     );
@@ -244,14 +246,14 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
     return from(this.ipcClient.remove({ backupFilePath })).pipe(
       tap((result) => {
         if (Number(result?.changed ?? 0) > 0) {
-          toast.success('Backup deleted.');
+          toast.success(this.text('deleted'));
         }
 
         void firstValueFrom(this.listBackups());
       }),
       finalize(() => this.removeLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to delete backup.'));
+        toast.error(this.toErrorMessage(error, this.text('deleteFailed')));
         return throwError(() => error);
       }),
     );
@@ -274,23 +276,23 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
 
     onIpcEvent('backup:backupCompleted', (payload) => {
       const result = this.normalizeCreateBackupResult(payload as DTO.CreateBackupResultDto);
-      toast.success(`Backup completed: ${result.fileName}`);
+      toast.success(this.text('completed', { fileName: result.fileName }));
       void firstValueFrom(this.listBackups());
     });
 
     onIpcEvent('backup:backupFailed', (payload) => {
-      const errorMessage = this.extractErrorFromPayload(payload, 'Backup failed.');
+      const errorMessage = this.extractErrorFromPayload(payload, this.text('backupFailed'));
       toast.error(errorMessage);
     });
 
     onIpcEvent('backup:restoreCompleted', (payload) => {
       this.normalizeRestoreResult(payload as DTO.RestoreBackupResultDto);
-      toast.success('Restore completed. Reloading app data...');
+      toast.success(this.text('restoreCompleted'));
       this.triggerApplicationRefreshAfterRestore();
     });
 
     onIpcEvent('backup:restoreFailed', (payload) => {
-      const errorMessage = this.extractErrorFromPayload(payload, 'Restore failed.');
+      const errorMessage = this.extractErrorFromPayload(payload, this.text('restoreFailed'));
       toast.error(errorMessage);
     });
   }
@@ -340,7 +342,8 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
           ? value.lastBackupError.trim()
           : null,
       configurationWarning:
-        typeof value?.configurationWarning === 'string' && value.configurationWarning.trim().length > 0
+        typeof value?.configurationWarning === 'string' &&
+        value.configurationWarning.trim().length > 0
           ? value.configurationWarning.trim()
           : null,
       lastCleanupWarning:
@@ -414,6 +417,11 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
     }
 
     return fallbackMessage;
+  }
+
+  /** A message the app owns, translated. Messages from the main process are shown as they arrive. */
+  private text(key: string, params?: Record<string, unknown>): string {
+    return this.translateService.instant(`dataBackups.toasts.backup.${key}`, params);
   }
 
   private toErrorMessage(error: unknown, fallbackMessage: string): string {

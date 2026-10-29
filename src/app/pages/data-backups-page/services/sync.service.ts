@@ -11,6 +11,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { APIChannel } from '@/config/api';
@@ -39,6 +40,7 @@ import {
 export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private readonly localPreferencesService = inject(LocalPreferencesService);
   private readonly windowService = inject(WindowService);
+  private readonly translateService = inject(TranslateService);
   private readonly settingsSubject = new BehaviorSubject<SyncSettingsDto>(SYNC_SETTINGS_DEFAULTS);
   private readonly stateSubject = new BehaviorSubject<SyncStateDto>(this.readPersistedState());
   private readonly snapshotsSubject = new BehaviorSubject<readonly SyncSnapshotInfoDto[]>([]);
@@ -110,7 +112,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         this.settingsSubject.next(settings);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load sync settings.'));
+        toast.error(this.toErrorMessage(error, this.text('loadSettingsFailed')));
         return of(this.settingsSubject.value);
       }),
       finalize(() => this.settingsLoadingSubject.next(false)),
@@ -126,7 +128,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         this.settingsSubject.next(settings);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to update sync settings.'));
+        toast.error(this.toErrorMessage(error, this.text('updateSettingsFailed')));
         return of(this.settingsSubject.value);
       }),
       finalize(() => this.settingsLoadingSubject.next(false)),
@@ -142,7 +144,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         this.setState(state);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load sync state.'));
+        toast.error(this.toErrorMessage(error, this.text('loadStateFailed')));
         return of(this.stateSubject.value);
       }),
       finalize(() => this.stateLoadingSubject.next(false)),
@@ -155,7 +157,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         hasNewerRemoteSnapshot: Boolean(result?.hasNewerRemoteSnapshot),
       })),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to check for newer sync data.'));
+        toast.error(this.toErrorMessage(error, this.text('checkNewerFailed')));
         return of({
           hasNewerRemoteSnapshot: false,
         });
@@ -175,7 +177,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         };
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to select a sync folder.'));
+        toast.error(this.toErrorMessage(error, this.text('selectFolderFailed')));
         return of(null);
       }),
     );
@@ -188,7 +190,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return from(this.ipcClient.repoStatus(payload)).pipe(
       map((result) => this.normalizeRepoStatus(result)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to inspect the selected sync folder.'));
+        toast.error(this.toErrorMessage(error, this.text('inspectFolderFailed')));
         return of({
           exists: false,
           repoPath: null,
@@ -207,12 +209,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       }),
     ).pipe(
       tap(() => {
-        toast.success('Sync enabled.');
+        toast.success(this.text('enabled'));
         void this.refreshSettingsAndState();
       }),
       finalize(() => this.enableLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to enable sync.'));
+        toast.error(this.toErrorMessage(error, this.text('enableFailed')));
         return throwError(() => error);
       }),
     );
@@ -227,12 +229,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
           ...this.settingsSubject.value,
           enabled: false,
         });
-        toast.success('Sync disabled.');
+        toast.success(this.text('disabled'));
         void this.refreshSettingsAndState();
       }),
       finalize(() => this.disableLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to disable sync.'));
+        toast.error(this.toErrorMessage(error, this.text('disableFailed')));
         return throwError(() => error);
       }),
     );
@@ -245,12 +247,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       map((result) => this.normalizeSyncNowResult(result)),
       tap((result) => {
         if (!result.pulled && !result.pushed) {
-          toast.success('Sync check completed. Nothing changed.');
+          toast.success(this.text('syncNothingChanged'));
         }
       }),
       finalize(() => this.syncNowLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Sync failed.'));
+        toast.error(this.toErrorMessage(error, this.text('syncFailed')));
         return throwError(() => error);
       }),
     );
@@ -263,12 +265,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       map((result) => this.normalizeActionResult(result)),
       tap((result) => {
         if (result.action === 'skipped') {
-          toast.success(result.reason ?? 'No newer remote snapshot was found.');
+          toast.success(result.reason ?? this.text('pullNothingNewer'));
         }
       }),
       finalize(() => this.pullNowLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Pull failed.'));
+        toast.error(this.toErrorMessage(error, this.text('pullFailed')));
         return throwError(() => error);
       }),
     );
@@ -281,12 +283,12 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       map((result) => this.normalizeActionResult(result)),
       tap((result) => {
         if (result.action === 'skipped') {
-          toast.success(result.reason ?? 'No local changes needed to be published.');
+          toast.success(result.reason ?? this.text('pushNothingToPublish'));
         }
       }),
       finalize(() => this.pushNowLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Push failed.'));
+        toast.error(this.toErrorMessage(error, this.text('pushFailed')));
         return throwError(() => error);
       }),
     );
@@ -305,7 +307,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         this.snapshotsSubject.next(rows);
       }),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to load sync snapshots.'));
+        toast.error(this.toErrorMessage(error, this.text('loadSnapshotsFailed')));
         return of(this.snapshotsSubject.value);
       }),
       finalize(() => this.snapshotsLoadingSubject.next(false)),
@@ -318,13 +320,13 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return from(this.ipcClient.setDefaultSnapshot({ snapshotFilePath })).pipe(
       map((result) => this.normalizeActionResult(result)),
       tap(() => {
-        toast.success('Default sync file updated. Reloading app data...');
+        toast.success(this.text('defaultFileUpdated'));
         void firstValueFrom(this.listSnapshots());
         reloadAppShell(this.windowService, 250);
       }),
       finalize(() => this.setDefaultSnapshotLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to select the default sync file.'));
+        toast.error(this.toErrorMessage(error, this.text('selectDefaultFileFailed')));
         return throwError(() => error);
       }),
     );
@@ -336,14 +338,14 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return from(this.ipcClient.removeSnapshot({ snapshotFilePath })).pipe(
       tap((result) => {
         if (Number(result?.changed ?? 0) > 0) {
-          toast.success('Sync file deleted.');
+          toast.success(this.text('fileDeleted'));
         }
 
         void firstValueFrom(this.listSnapshots());
       }),
       finalize(() => this.removeSnapshotLoadingSubject.next(false)),
       catchError((error) => {
-        toast.error(this.toErrorMessage(error, 'Failed to delete the sync file.'));
+        toast.error(this.toErrorMessage(error, this.text('deleteFileFailed')));
         return throwError(() => error);
       }),
     );
@@ -366,24 +368,32 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
 
     onIpcEvent('sync:pullCompleted', (payload) => {
       const result = this.normalizeActionResult(payload as DTO.SyncActionResultDto);
-      toast.success(`Pull completed${result.snapshotId ? ` (${result.snapshotId})` : '.'}`);
+      toast.success(
+        result.snapshotId
+          ? this.text('pullCompletedWithId', { snapshotId: result.snapshotId })
+          : this.text('pullCompleted'),
+      );
       void this.refreshSettingsAndState();
       reloadAppShell(this.windowService, 250);
     });
 
     onIpcEvent('sync:pullFailed', (payload) => {
-      const errorMessage = this.extractErrorFromPayload(payload, 'Pull failed.');
+      const errorMessage = this.extractErrorFromPayload(payload, this.text('pullFailed'));
       toast.error(errorMessage);
     });
 
     onIpcEvent('sync:pushCompleted', (payload) => {
       const result = this.normalizeActionResult(payload as DTO.SyncActionResultDto);
-      toast.success(`Push completed${result.snapshotId ? ` (${result.snapshotId})` : '.'}`);
+      toast.success(
+        result.snapshotId
+          ? this.text('pushCompletedWithId', { snapshotId: result.snapshotId })
+          : this.text('pushCompleted'),
+      );
       void this.refreshSettingsAndState();
     });
 
     onIpcEvent('sync:pushFailed', (payload) => {
-      const errorMessage = this.extractErrorFromPayload(payload, 'Push failed.');
+      const errorMessage = this.extractErrorFromPayload(payload, this.text('pushFailed'));
       toast.error(errorMessage);
     });
 
@@ -397,7 +407,7 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         conflictInfo,
         lastError: conflictInfo?.reason ?? currentState.lastError,
       });
-      toast.error('Sync conflict detected. Review the details below.');
+      toast.error(this.text('conflictDetected'));
       void this.refreshSettingsAndState();
       reloadAppShell(this.windowService, 250);
     });
@@ -424,21 +434,29 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       baseFolderPath: folderPath,
       repoFolderName,
       repoPath:
-        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0 ? value.repoPath.trim() : null,
+        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0
+          ? value.repoPath.trim()
+          : null,
       deviceId:
-        typeof value?.deviceId === 'string' && value.deviceId.trim().length > 0 ? value.deviceId.trim() : '',
+        typeof value?.deviceId === 'string' && value.deviceId.trim().length > 0
+          ? value.deviceId.trim()
+          : '',
       deviceName:
         typeof value?.deviceName === 'string' && value.deviceName.trim().length > 0
           ? value.deviceName.trim()
           : null,
       autoPullIntervalMin:
-        Number.isInteger(autoPullIntervalMin)
-        && SYNC_INTERVAL_OPTIONS.includes(autoPullIntervalMin as (typeof SYNC_INTERVAL_OPTIONS)[number])
+        Number.isInteger(autoPullIntervalMin) &&
+        SYNC_INTERVAL_OPTIONS.includes(
+          autoPullIntervalMin as (typeof SYNC_INTERVAL_OPTIONS)[number],
+        )
           ? autoPullIntervalMin
           : SYNC_SETTINGS_DEFAULTS.autoPullIntervalMin,
       autoPushIntervalMin:
-        Number.isInteger(autoPushIntervalMin)
-        && SYNC_INTERVAL_OPTIONS.includes(autoPushIntervalMin as (typeof SYNC_INTERVAL_OPTIONS)[number])
+        Number.isInteger(autoPushIntervalMin) &&
+        SYNC_INTERVAL_OPTIONS.includes(
+          autoPushIntervalMin as (typeof SYNC_INTERVAL_OPTIONS)[number],
+        )
           ? autoPushIntervalMin
           : SYNC_SETTINGS_DEFAULTS.autoPushIntervalMin,
       autoPushOnQuit: Boolean(value?.autoPushOnQuit),
@@ -447,7 +465,8 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
           ? retentionCountPerDevice
           : SYNC_SETTINGS_DEFAULTS.retentionCountPerDevice,
       lastSeenRemoteSnapshotId:
-        typeof value?.lastSeenRemoteSnapshotId === 'string' && value.lastSeenRemoteSnapshotId.trim().length > 0
+        typeof value?.lastSeenRemoteSnapshotId === 'string' &&
+        value.lastSeenRemoteSnapshotId.trim().length > 0
           ? value.lastSeenRemoteSnapshotId.trim()
           : null,
       lastPublishedCounter: this.normalizeIntegerOrNull(
@@ -456,7 +475,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       lastPublishedLocalCounter: this.normalizeIntegerOrNull(value?.lastPublishedLocalCounter),
       lastPulledCounter: this.normalizeIntegerOrNull(value?.lastPulledCounter),
       lastError:
-        typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null,
+        typeof value?.lastError === 'string' && value.lastError.trim().length > 0
+          ? value.lastError.trim()
+          : null,
     };
   }
 
@@ -466,29 +487,40 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   ): SyncStateDto {
     const status = value?.status;
     const normalizedStatus =
-      status === 'idle' || status === 'running' || status === 'ok' || status === 'error' || status === 'conflict'
+      status === 'idle' ||
+      status === 'running' ||
+      status === 'ok' ||
+      status === 'error' ||
+      status === 'conflict'
         ? status
         : SYNC_STATE_DEFAULTS.status;
     const preservePreviousStatus = normalizedStatus === 'idle' && fallbackState.status !== 'idle';
     const effectiveStatus = preservePreviousStatus ? fallbackState.status : normalizedStatus;
     const normalizedLastError =
-      typeof value?.lastError === 'string' && value.lastError.trim().length > 0 ? value.lastError.trim() : null;
+      typeof value?.lastError === 'string' && value.lastError.trim().length > 0
+        ? value.lastError.trim()
+        : null;
 
     return {
       status: effectiveStatus,
       lastPullAtMs: this.normalizeIntegerOrNull(value?.lastPullAtMs) ?? fallbackState.lastPullAtMs,
       lastPushAtMs: this.normalizeIntegerOrNull(value?.lastPushAtMs) ?? fallbackState.lastPushAtMs,
       lastError:
-        normalizedLastError
-        ?? (effectiveStatus === 'error' || effectiveStatus === 'conflict' ? fallbackState.lastError : null),
-      remoteLatest: this.normalizeRemoteLatest(value?.remoteLatest ?? null) ?? fallbackState.remoteLatest,
+        normalizedLastError ??
+        (effectiveStatus === 'error' || effectiveStatus === 'conflict'
+          ? fallbackState.lastError
+          : null),
+      remoteLatest:
+        this.normalizeRemoteLatest(value?.remoteLatest ?? null) ?? fallbackState.remoteLatest,
       conflictInfo:
-        this.normalizeConflictInfo(value?.conflictInfo ?? null)
-        ?? (effectiveStatus === 'conflict' ? fallbackState.conflictInfo : null),
+        this.normalizeConflictInfo(value?.conflictInfo ?? null) ??
+        (effectiveStatus === 'conflict' ? fallbackState.conflictInfo : null),
     };
   }
 
-  private normalizeConflictInfo(value: DTO.SyncConflictInfoDto | null | undefined): DTO.SyncConflictInfoDto | null {
+  private normalizeConflictInfo(
+    value: DTO.SyncConflictInfoDto | null | undefined,
+  ): DTO.SyncConflictInfoDto | null {
     if (!value) {
       return null;
     }
@@ -502,7 +534,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
         ? value.remoteSnapshotPath.trim()
         : null;
     const reason =
-      typeof value.reason === 'string' && value.reason.trim().length > 0 ? value.reason.trim() : null;
+      typeof value.reason === 'string' && value.reason.trim().length > 0
+        ? value.reason.trim()
+        : null;
 
     if (!remoteSnapshotPath || !reason) {
       return null;
@@ -515,14 +549,17 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     };
   }
 
-  private normalizeRemoteLatest(value: DTO.SyncRemoteLatestDto | null | undefined): DTO.SyncRemoteLatestDto | null {
+  private normalizeRemoteLatest(
+    value: DTO.SyncRemoteLatestDto | null | undefined,
+  ): DTO.SyncRemoteLatestDto | null {
     if (!value) {
       return null;
     }
 
     const changeCounter = this.normalizeIntegerOrNull(value.changeCounter);
     const lastWriteMs = this.normalizeIntegerOrNull(value.lastWriteMs);
-    const file = typeof value.file === 'string' && value.file.trim().length > 0 ? value.file.trim() : null;
+    const file =
+      typeof value.file === 'string' && value.file.trim().length > 0 ? value.file.trim() : null;
 
     if (changeCounter === null || lastWriteMs === null || !file) {
       return null;
@@ -538,11 +575,11 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
   private normalizeRepoStatus(value: DTO.SyncRepoStatusResponse): RepoStatusDto {
     const repoMeta = value?.repoMeta;
     const normalizedRepoMeta =
-      repoMeta
-        && typeof repoMeta.repoId === 'string'
-        && repoMeta.repoId.trim().length > 0
-        && Number.isInteger(this.normalizeIntegerOrNull(repoMeta.createdAtMs))
-        && Number.isInteger(this.normalizeIntegerOrNull(repoMeta.syncSchemaVersion))
+      repoMeta &&
+      typeof repoMeta.repoId === 'string' &&
+      repoMeta.repoId.trim().length > 0 &&
+      Number.isInteger(this.normalizeIntegerOrNull(repoMeta.createdAtMs)) &&
+      Number.isInteger(this.normalizeIntegerOrNull(repoMeta.syncSchemaVersion))
         ? {
             repo_id: repoMeta.repoId.trim(),
             created_at_ms: this.normalizeIntegerOrNull(repoMeta.createdAtMs) ?? Date.now(),
@@ -553,7 +590,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return {
       exists: Boolean(value?.exists),
       repoPath:
-        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0 ? value.repoPath.trim() : null,
+        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0
+          ? value.repoPath.trim()
+          : null,
       repoMeta: normalizedRepoMeta,
     };
   }
@@ -562,12 +601,19 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     return {
       action: String(value?.action ?? ''),
       reason:
-        typeof value?.reason === 'string' && value.reason.trim().length > 0 ? value.reason.trim() : null,
+        typeof value?.reason === 'string' && value.reason.trim().length > 0
+          ? value.reason.trim()
+          : null,
       pulled: typeof value?.pulled === 'boolean' ? value.pulled : undefined,
       pushed: typeof value?.pushed === 'boolean' ? value.pushed : undefined,
-      repoId: typeof value?.repoId === 'string' && value.repoId.trim().length > 0 ? value.repoId.trim() : null,
+      repoId:
+        typeof value?.repoId === 'string' && value.repoId.trim().length > 0
+          ? value.repoId.trim()
+          : null,
       repoPath:
-        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0 ? value.repoPath.trim() : null,
+        typeof value?.repoPath === 'string' && value.repoPath.trim().length > 0
+          ? value.repoPath.trim()
+          : null,
       snapshotId:
         typeof value?.snapshotId === 'string' && value.snapshotId.trim().length > 0
           ? value.snapshotId.trim()
@@ -590,7 +636,8 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
           ? value.restoredTo.trim()
           : null,
       previousLocalCopyPath:
-        typeof value?.previousLocalCopyPath === 'string' && value.previousLocalCopyPath.trim().length > 0
+        typeof value?.previousLocalCopyPath === 'string' &&
+        value.previousLocalCopyPath.trim().length > 0
           ? value.previousLocalCopyPath.trim()
           : null,
       restoredRemote: typeof value?.restoredRemote === 'boolean' ? value.restoredRemote : undefined,
@@ -611,9 +658,9 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
       pushed: Boolean(value?.pushed),
       skipped: Array.isArray(value?.skipped)
         ? value.skipped
-          .filter((entry): entry is string => typeof entry === 'string')
-          .map((entry) => entry.trim())
-          .filter((entry) => entry.length > 0)
+            .filter((entry): entry is string => typeof entry === 'string')
+            .map((entry) => entry.trim())
+            .filter((entry) => entry.length > 0)
         : undefined,
       pullResult: value?.pullResult ? this.normalizeActionResult(value.pullResult) : null,
       pushResult: value?.pushResult ? this.normalizeActionResult(value.pushResult) : null,
@@ -663,6 +710,11 @@ export class SyncService extends BaseIpcService<APIChannel.SYNC> {
     }
 
     return fallbackMessage;
+  }
+
+  /** A message the app owns, translated. Messages from the main process are shown as they arrive. */
+  private text(key: string, params?: Record<string, unknown>): string {
+    return this.translateService.instant(`dataBackups.toasts.sync.${key}`, params);
   }
 
   private toErrorMessage(error: unknown, fallbackMessage: string): string {

@@ -605,6 +605,50 @@
         "success": "导出完成：{{fileName}}",
         "error": "数据导出失败。"
       }
+    },
+    "toasts": {
+      "backup": {
+        "loadSettingsFailed": "无法加载备份设置。",
+        "updateSettingsFailed": "无法更新备份设置。",
+        "loadStateFailed": "无法加载备份状态。",
+        "selectFolderFailed": "无法选择备份文件夹。",
+        "loadListFailed": "无法加载备份列表。",
+        "selectFileFailed": "无法选择备份文件。",
+        "backupFailed": "备份失败。",
+        "restoreFailed": "恢复失败。",
+        "deleted": "备份已删除。",
+        "deleteFailed": "无法删除备份。",
+        "completed": "备份已完成：{{fileName}}",
+        "restoreCompleted": "恢复已完成。正在重新加载应用数据……"
+      },
+      "sync": {
+        "loadSettingsFailed": "无法加载同步设置。",
+        "updateSettingsFailed": "无法更新同步设置。",
+        "loadStateFailed": "无法加载同步状态。",
+        "checkNewerFailed": "无法检查是否有更新的同步数据。",
+        "selectFolderFailed": "无法选择同步文件夹。",
+        "inspectFolderFailed": "无法检查所选的同步文件夹。",
+        "enabled": "同步已启用。",
+        "enableFailed": "无法启用同步。",
+        "disabled": "同步已停用。",
+        "disableFailed": "无法停用同步。",
+        "syncNothingChanged": "同步检查已完成，没有任何变化。",
+        "syncFailed": "同步失败。",
+        "pullNothingNewer": "未找到更新的远程快照。",
+        "pullFailed": "拉取失败。",
+        "pushNothingToPublish": "没有需要发布的本地更改。",
+        "pushFailed": "推送失败。",
+        "loadSnapshotsFailed": "无法加载同步快照。",
+        "defaultFileUpdated": "默认同步文件已更新。正在重新加载应用数据……",
+        "selectDefaultFileFailed": "无法选择默认同步文件。",
+        "fileDeleted": "同步文件已删除。",
+        "deleteFileFailed": "无法删除同步文件。",
+        "pullCompleted": "拉取已完成。",
+        "pullCompletedWithId": "拉取已完成（{{snapshotId}}）",
+        "pushCompleted": "推送已完成。",
+        "pushCompletedWithId": "推送已完成（{{snapshotId}}）",
+        "conflictDetected": "检测到同步冲突。请查看下方详情。"
+      }
     }
   },
   "overview": {

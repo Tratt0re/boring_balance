@@ -72,9 +72,12 @@ export class ExportSectionComponent {
   protected readonly exportLoading = toSignal(this.exportService.loading$, {
     initialValue: false,
   });
-  protected readonly downloadImportTemplateLoading = toSignal(this.exportService.downloadTemplateLoading$, {
-    initialValue: false,
-  });
+  protected readonly downloadImportTemplateLoading = toSignal(
+    this.exportService.downloadTemplateLoading$,
+    {
+      initialValue: false,
+    },
+  );
   protected readonly selectedImportFilePath = toSignal(this.importExcelService.selectedFilePath$, {
     initialValue: null,
   });
@@ -110,16 +113,18 @@ export class ExportSectionComponent {
   );
   protected readonly canImport = computed(
     () =>
-      Boolean(this.selectedImportFilePath())
-      && this.importValidation()?.ok === true
-      && !this.importBusy(),
+      Boolean(this.selectedImportFilePath()) &&
+      this.importValidation()?.ok === true &&
+      !this.importBusy(),
   );
   protected readonly importPreviewSummary = computed(() => {
     const validation = this.importValidation();
-    return validation?.ok ? validation.summary ?? null : null;
+    return validation?.ok ? (validation.summary ?? null) : null;
   });
   protected readonly importErrorRows = computed<readonly ImportErrorTableRow[]>(() =>
-    (this.importValidation()?.errors ?? []).map((error, index) => this.toImportErrorTableRow(error, index)),
+    (this.importValidation()?.errors ?? []).map((error, index) =>
+      this.toImportErrorTableRow(error, index),
+    ),
   );
   protected readonly importResultSummary = computed(() => this.lastImportResult()?.result ?? null);
 
@@ -168,7 +173,9 @@ export class ExportSectionComponent {
         toast.error(
           this.toErrorMessage(
             error,
-            this.translateService.instant('dataBackups.exportImport.import.template.messages.error'),
+            this.translateService.instant(
+              'dataBackups.exportImport.import.template.messages.error',
+            ),
           ),
         );
       });
@@ -209,7 +216,9 @@ export class ExportSectionComponent {
   protected onValidateImport(): void {
     const filePath = this.selectedImportFilePath();
     if (!filePath) {
-      toast.error(this.translateService.instant('dataBackups.exportImport.import.messages.fileRequired'));
+      toast.error(
+        this.translateService.instant('dataBackups.exportImport.import.messages.fileRequired'),
+      );
       return;
     }
 
@@ -237,9 +246,15 @@ export class ExportSectionComponent {
 
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('dataBackups.exportImport.import.confirm.title'),
-      zDescription: this.translateService.instant('dataBackups.exportImport.import.confirm.description'),
-      zOkText: this.translateService.instant('dataBackups.exportImport.import.confirm.actions.import'),
-      zCancelText: this.translateService.instant('dataBackups.exportImport.import.confirm.actions.cancel'),
+      zDescription: this.translateService.instant(
+        'dataBackups.exportImport.import.confirm.description',
+      ),
+      zOkText: this.translateService.instant(
+        'dataBackups.exportImport.import.confirm.actions.import',
+      ),
+      zCancelText: this.translateService.instant(
+        'dataBackups.exportImport.import.confirm.actions.cancel',
+      ),
       zOkDestructive: true,
       zMaskClosable: true,
       zClosable: true,
@@ -271,7 +286,9 @@ export class ExportSectionComponent {
           return;
         }
 
-        toast.success(this.translateService.instant('dataBackups.exportImport.import.messages.importSuccess'));
+        toast.success(
+          this.translateService.instant('dataBackups.exportImport.import.messages.importSuccess'),
+        );
         this.triggerApplicationRefreshAfterImport();
       })
       .catch((error) => {

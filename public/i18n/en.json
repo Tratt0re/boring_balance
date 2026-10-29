@@ -605,6 +605,50 @@
         "success": "Export completed: {{fileName}}",
         "error": "Failed to export data."
       }
+    },
+    "toasts": {
+      "backup": {
+        "loadSettingsFailed": "Failed to load backup settings.",
+        "updateSettingsFailed": "Failed to update backup settings.",
+        "loadStateFailed": "Failed to load backup state.",
+        "selectFolderFailed": "Failed to select a backup folder.",
+        "loadListFailed": "Failed to load backups list.",
+        "selectFileFailed": "Failed to select a backup file.",
+        "backupFailed": "Backup failed.",
+        "restoreFailed": "Restore failed.",
+        "deleted": "Backup deleted.",
+        "deleteFailed": "Failed to delete backup.",
+        "completed": "Backup completed: {{fileName}}",
+        "restoreCompleted": "Restore completed. Reloading app data..."
+      },
+      "sync": {
+        "loadSettingsFailed": "Failed to load sync settings.",
+        "updateSettingsFailed": "Failed to update sync settings.",
+        "loadStateFailed": "Failed to load sync state.",
+        "checkNewerFailed": "Failed to check for newer sync data.",
+        "selectFolderFailed": "Failed to select a sync folder.",
+        "inspectFolderFailed": "Failed to inspect the selected sync folder.",
+        "enabled": "Sync enabled.",
+        "enableFailed": "Failed to enable sync.",
+        "disabled": "Sync disabled.",
+        "disableFailed": "Failed to disable sync.",
+        "syncNothingChanged": "Sync check completed. Nothing changed.",
+        "syncFailed": "Sync failed.",
+        "pullNothingNewer": "No newer remote snapshot was found.",
+        "pullFailed": "Pull failed.",
+        "pushNothingToPublish": "No local changes needed to be published.",
+        "pushFailed": "Push failed.",
+        "loadSnapshotsFailed": "Failed to load sync snapshots.",
+        "defaultFileUpdated": "Default sync file updated. Reloading app data...",
+        "selectDefaultFileFailed": "Failed to select the default sync file.",
+        "fileDeleted": "Sync file deleted.",
+        "deleteFileFailed": "Failed to delete the sync file.",
+        "pullCompleted": "Pull completed.",
+        "pullCompletedWithId": "Pull completed ({{snapshotId}})",
+        "pushCompleted": "Push completed.",
+        "pushCompletedWithId": "Push completed ({{snapshotId}})",
+        "conflictDetected": "Sync conflict detected. Review the details below."
+      }
     }
   },
   "overview": {

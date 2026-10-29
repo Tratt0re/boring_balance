@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -51,13 +58,7 @@ export interface ResetConfirmDialogData {
       }
 
       <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <button
-          type="button"
-          z-button
-          zType="ghost"
-          [zDisabled]="loading()"
-          (click)="onCancel()"
-        >
+        <button type="button" z-button zType="ghost" [zDisabled]="loading()" (click)="onCancel()">
           {{ 'common.cancel' | translate }}
         </button>
         <button
@@ -109,7 +110,9 @@ export class ResetConfirmDialogComponent {
   readonly inputBorderClass = computed(() => {
     const val = this.confirmInput();
     if (val.length === 0) return '';
-    return this.inputMatchesReset() ? '' : '[&]:border-destructive focus-visible:[&]:border-destructive';
+    return this.inputMatchesReset()
+      ? ''
+      : '[&]:border-destructive focus-visible:[&]:border-destructive';
   });
 
   onInput(event: Event): void {
