@@ -1,4 +1,4 @@
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, dialog, session } = require('electron');
 const path = require('node:path');
 const {
   closeDatabase,
@@ -12,6 +12,7 @@ const { backupController, syncController } = require('./controllers');
 const { registerIpcHandlers } = require('./ipc');
 const { installPermissionPolicy } = require('./utils/trusted-sender');
 const { createWindow, getTrustedRendererSources } = require('./window');
+const { buildQuitFailureDialog } = require('./utils/quit-outcome');
 
 const APP_NAME = 'Boring Balance';
 const APP_STORAGE_DIR_NAME = 'boringbalance';
@@ -78,19 +79,54 @@ app.on('before-quit', (event) => {
 
   Promise.resolve()
     .then(async () => {
+      const outcomes = [];
       try {
-        await syncController.onAppBeforeQuit();
+        outcomes.push(await syncController.onAppBeforeQuit());
       } catch (error) {
         console.error('[electron] Sync before quit failed:', error);
+        outcomes.push({
+          failed: true,
+          operation: 'sync',
+          message: String(error?.message ?? error),
+        });
       }
 
       try {
-        await backupController.onAppBeforeQuit();
+        outcomes.push(await backupController.onAppBeforeQuit());
       } catch (error) {
         console.error('[electron] Backup before quit failed:', error);
+        outcomes.push({
+          failed: true,
+          operation: 'backup',
+          message: String(error?.message ?? error),
+        });
       }
+
+      // A failed backup or sync means the latest changes may not be safe yet. Ask before closing.
+      const failureDialog = buildQuitFailureDialog(outcomes);
+      if (!failureDialog) {
+        return true;
+      }
+
+      const choice = await dialog.showMessageBox({
+        type: 'warning',
+        title: failureDialog.title,
+        message: failureDialog.message,
+        detail: failureDialog.detail,
+        buttons: ['Quit anyway', 'Cancel'],
+        defaultId: 1,
+        cancelId: 1,
+      });
+
+      return choice.response === 0;
     })
-    .finally(() => {
+    .then((shouldQuit) => {
+      if (!shouldQuit) {
+        // Cancelled: keep the app open. The next quit runs the backup and sync again before asking.
+        beforeQuitHandled = false;
+        return;
+      }
+
       syncController.dispose();
       backupController.dispose();
       closeDatabase();

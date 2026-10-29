@@ -594,7 +594,12 @@ async function onAppBeforeQuit() {
     });
   } catch (error) {
     console.error('[electron] Auto-backup on app quit failed:', error);
-    return null;
+    // Reported to the caller, so the app can ask the user whether to quit anyway.
+    return {
+      failed: true,
+      operation: 'backup',
+      message: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 

@@ -1480,7 +1480,12 @@ async function onAppBeforeQuit() {
     });
   } catch (error) {
     console.error('[electron] Sync before quit failed:', error);
-    return null;
+    // Reported to the caller, so the app can ask the user whether to quit anyway.
+    return {
+      failed: true,
+      operation: 'sync',
+      message: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 
