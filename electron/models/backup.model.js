@@ -5,6 +5,7 @@ const { selectRows } = require('../database/core_op');
 const {
   formatTimestampForFilename,
   listFilesSortedByMtime,
+  removeTemporaryFileQuietly,
   safeReplaceFileWithBackup,
   safeWriteFileAtomic,
 } = require('../utils/file-utils');
@@ -200,12 +201,9 @@ async function createBackup(database, folderPath, appVersion) {
     fs.renameSync(sqliteTemporaryPath, sqlitePath);
     safeWriteFileAtomic(sidecarPath, JSON.stringify(sidecarPayload, null, 2));
   } catch (error) {
-    if (fs.existsSync(sqliteTemporaryPath)) {
-      fs.unlinkSync(sqliteTemporaryPath);
-    }
-
+    removeTemporaryFileQuietly(sqliteTemporaryPath);
     if (fs.existsSync(sqlitePath) && !fs.existsSync(sidecarPath)) {
-      fs.unlinkSync(sqlitePath);
+      removeTemporaryFileQuietly(sqlitePath);
     }
 
     throw error;

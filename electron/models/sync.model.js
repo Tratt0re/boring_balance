@@ -2,7 +2,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const Database = require('better-sqlite3');
 const { selectRows } = require('../database/core_op');
-const { formatTimestampForFilename, safeReplaceFileWithBackup } = require('../utils/file-utils');
+const {
+  formatTimestampForFilename,
+  removeTemporaryFileQuietly,
+  safeReplaceFileWithBackup,
+} = require('../utils/file-utils');
 
 const SYNC_SCHEMA_VERSION = 1;
 const SYNC_CONTAINER_DIR_NAME = 'boring-balance.sync';
@@ -10,7 +14,12 @@ const INDEX_FILE_NAME = 'sync_index.json';
 const SNAPSHOTS_DIR_NAME = 'snapshots';
 const SNAPSHOT_FILE_PREFIX = 'snap_';
 const SQLITE_FILE_SUFFIX = '.sqlite';
-const APP_META_KEYS = Object.freeze(['db_uuid', 'change_counter', 'last_write_ms', 'schema_version']);
+const APP_META_KEYS = Object.freeze([
+  'db_uuid',
+  'change_counter',
+  'last_write_ms',
+  'schema_version',
+]);
 const SNAPSHOT_FILE_PATTERN = /^snap_(.+)_(\d+)_(\d+)_(.+)\.sqlite$/;
 
 function isPlainObject(value) {
@@ -112,10 +121,7 @@ function writeWithFixedTempPath(filePath, content) {
     fs.writeFileSync(temporaryPath, content);
     fs.renameSync(temporaryPath, normalizedFilePath);
   } catch (error) {
-    if (fs.existsSync(temporaryPath)) {
-      fs.unlinkSync(temporaryPath);
-    }
-
+    removeTemporaryFileQuietly(temporaryPath);
     throw error;
   }
 
@@ -134,7 +140,14 @@ function normalizeIndexLatest(value) {
   const lastWriteMs = normalizeIntegerOrNull(value.last_write_ms);
   const createdAtMs = normalizeIntegerOrNull(value.created_at_ms);
 
-  if (!file || !dbUuid || !deviceId || !Number.isInteger(changeCounter) || !Number.isInteger(lastWriteMs) || !Number.isInteger(createdAtMs)) {
+  if (
+    !file ||
+    !dbUuid ||
+    !deviceId ||
+    !Number.isInteger(changeCounter) ||
+    !Number.isInteger(lastWriteMs) ||
+    !Number.isInteger(createdAtMs)
+  ) {
     return null;
   }
 
@@ -301,10 +314,7 @@ async function createSnapshot(database, snapshotsDir, deviceId, meta) {
     await database.backup(temporaryPath);
     fs.renameSync(temporaryPath, snapshotFilePath);
   } catch (error) {
-    if (fs.existsSync(temporaryPath)) {
-      fs.unlinkSync(temporaryPath);
-    }
-
+    removeTemporaryFileQuietly(temporaryPath);
     throw error;
   }
 
@@ -441,7 +451,8 @@ function listSnapshots(folderPath) {
     return [];
   }
 
-  const entries = fs.readdirSync(snapshotsDir, { withFileTypes: true })
+  const entries = fs
+    .readdirSync(snapshotsDir, { withFileTypes: true })
     .filter((entry) => entry.isFile() && SNAPSHOT_FILE_PATTERN.test(entry.name))
     .map((entry) => {
       const fullPath = path.join(snapshotsDir, entry.name);

@@ -17,6 +17,20 @@ function formatTimestampForFilename(unixTimestampMilliseconds = Date.now()) {
   return `${year}${month}${day}-${hours}${minutes}${seconds}`;
 }
 
+/**
+ * Removes a temporary file while an error is already being handled. A failure here must not replace the
+ * error that caused the cleanup, so it is logged and swallowed.
+ */
+function removeTemporaryFileQuietly(filePath) {
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  } catch (cleanupError) {
+    console.error(`[electron] Could not remove temporary file ${filePath}:`, cleanupError.message);
+  }
+}
+
 function safeWriteFileAtomic(filePath, content) {
   if (typeof filePath !== 'string' || filePath.trim().length === 0) {
     throw new Error('filePath must be a non-empty string.');
@@ -36,10 +50,7 @@ function safeWriteFileAtomic(filePath, content) {
     fs.writeFileSync(temporaryPath, content);
     fs.renameSync(temporaryPath, normalizedPath);
   } catch (error) {
-    if (fs.existsSync(temporaryPath)) {
-      fs.unlinkSync(temporaryPath);
-    }
-
+    removeTemporaryFileQuietly(temporaryPath);
     throw error;
   }
 
@@ -180,6 +191,7 @@ function listFilesSortedByMtime(directoryPath, options = {}) {
 }
 
 module.exports = {
+  removeTemporaryFileQuietly,
   formatTimestampForFilename,
   listFilesSortedByMtime,
   restoreReplacedFile,
