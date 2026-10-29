@@ -36,7 +36,6 @@
       "selectColor": "选择颜色",
       "selectIcon": "选择图标",
       "pickDate": "选择日期",
-      "amountZero": "0.00",
       "selectAccount": "选择账户",
       "selectCategory": "选择分类",
       "optionalDescription": "可选描述",
@@ -117,9 +116,7 @@
   "nav": {
     "sections": {
       "main": "菜单",
-      "insights": "分析",
-      "setup": "设置",
-      "settings": "首选项"
+      "setup": "设置"
     },
     "items": {
       "overview": "概览",
@@ -130,16 +127,10 @@
       "accounts": "账户",
       "categories": "分类",
       "recurringEvents": "定期事件",
-      "settings": "首选项",
-      "dataBackups": "数据与备份",
-      "about": "关于"
+      "settings": "首选项"
     }
   },
   "settings": {
-    "page": {
-      "title": "首选项",
-      "description": "管理应用偏好、备份、同步、导出及本地详情。"
-    },
     "sections": {
       "general": {
         "title": "通用",
@@ -186,7 +177,6 @@
       "currencyGroupDescription": "选择金额的显示方式，使余额、报告和表单易于阅读。",
       "cards": {
         "theme": {
-          "title": "主题",
           "description": "选择最适合日常使用的外观。",
           "fieldLabel": "显示模式",
           "options": {
@@ -196,12 +186,10 @@
           }
         },
         "language": {
-          "title": "语言",
           "description": "选择应用导航、标签和消息所用的语言。",
           "fieldLabel": "应用语言"
         },
         "dashboardValuationMode": {
-          "title": "仪表板净资产模式",
           "description": "选择概览中的净资产和分配是否在可用时包含估值快照。禁用后，这些卡片仅使用交易的账本余额。",
           "fieldLabel": "仪表板计算方式",
           "options": {
@@ -210,7 +198,6 @@
           }
         },
         "currency": {
-          "title": "货币符号",
           "description": "选择余额、交易和报告旁显示的符号。",
           "fieldLabel": "符号",
           "customLabel": "自定义符号",
@@ -220,7 +207,6 @@
           }
         },
         "numberFormat": {
-          "title": "金额显示格式",
           "description": "选择金额使用的分隔符，使录入和报告符合预期格式。",
           "fieldLabel": "格式",
           "previewLabel": "预览",
@@ -234,7 +220,6 @@
       }
     },
     "about": {
-      "appNameLabel": "应用",
       "appVersionLabel": "版本",
       "appVersionUnavailable": "此版本不可用",
       "copy": {
@@ -248,28 +233,14 @@
         "paragraph8": "没有任何功能是强制的。按需使用即可。",
         "paragraph9": "欢迎来到这个朴实的小地方——记得偶尔备份，保护好你的数据 😉"
       },
-      "localFirst": "Boring Balance 是一款注重隐私的个人财务追踪应用。数据保存在你的设备上，应用仅用于显示余额和分析。",
-      "openSourceNote": "核心应用为开源项目，你可以在下方仓库中查看代码或跟进开发进展。",
       "openSourceCta": "在 GitHub 上查看",
       "checkForUpdates": "检查更新",
       "upToDate": "已是最新版本 (v{{version}})",
       "updateCheckFailed": "无法检查更新。请检查网络连接后重试。",
-      "footer": "由 {{authorName}} 用 ❤️ 制作",
-      "runtime": {
-        "title": "运行时",
-        "description": "通过 Electron 桥接暴露的渲染器运行时版本。",
-        "electron": "Electron",
-        "node": "Node.js",
-        "chrome": "Chrome",
-        "unknown": "不可用"
-      }
+      "footer": "由 {{authorName}} 用 ❤️ 制作"
     }
   },
   "dataBackups": {
-    "page": {
-      "title": "数据与备份",
-      "description": "管理本地备份，并为同步及导入/导出功能做好准备。"
-    },
     "sections": {
       "backups": {
         "title": "备份"
@@ -360,15 +331,12 @@
       }
     },
     "sync": {
-      "title": "同步",
       "overview": {
         "title": "外部文件夹同步",
         "description": "使用已在设备间同步的文件夹，例如云盘、NAS 或 USB 驱动器。",
         "warning": "请选择可信任的同步文件夹。应用继续从你的设备运行，仅使用共享文件夹安全交换副本。",
         "enabled": "启用同步",
         "chooseFolder": "选择文件夹位置",
-        "selectedFolder": "已选文件夹位置",
-        "baseFolderPath": "文件夹位置",
         "repoPath": "应用同步文件夹",
         "notConnected": "尚未连接",
         "enableHints": {
@@ -379,20 +347,6 @@
       "setup": {
         "title": "连接同步文件夹",
         "description": "选择应用同步文件夹的位置，然后创建新的同步空间或连接已有空间。",
-        "steps": {
-          "rootFolder": {
-            "title": "1. 选择文件夹位置",
-            "description": "选择已有文件夹或创建新文件夹。应用同步文件夹将在此处创建。"
-          },
-          "create": {
-            "title": "2. 在第一台设备上创建",
-            "description": "当本设备需要首先将同步数据发布到该文件夹时，使用「创建」。"
-          },
-          "attach": {
-            "title": "3. 在其他设备上连接",
-            "description": "当另一台设备已创建同步文件夹且本设备需要加入时，使用「连接」。"
-          }
-        },
         "actions": {
           "create": "创建新同步空间",
           "attach": "连接已有同步空间"
@@ -415,7 +369,6 @@
         "autoPushIntervalMin": "自动推送间隔",
         "autoPushOnQuit": "退出时推送",
         "autoPushOnQuitHint": "启用后，应用在关闭前会分享最新更改。",
-        "retentionCountPerDevice": "每设备保留快照数",
         "intervalOptions": {
           "off": "关闭",
           "minutes5": "每 5 分钟",
@@ -447,10 +400,6 @@
       "status": {
         "title": "状态",
         "description": "查看当前同步状态及本设备上次拉取或推送的时间。",
-        "columns": {
-          "item": "项目",
-          "value": "值"
-        },
         "rows": {
           "current": "当前状态",
           "lastPull": "上次拉取",
@@ -594,7 +543,6 @@
       },
       "controls": {
         "exportExcel": "导出为 Excel",
-        "importData": "导入数据库 / CSV",
         "downloadTemplate": "下载模板",
         "selectFile": "选择 Excel 文件",
         "removeSelectedFile": "移除文件",
@@ -652,9 +600,6 @@
     }
   },
   "overview": {
-    "toolbar": {
-      "reload": "刷新"
-    },
     "banners": {
       "syncUpdateAvailable": {
         "title": "有更新的同步数据可用",
@@ -673,34 +618,19 @@
     },
     "cards": {
       "netWorth": {
-        "title": "总净资产",
         "summaryTitle": "净资产",
-        "receivablesPayablesTitle": "应收与应付",
         "allocationTitle": "分配",
-        "description": "查看当前净资产、与上月相比的变化，以及应收或应付款对整体的影响。",
-        "allocationDescription": "查看哪些账户构成净资产，一眼识别集中情况。",
-        "descriptionDailyAverage": "平均净资产/天（MTD）：{{value}}/天",
         "tooltips": {
-          "averageDailyChangePositive": "本月你的总净资产平均每天增加 {{value}}（相对于上月末）。",
-          "averageDailyChangeNegative": "本月你的总净资产平均每天减少 {{value}}（相对于上月末）。",
-          "averageDailyChangeNeutral": "本月你的总净资产平均每天无变化（相对于上月末）。",
-          "current": "当前",
           "ledgerBalance": "账本余额",
           "marketValue": "市值"
         },
         "total": "合计",
-        "withValuations": "含估值",
         "liquidAssets": "流动资产",
         "investments": "投资",
         "snapshotBased": {
           "today": "快照已于今日更新",
           "daysAgo": "基于快照（{{days}} 天前）"
         },
-        "valuationsOutdated": {
-          "title": "估值可能已过期",
-          "body": "你的最新估值快照已有 {{days}} 天。更新快照以保持「含估值」的准确性。"
-        },
-        "deltaVsPreviousMonth": "较上月",
         "receivables": "应收款",
         "payables": "应付款",
         "totalAfterRP": "应收应付后",
@@ -727,11 +657,7 @@
         "loadFailed": "无法加载活动数据。"
       },
       "recentTransactions": {
-        "title": "最近交易",
-        "description": "本月最新 {{count}} 笔交易",
-        "loadFailed": "无法加载交易记录。",
         "empty": "本月暂无交易。添加一笔以开始记录活动。",
-        "toggleSettled": "切换结清状态",
         "tooltips": {
           "settled": "已结清",
           "settle": "结清",
@@ -770,9 +696,6 @@
   "breakdown": {
     "toolbar": {
       "selectYear": "选择年份"
-    },
-    "view": {
-      "all": "全部"
     },
     "averageMode": {
       "label": "使用已过月份计算平均值",
@@ -833,12 +756,6 @@
         "description": "查看哪些支出分类在两个月间增长、收缩或保持相近。",
         "empty": "无支出分类可用于雷达对比。"
       },
-      "dailyCalendar": {
-        "title": "每日支出日历",
-        "description": "使用统一刻度查看各月哪些天支出最多。",
-        "panelHint": "每日支出（相同刻度）",
-        "empty": "所选月份无每日支出数据。"
-      },
       "expensesByCategory": {
         "title": "按分类支出",
         "description": "并排查看各分类，包括两个月之间的差额。",
@@ -890,10 +807,6 @@
         "archive": "归档账户",
         "locked": "已锁定账户",
         "manageArchived": "管理已归档账户"
-      },
-      "columns": {
-        "color": "颜色",
-        "icon": "图标"
       }
     },
     "dialog": {
@@ -974,10 +887,6 @@
         "archive": "归档分类",
         "locked": "已锁定分类",
         "manageArchived": "管理已归档分类"
-      },
-      "columns": {
-        "color": "颜色",
-        "icon": "图标"
       }
     },
     "dialog": {
@@ -1111,7 +1020,6 @@
     },
     "analysis": {
       "title": "预算分析",
-      "description": "对比所选年份各分类的预算目标与实际支出。",
       "loading": "正在加载预算分析...",
       "empty": "{{year}} 年暂无预算分析。添加预算和相应交易后即可对比计划与实际。",
       "series": {
@@ -1141,11 +1049,7 @@
       "commonTransactions": "交易",
       "transfers": "转账"
     },
-    "pagination": {
-      "summary": "{{start}}-{{end}} / {{total}}"
-    },
     "transfers": {
-      "title": "转账",
       "table": {
         "description": "追踪自有账户间的资金流动。转账改变资金位置，不影响支出合计。",
         "emptyMessage": "暂无转账记录。在自有账户间转移资金时添加。",
@@ -1331,7 +1235,6 @@
       "piggyBank": "存钱罐",
       "vault": "保险箱",
       "bank": "银行",
-      "banknoteArrowUp": "纸币",
       "shoppingCart": "购物车",
       "store": "商店",
       "backpack": "背包",
@@ -1394,8 +1297,7 @@
       "brain": "大脑",
       "crypto": "加密货币",
       "factory": "工厂",
-      "car": "汽车",
-      "card": "卡片"
+      "car": "汽车"
     }
   },
   "header": {
@@ -1430,24 +1332,14 @@
       "description": "规划定期交易和转账，使常规活动更易于追踪。",
       "emptyMessage": "暂无定期事件。添加一个以自动化重复交易或转账。",
       "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建定期事件。",
-      "columns": {
-        "title": "标题",
-        "startDate": "开始日期",
-        "schedule": "安排",
-        "template": "模板"
-      },
       "actions": {
         "add": "添加定期事件",
         "viewItems": "查看计划项目",
         "edit": "编辑定期事件",
-        "run": "执行定期事件",
         "delete": "删除定期事件"
       },
       "schedule": {
-        "summary": "共 {{count}} 次，每 {{unit}} {{interval}} 次",
-        "every": "每 {{unit}} {{interval}} 次",
-        "occurrences": "{{count}} 次",
-        "monthPolicy": "若该日不在月份中：{{policy}}"
+        "summary": "共 {{count}} 次，每 {{unit}} {{interval}} 次"
       },
       "template": {
         "unknown": "未知模板",
@@ -1534,12 +1426,7 @@
       },
       "form": {
         "labels": {
-          "title": "标题",
-          "startDate": "开始日期",
-          "occurrences": "次数",
-          "frequencyInterval": "每",
-          "frequencyUnit": "频率单位",
-          "monthPolicy": "若该日不在月份中"
+          "frequencyInterval": "每"
         },
         "placeholders": {
           "title": "定期事件标题",
@@ -1563,14 +1450,6 @@
         "delete": "删除"
       }
     },
-    "runConfirm": {
-      "title": "执行定期事件？",
-      "description": "立即为「{{title}}」生成缺失的计划项目。",
-      "actions": {
-        "cancel": "取消",
-        "run": "立即执行"
-      }
-    },
     "createResult": {
       "title": "定期事件已创建"
     },
@@ -1583,7 +1462,6 @@
     },
     "runResult": {
       "title": "定期事件已创建",
-      "description": "「{{title}}」处理了 {{total}} 次。已创建：{{created}}。已跳过现有：{{skipped}}。",
       "labels": {
         "plan": "定期计划",
         "created": "本次创建",
@@ -1596,14 +1474,6 @@
       "actions": {
         "ok": "确定"
       }
-    },
-    "runError": {
-      "title": "定期事件执行失败",
-      "description": "定期事件无法执行：{{error}}",
-      "actions": {
-        "ok": "确定"
-      },
-      "fallbackError": "意外错误"
     },
     "toasts": {
       "createSuccess": "定期事件创建成功。",
@@ -1675,9 +1545,7 @@
       }
     },
     "header": {
-      "currentValue": "当前价值",
       "change": "变化",
-      "changePct": "变化 %",
       "accountBalance": "账户余额",
       "lastSnapshot": "最新快照",
       "changeVsBalance": "与余额的差异",

@@ -36,7 +36,6 @@
       "selectColor": "Farbe auswählen",
       "selectIcon": "Symbol auswählen",
       "pickDate": "Datum auswählen",
-      "amountZero": "0,00",
       "selectAccount": "Konto auswählen",
       "selectCategory": "Kategorie auswählen",
       "optionalDescription": "Optionale Beschreibung",
@@ -117,9 +116,7 @@
   "nav": {
     "sections": {
       "main": "Menü",
-      "insights": "Auswertungen",
-      "setup": "Einrichtung",
-      "settings": "Einstellungen"
+      "setup": "Einrichtung"
     },
     "items": {
       "overview": "Übersicht",
@@ -130,16 +127,10 @@
       "accounts": "Konten",
       "categories": "Kategorien",
       "recurringEvents": "Wiederkehrende Ereignisse",
-      "settings": "Einstellungen",
-      "dataBackups": "Daten & Sicherungen",
-      "about": "Über"
+      "settings": "Einstellungen"
     }
   },
   "settings": {
-    "page": {
-      "title": "Einstellungen",
-      "description": "App-Einstellungen, Sicherungen, Synchronisierung, Exporte und lokale App-Details verwalten."
-    },
     "sections": {
       "general": {
         "title": "Allgemein",
@@ -186,7 +177,6 @@
       "currencyGroupDescription": "Festlegen, wie Geldwerte angezeigt werden, damit Salden, Berichte und Formulare leicht lesbar bleiben.",
       "cards": {
         "theme": {
-          "title": "Design",
           "description": "Das Erscheinungsbild auswählen, das sich für den täglichen Einsatz am besten eignet.",
           "fieldLabel": "Designmodus",
           "options": {
@@ -196,12 +186,10 @@
           }
         },
         "language": {
-          "title": "Sprache",
           "description": "Sprache für Navigation, Beschriftungen und Meldungen in der gesamten App auswählen.",
           "fieldLabel": "App-Sprache"
         },
         "dashboardValuationMode": {
-          "title": "Dashboard-Nettovermögensmodus",
           "description": "Festlegen, ob das Nettovermögen und die Aufteilung in der Übersicht Bewertungsmomentaufnahmen einschließen sollen, sofern verfügbar. Wenn deaktiviert, werden nur Buchungssalden aus Transaktionen verwendet.",
           "fieldLabel": "Dashboard-Berechnungen",
           "options": {
@@ -210,7 +198,6 @@
           }
         },
         "currency": {
-          "title": "Währungssymbol",
           "description": "Das Symbol auswählen, das neben Salden, Transaktionen und Berichten angezeigt werden soll.",
           "fieldLabel": "Symbol",
           "customLabel": "Benutzerdefiniertes Symbol",
@@ -220,7 +207,6 @@
           }
         },
         "numberFormat": {
-          "title": "Währungsanzeigestil",
           "description": "Trennzeichen für Beträge auswählen, damit Einträge und Berichte dem gewohnten Format entsprechen.",
           "fieldLabel": "Format",
           "previewLabel": "Vorschau",
@@ -234,7 +220,6 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
       "appVersionLabel": "App-Version",
       "appVersionUnavailable": "In diesem Build nicht verfügbar",
       "copy": {
@@ -248,28 +233,14 @@
         "paragraph8": "Nichts davon ist verpflichtend. Nutzen Sie so viel oder so wenig, wie Sie möchten.",
         "paragraph9": "Willkommen an diesem schlichten kleinen Ort — und denken Sie daran, Ihre Daten von Zeit zu Zeit mit einer Sicherung zu schützen 😉"
       },
-      "localFirst": "Boring Balance ist ein persönlicher Finanzverwaltung, der auf Datenschutz ausgerichtet ist. Ihre Daten verbleiben auf Ihrem Gerät, und die App nutzt sie ausschließlich zur Anzeige von Salden und Auswertungen.",
-      "openSourceNote": "Die Kern-App ist Open Source, sodass Sie das Projekt einsehen oder seiner Entwicklung im folgenden Repository folgen können.",
       "openSourceCta": "Auf GitHub öffnen",
       "checkForUpdates": "Nach Updates suchen",
       "upToDate": "Du bist auf dem neuesten Stand (v{{version}})",
       "updateCheckFailed": "Die Suche nach Updates ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
-      "footer": "Erstellt mit ❤️ von {{authorName}}",
-      "runtime": {
-        "title": "Laufzeitumgebung",
-        "description": "Renderer-Laufzeitversionen, die über die Electron-Brücke verfügbar sind.",
-        "electron": "Electron",
-        "node": "Node.js",
-        "chrome": "Chrome",
-        "unknown": "Nicht verfügbar"
-      }
+      "footer": "Erstellt mit ❤️ von {{authorName}}"
     }
   },
   "dataBackups": {
-    "page": {
-      "title": "Daten & Sicherungen",
-      "description": "Lokale Sicherungen verwalten und Synchronisierung sowie Import-/Exportfunktionen vorbereiten."
-    },
     "sections": {
       "backups": {
         "title": "Sicherungen"
@@ -360,15 +331,12 @@
       }
     },
     "sync": {
-      "title": "Synchronisierung",
       "overview": {
         "title": "Externe Ordnersynchronisierung",
         "description": "Einen Ordner verwenden, der bereits zwischen Geräten synchronisiert wird, z. B. ein Cloud-Laufwerk, NAS oder USB-Laufwerk.",
         "warning": "Einen vertrauenswürdigen Synchronisierungsordner auswählen. Die App arbeitet weiterhin vom eigenen Gerät und nutzt den gemeinsamen Ordner nur zum sicheren Dateiabgleich.",
         "enabled": "Synchronisierung aktivieren",
         "chooseFolder": "Ordnerspeicherort auswählen",
-        "selectedFolder": "Ausgewählter Ordnerspeicherort",
-        "baseFolderPath": "Ordnerspeicherort",
         "repoPath": "App-Synchronisierungsordner",
         "notConnected": "Noch nicht verbunden",
         "enableHints": {
@@ -379,20 +347,6 @@
       "setup": {
         "title": "Synchronisierungsordner verbinden",
         "description": "Auswählen, wo der App-Synchronisierungsordner liegen soll, und dann einen neuen Bereich erstellen oder einen vorhandenen verbinden.",
-        "steps": {
-          "rootFolder": {
-            "title": "1. Ordnerspeicherort auswählen",
-            "description": "Einen vorhandenen Ordner auswählen oder einen neuen erstellen. Der App-Synchronisierungsordner wird dort angelegt."
-          },
-          "create": {
-            "title": "2. Auf dem ersten Gerät erstellen",
-            "description": "\"Erstellen\" verwenden, wenn dieses Gerät die ersten Synchronisierungsdaten in den Ordner veröffentlichen soll."
-          },
-          "attach": {
-            "title": "3. Auf anderen Geräten verbinden",
-            "description": "\"Verbinden\" verwenden, wenn ein anderes Gerät den Synchronisierungsordner bereits erstellt hat und dieses Gerät beitreten soll."
-          }
-        },
         "actions": {
           "create": "Neuen Synchronisierungsbereich erstellen",
           "attach": "Mit vorhandenem Synchronisierungsbereich verbinden"
@@ -415,7 +369,6 @@
         "autoPushIntervalMin": "Automatisches Übertragungsintervall",
         "autoPushOnQuit": "Beim Beenden der App übertragen",
         "autoPushOnQuitHint": "Wenn aktiviert, überträgt die App die neuesten Änderungen, bevor sie geschlossen wird.",
-        "retentionCountPerDevice": "Gespeicherte Momentaufnahmen pro Gerät",
         "intervalOptions": {
           "off": "Aus",
           "minutes5": "Alle 5 Minuten",
@@ -447,10 +400,6 @@
       "status": {
         "title": "Status",
         "description": "Aktuellen Synchronisierungsstatus prüfen und sehen, wann dieses Gerät zuletzt abgerufen oder übertragen hat.",
-        "columns": {
-          "item": "Element",
-          "value": "Wert"
-        },
         "rows": {
           "current": "Aktueller Status",
           "lastPull": "Letzter Abruf",
@@ -594,7 +543,6 @@
       },
       "controls": {
         "exportExcel": "Als Excel exportieren",
-        "importData": "DB / CSV importieren",
         "downloadTemplate": "Vorlage herunterladen",
         "selectFile": "Excel-Datei auswählen",
         "removeSelectedFile": "Datei entfernen",
@@ -652,9 +600,6 @@
     }
   },
   "overview": {
-    "toolbar": {
-      "reload": "Neu laden"
-    },
     "banners": {
       "syncUpdateAvailable": {
         "title": "Neuere Synchronisierungsdaten sind verfügbar",
@@ -673,34 +618,19 @@
     },
     "cards": {
       "netWorth": {
-        "title": "Gesamtes Nettovermögen",
         "summaryTitle": "Nettovermögen",
-        "receivablesPayablesTitle": "Forderungen & Verbindlichkeiten",
         "allocationTitle": "Aufteilung",
-        "description": "Aktuelles Nettovermögen, Veränderung seit dem Vormonat und Einfluss von Forderungen oder Verbindlichkeiten auf das Gesamtbild einsehen.",
-        "allocationDescription": "Sehen, welche Konten das Nettovermögen ausmachen, um Konzentration auf einen Blick zu erkennen.",
-        "descriptionDailyAverage": "Ø Nettovermögen/Tag (MTD): {{value}}/Tag",
         "tooltips": {
-          "averageDailyChangePositive": "Das gesamte Nettovermögen steigt diesen Monat im Durchschnitt um {{value}} pro Tag (gegenüber Ende letzten Monats).",
-          "averageDailyChangeNegative": "Das gesamte Nettovermögen sinkt diesen Monat im Durchschnitt um {{value}} pro Tag (gegenüber Ende letzten Monats).",
-          "averageDailyChangeNeutral": "Das gesamte Nettovermögen ist diesen Monat im Durchschnitt pro Tag unverändert (gegenüber Ende letzten Monats).",
-          "current": "Aktuell",
           "ledgerBalance": "Buchungssaldo",
           "marketValue": "Marktwert"
         },
         "total": "Gesamt",
-        "withValuations": "Mit Bewertungen",
         "liquidAssets": "Liquidität",
         "investments": "Investitionen",
         "snapshotBased": {
           "today": "Momentaufnahmen heute aktualisiert",
           "daysAgo": "Basierend auf Momentaufnahmen (vor {{days}} Tagen)"
         },
-        "valuationsOutdated": {
-          "title": "Bewertungen möglicherweise veraltet",
-          "body": "Ihre neueste Bewertungsmomentaufnahme ist {{days}} Tage alt. Momentaufnahmen aktualisieren, um 'Mit Bewertungen' korrekt zu halten."
-        },
-        "deltaVsPreviousMonth": "ggü. Vormonat",
         "receivables": "Forderungen",
         "payables": "Verbindlichkeiten",
         "totalAfterRP": "Nach F&V",
@@ -727,11 +657,7 @@
         "loadFailed": "Aktivität konnte nicht geladen werden."
       },
       "recentTransactions": {
-        "title": "Letzte Transaktionen",
-        "description": "Neueste {{count}} Transaktionen diesen Monat",
-        "loadFailed": "Transaktionen konnten nicht geladen werden.",
         "empty": "Noch keine Transaktionen diesen Monat. Eine hinzufügen, um den Aktivitätsverlauf zu beginnen.",
-        "toggleSettled": "Abrechnung umschalten",
         "tooltips": {
           "settled": "Abgerechnet",
           "settle": "Abrechnen",
@@ -770,9 +696,6 @@
   "breakdown": {
     "toolbar": {
       "selectYear": "Jahr auswählen"
-    },
-    "view": {
-      "all": "Alle"
     },
     "averageMode": {
       "label": "Vergangene Monate für Durchschnitte verwenden",
@@ -833,12 +756,6 @@
         "description": "Sehen, welche Ausgabenkategorien in den zwei Monaten gewachsen, geschrumpft oder ähnlich geblieben sind.",
         "empty": "Keine Ausgabenkategorien für den Radar-Vergleich verfügbar."
       },
-      "dailyCalendar": {
-        "title": "Täglicher Ausgabenkalender",
-        "description": "Sehen, welche Tage in jedem Monat die höchsten Ausgaben hatten, mit einer gemeinsamen Skala.",
-        "panelHint": "Tägliche Ausgaben (gleiche Skala)",
-        "empty": "Keine täglichen Ausgabendaten für die ausgewählten Monate."
-      },
       "expensesByCategory": {
         "title": "Ausgaben nach Kategorie",
         "description": "Jede Kategorie nebeneinander prüfen, einschließlich der Differenz zwischen den zwei Monaten.",
@@ -890,10 +807,6 @@
         "archive": "Konto archivieren",
         "locked": "Gesperrtes Konto",
         "manageArchived": "Archivierte verwalten"
-      },
-      "columns": {
-        "color": "Farbe",
-        "icon": "Symbol"
       }
     },
     "dialog": {
@@ -974,10 +887,6 @@
         "archive": "Kategorie archivieren",
         "locked": "Gesperrte Kategorie",
         "manageArchived": "Archivierte verwalten"
-      },
-      "columns": {
-        "color": "Farbe",
-        "icon": "Symbol"
       }
     },
     "dialog": {
@@ -1111,7 +1020,6 @@
     },
     "analysis": {
       "title": "Budgetanalyse",
-      "description": "Budgetziele mit tatsächlichen Kategorieausgaben für das ausgewählte Jahr vergleichen.",
       "loading": "Budgetanalyse wird geladen...",
       "empty": "Noch keine Budgetanalyse für {{year}}. Budgets und passende Transaktionen hinzufügen, um Plan und Ist zu vergleichen.",
       "series": {
@@ -1141,11 +1049,7 @@
       "commonTransactions": "Transaktionen",
       "transfers": "Überträge"
     },
-    "pagination": {
-      "summary": "{{start}}-{{end}} von {{total}}"
-    },
     "transfers": {
-      "title": "Überträge",
       "table": {
         "description": "Geldbewegungen zwischen eigenen Konten verfolgen. Überträge ändern, wo Geld liegt, nicht die Ausgabensummen.",
         "emptyMessage": "Noch keine Überträge. Einen hinzufügen, wenn Geld zwischen eigenen Konten bewegt wird.",
@@ -1331,7 +1235,6 @@
       "piggyBank": "Sparschwein",
       "vault": "Tresor",
       "bank": "Bank",
-      "banknoteArrowUp": "Banknote",
       "shoppingCart": "Einkaufswagen",
       "store": "Geschäft",
       "backpack": "Rucksack",
@@ -1394,8 +1297,7 @@
       "brain": "Gehirn",
       "crypto": "Krypto",
       "factory": "Fabrik",
-      "car": "Auto",
-      "card": "Karte"
+      "car": "Auto"
     }
   },
   "header": {
@@ -1430,24 +1332,14 @@
       "description": "Wiederkehrende Transaktionen und Überträge planen, damit routinemäßige Aktivitäten leichter nachverfolgt werden können.",
       "emptyMessage": "Noch keine wiederkehrenden Ereignisse. Eines hinzufügen, um wiederholte Transaktionen oder Überträge zu automatisieren.",
       "emptyNoAccountsMessage": "Noch keine Konten. Das erste Konto hinzufügen, bevor wiederkehrende Ereignisse erstellt werden.",
-      "columns": {
-        "title": "Titel",
-        "startDate": "Startdatum",
-        "schedule": "Zeitplan",
-        "template": "Vorlage"
-      },
       "actions": {
         "add": "Wiederkehrendes Ereignis hinzufügen",
         "viewItems": "Geplante Einträge anzeigen",
         "edit": "Wiederkehrendes Ereignis bearbeiten",
-        "run": "Wiederkehrendes Ereignis ausführen",
         "delete": "Wiederkehrendes Ereignis löschen"
       },
       "schedule": {
-        "summary": "Tritt {{count}} Mal auf, {{interval}} je {{unit}}",
-        "every": "{{interval}} je {{unit}}",
-        "occurrences": "{{count}} Wiederholungen",
-        "monthPolicy": "Falls der Tag nicht im Monat existiert: {{policy}}"
+        "summary": "Tritt {{count}} Mal auf, {{interval}} je {{unit}}"
       },
       "template": {
         "unknown": "Unbekannte Vorlage",
@@ -1534,12 +1426,7 @@
       },
       "form": {
         "labels": {
-          "title": "Titel",
-          "startDate": "Startdatum",
-          "occurrences": "Wiederholungen",
-          "frequencyInterval": "Alle",
-          "frequencyUnit": "Häufigkeitseinheit",
-          "monthPolicy": "Falls der Tag nicht im Monat existiert"
+          "frequencyInterval": "Alle"
         },
         "placeholders": {
           "title": "Titel des wiederkehrenden Ereignisses",
@@ -1563,14 +1450,6 @@
         "delete": "Löschen"
       }
     },
-    "runConfirm": {
-      "title": "Wiederkehrendes Ereignis ausführen?",
-      "description": "Fehlende geplante Einträge für \"{{title}}\" jetzt generieren.",
-      "actions": {
-        "cancel": "Abbrechen",
-        "run": "Jetzt ausführen"
-      }
-    },
     "createResult": {
       "title": "Wiederkehrendes Ereignis erstellt"
     },
@@ -1583,7 +1462,6 @@
     },
     "runResult": {
       "title": "Wiederkehrende Ereignisse erstellt",
-      "description": "\"{{title}}\" hat {{total}} Wiederholungen verarbeitet. Erstellt: {{created}}. Bereits vorhanden übersprungen: {{skipped}}.",
       "labels": {
         "plan": "Wiederkehrender Plan",
         "created": "Jetzt erstellt",
@@ -1596,14 +1474,6 @@
       "actions": {
         "ok": "OK"
       }
-    },
-    "runError": {
-      "title": "Wiederkehrendes Ereignis konnte nicht ausgeführt werden",
-      "description": "Das wiederkehrende Ereignis konnte nicht ausgeführt werden: {{error}}",
-      "actions": {
-        "ok": "OK"
-      },
-      "fallbackError": "Unerwarteter Fehler"
     },
     "toasts": {
       "createSuccess": "Wiederkehrendes Ereignis erfolgreich erstellt.",
@@ -1675,9 +1545,7 @@
       }
     },
     "header": {
-      "currentValue": "Aktueller Wert",
       "change": "Veränderung",
-      "changePct": "Veränderung %",
       "accountBalance": "Kontosaldo",
       "lastSnapshot": "Neueste Momentaufnahme",
       "changeVsBalance": "Veränderung ggü. Saldo",

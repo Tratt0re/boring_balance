@@ -36,7 +36,6 @@
       "selectColor": "Selecciona color",
       "selectIcon": "Selecciona icono",
       "pickDate": "Selecciona una fecha",
-      "amountZero": "0,00",
       "selectAccount": "Selecciona cuenta",
       "selectCategory": "Selecciona categoria",
       "optionalDescription": "Descripcion opcional",
@@ -117,9 +116,7 @@
   "nav": {
     "sections": {
       "main": "Menu",
-      "insights": "Analitica",
-      "setup": "Organizacion",
-      "settings": "Preferencias"
+      "setup": "Organizacion"
     },
     "items": {
       "overview": "Vista general",
@@ -130,16 +127,10 @@
       "accounts": "Cuentas",
       "categories": "Categorias",
       "recurringEvents": "Eventos recurrentes",
-      "settings": "Configuracion",
-      "dataBackups": "Datos y respaldo",
-      "about": "Sobre la app"
+      "settings": "Configuracion"
     }
   },
   "settings": {
-    "page": {
-      "title": "Configuracion",
-      "description": "Gestiona preferencias de la app, respaldos, sincronizacion, exportaciones y detalles locales."
-    },
     "sections": {
       "general": {
         "title": "General",
@@ -186,7 +177,6 @@
       "currencyGroupDescription": "Elige como se muestran los importes para que balances, reportes y formularios sean faciles de leer.",
       "cards": {
         "theme": {
-          "title": "Tema",
           "description": "Elige la apariencia mas comoda para usar la app todos los dias.",
           "fieldLabel": "Modo de tema",
           "options": {
@@ -196,12 +186,10 @@
           }
         },
         "language": {
-          "title": "Idioma",
           "description": "Elige el idioma de la navegacion, las etiquetas y los mensajes de toda la app.",
           "fieldLabel": "Idioma de la app"
         },
         "dashboardValuationMode": {
-          "title": "Modo de patrimonio en el panel",
           "description": "Elige si el patrimonio y la asignacion de la Vista general deben incluir instantaneas de valoracion cuando existan. Si lo desactivas, esas tarjetas usan solo saldos contables de movimientos.",
           "fieldLabel": "Calculo del panel",
           "options": {
@@ -210,7 +198,6 @@
           }
         },
         "currency": {
-          "title": "Simbolo de moneda",
           "description": "Selecciona el simbolo que quieres ver junto a balances, movimientos y reportes.",
           "fieldLabel": "Simbolo",
           "customLabel": "Simbolo personalizado",
@@ -220,7 +207,6 @@
           }
         },
         "numberFormat": {
-          "title": "Estilo de visualizacion de moneda",
           "description": "Elige los separadores de los importes para que entradas y reportes se vean como esperas.",
           "fieldLabel": "Formato",
           "previewLabel": "Vista previa",
@@ -234,7 +220,6 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
       "appVersionLabel": "Version de la app",
       "appVersionUnavailable": "No disponible en esta build",
       "copy": {
@@ -248,28 +233,14 @@
         "paragraph8": "Nada aqui es obligatorio. Usa tanto o tan poco como quieras.",
         "paragraph9": "Bienvenido a este pequeno lugar aburrido - y recuerda mantener tu balance a salvo con una copia de seguridad de vez en cuando 😉"
       },
-      "localFirst": "Boring Balance es un gestor de finanzas personales pensado para la privacidad. Tus datos se quedan en tu dispositivo y la app los usa solo para mostrar balances y analisis.",
-      "openSourceNote": "La app principal es open source, asi que puedes revisar el proyecto o seguir su desarrollo desde el repositorio de abajo.",
       "openSourceCta": "Abrir en GitHub",
       "checkForUpdates": "Buscar actualizaciones",
       "upToDate": "Estás al día (v{{version}})",
       "updateCheckFailed": "No se pudo buscar actualizaciones. Revisa tu conexión e inténtalo de nuevo.",
-      "footer": "Hecho con ❤️ por {{authorName}}",
-      "runtime": {
-        "title": "Runtime",
-        "description": "Versiones del runtime del renderer expuestas por el puente de Electron.",
-        "electron": "Electron",
-        "node": "Node.js",
-        "chrome": "Chrome",
-        "unknown": "No disponible"
-      }
+      "footer": "Hecho con ❤️ por {{authorName}}"
     }
   },
   "dataBackups": {
-    "page": {
-      "title": "Datos y respaldo",
-      "description": "Gestiona respaldos locales y prepara sincronizacion y exportacion/importacion."
-    },
     "sections": {
       "backups": {
         "title": "Respaldos"
@@ -360,15 +331,12 @@
       }
     },
     "sync": {
-      "title": "Sincronizacion",
       "overview": {
         "title": "Sincronizacion con carpeta externa",
         "description": "Usa una carpeta que ya mantengas sincronizada entre dispositivos, como una nube, un NAS o una unidad USB.",
         "warning": "Elige una carpeta de sincronizacion de confianza. La app sigue trabajando desde tu dispositivo y usa la carpeta compartida solo para intercambiar copias de forma segura.",
         "enabled": "Activar sync",
         "chooseFolder": "Elegir ubicacion",
-        "selectedFolder": "Ubicacion seleccionada",
-        "baseFolderPath": "Ubicacion de carpeta",
         "repoPath": "Carpeta sync de la app",
         "notConnected": "Aun sin conectar",
         "enableHints": {
@@ -379,20 +347,6 @@
       "setup": {
         "title": "Conectar una carpeta de sync",
         "description": "Elige donde guardar la carpeta sync de la app y luego crea un espacio nuevo o conectate a uno existente.",
-        "steps": {
-          "rootFolder": {
-            "title": "1. Elegir una ubicacion",
-            "description": "Elige una carpeta existente o crea una nueva. La carpeta sync de la app se creara alli."
-          },
-          "create": {
-            "title": "2. Crear en el primer dispositivo",
-            "description": "Usa Crear cuando este dispositivo deba publicar los primeros datos sync en esa carpeta."
-          },
-          "attach": {
-            "title": "3. Conectar en otros dispositivos",
-            "description": "Usa Conectar cuando otro dispositivo ya creo la carpeta sync y este dispositivo solo debe unirse."
-          }
-        },
         "actions": {
           "create": "Crear nuevo espacio de sync",
           "attach": "Conectar a un espacio existente"
@@ -415,7 +369,6 @@
         "autoPushIntervalMin": "Intervalo de push",
         "autoPushOnQuit": "Hacer push al cerrar",
         "autoPushOnQuitHint": "Si esta activado, la app comparte tus cambios mas recientes antes de cerrarse.",
-        "retentionCountPerDevice": "Snapshots por dispositivo",
         "intervalOptions": {
           "off": "Desactivado",
           "minutes5": "Cada 5 minutos",
@@ -447,10 +400,6 @@
       "status": {
         "title": "Estado",
         "description": "Consulta el estado actual del sync y cuando este dispositivo hizo pull o push por ultima vez.",
-        "columns": {
-          "item": "Elemento",
-          "value": "Valor"
-        },
         "rows": {
           "current": "Estado actual",
           "lastPull": "Ultimo pull",
@@ -594,7 +543,6 @@
       },
       "controls": {
         "exportExcel": "Exportar a Excel",
-        "importData": "Importar DB / CSV",
         "downloadTemplate": "Descargar plantilla",
         "selectFile": "Seleccionar archivo de Excel",
         "removeSelectedFile": "Quitar archivo",
@@ -652,9 +600,6 @@
     }
   },
   "overview": {
-    "toolbar": {
-      "reload": "Recargar"
-    },
     "banners": {
       "syncUpdateAvailable": {
         "title": "Hay datos de sincronización más recientes disponibles",
@@ -673,34 +618,19 @@
     },
     "cards": {
       "netWorth": {
-        "title": "Patrimonio neto total",
         "summaryTitle": "Patrimonio neto",
-        "receivablesPayablesTitle": "Por cobrar y por pagar",
         "allocationTitle": "Asignacion",
-        "description": "Ve tu patrimonio neto actual, como cambio desde el mes pasado y como influyen los cobros y pagos pendientes.",
-        "allocationDescription": "Ve que cuentas componen tu patrimonio neto para detectar concentracion de un vistazo.",
-        "descriptionDailyAverage": "Prom. patrimonio neto/dia (MTD): {{value}}/dia",
         "tooltips": {
-          "averageDailyChangePositive": "Tu patrimonio neto total esta aumentando en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
-          "averageDailyChangeNegative": "Tu patrimonio neto total esta disminuyendo en promedio {{value}} por dia este mes (vs el cierre del mes anterior).",
-          "averageDailyChangeNeutral": "Tu patrimonio neto total no presenta cambios promedio por dia este mes (vs el cierre del mes anterior).",
-          "current": "Actual",
           "ledgerBalance": "Saldo contable",
           "marketValue": "Valor de mercado"
         },
         "total": "Total",
-        "withValuations": "Con valoraciones",
         "liquidAssets": "liquidez",
         "investments": "Inversiones",
         "snapshotBased": {
           "today": "Instantaneas actualizadas hoy",
           "daysAgo": "Basado en instantaneas (hace {{days}} dias)"
         },
-        "valuationsOutdated": {
-          "title": "Las valoraciones pueden estar desactualizadas",
-          "body": "Tu ultima instantanea de valoracion tiene {{days}} dias. Actualiza las instantaneas para mantener preciso 'Con valoraciones'."
-        },
-        "deltaVsPreviousMonth": "vs mes anterior",
         "receivables": "Por cobrar",
         "payables": "Por pagar",
         "totalAfterRP": "Tras C&P",
@@ -727,11 +657,7 @@
         "loadFailed": "No se pudo cargar la actividad."
       },
       "recentTransactions": {
-        "title": "Ultimos movimientos",
-        "description": "Ultimos {{count}} movimientos de este mes",
-        "loadFailed": "No se pudieron cargar los movimientos.",
         "empty": "Aun no hay movimientos este mes. Agrega uno para empezar a llenar tu actividad.",
-        "toggleSettled": "Cambiar liquidado",
         "tooltips": {
           "settled": "Liquidado",
           "settle": "Liquidar",
@@ -770,9 +696,6 @@
   "breakdown": {
     "toolbar": {
       "selectYear": "Seleccionar año"
-    },
-    "view": {
-      "all": "Todos"
     },
     "averageMode": {
       "label": "Usar meses transcurridos para promedios",
@@ -833,12 +756,6 @@
         "description": "Mira que categorias de gasto crecieron, bajaron o se mantuvieron parecidas entre los dos meses.",
         "empty": "No hay categorias de gasto disponibles para la comparacion radar."
       },
-      "dailyCalendar": {
-        "title": "Calendario diario de gastos",
-        "description": "Mira que dias concentraron mas gasto en cada mes usando una sola escala.",
-        "panelHint": "Gastos diarios (misma escala)",
-        "empty": "No hay datos diarios de gasto para los meses seleccionados."
-      },
       "expensesByCategory": {
         "title": "Gastos por categoria",
         "description": "Revisa cada categoria lado a lado, incluida la diferencia entre ambos meses.",
@@ -890,10 +807,6 @@
         "archive": "Archivar cuenta",
         "locked": "Cuenta bloqueada",
         "manageArchived": "Gestionar archivadas"
-      },
-      "columns": {
-        "color": "Color",
-        "icon": "Icono"
       }
     },
     "dialog": {
@@ -974,10 +887,6 @@
         "archive": "Archivar categoria",
         "locked": "Categoria bloqueada",
         "manageArchived": "Gestionar archivadas"
-      },
-      "columns": {
-        "color": "Color",
-        "icon": "Icono"
       }
     },
     "dialog": {
@@ -1111,7 +1020,6 @@
     },
     "analysis": {
       "title": "Analisis de presupuesto",
-      "description": "Compara los objetivos de presupuesto con los gastos reales por categoria para el ano seleccionado.",
       "loading": "Cargando analisis de presupuesto...",
       "empty": "Aun no hay analisis de presupuesto para {{year}}. Agrega presupuestos y movimientos relacionados para comparar plan y realidad.",
       "series": {
@@ -1141,11 +1049,7 @@
       "commonTransactions": "Movimientos comunes",
       "transfers": "Transferencias"
     },
-    "pagination": {
-      "summary": "{{start}}-{{end}} de {{total}}"
-    },
     "transfers": {
-      "title": "Transferencias",
       "table": {
         "description": "Sigue el dinero que mueves entre tus propias cuentas. Las transferencias cambian donde esta el dinero, no tu gasto total.",
         "emptyMessage": "Aun no hay transferencias. Agrega una cuando muevas dinero entre tus propias cuentas.",
@@ -1331,7 +1235,6 @@
       "piggyBank": "Alcancia",
       "vault": "Boveda",
       "bank": "Banco",
-      "banknoteArrowUp": "Billete",
       "shoppingCart": "Carrito",
       "store": "Tienda",
       "backpack": "Mochila",
@@ -1394,8 +1297,7 @@
       "brain": "Cerebro",
       "crypto": "Cripto",
       "factory": "Fabrica",
-      "car": "Coche",
-      "card": "Tarjeta"
+      "car": "Coche"
     }
   },
   "header": {
@@ -1430,24 +1332,14 @@
       "description": "Planifica movimientos y transferencias repetidos para llevar mejor tu actividad rutinaria.",
       "emptyMessage": "Aun no hay eventos recurrentes. Agrega uno para automatizar movimientos o transferencias repetidas.",
       "emptyNoAccountsMessage": "Aun no hay cuentas. Agrega la primera antes de crear eventos recurrentes.",
-      "columns": {
-        "title": "Titulo",
-        "startDate": "Fecha de inicio",
-        "schedule": "Programacion",
-        "template": "Plantilla"
-      },
       "actions": {
         "add": "Agregar evento recurrente",
         "viewItems": "Ver elementos planificados",
         "edit": "Editar evento recurrente",
-        "run": "Ejecutar evento recurrente",
         "delete": "Eliminar evento recurrente"
       },
       "schedule": {
-        "summary": "Ocurre {{count}} veces, {{interval}} cada {{unit}}",
-        "every": "{{interval}} cada  {{unit}}",
-        "occurrences": "{{count}} ocurrencias",
-        "monthPolicy": "Si el dia no existe en el mes: {{policy}}"
+        "summary": "Ocurre {{count}} veces, {{interval}} cada {{unit}}"
       },
       "template": {
         "unknown": "Plantilla desconocida",
@@ -1534,12 +1426,7 @@
       },
       "form": {
         "labels": {
-          "title": "Titulo",
-          "startDate": "Fecha de inicio",
-          "occurrences": "Ocurrencias",
-          "frequencyInterval": "Cada",
-          "frequencyUnit": "Unidad de frecuencia",
-          "monthPolicy": "Si el dia no existe en el mes"
+          "frequencyInterval": "Cada"
         },
         "placeholders": {
           "title": "Titulo del evento recurrente",
@@ -1563,14 +1450,6 @@
         "delete": "Eliminar"
       }
     },
-    "runConfirm": {
-      "title": "Ejecutar evento recurrente?",
-      "description": "Genera ahora los elementos programados que falten para \"{{title}}\".",
-      "actions": {
-        "cancel": "Cancelar",
-        "run": "Ejecutar ahora"
-      }
-    },
     "createResult": {
       "title": "Evento recurrente creado"
     },
@@ -1583,7 +1462,6 @@
     },
     "runResult": {
       "title": "Eventos recurrentes creados",
-      "description": "\"{{title}}\" proceso {{total}} ocurrencias. Creadas: {{created}}. Omitidas por existentes: {{skipped}}.",
       "labels": {
         "plan": "Plan recurrente",
         "created": "Creados ahora",
@@ -1596,14 +1474,6 @@
       "actions": {
         "ok": "Aceptar"
       }
-    },
-    "runError": {
-      "title": "No se pudo ejecutar el evento recurrente",
-      "description": "No se pudo ejecutar el evento recurrente: {{error}}",
-      "actions": {
-        "ok": "Aceptar"
-      },
-      "fallbackError": "Error inesperado"
     },
     "toasts": {
       "createSuccess": "Evento recurrente creado correctamente.",
@@ -1675,9 +1545,7 @@
       }
     },
     "header": {
-      "currentValue": "Valor actual",
       "change": "Variación",
-      "changePct": "Variación %",
       "accountBalance": "Saldo de la cuenta",
       "lastSnapshot": "Última instantánea",
       "changeVsBalance": "Variación vs saldo",

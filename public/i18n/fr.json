@@ -36,7 +36,6 @@
       "selectColor": "Sélectionner une couleur",
       "selectIcon": "Sélectionner une icône",
       "pickDate": "Choisir une date",
-      "amountZero": "0,00",
       "selectAccount": "Sélectionner un compte",
       "selectCategory": "Sélectionner une catégorie",
       "optionalDescription": "Description facultative",
@@ -117,9 +116,7 @@
   "nav": {
     "sections": {
       "main": "Menu",
-      "insights": "Analyses",
-      "setup": "Configuration",
-      "settings": "Paramètres"
+      "setup": "Configuration"
     },
     "items": {
       "overview": "Vue d'ensemble",
@@ -130,16 +127,10 @@
       "accounts": "Comptes",
       "categories": "Catégories",
       "recurringEvents": "Événements récurrents",
-      "settings": "Paramètres",
-      "dataBackups": "Données et sauvegardes",
-      "about": "À propos"
+      "settings": "Paramètres"
     }
   },
   "settings": {
-    "page": {
-      "title": "Paramètres",
-      "description": "Gérer les préférences de l'application, les sauvegardes, la synchronisation, les exports et les détails locaux."
-    },
     "sections": {
       "general": {
         "title": "Général",
@@ -186,7 +177,6 @@
       "currencyGroupDescription": "Choisir comment les montants s'affichent pour que les soldes, les rapports et les formulaires restent lisibles.",
       "cards": {
         "theme": {
-          "title": "Thème",
           "description": "Choisir l'apparence la plus adaptée à une utilisation quotidienne dans toute l'application.",
           "fieldLabel": "Mode d'affichage",
           "options": {
@@ -196,12 +186,10 @@
           }
         },
         "language": {
-          "title": "Langue",
           "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
           "fieldLabel": "Langue de l'application"
         },
         "dashboardValuationMode": {
-          "title": "Mode valeur nette du tableau de bord",
           "description": "Choisir si la valeur nette et la répartition dans la vue d'ensemble doivent inclure les valorisations lorsqu'elles sont disponibles. Si désactivé, ces cartes utilisent uniquement les soldes comptables des transactions.",
           "fieldLabel": "Calculs du tableau de bord",
           "options": {
@@ -210,7 +198,6 @@
           }
         },
         "currency": {
-          "title": "Symbole monétaire",
           "description": "Sélectionner le symbole à afficher à côté des soldes, transactions et rapports.",
           "fieldLabel": "Symbole",
           "customLabel": "Symbole personnalisé",
@@ -220,7 +207,6 @@
           }
         },
         "numberFormat": {
-          "title": "Format d'affichage des montants",
           "description": "Choisir les séparateurs utilisés dans les montants pour que les saisies et rapports correspondent au format attendu.",
           "fieldLabel": "Format",
           "previewLabel": "Aperçu",
@@ -234,7 +220,6 @@
       }
     },
     "about": {
-      "appNameLabel": "Application",
       "appVersionLabel": "Version",
       "appVersionUnavailable": "Non disponible dans cette version",
       "copy": {
@@ -248,28 +233,14 @@
         "paragraph8": "Rien n'est imposé. Utilisez autant ou aussi peu que vous le souhaitez.",
         "paragraph9": "Bienvenue dans ce petit endroit tranquille — et pensez à protéger vos données avec une sauvegarde de temps en temps 😉"
       },
-      "localFirst": "Boring Balance est un gestionnaire de finances personnelles axé sur la confidentialité. Vos données restent sur votre appareil et l'application les utilise uniquement pour afficher vos soldes et analyses.",
-      "openSourceNote": "L'application principale est open source, vous pouvez donc consulter le projet ou suivre son développement depuis le dépôt ci-dessous.",
       "openSourceCta": "Ouvrir sur GitHub",
       "checkForUpdates": "Vérifier les mises à jour",
       "upToDate": "Vous êtes à jour (v{{version}})",
       "updateCheckFailed": "Impossible de vérifier les mises à jour. Vérifiez votre connexion et réessayez.",
-      "footer": "Fait avec ❤️ par {{authorName}}",
-      "runtime": {
-        "title": "Environnement d'exécution",
-        "description": "Versions de l'environnement d'exécution du moteur de rendu exposées via le pont Electron.",
-        "electron": "Electron",
-        "node": "Node.js",
-        "chrome": "Chrome",
-        "unknown": "Indisponible"
-      }
+      "footer": "Fait avec ❤️ par {{authorName}}"
     }
   },
   "dataBackups": {
-    "page": {
-      "title": "Données et sauvegardes",
-      "description": "Gérer les sauvegardes locales et préparer la synchronisation et les fonctions d'import/export."
-    },
     "sections": {
       "backups": {
         "title": "Sauvegardes"
@@ -360,15 +331,12 @@
       }
     },
     "sync": {
-      "title": "Synchronisation",
       "overview": {
         "title": "Synchronisation via dossier externe",
         "description": "Utiliser un dossier déjà synchronisé entre vos appareils, comme un disque cloud, un NAS ou une clé USB.",
         "warning": "Choisir un dossier de synchronisation de confiance. L'application continue de fonctionner depuis votre appareil et n'utilise le dossier partagé que pour échanger des copies en toute sécurité.",
         "enabled": "Activer la synchronisation",
         "chooseFolder": "Choisir l'emplacement",
-        "selectedFolder": "Emplacement sélectionné",
-        "baseFolderPath": "Emplacement du dossier",
         "repoPath": "Dossier de synchronisation de l'application",
         "notConnected": "Pas encore connecté",
         "enableHints": {
@@ -379,20 +347,6 @@
       "setup": {
         "title": "Connecter un dossier de synchronisation",
         "description": "Choisir l'emplacement du dossier de synchronisation de l'application, puis créer un nouvel espace ou se connecter à un espace existant.",
-        "steps": {
-          "rootFolder": {
-            "title": "1. Choisir un emplacement",
-            "description": "Sélectionner un dossier existant ou en créer un nouveau. Le dossier de synchronisation de l'application y sera créé."
-          },
-          "create": {
-            "title": "2. Créer sur le premier appareil",
-            "description": "Utiliser Créer lorsque cet appareil doit publier les premières données de synchronisation dans ce dossier."
-          },
-          "attach": {
-            "title": "3. Connecter sur les autres appareils",
-            "description": "Utiliser Connecter lorsqu'un autre appareil a déjà créé le dossier de synchronisation et que cet appareil doit le rejoindre."
-          }
-        },
         "actions": {
           "create": "Créer un nouvel espace de synchronisation",
           "attach": "Se connecter à un espace existant"
@@ -415,7 +369,6 @@
         "autoPushIntervalMin": "Intervalle d'envoi automatique",
         "autoPushOnQuit": "Envoyer à la fermeture",
         "autoPushOnQuitHint": "Lorsqu'activé, l'application partage vos dernières modifications avant de se fermer.",
-        "retentionCountPerDevice": "Instantanés conservés par appareil",
         "intervalOptions": {
           "off": "Désactivé",
           "minutes5": "Toutes les 5 minutes",
@@ -447,10 +400,6 @@
       "status": {
         "title": "Statut",
         "description": "Vérifier l'état actuel de la synchronisation et voir quand cet appareil a récupéré ou envoyé des données pour la dernière fois.",
-        "columns": {
-          "item": "Élément",
-          "value": "Valeur"
-        },
         "rows": {
           "current": "Statut actuel",
           "lastPull": "Dernière récupération",
@@ -594,7 +543,6 @@
       },
       "controls": {
         "exportExcel": "Exporter en Excel",
-        "importData": "Importer DB / CSV",
         "downloadTemplate": "Télécharger le modèle",
         "selectFile": "Sélectionner un fichier Excel",
         "removeSelectedFile": "Supprimer le fichier",
@@ -652,9 +600,6 @@
     }
   },
   "overview": {
-    "toolbar": {
-      "reload": "Actualiser"
-    },
     "banners": {
       "syncUpdateAvailable": {
         "title": "Des données de synchronisation plus récentes sont disponibles",
@@ -673,34 +618,19 @@
     },
     "cards": {
       "netWorth": {
-        "title": "Valeur nette totale",
         "summaryTitle": "Valeur nette",
-        "receivablesPayablesTitle": "Créances et dettes",
         "allocationTitle": "Répartition",
-        "description": "Consulter la valeur nette actuelle, son évolution depuis le mois dernier et l'impact des créances ou dettes sur l'ensemble.",
-        "allocationDescription": "Voir quels comptes constituent la valeur nette pour identifier la concentration d'un coup d'œil.",
-        "descriptionDailyAverage": "Valeur nette moy./jour (MTD) : {{value}}/jour",
         "tooltips": {
-          "averageDailyChangePositive": "Votre valeur nette totale augmente en moyenne de {{value}} par jour ce mois-ci (par rapport à la fin du mois dernier).",
-          "averageDailyChangeNegative": "Votre valeur nette totale diminue en moyenne de {{value}} par jour ce mois-ci (par rapport à la fin du mois dernier).",
-          "averageDailyChangeNeutral": "Votre valeur nette totale est stable en moyenne par jour ce mois-ci (par rapport à la fin du mois dernier).",
-          "current": "Actuel",
           "ledgerBalance": "Solde comptable",
           "marketValue": "Valeur de marché"
         },
         "total": "Total",
-        "withValuations": "Avec valorisations",
         "liquidAssets": "Liquidités",
         "investments": "Investissements",
         "snapshotBased": {
           "today": "Instantanés mis à jour aujourd'hui",
           "daysAgo": "Basé sur les instantanés (il y a {{days}} jours)"
         },
-        "valuationsOutdated": {
-          "title": "Les valorisations sont peut-être obsolètes",
-          "body": "Votre dernier instantané de valorisation date de {{days}} jours. Mettez à jour les instantanés pour maintenir la précision de 'Avec valorisations'."
-        },
-        "deltaVsPreviousMonth": "vs mois précédent",
         "receivables": "Créances",
         "payables": "Dettes",
         "totalAfterRP": "Après C&D",
@@ -727,11 +657,7 @@
         "loadFailed": "Impossible de charger l'activité."
       },
       "recentTransactions": {
-        "title": "Dernières transactions",
-        "description": "Les {{count}} dernières transactions du mois",
-        "loadFailed": "Impossible de charger les transactions.",
         "empty": "Aucune transaction ce mois-ci. Ajoutez-en une pour commencer à alimenter le journal d'activité.",
-        "toggleSettled": "Basculer le statut soldé",
         "tooltips": {
           "settled": "Soldé",
           "settle": "Solder",
@@ -770,9 +696,6 @@
   "breakdown": {
     "toolbar": {
       "selectYear": "Sélectionner une année"
-    },
-    "view": {
-      "all": "Tout"
     },
     "averageMode": {
       "label": "Utiliser les mois écoulés pour les moyennes",
@@ -833,12 +756,6 @@
         "description": "Voir quelles catégories de dépenses ont augmenté, diminué ou sont restées similaires entre les deux mois.",
         "empty": "Aucune catégorie de dépenses disponible pour la comparaison radar."
       },
-      "dailyCalendar": {
-        "title": "Calendrier des dépenses journalières",
-        "description": "Voir quels jours ont concentré les dépenses les plus importantes dans chaque mois, avec une échelle commune.",
-        "panelHint": "Dépenses journalières (même échelle)",
-        "empty": "Aucune donnée de dépenses journalières pour les mois sélectionnés."
-      },
       "expensesByCategory": {
         "title": "Dépenses par catégorie",
         "description": "Examiner chaque catégorie côte à côte, y compris la différence entre les deux mois.",
@@ -890,10 +807,6 @@
         "archive": "Archiver le compte",
         "locked": "Compte verrouillé",
         "manageArchived": "Gérer les archives"
-      },
-      "columns": {
-        "color": "Couleur",
-        "icon": "Icône"
       }
     },
     "dialog": {
@@ -974,10 +887,6 @@
         "archive": "Archiver la catégorie",
         "locked": "Catégorie verrouillée",
         "manageArchived": "Gérer les archives"
-      },
-      "columns": {
-        "color": "Couleur",
-        "icon": "Icône"
       }
     },
     "dialog": {
@@ -1111,7 +1020,6 @@
     },
     "analysis": {
       "title": "Analyse budgétaire",
-      "description": "Comparer les objectifs budgétaires aux dépenses réelles par catégorie pour l'année sélectionnée.",
       "loading": "Chargement de l'analyse budgétaire...",
       "empty": "Aucune analyse budgétaire pour {{year}}. Ajoutez des budgets et des transactions correspondantes pour comparer le plan et le réel.",
       "series": {
@@ -1141,11 +1049,7 @@
       "commonTransactions": "Transactions",
       "transfers": "Virements"
     },
-    "pagination": {
-      "summary": "{{start}}-{{end}} sur {{total}}"
-    },
     "transfers": {
-      "title": "Virements",
       "table": {
         "description": "Suivre les mouvements d'argent entre vos propres comptes. Les virements changent l'emplacement de l'argent, pas les totaux de dépenses.",
         "emptyMessage": "Aucun virement. Ajoutez-en un lorsque vous déplacez de l'argent entre vos comptes.",
@@ -1331,7 +1235,6 @@
       "piggyBank": "Tirelire",
       "vault": "Coffre",
       "bank": "Banque",
-      "banknoteArrowUp": "Billet",
       "shoppingCart": "Panier",
       "store": "Magasin",
       "backpack": "Sac à dos",
@@ -1394,8 +1297,7 @@
       "brain": "Cerveau",
       "crypto": "Crypto",
       "factory": "Usine",
-      "car": "Voiture",
-      "card": "Carte"
+      "car": "Voiture"
     }
   },
   "header": {
@@ -1430,24 +1332,14 @@
       "description": "Planifier des transactions et des virements récurrents pour faciliter le suivi des activités routinières.",
       "emptyMessage": "Aucun événement récurrent. Ajoutez-en un pour automatiser les transactions ou virements répétés.",
       "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant de créer des événements récurrents.",
-      "columns": {
-        "title": "Titre",
-        "startDate": "Date de début",
-        "schedule": "Planification",
-        "template": "Modèle"
-      },
       "actions": {
         "add": "Ajouter un événement récurrent",
         "viewItems": "Voir les éléments planifiés",
         "edit": "Modifier l'événement récurrent",
-        "run": "Exécuter l'événement récurrent",
         "delete": "Supprimer l'événement récurrent"
       },
       "schedule": {
-        "summary": "Se produit {{count}} fois, {{interval}} toutes les {{unit}}",
-        "every": "{{interval}} toutes les {{unit}}",
-        "occurrences": "{{count}} occurrences",
-        "monthPolicy": "Si le jour n'existe pas dans le mois : {{policy}}"
+        "summary": "Se produit {{count}} fois, {{interval}} toutes les {{unit}}"
       },
       "template": {
         "unknown": "Modèle inconnu",
@@ -1534,12 +1426,7 @@
       },
       "form": {
         "labels": {
-          "title": "Titre",
-          "startDate": "Date de début",
-          "occurrences": "Occurrences",
-          "frequencyInterval": "Tous les",
-          "frequencyUnit": "Unité de fréquence",
-          "monthPolicy": "Si le jour n'existe pas dans le mois"
+          "frequencyInterval": "Tous les"
         },
         "placeholders": {
           "title": "Titre de l'événement récurrent",
@@ -1563,14 +1450,6 @@
         "delete": "Supprimer"
       }
     },
-    "runConfirm": {
-      "title": "Exécuter l'événement récurrent ?",
-      "description": "Générer maintenant les éléments planifiés manquants pour \"{{title}}\".",
-      "actions": {
-        "cancel": "Annuler",
-        "run": "Exécuter maintenant"
-      }
-    },
     "createResult": {
       "title": "Événement récurrent créé"
     },
@@ -1583,7 +1462,6 @@
     },
     "runResult": {
       "title": "Événements récurrents créés",
-      "description": "\"{{title}}\" a traité {{total}} occurrences. Créées : {{created}}. Existantes ignorées : {{skipped}}.",
       "labels": {
         "plan": "Plan récurrent",
         "created": "Créés maintenant",
@@ -1596,14 +1474,6 @@
       "actions": {
         "ok": "OK"
       }
-    },
-    "runError": {
-      "title": "Échec de l'exécution de l'événement récurrent",
-      "description": "L'événement récurrent n'a pas pu être exécuté : {{error}}",
-      "actions": {
-        "ok": "OK"
-      },
-      "fallbackError": "Erreur inattendue"
     },
     "toasts": {
       "createSuccess": "Événement récurrent créé avec succès.",
@@ -1675,9 +1545,7 @@
       }
     },
     "header": {
-      "currentValue": "Valeur actuelle",
       "change": "Variation",
-      "changePct": "Variation %",
       "accountBalance": "Solde du compte",
       "lastSnapshot": "Dernier instantané",
       "changeVsBalance": "Variation vs solde",

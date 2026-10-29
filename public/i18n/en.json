@@ -36,7 +36,6 @@
       "selectColor": "Select color",
       "selectIcon": "Select icon",
       "pickDate": "Pick a date",
-      "amountZero": "0,00",
       "selectAccount": "Select account",
       "selectCategory": "Select category",
       "optionalDescription": "Optional description",
@@ -117,9 +116,7 @@
   "nav": {
     "sections": {
       "main": "Menu",
-      "insights": "Insights",
-      "setup": "Setup",
-      "settings": "Settings"
+      "setup": "Setup"
     },
     "items": {
       "overview": "Overview",
@@ -130,16 +127,10 @@
       "accounts": "Accounts",
       "categories": "Categories",
       "recurringEvents": "Recurring events",
-      "settings": "Settings",
-      "dataBackups": "Data & Backups",
-      "about": "About"
+      "settings": "Settings"
     }
   },
   "settings": {
-    "page": {
-      "title": "Settings",
-      "description": "Manage app preferences, backups, sync, exports, and local app details."
-    },
     "sections": {
       "general": {
         "title": "General",
@@ -186,7 +177,6 @@
       "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
       "cards": {
         "theme": {
-          "title": "Theme",
           "description": "Pick the appearance that feels best for everyday use across the whole app.",
           "fieldLabel": "Theme mode",
           "options": {
@@ -196,12 +186,10 @@
           }
         },
         "language": {
-          "title": "Language",
           "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         },
         "dashboardValuationMode": {
-          "title": "Dashboard net worth mode",
           "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
           "fieldLabel": "Dashboard calculations",
           "options": {
@@ -210,7 +198,6 @@
           }
         },
         "currency": {
-          "title": "Currency symbol",
           "description": "Select the symbol you want to see next to balances, transactions, and reports.",
           "fieldLabel": "Symbol",
           "customLabel": "Custom symbol",
@@ -220,7 +207,6 @@
           }
         },
         "numberFormat": {
-          "title": "Currency display style",
           "description": "Choose the separators used in amounts so entries and reports match what you expect.",
           "fieldLabel": "Format",
           "previewLabel": "Preview",
@@ -234,7 +220,6 @@
       }
     },
     "about": {
-      "appNameLabel": "App",
       "appVersionLabel": "App version",
       "appVersionUnavailable": "Not available in this build",
       "copy": {
@@ -248,28 +233,14 @@
         "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
         "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
       },
-      "localFirst": "Boring Balance is a personal finance tracker built for privacy. Your data stays on your device, and the app uses it only to show your balances and insights.",
-      "openSourceNote": "The core app is open source, so you can review the project or follow its development from the repository below.",
       "openSourceCta": "Open on GitHub",
       "checkForUpdates": "Check for updates",
       "upToDate": "You're up to date (v{{version}})",
       "updateCheckFailed": "Couldn't check for updates. Check your connection and try again.",
-      "footer": "Made with ❤️ by {{authorName}}",
-      "runtime": {
-        "title": "Runtime",
-        "description": "Renderer runtime versions exposed through the Electron bridge.",
-        "electron": "Electron",
-        "node": "Node.js",
-        "chrome": "Chrome",
-        "unknown": "Unavailable"
-      }
+      "footer": "Made with ❤️ by {{authorName}}"
     }
   },
   "dataBackups": {
-    "page": {
-      "title": "Data & Backups",
-      "description": "Manage local backups and prepare for sync and import/export features."
-    },
     "sections": {
       "backups": {
         "title": "Backups"
@@ -360,15 +331,12 @@
       }
     },
     "sync": {
-      "title": "Sync",
       "overview": {
         "title": "External folder sync",
         "description": "Use a folder you already keep in sync between devices, such as a cloud drive, NAS, or USB drive.",
         "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
         "enabled": "Enable sync",
         "chooseFolder": "Choose folder location",
-        "selectedFolder": "Selected folder location",
-        "baseFolderPath": "Folder location",
         "repoPath": "App sync folder",
         "notConnected": "Not connected yet",
         "enableHints": {
@@ -379,20 +347,6 @@
       "setup": {
         "title": "Connect a sync folder",
         "description": "Choose where the app sync folder should live, then create a new sync space or connect to an existing one.",
-        "steps": {
-          "rootFolder": {
-            "title": "1. Choose a folder location",
-            "description": "Pick an existing folder or create a new one. The app sync folder will be created there."
-          },
-          "create": {
-            "title": "2. Create on the first device",
-            "description": "Use Create when this device should publish the first sync data into that folder."
-          },
-          "attach": {
-            "title": "3. Connect on other devices",
-            "description": "Use Connect when another device already created the sync folder and this device should join it."
-          }
-        },
         "actions": {
           "create": "Create new sync space",
           "attach": "Connect to existing sync space"
@@ -415,7 +369,6 @@
         "autoPushIntervalMin": "Auto push interval",
         "autoPushOnQuit": "Push on app quit",
         "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
-        "retentionCountPerDevice": "Snapshots kept per device",
         "intervalOptions": {
           "off": "Off",
           "minutes5": "Every 5 minutes",
@@ -447,10 +400,6 @@
       "status": {
         "title": "Status",
         "description": "Check the current sync state and see when this device last pulled or pushed.",
-        "columns": {
-          "item": "Item",
-          "value": "Value"
-        },
         "rows": {
           "current": "Current status",
           "lastPull": "Last pull",
@@ -594,7 +543,6 @@
       },
       "controls": {
         "exportExcel": "Export to Excel",
-        "importData": "Import DB / CSV",
         "downloadTemplate": "Download template",
         "selectFile": "Select Excel file",
         "removeSelectedFile": "Remove file",
@@ -652,9 +600,6 @@
     }
   },
   "overview": {
-    "toolbar": {
-      "reload": "Reload"
-    },
     "banners": {
       "syncUpdateAvailable": {
         "title": "Newer sync data is available",
@@ -673,34 +618,19 @@
     },
     "cards": {
       "netWorth": {
-        "title": "Total net worth",
         "summaryTitle": "Net Worth",
-        "receivablesPayablesTitle": "Receivables & Payables",
         "allocationTitle": "Allocation",
-        "description": "See your current net worth, how it changed since last month, and how receivables or payables affect the full picture.",
-        "allocationDescription": "See which accounts make up your net worth so you can spot concentration at a glance.",
-        "descriptionDailyAverage": "Avg net worth/day (MTD): {{value}}/day",
         "tooltips": {
-          "averageDailyChangePositive": "Your total net worth is increasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNegative": "Your total net worth is decreasing by an average of {{value}} per day this month (vs the end of last month).",
-          "averageDailyChangeNeutral": "Your total net worth is unchanged on average per day this month (vs the end of last month).",
-          "current": "Current",
           "ledgerBalance": "Ledger Balance",
           "marketValue": "Market Value"
         },
         "total": "Total",
-        "withValuations": "With valuations",
         "liquidAssets": "Liquidity",
         "investments": "Investments",
         "snapshotBased": {
           "today": "Snapshots updated today",
           "daysAgo": "Based on snapshots ({{days}} days ago)"
         },
-        "valuationsOutdated": {
-          "title": "Valuations may be outdated",
-          "body": "Your latest valuation snapshot is {{days}} days old. Update snapshots to keep 'With valuations' accurate."
-        },
-        "deltaVsPreviousMonth": "vs previous month",
         "receivables": "Receivables",
         "payables": "Payables",
         "totalAfterRP": "After R&P",
@@ -727,11 +657,7 @@
         "loadFailed": "Unable to load activity."
       },
       "recentTransactions": {
-        "title": "Last transactions",
-        "description": "Latest {{count}} transactions this month",
-        "loadFailed": "Unable to load transactions.",
         "empty": "No transactions this month yet. Add one to start building your activity feed.",
-        "toggleSettled": "Toggle settled",
         "tooltips": {
           "settled": "Settled",
           "settle": "Settle",
@@ -770,9 +696,6 @@
   "breakdown": {
     "toolbar": {
       "selectYear": "Select year"
-    },
-    "view": {
-      "all": "All"
     },
     "averageMode": {
       "label": "Use elapsed months for averages",
@@ -833,12 +756,6 @@
         "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
         "empty": "No expense categories available for radar comparison."
       },
-      "dailyCalendar": {
-        "title": "Daily expense calendar",
-        "description": "See which days carried the heaviest spending in each month with one shared scale.",
-        "panelHint": "Daily expenses (same scale)",
-        "empty": "No daily spending data for the selected months."
-      },
       "expensesByCategory": {
         "title": "Expenses by category",
         "description": "Review each category side by side, including the difference between the two months.",
@@ -890,10 +807,6 @@
         "archive": "Archive account",
         "locked": "Locked account",
         "manageArchived": "Manage archived"
-      },
-      "columns": {
-        "color": "Color",
-        "icon": "Icon"
       }
     },
     "dialog": {
@@ -974,10 +887,6 @@
         "archive": "Archive category",
         "locked": "Locked category",
         "manageArchived": "Manage archived"
-      },
-      "columns": {
-        "color": "Color",
-        "icon": "Icon"
       }
     },
     "dialog": {
@@ -1111,7 +1020,6 @@
     },
     "analysis": {
       "title": "Budget analysis",
-      "description": "Compare budget targets against actual category expenses for the selected year.",
       "loading": "Loading budget analysis...",
       "empty": "No budget analysis for {{year}} yet. Add budgets and matching transactions to compare plan versus actual.",
       "series": {
@@ -1141,11 +1049,7 @@
       "commonTransactions": "Common transactions",
       "transfers": "Transfers"
     },
-    "pagination": {
-      "summary": "{{start}}-{{end}} of {{total}}"
-    },
     "transfers": {
-      "title": "Transfers",
       "table": {
         "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
         "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
@@ -1331,7 +1235,6 @@
       "piggyBank": "Piggy Bank",
       "vault": "Vault",
       "bank": "Bank",
-      "banknoteArrowUp": "Banknote",
       "shoppingCart": "Shopping Cart",
       "store": "Store",
       "backpack": "Backpack",
@@ -1394,8 +1297,7 @@
       "brain": "Brain",
       "crypto": "Crypto",
       "factory": "Factory",
-      "car": "Car",
-      "card": "Card"
+      "car": "Car"
     }
   },
   "header": {
@@ -1430,24 +1332,14 @@
       "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
       "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
       "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
-      "columns": {
-        "title": "Title",
-        "startDate": "Start date",
-        "schedule": "Schedule",
-        "template": "Template"
-      },
       "actions": {
         "add": "Add recurring event",
         "viewItems": "View planned items",
         "edit": "Edit recurring event",
-        "run": "Run recurring event",
         "delete": "Delete recurring event"
       },
       "schedule": {
-        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}",
-        "every": "{{interval}} every {{unit}}",
-        "occurrences": "{{count}} occurrences",
-        "monthPolicy": "If the day is not in the month: {{policy}}"
+        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}"
       },
       "template": {
         "unknown": "Unknown template",
@@ -1534,12 +1426,7 @@
       },
       "form": {
         "labels": {
-          "title": "Title",
-          "startDate": "Start date",
-          "occurrences": "Occurrences",
-          "frequencyInterval": "Every",
-          "frequencyUnit": "Frequency unit",
-          "monthPolicy": "If the day is not in the month"
+          "frequencyInterval": "Every"
         },
         "placeholders": {
           "title": "Recurring event title",
@@ -1563,14 +1450,6 @@
         "delete": "Delete"
       }
     },
-    "runConfirm": {
-      "title": "Run recurring event?",
-      "description": "Generate any missing scheduled items for \"{{title}}\" now.",
-      "actions": {
-        "cancel": "Cancel",
-        "run": "Run now"
-      }
-    },
     "createResult": {
       "title": "Recurring event created"
     },
@@ -1583,7 +1462,6 @@
     },
     "runResult": {
       "title": "Recurring events created",
-      "description": "\"{{title}}\" processed {{total}} occurrences. Created: {{created}}. Skipped existing: {{skipped}}.",
       "labels": {
         "plan": "Recurring plan",
         "created": "Created now",
@@ -1596,14 +1474,6 @@
       "actions": {
         "ok": "OK"
       }
-    },
-    "runError": {
-      "title": "Failed to run recurring event",
-      "description": "The recurring event could not be executed: {{error}}",
-      "actions": {
-        "ok": "OK"
-      },
-      "fallbackError": "Unexpected error"
     },
     "toasts": {
       "createSuccess": "Recurring event created successfully.",
@@ -1675,9 +1545,7 @@
       }
     },
     "header": {
-      "currentValue": "Current value",
       "change": "Change",
-      "changePct": "Change %",
       "accountBalance": "Account balance",
       "lastSnapshot": "Latest snapshot",
       "changeVsBalance": "Change vs balance",
