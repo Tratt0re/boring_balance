@@ -23,5 +23,6 @@ export const BACKUP_STATE_DEFAULTS: BackupStateDto = {
   lastBackupFileName: null,
   lastBackupStatus: 'idle',
   lastBackupError: null,
+  lastCleanupWarning: null,
   lastBackedUpChangeCounter: null,
 };

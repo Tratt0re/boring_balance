@@ -49,6 +49,7 @@ const BACKUP_STATE_DEFAULTS = Object.freeze({
   lastBackupFileName: null,
   lastBackupStatus: 'idle',
   lastBackupError: null,
+  lastCleanupWarning: null,
   lastBackedUpChangeCounter: null,
 });
 const BACKUP_EVENT_CHANNELS = Object.freeze({
@@ -105,6 +106,7 @@ function cloneState() {
     lastBackupFileName: runtimeState.lastBackupFileName,
     lastBackupStatus: runtimeState.lastBackupStatus,
     lastBackupError: runtimeState.lastBackupError,
+    lastCleanupWarning: runtimeState.lastCleanupWarning,
     lastBackedUpChangeCounter: runtimeState.lastBackedUpChangeCounter,
   };
 }
@@ -333,13 +335,22 @@ async function executeBackup(options = {}) {
       settings.folderPath,
       app.getVersion(),
     );
-    backupModel.pruneBackups(settings.folderPath, settings.retentionCount);
+
+    // The new backup is already good. A failure to remove old ones is only a warning about cleanup.
+    let cleanupWarning = null;
+    try {
+      backupModel.pruneBackups(settings.folderPath, settings.retentionCount);
+    } catch (pruneError) {
+      cleanupWarning = pruneError instanceof Error ? pruneError.message : String(pruneError);
+      console.error('[electron] Could not remove old backups:', pruneError);
+    }
 
     setRuntimeState({
       lastBackupAtMs: backupResult.createdAtMs,
       lastBackupFileName: backupResult.fileName,
       lastBackupStatus: 'ok',
       lastBackupError: null,
+      lastCleanupWarning: cleanupWarning,
       lastBackedUpChangeCounter: Number.isInteger(backupResult.meta?.change_counter)
         ? backupResult.meta.change_counter
         : runtimeState.lastBackedUpChangeCounter,

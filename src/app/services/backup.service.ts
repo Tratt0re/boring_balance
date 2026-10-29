@@ -31,6 +31,7 @@ const BACKUP_STATE_DEFAULTS: DTO.BackupStateDto = {
   lastBackupFileName: null,
   lastBackupStatus: 'idle',
   lastBackupError: null,
+  lastCleanupWarning: null,
   lastBackedUpChangeCounter: null,
 };
 
@@ -334,6 +335,10 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
       lastBackupError:
         typeof value?.lastBackupError === 'string' && value.lastBackupError.trim().length > 0
           ? value.lastBackupError.trim()
+          : null,
+      lastCleanupWarning:
+        typeof value?.lastCleanupWarning === 'string' && value.lastCleanupWarning.trim().length > 0
+          ? value.lastCleanupWarning.trim()
           : null,
       lastBackedUpChangeCounter: this.normalizeIntegerOrNull(value?.lastBackedUpChangeCounter),
     };

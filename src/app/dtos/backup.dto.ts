@@ -11,6 +11,8 @@ export interface BackupStateDto {
   readonly lastBackupFileName: string | null;
   readonly lastBackupStatus: 'idle' | 'running' | 'ok' | 'error';
   readonly lastBackupError: string | null;
+  /** Set when a backup succeeded but old backups could not be removed. The new backup is still good. */
+  readonly lastCleanupWarning: string | null;
   readonly lastBackedUpChangeCounter: number | null;
 }
 
