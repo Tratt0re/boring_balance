@@ -56,20 +56,32 @@ const PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS = [
   { label: 'recurringEvents.dialog.edit.applyToOptions.ruleOnly', value: 'rule_only' },
 ] as const;
 
-interface NormalizedPlanItemValues {
+interface NormalizedPlanItemBase {
   readonly title: string;
-  readonly type: PlanItemType;
   readonly ruleJson: PlanItemRuleJsonDto;
-  readonly template: {
-    readonly amountCents: number;
-    readonly description: string;
-    readonly settled: boolean;
-    readonly accountId?: number;
-    readonly categoryId?: number;
-    readonly fromAccountId?: number;
-    readonly toAccountId?: number;
-  };
 }
+
+interface NormalizedTemplateBase {
+  readonly amountCents: number;
+  readonly description: string;
+  readonly settled: boolean;
+}
+
+type NormalizedPlanItemValues =
+  | (NormalizedPlanItemBase & {
+      readonly type: 'transaction';
+      readonly template: NormalizedTemplateBase & {
+        readonly accountId: number;
+        readonly categoryId: number;
+      };
+    })
+  | (NormalizedPlanItemBase & {
+      readonly type: 'transfer';
+      readonly template: NormalizedTemplateBase & {
+        readonly fromAccountId: number;
+        readonly toAccountId: number;
+      };
+    });
 
 export interface PlanItemDialogInitialValue {
   readonly title: string;
@@ -197,8 +209,8 @@ export class UpsertPlanItemDialogComponent {
     if (values.type === 'transaction') {
       const templateJson: PlanItemTransactionTemplateJsonInputDto = {
         amount_cents: values.template.amountCents,
-        account_id: values.template.accountId!,
-        category_id: values.template.categoryId!,
+        account_id: values.template.accountId,
+        category_id: values.template.categoryId,
         description: values.template.description,
         settled: values.template.settled,
       };
@@ -213,8 +225,8 @@ export class UpsertPlanItemDialogComponent {
 
     const templateJson: PlanItemTransferTemplateJsonInputDto = {
       amount_cents: values.template.amountCents,
-      from_account_id: values.template.fromAccountId!,
-      to_account_id: values.template.toAccountId!,
+      from_account_id: values.template.fromAccountId,
+      to_account_id: values.template.toAccountId,
       description: values.template.description,
       settled: values.template.settled,
     };
@@ -248,8 +260,8 @@ export class UpsertPlanItemDialogComponent {
     if (values.type === 'transaction') {
       const templateJson: PlanItemTransactionTemplateJsonInputDto = {
         amount_cents: values.template.amountCents,
-        account_id: values.template.accountId!,
-        category_id: values.template.categoryId!,
+        account_id: values.template.accountId,
+        category_id: values.template.categoryId,
         description: values.template.description,
         settled: values.template.settled,
       };
@@ -273,8 +285,8 @@ export class UpsertPlanItemDialogComponent {
 
     const templateJson: PlanItemTransferTemplateJsonInputDto = {
       amount_cents: values.template.amountCents,
-      from_account_id: values.template.fromAccountId!,
-      to_account_id: values.template.toAccountId!,
+      from_account_id: values.template.fromAccountId,
+      to_account_id: values.template.toAccountId,
       description: values.template.description,
       settled: values.template.settled,
     };

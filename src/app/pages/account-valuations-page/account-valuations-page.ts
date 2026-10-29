@@ -372,6 +372,11 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
   private onEditValuation(row: object): void {
     const valuation = row as ValuationTableRow;
+    const accountId = this.accountId;
+    if (accountId === null) {
+      return;
+    }
+
     let isUpdating = false;
 
     const dialogRef = this.dialogService.create<
@@ -382,7 +387,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('accountValuations.dialog.edit.description'),
       zContent: UpsertAccountValuationDialogComponent,
       zData: {
-        accountId: this.accountId!,
+        accountId,
         valuation: {
           valuedAt: valuation.valuedAt,
           valueCents: valuation.valueCents,
@@ -432,6 +437,11 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   }
 
   private openAddValuationDialog(): void {
+    const accountId = this.accountId;
+    if (accountId === null) {
+      return;
+    }
+
     let isCreating = false;
 
     const dialogRef = this.dialogService.create<
@@ -442,7 +452,7 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       zDescription: this.translateService.instant('accountValuations.dialog.add.description'),
       zContent: UpsertAccountValuationDialogComponent,
       zData: {
-        accountId: this.accountId!,
+        accountId,
       },
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
