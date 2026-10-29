@@ -1057,8 +1057,12 @@ async function performPush(settings, options = {}) {
       indexUpdated = true;
     }
 
+    // Only a push that actually moved the index publishes this device's changes. If another device is
+    // ahead and the index was left alone, the counter stays where it was, so these changes are retried.
     const persistedSettings = persistSettingsPatch({
-      lastPublishedCounter: localMeta.change_counter,
+      lastPublishedCounter: indexUpdated
+        ? localMeta.change_counter
+        : currentSettings.lastPublishedCounter,
       lastError: null,
     });
     const pushResult = buildPushCompletedResult(persistedSettings, snapshotResult, indexUpdated);
