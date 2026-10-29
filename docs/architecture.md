@@ -69,7 +69,6 @@ The Electron side exposes domain modules through controllers collected in `elect
 
 ```js
 module.exports = {
-  appMetaController,
   accountsController,
   accountValuationsController,
   categoriesController,
@@ -513,7 +512,6 @@ Example:
 
 ```ts
 export enum APIChannel {
-  APP_META = 'appMeta',
   ACCOUNT_VALUATIONS = 'accountValuations',
   ACCOUNTS = 'accounts',
   CATEGORIES = 'categories',

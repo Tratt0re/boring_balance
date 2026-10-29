@@ -1,5 +1,4 @@
 const {
-  appMetaController,
   accountsController,
   accountValuationsController,
   categoriesController,
@@ -19,12 +18,6 @@ const {
 const { CHANNELS } = require('./channels');
 
 const IPC_HANDLERS = Object.freeze({
-  [CHANNELS.appMeta.create]: appMetaController.create,
-  [CHANNELS.appMeta.get]: appMetaController.get,
-  [CHANNELS.appMeta.list]: appMetaController.list,
-  [CHANNELS.appMeta.update]: appMetaController.update,
-  [CHANNELS.appMeta.remove]: appMetaController.remove,
-  [CHANNELS.appMeta.upsert]: appMetaController.upsert,
 
   [CHANNELS.accountValuations.create]: accountValuationsController.create,
   [CHANNELS.accountValuations.get]: accountValuationsController.get,

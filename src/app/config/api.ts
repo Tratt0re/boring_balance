@@ -12,7 +12,6 @@ export interface ElectronAppInfo {
 }
 
 export enum APIChannel {
-  APP_META = 'appMeta',
   ACCOUNT_VALUATIONS = 'accountValuations',
   ACCOUNTS = 'accounts',
   CATEGORIES = 'categories',
@@ -51,14 +50,6 @@ export interface ElectronIpcClient {
       DTO.AccountValuationGetLatestByAccountDto,
       DTO.AccountValuationGetLatestByAccountResponse
     >;
-  };
-  readonly appMeta: {
-    readonly create: IpcRequest<DTO.AppMetaCreateDto, DTO.AppMetaCreateResponse>;
-    readonly get: IpcRequest<DTO.AppMetaGetDto, DTO.AppMetaGetResponse>;
-    readonly list: OptionalIpcRequest<DTO.AppMetaListDto, DTO.AppMetaListResponse>;
-    readonly update: IpcRequest<DTO.AppMetaUpdateDto, DTO.AppMetaUpdateResponse>;
-    readonly remove: IpcRequest<DTO.AppMetaGetDto, DTO.AppMetaRemoveResponse>;
-    readonly upsert: IpcRequest<DTO.AppMetaUpsertDto, DTO.AppMetaUpsertResponse>;
   };
   readonly accounts: {
     readonly create: IpcRequest<DTO.AccountCreateDto, DTO.AccountCreateResponse>;

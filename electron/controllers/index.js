@@ -1,4 +1,3 @@
-const appMetaController = require('./app-meta.controller');
 const accountsController = require('./accounts.controller');
 const accountValuationsController = require('./account-valuations.controller');
 const categoriesController = require('./categories.controller');
@@ -15,7 +14,6 @@ const updateController = require('./update.controller');
 const windowController = require('./window.controller');
 
 module.exports = {
-  appMetaController,
   accountsController,
   accountValuationsController,
   categoriesController,

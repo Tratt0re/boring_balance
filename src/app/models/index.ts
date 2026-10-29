@@ -1,5 +1,4 @@
 export * from './account-valuations.model';
-export * from './app-meta.model';
 export * from './accounts.model';
 export * from './budgets.model';
 export * from './categories.model';
