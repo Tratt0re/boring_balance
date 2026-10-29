@@ -271,7 +271,6 @@ module.exports = {
   findWorksheetByAliases,
   mapWorksheetRows,
   normalizeLookupKey,
-  readCellValue,
   readWorkbookFromFile,
   readWorksheetHeaderMap,
   writeWorkbookToBuffer,

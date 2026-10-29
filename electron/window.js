@@ -205,6 +205,5 @@ function reloadOpenWindows() {
 module.exports = {
   createWindow,
   getTrustedRendererSources,
-  initMainWindow,
   reloadOpenWindows,
 };

@@ -1496,7 +1496,6 @@ async function onAppBeforeQuit() {
 module.exports = {
   checkAvailability,
   disable,
-  disableSync: disable,
   dispose,
   enable,
   enableAttachRepo,

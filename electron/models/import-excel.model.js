@@ -1343,8 +1343,5 @@ async function prepareImport(filePath, database = getDatabase()) {
 
 module.exports = {
   executeImport,
-  parseWorkbook,
   prepareImport,
-  validateAndNormalize,
-  validateWorkbookStructure,
 };

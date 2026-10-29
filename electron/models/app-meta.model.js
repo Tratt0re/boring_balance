@@ -10,13 +10,8 @@ function updateByKey(key, changes) {
   return appMetaBaseModel.updateById(key, changes);
 }
 
-function deleteByKey(key) {
-  return appMetaBaseModel.deleteById(key);
-}
-
 module.exports = {
   ...appMetaBaseModel,
   getByKey,
   updateByKey,
-  deleteByKey,
 };

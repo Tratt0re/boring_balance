@@ -573,24 +573,6 @@ function extractListPayload(payload) {
 }
 
 /**
- * Extracts query options from either `{ options }` or a plain options object.
- *
- * @param {unknown} payload - Incoming request payload.
- * @returns {Record<string, unknown>} Parsed options object.
- */
-function extractOptionsPayload(payload) {
-  if (payload === undefined || payload === null) {
-    return {};
-  }
-
-  const body = ensurePlainObject(payload, 'payload');
-  const options = body.options ?? body;
-
-  ensurePlainObject(options, 'options');
-  return options;
-}
-
-/**
  * Removes keys whose values are `undefined`.
  *
  * @param {Record<string, unknown>} values - Source object.
@@ -746,7 +728,6 @@ module.exports = {
   ensurePlainObject,
   extractId,
   extractListPayload,
-  extractOptionsPayload,
   extractString,
   normalizeAmountToCents,
   normalizeBooleanFlag,
