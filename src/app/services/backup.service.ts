@@ -32,6 +32,7 @@ const BACKUP_STATE_DEFAULTS: DTO.BackupStateDto = {
   lastBackupStatus: 'idle',
   lastBackupError: null,
   lastCleanupWarning: null,
+  configurationWarning: null,
   lastBackedUpChangeCounter: null,
 };
 
@@ -335,6 +336,10 @@ export class BackupService extends BaseIpcService<APIChannel.BACKUP> {
       lastBackupError:
         typeof value?.lastBackupError === 'string' && value.lastBackupError.trim().length > 0
           ? value.lastBackupError.trim()
+          : null,
+      configurationWarning:
+        typeof value?.configurationWarning === 'string' && value.configurationWarning.trim().length > 0
+          ? value.configurationWarning.trim()
           : null,
       lastCleanupWarning:
         typeof value?.lastCleanupWarning === 'string' && value.lastCleanupWarning.trim().length > 0

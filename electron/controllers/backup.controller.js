@@ -100,6 +100,29 @@ function cloneSettings(settings) {
   };
 }
 
+const NO_FOLDER_WARNING =
+  'Automatic backup is on but no backup folder is set, so no backups are being made.';
+let lastLoggedConfigurationWarning = null;
+
+/**
+ * Why automatic backup cannot do its job with the current settings, or null. Computed from the settings
+ * every time, so it can never be out of date. It is a warning, not an error: nothing has failed.
+ */
+function computeConfigurationWarning() {
+  const settings = readBackupSettings();
+  const warning = settings.enabled && !settings.folderPath ? NO_FOLDER_WARNING : null;
+
+  // Say it once per change in the log, not every time the state is read.
+  if (warning !== lastLoggedConfigurationWarning) {
+    lastLoggedConfigurationWarning = warning;
+    if (warning) {
+      console.warn(`[electron] ${warning}`);
+    }
+  }
+
+  return warning;
+}
+
 function cloneState() {
   return {
     lastBackupAtMs: runtimeState.lastBackupAtMs,
@@ -107,6 +130,7 @@ function cloneState() {
     lastBackupStatus: runtimeState.lastBackupStatus,
     lastBackupError: runtimeState.lastBackupError,
     lastCleanupWarning: runtimeState.lastCleanupWarning,
+    configurationWarning: computeConfigurationWarning(),
     lastBackedUpChangeCounter: runtimeState.lastBackedUpChangeCounter,
   };
 }

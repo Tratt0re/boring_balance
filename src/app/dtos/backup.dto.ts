@@ -13,6 +13,8 @@ export interface BackupStateDto {
   readonly lastBackupError: string | null;
   /** Set when a backup succeeded but old backups could not be removed. The new backup is still good. */
   readonly lastCleanupWarning: string | null;
+  /** Set when automatic backup is on but cannot run, for example because no folder is chosen. */
+  readonly configurationWarning: string | null;
   readonly lastBackedUpChangeCounter: number | null;
 }
 
