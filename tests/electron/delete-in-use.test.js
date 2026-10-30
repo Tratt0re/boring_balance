@@ -16,7 +16,6 @@ let db;
 let accounts;
 let categories;
 let transactions;
-let transfers;
 let cash;
 let bank;
 
@@ -26,7 +25,6 @@ beforeEach(() => {
   accounts = loadElectronModule('electron/controllers/accounts.controller.js');
   categories = loadElectronModule('electron/controllers/categories.controller.js');
   transactions = loadElectronModule('electron/controllers/transactions/transactions.controller.js');
-  transfers = loadElectronModule('electron/controllers/transactions/transfers.controller.js');
 });
 
 afterEach(closeTestDatabase);

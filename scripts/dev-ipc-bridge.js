@@ -17,7 +17,6 @@
 //   GET /__bridge/calls                                            channels invoked so far
 //   POST /__bridge/emit { channel, payload }                       push an IPC event to the page
 
-const path = require('node:path');
 const { spawn } = require('node:child_process');
 
 // better-sqlite3 is built for Electron's runtime, so run under Electron's Node.

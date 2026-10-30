@@ -89,7 +89,7 @@ export function allocateBucketsToTargetTotalCents<TBucket extends { readonly tot
     };
   });
 
-  let remaining = normalizedTarget - allocations.reduce((sum, entry) => sum + entry.totalCents, 0);
+  const remaining = normalizedTarget - allocations.reduce((sum, entry) => sum + entry.totalCents, 0);
   if (remaining > 0) {
     allocations
       .slice()

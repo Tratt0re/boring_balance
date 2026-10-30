@@ -117,7 +117,7 @@ export class AppDataTableComponent {
   readonly title = input('');
   readonly description = input('');
   readonly tableActions = input<readonly TableHeaderActionItem[]>([]);
-  readonly activeFilters = input<readonly TableActiveFilterItem[]>([], { alias: 'active-filters' });
+  readonly activeFilters = input<readonly TableActiveFilterItem[]>([]);
   readonly emptyMessage = input('No data available.');
   readonly emptyActionLabel = input('');
   readonly emptyActionIcon = input<ZardIcon | null>(null);

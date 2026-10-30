@@ -903,7 +903,8 @@ function validateTransactions(rawRows, accountRegistry, categoryRegistry) {
 
     const accountLookupKey = toCaseInsensitiveLookupKey(accountName);
     const categoryLookupKey = toCaseInsensitiveLookupKey(categoryName);
-    const accountEntry = resolveReference(
+    // Called for the errors it records; the account entry itself is not needed here.
+    resolveReference(
       accountRegistry,
       accountLookupKey,
       'transactions',

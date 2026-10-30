@@ -4,7 +4,6 @@ const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 
 const planItemsBaseModel = createBaseModel('plan_items');
 
-const DAY_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_MONTH_POLICY = 'clip';
 
 function parseJsonObjectField(value, label) {

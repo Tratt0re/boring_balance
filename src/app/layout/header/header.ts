@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { LanguageSelectorComponent } from '@/components/language-selector/language-selector.component';
-import { ThemeToggleComponent } from '@/components/theme-toggle/theme-toggle.component';
 import { HeaderComponent } from '@/shared/components/layout/header.component';
 
 @Component({

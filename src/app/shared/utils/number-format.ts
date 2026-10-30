@@ -85,7 +85,8 @@ export function formatNumber(value: number, style: CurrencyFormatStyle, options:
   );
   const absoluteValue = Math.abs(value);
   const roundedValue = absoluteValue.toFixed(normalizedMaximumFractionDigits);
-  let [integerPart, fractionPart = ''] = roundedValue.split('.');
+  const [integerPart, initialFractionPart = ''] = roundedValue.split('.');
+  let fractionPart = initialFractionPart;
 
   if (normalizedMaximumFractionDigits > normalizedMinimumFractionDigits) {
     const trimmedFraction = fractionPart.replace(/0+$/g, '');

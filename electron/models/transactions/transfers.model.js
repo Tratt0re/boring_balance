@@ -1,6 +1,5 @@
 const {
   buildWhereClause,
-  countRows,
   deleteRows,
   getDatabase,
   selectRows,

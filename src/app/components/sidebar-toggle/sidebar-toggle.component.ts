@@ -12,9 +12,9 @@ import { ZardIconComponent } from '@/shared/components/icon';
 })
 export class SidebarToggleComponent {
   readonly sidebarCollapsed = input(false);
-  readonly toggle = output<void>();
+  readonly sidebarToggle = output<void>();
 
   protected onToggle(): void {
-    this.toggle.emit();
+    this.sidebarToggle.emit();
   }
 }
