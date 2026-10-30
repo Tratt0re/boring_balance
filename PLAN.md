@@ -115,8 +115,9 @@ Bridge: `npm run build && npm run dev:bridge` serves http://127.0.0.1:4300 (dev 
 - [x] 7.3 `format` / `format:check` scripts (Prettier is configured but not a declared dependency). **Dependency question.**
 - [x] 7.4 Optional ESLint (`angular-eslint`). **Dependency question.**
 - [x] 7.5 README: add dev/build instructions or link to CLAUDE.md; consider CONTRIBUTING.
-- [ ] 7.6 (not applicable until the owner has Apple/Windows signing certificates; revisit if the app is distributed to others) Code signing and notarization (macOS/Windows) if the app is distributed. Owner decision.
+- [x] 7.6 Code signing and notarization: **skipped by the owner** (no Apple/Windows certificates, and none planned for the next weeks). Revisit only if the app is distributed to others.
 - [x] 7.7 Document the manual update check (no auto-updater) in the README.
+- [ ] 7.8 Review `docs/architecture.md` and `README.md` against the code as it is now, and update them. Do this after 4.1 and 5.6, so they describe the final state.
 
 ---
 
