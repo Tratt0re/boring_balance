@@ -11,7 +11,7 @@ import { toast } from 'ngx-sonner';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppBarChartComponent, type AppBarChartSeries } from '@/components/charts';
-import { AppDataTableComponent, type EditableOptionItem, type TableDataItem } from '@/components/data-table';
+import { AppDataTableComponent, type EditableOptionItem } from '@/components/data-table';
 import {
   DEFAULT_VISUAL_COLOR_KEY,
   DEFAULT_VISUAL_ICON_KEY,
@@ -43,7 +43,6 @@ import {
   DEFAULT_PAGE_SIZE,
   PAGE_SIZE_OPTIONS,
   computePageCount,
-  createActionColumn,
   getTargetPageAfterCreate,
   toEditableOptionIcon,
   translateMaybe,
@@ -52,117 +51,19 @@ import {
   UpsertBudgetDialogComponent,
   type UpsertBudgetDialogData,
 } from './components/upsert-budget-dialog/upsert-budget-dialog.component';
-
-type BudgetSectionView = 'setup' | 'analysis';
-
-interface BudgetCategoryLookup {
-  readonly name: string;
-  readonly icon: string | null;
-  readonly colorKey: string | null;
-}
-
-interface BudgetTableRow {
-  readonly id: number;
-  readonly categoryId: number;
-  readonly categoryName: string;
-  readonly categoryIcon: string | null;
-  readonly categoryColorHex: string;
-  readonly budgetYear: number;
-  readonly amount: number;
-  readonly description: string | null;
-}
-
-const BUDGET_COLUMN_WIDTH = {
-  category: '3/10',
-  year: '1/10',
-  amount: '2/10',
-  description: '3/10',
-  action: '1/10',
-} as const;
-
-const BUDGET_TABLE_COLUMNS: readonly TableDataItem[] = [
-  {
-    columnName: 'common.labels.year',
-    columnKey: 'budgetYear',
-    type: 'number',
-    number: {
-      useGrouping: false,
-    },
-    sortable: true,
-    minWidth: BUDGET_COLUMN_WIDTH.year,
-    maxWidth: BUDGET_COLUMN_WIDTH.year,
-  },
-  {
-    columnName: 'common.labels.category',
-    columnKey: 'categoryName',
-    type: 'badge',
-    sortable: true,
-    minWidth: BUDGET_COLUMN_WIDTH.category,
-    maxWidth: BUDGET_COLUMN_WIDTH.category,
-    badge: {
-      type: 'secondary',
-      shape: 'pill',
-      icon: DEFAULT_VISUAL_ICON_KEY,
-      iconColumnKey: 'categoryIcon',
-      colorHexColumnKey: 'categoryColorHex',
-      colorMode: 'icon',
-      fullWidth: true,
-    },
-  },
-  {
-    columnName: 'common.labels.description',
-    columnKey: 'description',
-    type: 'string',
-    sortable: true,
-    minWidth: BUDGET_COLUMN_WIDTH.description,
-    maxWidth: BUDGET_COLUMN_WIDTH.description,
-  },
-  {
-    columnName: 'common.labels.amount',
-    columnKey: 'amount',
-    type: 'currency',
-    sortable: true,
-    minWidth: BUDGET_COLUMN_WIDTH.amount,
-    maxWidth: BUDGET_COLUMN_WIDTH.amount,
-  },
-] as const;
-
-const createBudgetTableStructure = (
-  onEditAction: (row: object) => void | Promise<void>,
-  onDeleteAction: (row: object) => void | Promise<void>,
-): readonly TableDataItem[] =>
-  [
-    ...BUDGET_TABLE_COLUMNS,
-    createActionColumn(BUDGET_COLUMN_WIDTH.action, [
-      {
-        id: 'edit',
-        icon: 'pencil',
-        label: 'budgets.table.actions.edit',
-        buttonType: 'ghost',
-        action: onEditAction,
-      },
-      {
-        id: 'delete',
-        icon: 'trash',
-        label: 'budgets.table.actions.delete',
-        buttonType: 'ghost',
-        action: onDeleteAction,
-      },
-    ]),
-  ] as const;
-
-const MIN_YEAR = 1970;
-const MAX_YEAR = 9999;
-const AMOUNT_CENTS_DIVISOR = 100;
-const ANALYSIS_CHART_MIN_HEIGHT_REM = 18;
-const ANALYSIS_CHART_BASE_HEIGHT_REM = 6;
-const ANALYSIS_CHART_ROW_HEIGHT_REM = 2.25;
-
-interface BudgetAnalysisTotals {
-  readonly budget_amount_cents: number;
-  readonly expenses_total_cents: number;
-  readonly delta_cents: number;
-}
+import {
+  type BudgetSectionView,
+  type BudgetCategoryLookup,
+  type BudgetTableRow,
+  createBudgetTableStructure,
+  MIN_YEAR,
+  MAX_YEAR,
+  AMOUNT_CENTS_DIVISOR,
+  ANALYSIS_CHART_MIN_HEIGHT_REM,
+  ANALYSIS_CHART_BASE_HEIGHT_REM,
+  ANALYSIS_CHART_ROW_HEIGHT_REM,
+  type BudgetAnalysisTotals,
+} from './budget-page.config';
 
 @Component({
   selector: 'app-budget-page',
