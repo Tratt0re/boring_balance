@@ -24,64 +24,31 @@ import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
-
-const PLAN_ITEM_TITLE_MIN_LENGTH = 2;
-const PLAN_ITEM_TITLE_MAX_LENGTH = 80;
-const PLAN_ITEM_DESCRIPTION_MAX_LENGTH = 75;
-
-const PLAN_ITEM_TYPE_OPTIONS = [
-  { label: 'recurringEvents.type.transaction', value: 'transaction' },
-  { label: 'recurringEvents.type.transfer', value: 'transfer' },
-] as const;
-
-const PLAN_ITEM_FREQUENCY_UNIT_OPTIONS = [
-  { label: 'recurringEvents.frequency.unit.day', value: 'day' },
-  { label: 'recurringEvents.frequency.unit.week', value: 'week' },
-  { label: 'recurringEvents.frequency.unit.month', value: 'month' },
-  { label: 'recurringEvents.frequency.unit.year', value: 'year' },
-] as const;
-
-const PLAN_ITEM_MONTH_POLICY_OPTIONS = [
-  { label: 'recurringEvents.monthPolicy.none', value: '' },
-  { label: 'recurringEvents.monthPolicy.clip', value: 'clip' },
-  { label: 'recurringEvents.monthPolicy.skip', value: 'skip' },
-  { label: 'recurringEvents.monthPolicy.last_day', value: 'last_day' },
-  { label: 'recurringEvents.monthPolicy.first_day', value: 'first_day' },
-] as const;
-
-const PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS = [
-  { label: 'recurringEvents.dialog.edit.applyToOptions.all', value: 'all' },
-  { label: 'recurringEvents.dialog.edit.applyToOptions.upcoming', value: 'upcoming' },
-  { label: 'recurringEvents.dialog.edit.applyToOptions.fromDate', value: 'from_date' },
-  { label: 'recurringEvents.dialog.edit.applyToOptions.ruleOnly', value: 'rule_only' },
-] as const;
-
-interface NormalizedPlanItemBase {
-  readonly title: string;
-  readonly ruleJson: PlanItemRuleJsonDto;
-}
-
-interface NormalizedTemplateBase {
-  readonly amountCents: number;
-  readonly description: string;
-  readonly settled: boolean;
-}
-
-type NormalizedPlanItemValues =
-  | (NormalizedPlanItemBase & {
-      readonly type: 'transaction';
-      readonly template: NormalizedTemplateBase & {
-        readonly accountId: number;
-        readonly categoryId: number;
-      };
-    })
-  | (NormalizedPlanItemBase & {
-      readonly type: 'transfer';
-      readonly template: NormalizedTemplateBase & {
-        readonly fromAccountId: number;
-        readonly toAccountId: number;
-      };
-    });
+import {
+  NormalizedPlanItemValues,
+  PLAN_ITEM_DESCRIPTION_MAX_LENGTH,
+  PLAN_ITEM_FREQUENCY_UNIT_OPTIONS,
+  PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS,
+  PLAN_ITEM_MONTH_POLICY_OPTIONS,
+  PLAN_ITEM_TYPE_OPTIONS,
+  getAccountIdError,
+  getAmountError,
+  getCategoryIdError,
+  getCountError,
+  getDescriptionError,
+  getFrequencyIntervalError,
+  getFrequencyUnitError,
+  getFromAccountError,
+  getStartDateError,
+  getTitleError,
+  getToAccountError,
+  getTypeError,
+  normalizeTemplateDescription,
+  toAmountForType,
+  toPlanItemFrequencyUnit,
+  toPlanItemMonthPolicy,
+  toPlanItemType,
+} from './upsert-plan-item-dialog.utils';
 
 export interface PlanItemDialogInitialValue {
   readonly title: string;
@@ -318,7 +285,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getTitleError(control.value);
+    return getTitleError(control.value);
   }
 
   protected visibleTypeErrorKey(): string | null {
@@ -327,7 +294,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getTypeError(control.value);
+    return getTypeError(control.value);
   }
 
   protected visibleStartDateErrorKey(): string | null {
@@ -336,7 +303,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getStartDateError(control.value);
+    return getStartDateError(control.value);
   }
 
   protected visibleCountErrorKey(): string | null {
@@ -345,7 +312,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getCountError(control.value);
+    return getCountError(control.value);
   }
 
   protected visibleFrequencyIntervalErrorKey(): string | null {
@@ -354,7 +321,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getFrequencyIntervalError(control.value);
+    return getFrequencyIntervalError(control.value);
   }
 
   protected visibleFrequencyUnitErrorKey(): string | null {
@@ -363,7 +330,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getFrequencyUnitError(control.value);
+    return getFrequencyUnitError(control.value);
   }
 
   protected visibleAmountErrorKey(): string | null {
@@ -372,7 +339,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getAmountError(control.value);
+    return getAmountError(control.value, this.form.controls.type.value);
   }
 
   protected visibleAccountIdErrorKey(): string | null {
@@ -385,7 +352,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getAccountIdError(control.value);
+    return getAccountIdError(control.value);
   }
 
   protected visibleCategoryIdErrorKey(): string | null {
@@ -398,7 +365,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getCategoryIdError(control.value);
+    return getCategoryIdError(control.value);
   }
 
   protected visibleFromAccountErrorKey(): string | null {
@@ -411,7 +378,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getFromAccountError(control.value);
+    return getFromAccountError(control.value);
   }
 
   protected visibleToAccountErrorKey(): string | null {
@@ -424,7 +391,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getToAccountError(control.value, this.form.controls.fromAccountId.value);
+    return getToAccountError(control.value, this.form.controls.fromAccountId.value);
   }
 
   protected visibleDescriptionErrorKey(): string | null {
@@ -433,7 +400,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    return this.getDescriptionError(control.value);
+    return getDescriptionError(control.value);
   }
 
   protected isTransactionTypeSelected(): boolean {
@@ -493,7 +460,7 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    const type = this.toPlanItemType(values.type);
+    const type = toPlanItemType(values.type);
     if (!type) {
       this.errorKey.set('recurringEvents.dialog.add.errors.typeRequired');
       return null;
@@ -517,19 +484,19 @@ export class UpsertPlanItemDialogComponent {
       return null;
     }
 
-    const frequencyUnit = this.toPlanItemFrequencyUnit(values.frequencyUnit);
+    const frequencyUnit = toPlanItemFrequencyUnit(values.frequencyUnit);
     if (!frequencyUnit) {
       this.errorKey.set('recurringEvents.dialog.add.errors.frequencyUnitRequired');
       return null;
     }
 
-    const amount = this.toAmountForType(values.amount, type);
+    const amount = toAmountForType(values.amount, type);
     if (amount === null) {
       this.errorKey.set('recurringEvents.dialog.add.errors.amountInvalid');
       return null;
     }
 
-    const monthPolicy = this.toPlanItemMonthPolicy(values.monthPolicy);
+    const monthPolicy = toPlanItemMonthPolicy(values.monthPolicy);
 
     const ruleJson: PlanItemRuleJsonDto = {
       start_date: startDate,
@@ -543,7 +510,7 @@ export class UpsertPlanItemDialogComponent {
 
     const baseTemplate = {
       amountCents: amountToCents(amount),
-      description: this.normalizeTemplateDescription(values.description) || title.slice(0, PLAN_ITEM_DESCRIPTION_MAX_LENGTH),
+      description: normalizeTemplateDescription(values.description) || title.slice(0, PLAN_ITEM_DESCRIPTION_MAX_LENGTH),
       settled: values.settled,
     } as const;
 
@@ -605,175 +572,33 @@ export class UpsertPlanItemDialogComponent {
 
   private hasValidationError(): boolean {
     if (
-      this.getTitleError(this.form.controls.title.value) !== null ||
-      this.getTypeError(this.form.controls.type.value) !== null ||
-      this.getStartDateError(this.form.controls.startDate.value) !== null ||
-      this.getCountError(this.form.controls.count.value) !== null ||
-      this.getFrequencyIntervalError(this.form.controls.frequencyInterval.value) !== null ||
-      this.getFrequencyUnitError(this.form.controls.frequencyUnit.value) !== null ||
-      this.getAmountError(this.form.controls.amount.value) !== null ||
-      this.getDescriptionError(this.form.controls.description.value) !== null
+      getTitleError(this.form.controls.title.value) !== null ||
+      getTypeError(this.form.controls.type.value) !== null ||
+      getStartDateError(this.form.controls.startDate.value) !== null ||
+      getCountError(this.form.controls.count.value) !== null ||
+      getFrequencyIntervalError(this.form.controls.frequencyInterval.value) !== null ||
+      getFrequencyUnitError(this.form.controls.frequencyUnit.value) !== null ||
+      getAmountError(this.form.controls.amount.value, this.form.controls.type.value) !== null ||
+      getDescriptionError(this.form.controls.description.value) !== null
     ) {
       return true;
     }
 
     if (this.isTransactionTypeSelected()) {
       return (
-        this.getAccountIdError(this.form.controls.accountId.value) !== null ||
-        this.getCategoryIdError(this.form.controls.categoryId.value) !== null
+        getAccountIdError(this.form.controls.accountId.value) !== null ||
+        getCategoryIdError(this.form.controls.categoryId.value) !== null
       );
     }
 
     if (this.isTransferTypeSelected()) {
       return (
-        this.getFromAccountError(this.form.controls.fromAccountId.value) !== null ||
-        this.getToAccountError(this.form.controls.toAccountId.value, this.form.controls.fromAccountId.value) !== null
+        getFromAccountError(this.form.controls.fromAccountId.value) !== null ||
+        getToAccountError(this.form.controls.toAccountId.value, this.form.controls.fromAccountId.value) !== null
       );
     }
 
     return false;
-  }
-
-  private getTitleError(value: string): string | null {
-    const trimmed = value.trim();
-    if (trimmed.length === 0) {
-      return 'recurringEvents.dialog.add.errors.titleRequired';
-    }
-
-    if (trimmed.length < PLAN_ITEM_TITLE_MIN_LENGTH) {
-      return 'recurringEvents.dialog.add.errors.titleMinLength';
-    }
-
-    if (trimmed.length > PLAN_ITEM_TITLE_MAX_LENGTH) {
-      return 'recurringEvents.dialog.add.errors.titleMaxLength';
-    }
-
-    return null;
-  }
-
-  private getTypeError(value: unknown): string | null {
-    return this.toPlanItemType(value) === null ? 'recurringEvents.dialog.add.errors.typeRequired' : null;
-  }
-
-  private getStartDateError(value: Date | null): string | null {
-    return dateToUnixMs(value) === null ? 'recurringEvents.dialog.add.errors.startDateRequired' : null;
-  }
-
-  private getCountError(value: string): string | null {
-    if (value.trim().length === 0) {
-      return 'recurringEvents.dialog.add.errors.countRequired';
-    }
-
-    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.countInvalid' : null;
-  }
-
-  private getFrequencyIntervalError(value: string): string | null {
-    if (value.trim().length === 0) {
-      return 'recurringEvents.dialog.add.errors.frequencyIntervalRequired';
-    }
-
-    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.frequencyIntervalInvalid' : null;
-  }
-
-  private getFrequencyUnitError(value: unknown): string | null {
-    return this.toPlanItemFrequencyUnit(value) === null
-      ? 'recurringEvents.dialog.add.errors.frequencyUnitRequired'
-      : null;
-  }
-
-  private getAccountIdError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.accountRequired' : null;
-  }
-
-  private getCategoryIdError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.categoryRequired' : null;
-  }
-
-  private getFromAccountError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'recurringEvents.dialog.add.errors.fromAccountRequired' : null;
-  }
-
-  private getToAccountError(value: unknown, fromAccountValue: unknown): string | null {
-    const toAccountId = toPositiveInteger(value);
-    if (toAccountId === null) {
-      return 'recurringEvents.dialog.add.errors.toAccountRequired';
-    }
-
-    const fromAccountId = toPositiveInteger(fromAccountValue);
-    if (fromAccountId !== null && fromAccountId === toAccountId) {
-      return 'recurringEvents.dialog.add.errors.accountsMustDiffer';
-    }
-
-    return null;
-  }
-
-  private getAmountError(value: string): string | null {
-    if (value.trim().length === 0) {
-      return 'recurringEvents.dialog.add.errors.amountRequired';
-    }
-
-    const type = this.toPlanItemType(this.form.controls.type.value);
-    if (!type) {
-      return 'recurringEvents.dialog.add.errors.amountInvalid';
-    }
-
-    return this.toAmountForType(value, type) === null ? 'recurringEvents.dialog.add.errors.amountInvalid' : null;
-  }
-
-  private getDescriptionError(value: string): string | null {
-    return value.length > PLAN_ITEM_DESCRIPTION_MAX_LENGTH
-      ? 'recurringEvents.dialog.add.errors.descriptionMaxLength'
-      : null;
-  }
-
-  private normalizeTemplateDescription(value: unknown): string {
-    if (value === null || value === undefined) {
-      return '';
-    }
-
-    return `${value}`.trim();
-  }
-
-  private toPositiveAmount(value: unknown): number | null {
-    if (value === null || value === undefined || `${value}`.trim().length === 0) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || parsed <= 0) {
-      return null;
-    }
-
-    return parsed;
-  }
-
-  private toSignedNonZeroAmount(value: unknown): number | null {
-    if (value === null || value === undefined || `${value}`.trim().length === 0) {
-      return null;
-    }
-
-    const parsed = Number(value);
-    if (!Number.isFinite(parsed) || parsed === 0) {
-      return null;
-    }
-
-    return parsed;
-  }
-
-  private toAmountForType(value: unknown, type: PlanItemType): number | null {
-    return type === 'transaction' ? this.toSignedNonZeroAmount(value) : this.toPositiveAmount(value);
-  }
-
-  private toPlanItemType(value: unknown): PlanItemType | null {
-    return value === 'transaction' || value === 'transfer' ? value : null;
-  }
-
-  private toPlanItemFrequencyUnit(value: unknown): PlanItemFrequencyUnit | null {
-    return value === 'day' || value === 'week' || value === 'month' || value === 'year' ? value : null;
-  }
-
-  private toPlanItemMonthPolicy(value: unknown): PlanItemMonthPolicy | null {
-    return value === 'clip' || value === 'skip' || value === 'last_day' || value === 'first_day' ? value : null;
   }
 
   private clearSubmitError(): void {
