@@ -1,17 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   computed,
+  DestroyRef,
+  inject,
   input,
+  OnChanges,
+  OnInit,
   signal,
+  SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { type AppBarChartSeries, AppBarChartComponent } from '@/components/charts';
@@ -38,8 +39,8 @@ const MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE = '18rem';
     class: 'block',
   },
 })
-export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, OnChanges {
-  private languageChangeSubscription: Subscription | null = null;
+export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
+  private readonly destroyRef = inject(DestroyRef);
   private rowsCache: ReadonlyArray<{
     month: string;
     incomes_cents: number;
@@ -69,7 +70,7 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, On
 
   ngOnInit(): void {
     this.series.set(this.buildMonthlyTotalsBarSeries([]));
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.rebuildLocalizedViewModel();
     });
     void this.loadData();
@@ -80,11 +81,6 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnDestroy, On
     if (yearChange && !yearChange.firstChange) {
       void this.loadData();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   async reload(): Promise<void> {

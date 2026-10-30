@@ -2,17 +2,18 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
+  OnChanges,
+  OnInit,
   signal,
+  SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import {
@@ -122,8 +123,8 @@ function groupMoneyFlowExpenseCategoriesByThreshold(
     class: 'block flex-1 min-h-0',
   },
 })
-export class MoneyFlowBreakdownSectionComponent implements OnInit, OnDestroy, OnChanges {
-  private languageChangeSubscription: Subscription | null = null;
+export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
+  private readonly destroyRef = inject(DestroyRef);
   private categoryColorHexById = new Map<number, string>();
   private responseCache: AnalyticsMoneyFlowSankeyByMonthResponse | null = null;
 
@@ -158,7 +159,7 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnDestroy, On
   }
 
   ngOnInit(): void {
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.rebuildLocalizedViewModel();
     });
     void this.loadData();
@@ -175,11 +176,6 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnDestroy, On
     if (showAllocationTargetsChange && !showAllocationTargetsChange.firstChange) {
       this.rebuildLocalizedViewModel();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   private async loadData(): Promise<void> {

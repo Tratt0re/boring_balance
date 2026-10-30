@@ -1,18 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
+  OnChanges,
+  OnInit,
   signal,
+  SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgTemplateOutlet } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { type AppSankeyChartLink, type AppSankeyChartNode, AppSankeyChartComponent } from '@/components/charts';
@@ -49,8 +50,8 @@ const MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE = '18rem';
     class: 'block',
   },
 })
-export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, OnChanges {
-  private languageChangeSubscription: Subscription | null = null;
+export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnChanges {
+  private readonly destroyRef = inject(DestroyRef);
   private categoryColorHexById = new Map<number, string>();
   private responseCache: AnalyticsMoneyFlowSankeyByMonthResponse | null = null;
 
@@ -90,7 +91,7 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
   }
 
   ngOnInit(): void {
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.rebuildLocalizedViewModel();
     });
     void this.loadData();
@@ -102,11 +103,6 @@ export class OverviewMoneyFlowSankeyCardComponent implements OnInit, OnDestroy, 
     if ((yearChange && !yearChange.firstChange) || (monthIndexChange && !monthIndexChange.firstChange)) {
       void this.loadData();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   async reload(): Promise<void> {

@@ -1,18 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
+  OnChanges,
+  OnInit,
   signal,
+  SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { type AppPieChartItem, AppPieChartComponent, resolveChartCssColor } from '@/components/charts';
@@ -59,8 +60,8 @@ interface NetWorthDistributionEntry {
     class: 'block',
   },
 })
-export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnChanges {
-  private languageChangeSubscription: Subscription | null = null;
+export class OverviewAllocationCardComponent implements OnInit, OnChanges {
+  private readonly destroyRef = inject(DestroyRef);
   private accountColorHexById = new Map<number, string>();
   private netWorthResponseCache: AnalyticsNetWorthByAccountResponse | null = null;
 
@@ -103,7 +104,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
   }
 
   ngOnInit(): void {
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.rebuildLocalizedViewModel();
     });
     void this.loadData();
@@ -127,11 +128,6 @@ export class OverviewAllocationCardComponent implements OnInit, OnDestroy, OnCha
 
       void this.loadData();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   async reload(): Promise<void> {

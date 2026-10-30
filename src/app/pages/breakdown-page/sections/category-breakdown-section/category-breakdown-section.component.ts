@@ -2,17 +2,18 @@ import {
   booleanAttribute,
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
   computed,
+  DestroyRef,
   effect,
+  inject,
   input,
+  OnChanges,
+  OnInit,
   signal,
+  SimpleChanges,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
@@ -156,9 +157,9 @@ function parseMonthIndexFromMonthKey(monthKey: string, targetYear: number): numb
   templateUrl: './category-breakdown-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoryBreakdownSectionComponent implements OnInit, OnDestroy, OnChanges {
+export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
   private readonly currentDateReference = new Date();
-  private languageChangeSubscription: Subscription | null = null;
+  private readonly destroyRef = inject(DestroyRef);
   private categoryColorHexById = new Map<number, string>();
   private categoryIconById = new Map<number, string | null>();
   private rawRowsCache: readonly AnalyticsCategoryByMonthRowDto[] = [];
@@ -225,7 +226,7 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnDestroy, OnC
 
   ngOnInit(): void {
     this.initializeLocalizedPlaceholders();
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.rebuildLocalizedViewModel();
     });
     void this.loadData();
@@ -248,11 +249,6 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnDestroy, OnC
     if (useElapsedMonthsAverageChange && !useElapsedMonthsAverageChange.firstChange) {
       this.rebuildLocalizedViewModel();
     }
-  }
-
-  ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   protected monthlyTrendCardTitle(): string {

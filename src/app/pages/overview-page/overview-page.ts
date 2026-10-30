@@ -1,7 +1,18 @@
-import { ChangeDetectionStrategy, Component, HostListener, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  HostListener,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import type { AnalyticsNetWorthSnapshotsDto } from '@/dtos';
 import { SyncService } from '@/pages/data-backups-page/services/sync.service';
@@ -52,7 +63,7 @@ export class OverviewPage implements OnInit, OnDestroy {
 
   private releaseToolbarActions: (() => void) | null = null;
   private readonly syncService = inject(SyncService);
-  private languageChangeSubscription: Subscription | null = null;
+  private readonly destroyRef = inject(DestroyRef);
   private overviewActivityChangeReloadTimeout: ReturnType<typeof setTimeout> | null = null;
   private syncEnabled = false;
   private syncAvailabilityCheckRunning = false;
@@ -80,7 +91,7 @@ export class OverviewPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateResponsiveState();
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.activateToolbarActions();
     });
     this.activateToolbarActions();
@@ -94,8 +105,6 @@ export class OverviewPage implements OnInit, OnDestroy {
     }
     this.releaseToolbarActions?.();
     this.releaseToolbarActions = null;
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
   }
 
   @HostListener('window:resize')

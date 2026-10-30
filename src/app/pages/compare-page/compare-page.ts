@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
@@ -64,7 +73,7 @@ interface CompareExpenseCategoryTableRow {
 })
 export class ComparePage implements OnInit, OnDestroy {
   private releaseToolbarActions: (() => void) | null = null;
-  private languageChangeSubscription: Subscription | null = null;
+  private readonly destroyRef = inject(DestroyRef);
   private compareLoadRequestId = 0;
   private categoryColorHexById = new Map<number, string>();
   private categoryIconById = new Map<number, string | null>();
@@ -379,7 +388,7 @@ export class ComparePage implements OnInit, OnDestroy {
       title: 'nav.items.compare',
       itemActions: [],
     });
-    this.languageChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+    this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.languageVersion.update((currentValue) => currentValue + 1);
     });
 
@@ -387,8 +396,6 @@ export class ComparePage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.languageChangeSubscription?.unsubscribe();
-    this.languageChangeSubscription = null;
     this.releaseToolbarActions?.();
     this.releaseToolbarActions = null;
   }
