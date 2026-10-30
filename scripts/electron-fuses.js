@@ -13,6 +13,9 @@ const { flipFuses, FuseV1Options, FuseVersion } = require('@electron/fuses');
 
 const FUSES = {
   version: FuseVersion.V1,
+  // Flipping fuses rewrites the Electron Framework binary, which breaks its ad-hoc signature on macOS.
+  // Re-sign it so Apple Silicon does not kill the app at launch.
+  resetAdHocDarwinSignature: true,
   [FuseV1Options.RunAsNode]: false,
   [FuseV1Options.EnableNodeCliInspectArguments]: false,
   [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
