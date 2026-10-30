@@ -6,7 +6,7 @@ const u = require('../../electron/controllers/utils.js');
 
 // Tests marked `it.fails` describe the DESIRED behavior of a known weakness. They pass while the
 // weakness exists and start failing once it is fixed, which is the signal to turn them into plain
-// `it`. Each one points at the PLAN.md task that fixes it.
+// `it`.
 
 describe('ensurePlainObject / ensureNonEmptyObject / ensureHasKeys', () => {
   it('returns the very same object', () => {

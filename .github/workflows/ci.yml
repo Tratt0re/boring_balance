@@ -31,7 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Fails on errors only. Existing warnings are reported but do not block (see PLAN.md 7.4).
       - name: Lint
         run: npm run lint
 

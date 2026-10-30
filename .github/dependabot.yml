@@ -27,7 +27,8 @@ updates:
           - 'tailwind-merge'
           - 'tailwindcss-animate'
     ignore:
-      # Majors are decided by hand (see PLAN.md 5.6).
+      # Majors are decided by hand: Angular 22 (with cdk, ngx-echarts and angular-eslint), TypeScript 7 and
+      # vitest 5 each need their own check first.
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
 
