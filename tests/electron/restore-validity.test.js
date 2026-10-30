@@ -90,7 +90,10 @@ const cases = {
         'CREATE TABLE filler (id INTEGER PRIMARY KEY, body TEXT); CREATE INDEX filler_body ON filler(body);',
     );
     const insert = db.prepare('INSERT INTO filler (body) VALUES (?)');
-    for (let i = 0; i < 2000; i += 1) insert.run(`row-${i}-${'x'.repeat(40)}`);
+    // One transaction: 2000 separate commits are slow on a CI runner's disk and timed out there.
+    db.transaction(() => {
+      for (let i = 0; i < 2000; i += 1) insert.run(`row-${i}-${'x'.repeat(40)}`);
+    })();
     db.close();
     const bytes = fs.readFileSync(filePath);
     // Overwrite the final pages (index/table content), leaving the first pages and app_meta intact.
