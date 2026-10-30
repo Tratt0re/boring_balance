@@ -106,6 +106,8 @@ No account is required to use the application. There is no sign-in, no email add
 
 All data is stored locally in a SQLite file on your device, in a location you can inspect and manage directly. The application does not send your financial data to any Boring Balance-operated service. If you enable backups, exports, or sync, copies are written only to folders you explicitly choose.
 
+The only network request the app makes is the update check described under [Updates](#updates): a read of the public GitHub releases API that sends none of your data (GitHub can see your IP address, as with any web request).
+
 Because there is no hosted cloud backup, you are fully responsible for choosing and managing your own backup or sync destination. This is a deliberate trade-off in favor of privacy and control. Copying the `.db` file to a safe location is always sufficient, and the built-in backup tools simply make that easier.
 
 ---
@@ -114,7 +116,7 @@ Because there is no hosted cloud backup, you are fully responsible for choosing 
 
 ### Requirements
 
-- Node.js 20 or later
+- Node.js 22.12 or later (24 is what CI and the bundled Electron use)
 - npm
 
 ### Install Dependencies
@@ -151,6 +153,19 @@ npm run dist:linux    # Linux
 
 Build artifacts are written to the `release/` directory. Output is platform-specific — macOS produces a `.dmg` or `.app` bundle, Windows produces an installer and portable `.exe`, and Linux produces an AppImage or `.deb` depending on configuration.
 
+### Run the Tests
+
+```bash
+npm test -- --watch=false   # renderer (Angular) tests
+npm run test:electron       # main-process tests, run under Electron's Node against a real SQLite database
+```
+
+The same two commands, followed by `npm run build` and `npm run build:preload:prod`, run on every push and pull request (see `.github/workflows/ci.yml`).
+
+### Try the Renderer in a Browser
+
+`npm run dev:bridge` serves the built renderer on `http://127.0.0.1:4300` with the real main-process handlers behind it, backed by a throwaway database with sample data. It is for development only and is never packaged.
+
 ### Database Location
 
 The SQLite database file is stored in the Electron `userData` directory under `data/`:
@@ -159,6 +174,17 @@ The SQLite database file is stored in the Electron `userData` directory under `d
 - Production: `boringbalance.db`
 
 You can override the active database environment by setting the `BORINGBALANCE_DB_ENV` environment variable to `dev` or `prod`.
+
+### Updates
+
+Boring Balance has no automatic updater. It never downloads or installs anything on its own.
+
+- When the app starts, it asks GitHub's public releases API for the latest release of this repository (one request, at most once every 6 hours). The request carries a fixed `User-Agent` of `boring-balance-app` and no account, identifier or usage data; as with any web request, GitHub can see your IP address.
+- If a newer version exists, a notice offers to open the release page in your browser. You can dismiss it, or tick the option to stop being reminded about that version.
+- **Settings → About → Check for updates** runs the same check on demand and tells you if it could not reach GitHub.
+- If you are offline, the check fails quietly and the app carries on.
+
+To update, download the new installer from the release page and install it over the old one. Your data stays in the `userData` folder described above, and the app takes a safety copy before changing the database format.
 
 ---
 
