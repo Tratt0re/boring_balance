@@ -53,6 +53,10 @@
   --system-app-color-9: oklch(0.68 0.2 302);
   --system-app-color-10: oklch(0.72 0.2 342);
   --system-app-color-11: oklch(0.72 0 0);
+  --system-app-color-12: oklch(0.55 0.19 278);
+  --system-app-color-13: oklch(0.87 0.09 172);
+  --system-app-color-14: oklch(0.55 0.09 60);
+  --system-app-color-15: oklch(0.5 0.15 15);
   --positive-transaction-color: oklch(0.72 0.18 260);
   --negative-transaction-color: oklch(0.72 0.18 25);
   --chart-income: var(--positive-transaction-color);
@@ -111,6 +115,10 @@
   --system-app-color-9: oklch(0.74 0.18 302);
   --system-app-color-10: oklch(0.77 0.18 342);
   --system-app-color-11: oklch(0.62 0 0);
+  --system-app-color-12: oklch(0.66 0.18 278);
+  --system-app-color-13: oklch(0.88 0.09 172);
+  --system-app-color-14: oklch(0.65 0.09 60);
+  --system-app-color-15: oklch(0.62 0.15 15);
   --positive-transaction-color: oklch(0.78 0.16 260);
   --negative-transaction-color: oklch(0.78 0.16 25);
   --chart-income: var(--positive-transaction-color);
@@ -188,6 +196,10 @@
   --color-system-app-9: var(--system-app-color-9);
   --color-system-app-10: var(--system-app-color-10);
   --color-system-app-11: var(--system-app-color-11);
+  --color-system-app-12: var(--system-app-color-12);
+  --color-system-app-13: var(--system-app-color-13);
+  --color-system-app-14: var(--system-app-color-14);
+  --color-system-app-15: var(--system-app-color-15);
   --color-positive-transaction: var(--positive-transaction-color);
   --color-negative-transaction: var(--negative-transaction-color);
   --color-warning: var(--warning);
