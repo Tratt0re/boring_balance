@@ -1,5 +1,4 @@
 export * from './bar-chart/bar-chart.component';
-export * from './calendar-chart/calendar-chart.component';
 export * from './chart-theme';
 export * from './line-chart/line-chart.component';
 export * from './pie-chart/pie-chart.component';
