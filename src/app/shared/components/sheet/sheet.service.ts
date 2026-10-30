@@ -93,9 +93,13 @@ export class ZardSheetService {
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       sheetContainer.attachTemplatePortal(
-        new TemplatePortal<T>(componentOrTemplateRef, null as unknown as ViewContainerRef, {
-          sheetRef,
-        } as T),
+        new TemplatePortal<T>(
+          componentOrTemplateRef,
+          null as unknown as ViewContainerRef,
+          {
+            sheetRef,
+          } as T,
+        ),
       );
     } else if (typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T, U>(sheetRef, config);
