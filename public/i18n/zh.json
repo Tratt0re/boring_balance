@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "设置文件已损坏",
+        "description": "Boring Balance 无法读取其设置文件，已使用默认设置启动。你的财务数据不受影响，但备份和同步文件夹等偏好设置可能需要重新设置。",
+        "kept_as": "已将损坏文件的副本保存为应用数据文件夹中的 {{file}}。",
+        "not_moved": "无法移开损坏的文件，因此保持原样，在修复之前无法更改设置。",
+        "dismiss": "关闭"
+      },
       "clear_financial": {
         "label": "清除所有财务数据",
         "description": "永久删除所有账户、交易、转账及预算。偏好设置将保留。",

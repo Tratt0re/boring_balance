@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "El archivo de ajustes estaba dañado",
+        "description": "Boring Balance no pudo leer su archivo de ajustes y empezó con los ajustes predeterminados. Tus datos financieros no se ven afectados, pero puede que debas volver a configurar preferencias como las carpetas de copia de seguridad y sincronización.",
+        "kept_as": "Se conservó una copia del archivo dañado como {{file}} en la carpeta de datos de la aplicación.",
+        "not_moved": "No se pudo apartar el archivo dañado, por lo que se dejó intacto y los cambios de ajustes están bloqueados hasta que se repare.",
+        "dismiss": "Cerrar"
+      },
       "clear_financial": {
         "label": "Borrar todos los datos financieros",
         "description": "Elimina definitivamente todas las cuentas, transacciones, transferencias y presupuestos. Tus preferencias se conservan.",

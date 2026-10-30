@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "Le fichier de paramètres était endommagé",
+        "description": "Boring Balance n'a pas pu lire son fichier de paramètres et a démarré avec les paramètres par défaut. Vos données financières ne sont pas touchées, mais certaines préférences, comme les dossiers de sauvegarde et de synchronisation, peuvent devoir être redéfinies.",
+        "kept_as": "Une copie du fichier endommagé a été conservée sous le nom {{file}} dans le dossier de données de l'application.",
+        "not_moved": "Le fichier endommagé n'a pas pu être mis de côté ; il a été laissé intact et les modifications des paramètres sont bloquées tant qu'il n'est pas réparé.",
+        "dismiss": "Fermer"
+      },
       "clear_financial": {
         "label": "Effacer toutes les données financières",
         "description": "Supprime définitivement tous les comptes, transactions, virements et budgets. Les préférences sont conservées.",

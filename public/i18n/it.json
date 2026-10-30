@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "Il file delle impostazioni era danneggiato",
+        "description": "Boring Balance non è riuscito a leggere il file delle impostazioni ed è ripartito dalle impostazioni predefinite. I tuoi dati finanziari non sono interessati, ma preferenze come le cartelle di backup e sincronizzazione potrebbero andare reimpostate.",
+        "kept_as": "Una copia del file danneggiato è stata conservata come {{file}} nella cartella dei dati dell'app.",
+        "not_moved": "Non è stato possibile spostare il file danneggiato, quindi è rimasto intatto e le modifiche alle impostazioni sono bloccate finché non viene riparato.",
+        "dismiss": "Chiudi"
+      },
       "clear_financial": {
         "label": "Cancella tutti i dati finanziari",
         "description": "Elimina definitivamente tutti i conti, transazioni, trasferimenti e budget. Le preferenze vengono mantenute.",

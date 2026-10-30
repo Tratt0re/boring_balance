@@ -1,4 +1,40 @@
 <div class="space-y-4">
+  @if (settingsProblem(); as problem) {
+    <section
+      role="alert"
+      class="rounded-lg border border-destructive/40 bg-destructive/5 p-4 md:p-5"
+    >
+      <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div class="min-w-0">
+          <h3 class="text-sm font-semibold tracking-tight">
+            {{ 'settings.data.settings_problem.label' | translate }}
+          </h3>
+          <p class="mt-1 text-sm text-muted-foreground">
+            {{ 'settings.data.settings_problem.description' | translate }}
+          </p>
+          @if (problem.keptFileName) {
+            <p class="mt-2 break-all text-sm text-muted-foreground">
+              {{
+                'settings.data.settings_problem.kept_as'
+                  | translate: { file: problem.keptFileName }
+              }}
+            </p>
+          } @else {
+            <p class="mt-2 text-sm text-muted-foreground">
+              {{ 'settings.data.settings_problem.not_moved' | translate }}
+            </p>
+          }
+        </div>
+
+        <div class="flex shrink-0 items-center">
+          <button z-button zType="outline" (click)="onDismissSettingsProblem()">
+            {{ 'settings.data.settings_problem.dismiss' | translate }}
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
       <div class="min-w-0">

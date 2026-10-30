@@ -24,8 +24,15 @@ export enum APIChannel {
   IMPORT_EXCEL = 'importExcel',
   SYNC = 'sync',
   RESET = 'reset',
+  SETTINGS = 'settings',
   UPDATE = 'update',
   WINDOW = 'window',
+}
+
+export interface SettingsProblem {
+  at: number;
+  keptFileName: string | null;
+  reason: string;
 }
 
 export interface UpdateCheckResult {
@@ -204,6 +211,10 @@ export interface ElectronIpcClient {
   readonly reset: {
     readonly clearFinancialData: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
     readonly factoryReset: OptionalIpcRequest<void, { ok: boolean; error?: string }>;
+  };
+  readonly settings: {
+    readonly getProblem: OptionalIpcRequest<void, SettingsProblem | null>;
+    readonly acknowledgeProblem: OptionalIpcRequest<void, void>;
   };
   readonly update: {
     readonly check: OptionalIpcRequest<void, UpdateCheckResult>;

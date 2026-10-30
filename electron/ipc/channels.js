@@ -101,6 +101,10 @@ const CHANNELS = Object.freeze({
     clearFinancialData: 'db:reset:clear-financial-data',
     factoryReset: 'db:reset:factory-reset',
   }),
+  settings: Object.freeze({
+    getProblem: 'settings:get-problem',
+    acknowledgeProblem: 'settings:acknowledge-problem',
+  }),
   update: Object.freeze({
     check: 'update:check',
     forceCheck: 'update:force-check',

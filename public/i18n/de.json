@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "Die Einstellungsdatei war beschädigt",
+        "description": "Boring Balance konnte die Einstellungsdatei nicht lesen und ist mit den Standardeinstellungen gestartet. Deine Finanzdaten sind nicht betroffen, aber Einstellungen wie die Ordner für Backup und Synchronisierung müssen eventuell neu festgelegt werden.",
+        "kept_as": "Eine Kopie der beschädigten Datei wurde als {{file}} im App-Datenordner aufbewahrt.",
+        "not_moved": "Die beschädigte Datei konnte nicht beiseitegelegt werden. Sie blieb unverändert, und Änderungen an den Einstellungen sind gesperrt, bis sie repariert ist.",
+        "dismiss": "Schließen"
+      },
       "clear_financial": {
         "label": "Alle Finanzdaten löschen",
         "description": "Löscht dauerhaft alle Konten, Transaktionen, Überträge und Budgets. Einstellungen bleiben erhalten.",

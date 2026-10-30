@@ -146,6 +146,13 @@
       }
     },
     "data": {
+      "settings_problem": {
+        "label": "Your settings file was damaged",
+        "description": "Boring Balance could not read its settings file and started from default settings. Your financial data is not affected, but preferences such as backup and sync folders may need to be set again.",
+        "kept_as": "A copy of the damaged file was kept as {{file}} in the app data folder.",
+        "not_moved": "The damaged file could not be moved aside, so it was left untouched and settings changes are blocked until it is repaired.",
+        "dismiss": "Dismiss"
+      },
       "clear_financial": {
         "label": "Clear all financial data",
         "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
