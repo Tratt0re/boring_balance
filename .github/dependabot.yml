@@ -1,0 +1,37 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # The Angular packages pin each other's exact version, so they must move together.
+      angular:
+        patterns:
+          - '@angular/*'
+          - '@angular-devkit/*'
+          - '@schematics/*'
+      # Electron, its native-module rebuild and the packager are upgraded as a set.
+      electron:
+        patterns:
+          - 'electron'
+          - 'electron-builder'
+          - '@electron/*'
+          - 'better-sqlite3'
+      tailwind:
+        patterns:
+          - 'tailwindcss'
+          - '@tailwindcss/*'
+          - 'tailwind-merge'
+          - 'tailwindcss-animate'
+    ignore:
+      # Majors are decided by hand (see PLAN.md 5.6).
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

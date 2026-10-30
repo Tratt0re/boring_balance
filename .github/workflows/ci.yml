@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# A newer push to the same branch makes the older run pointless.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Electron 40 ships Node 24, and @electron/rebuild needs Node 22.12 or later.
+          node-version: 24
+          cache: npm
+
+      # postinstall rebuilds better-sqlite3 for Electron, so this also checks the native build.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Renderer tests
+        run: npm test -- --watch=false
+
+      # Runs the main-process tests under Electron's Node against a real SQLite database.
+      - name: Electron tests
+        run: npm run test:electron
+
+      - name: Build renderer
+        run: npm run build
+
+      - name: Build preload
+        run: npm run build:preload:prod
