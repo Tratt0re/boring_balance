@@ -1,4 +1,4 @@
-const { dialog } = require('electron');
+const { app, dialog } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
@@ -1157,8 +1157,16 @@ function checkAvailability() {
   };
 }
 
+// Electron 43 and later open file dialogs in Downloads unless told otherwise. Start in the folder the
+// user already chose, or Documents on first use, like the import and export dialogs do.
+function resolveDefaultPickerPath() {
+  const { baseFolderPath, folderPath } = readSyncSettings();
+  return baseFolderPath || folderPath || app.getPath('documents');
+}
+
 async function selectFolder() {
   const result = await dialog.showOpenDialog({
+    defaultPath: resolveDefaultPickerPath(),
     properties: ['openDirectory', 'createDirectory'],
   });
 

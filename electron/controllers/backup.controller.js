@@ -456,8 +456,15 @@ function getState() {
   return cloneState();
 }
 
+// Electron 43 and later open file dialogs in Downloads unless told otherwise. Start in the folder the
+// user already chose, or Documents on first use, like the import and export dialogs do.
+function resolveDefaultPickerPath() {
+  return readBackupSettings().folderPath || app.getPath('documents');
+}
+
 async function selectFolder() {
   const result = await dialog.showOpenDialog({
+    defaultPath: resolveDefaultPickerPath(),
     properties: ['openDirectory', 'createDirectory'],
   });
 
@@ -483,6 +490,7 @@ function list() {
 async function selectRestoreFile() {
   const result = await dialog.showOpenDialog({
     title: 'Select a backup to restore',
+    defaultPath: resolveDefaultPickerPath(),
     properties: ['openFile'],
   });
 
