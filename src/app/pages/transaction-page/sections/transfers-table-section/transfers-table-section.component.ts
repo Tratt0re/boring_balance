@@ -18,12 +18,6 @@ import {
   type AppSheetFieldValueMap,
   type AppSheetFormComponent,
 } from '@/components/sheet-form';
-import {
-  APP_COLOR_OPTIONS,
-  APP_ICON_OPTIONS,
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
 import type {
   TransactionCreateTransferDto,
   TransactionListTransfersDto,
@@ -43,9 +37,20 @@ import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from '@/shared/utils';
+import {
+  resolveColorHexByValue,
+  resolveIconByValue,
+  toAllowedPageSize,
+  toAmountFilterValue,
+  toBooleanValue,
+  toCurrentMonthDateRange,
+  toDateValue,
+  toPositiveInteger,
+  toPositiveIntegerArray,
+  toSettledFilterValue,
+} from '../table-section.utils';
 
-const DEFAULT_PAGE_SIZE = 10;
-const PAGE_SIZE_OPTIONS = [5, 10, 25, 50] as const;
 const TRANSFER_FILTER_FIELD = {
   dateFrom: 'dateFrom',
   dateTo: 'dateTo',
@@ -64,10 +69,6 @@ const TRANSFER_COLUMN_WIDTH = {
   description: 'w-5/28',
   action: 'w-1/14',
 } as const;
-const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
-const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
-const DEFAULT_TABLE_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'circle') as ZardIcon;
-const DEFAULT_TABLE_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
 interface TransferTableRow {
   readonly transferId: string;
@@ -116,32 +117,6 @@ const DEFAULT_TRANSFER_TABLE_FILTERS: TransferTableFilters = {
   amountTo: null,
   settled: null,
   accountIds: [],
-};
-
-const resolveIconByValue = (value: string | null): ZardIcon | null => {
-  if (!value || value.length === 0) {
-    return DEFAULT_TABLE_ICON;
-  }
-
-  return APP_ICON_BY_VALUE.get(value) ?? DEFAULT_TABLE_ICON;
-};
-
-const resolveColorHexByValue = (value: string | null): string | null => {
-  if (!value || value.length === 0) {
-    return DEFAULT_TABLE_COLOR_HEX;
-  }
-
-  return APP_COLOR_HEX_BY_VALUE.get(value) ?? DEFAULT_TABLE_COLOR_HEX;
-};
-
-const toCurrentMonthDateRange = (referenceDate: Date = new Date()): { dateFrom: Date; dateTo: Date } => {
-  const year = referenceDate.getFullYear();
-  const monthIndex = referenceDate.getMonth();
-
-  return {
-    dateFrom: new Date(year, monthIndex, 1, 0, 0, 0, 0),
-    dateTo: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999),
-  };
 };
 
 const TRANSFER_TABLE_COLUMNS: readonly TableDataItem[] = [
@@ -526,7 +501,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const settled = this.toBooleanValue(event.value);
+    const settled = toBooleanValue(event.value);
     if (settled === null) {
       return;
     }
@@ -571,7 +546,7 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         settled: null,
       };
     } else if (fieldId === TRANSFER_FILTER_FIELD.accountId) {
-      const accountId = this.toPositiveInteger(rawValue);
+      const accountId = toPositiveInteger(rawValue);
       if (!accountId || !currentFilters.accountIds.includes(accountId)) {
         return;
       }
@@ -655,22 +630,6 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       dateFrom,
       dateTo,
     });
-  }
-
-  private toBooleanValue(value: unknown): boolean | null {
-    if (typeof value === 'boolean') {
-      return value;
-    }
-
-    if (value === 1 || value === '1' || value === 'true') {
-      return true;
-    }
-
-    if (value === 0 || value === '0' || value === 'false') {
-      return false;
-    }
-
-    return null;
   }
 
   private buildFilterFields(): readonly AppSheetField[] {
@@ -776,12 +735,12 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
   private applySheetFilters(values: AppSheetFieldValueMap): void {
     const nextFilters: TransferTableFilters = {
-      dateFrom: this.toDateValue(values[TRANSFER_FILTER_FIELD.dateFrom]),
-      dateTo: this.toDateValue(values[TRANSFER_FILTER_FIELD.dateTo]),
-      amountFrom: this.toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountFrom]),
-      amountTo: this.toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountTo]),
-      settled: this.toSettledFilterValue(values[TRANSFER_FILTER_FIELD.settled]),
-      accountIds: this.toPositiveIntegerArray(values[TRANSFER_FILTER_FIELD.accountId]),
+      dateFrom: toDateValue(values[TRANSFER_FILTER_FIELD.dateFrom]),
+      dateTo: toDateValue(values[TRANSFER_FILTER_FIELD.dateTo]),
+      amountFrom: toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountFrom]),
+      amountTo: toAmountFilterValue(values[TRANSFER_FILTER_FIELD.amountTo]),
+      settled: toSettledFilterValue(values[TRANSFER_FILTER_FIELD.settled]),
+      accountIds: toPositiveIntegerArray(values[TRANSFER_FILTER_FIELD.accountId]),
     };
 
     this.applyFiltersAndReload(nextFilters);
@@ -835,89 +794,6 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         ...(accounts === undefined ? {} : { accounts }),
       },
     };
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
-      return value;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number.parseInt(value, 10);
-      return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
-    }
-
-    return null;
-  }
-
-  private toPositiveIntegerArray(value: unknown): readonly number[] {
-    if (Array.isArray(value)) {
-      const uniqueValues = new Set<number>();
-
-      for (const item of value) {
-        const parsedValue = this.toPositiveInteger(item);
-        if (parsedValue) {
-          uniqueValues.add(parsedValue);
-        }
-      }
-
-      return Array.from(uniqueValues);
-    }
-
-    const parsedValue = this.toPositiveInteger(value);
-    return parsedValue ? [parsedValue] : [];
-  }
-
-  private toDateValue(value: unknown): Date | null {
-    if (value instanceof Date && !Number.isNaN(value.getTime())) {
-      return value;
-    }
-
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? null : date;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const timestamp = Date.parse(value);
-      return Number.isNaN(timestamp) ? null : new Date(timestamp);
-    }
-
-    return null;
-  }
-
-  private toAllowedPageSize(value: unknown): number {
-    const pageSize = this.toPositiveInteger(value);
-    if (!pageSize) {
-      return DEFAULT_PAGE_SIZE;
-    }
-
-    return PAGE_SIZE_OPTIONS.includes(pageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ? pageSize : DEFAULT_PAGE_SIZE;
-  }
-
-  private toAmountFilterValue(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number(value);
-      return Number.isFinite(parsedValue) ? parsedValue : null;
-    }
-
-    return null;
-  }
-
-  private toSettledFilterValue(value: unknown): boolean | null {
-    if (value === true || value === 'true') {
-      return true;
-    }
-
-    if (value === false || value === 'false') {
-      return false;
-    }
-
-    return null;
   }
 
   private applyFiltersAndReload(nextFilters: TransferTableFilters): void {
@@ -1100,8 +976,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const parsedPageSize = this.toAllowedPageSize(persistedState.pageSize);
-    const parsedPage = this.toPositiveInteger(persistedState.page) ?? 1;
+    const parsedPageSize = toAllowedPageSize(persistedState.pageSize);
+    const parsedPage = toPositiveInteger(persistedState.page) ?? 1;
     const parsedFilters = this.toPersistedFilters(persistedState.filters);
 
     this.pageSize.set(parsedPageSize);
@@ -1138,12 +1014,12 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
     const filters = value as Partial<PersistedTransferTableFilters>;
     return {
-      dateFrom: this.toDateValue(filters.dateFrom),
-      dateTo: this.toDateValue(filters.dateTo),
-      amountFrom: this.toAmountFilterValue(filters.amountFrom),
-      amountTo: this.toAmountFilterValue(filters.amountTo),
-      settled: this.toSettledFilterValue(filters.settled),
-      accountIds: this.toPositiveIntegerArray(filters.accountIds),
+      dateFrom: toDateValue(filters.dateFrom),
+      dateTo: toDateValue(filters.dateTo),
+      amountFrom: toAmountFilterValue(filters.amountFrom),
+      amountTo: toAmountFilterValue(filters.amountTo),
+      settled: toSettledFilterValue(filters.settled),
+      accountIds: toPositiveIntegerArray(filters.accountIds),
     };
   }
 

@@ -17,12 +17,6 @@ import {
   type AppSheetFieldValueMap,
   type AppSheetFormComponent,
 } from '@/components/sheet-form';
-import {
-  APP_COLOR_OPTIONS,
-  APP_ICON_OPTIONS,
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
 import type { CategoryType, TransactionCreateDto, TransactionListTransactionsDto, TransactionUpdateDto } from '@/dtos';
 import { type TransactionModel } from '@/models';
 import {
@@ -45,6 +39,18 @@ import {
   computePageCount,
   createActionColumn,
 } from '@/shared/utils';
+import {
+  resolveColorHexByValue,
+  resolveIconByValue,
+  toAllowedPageSize,
+  toAmountFilterValue,
+  toBooleanValue,
+  toCurrentMonthDateRange,
+  toDateValue,
+  toPositiveInteger,
+  toPositiveIntegerArray,
+  toSettledFilterValue,
+} from '../table-section.utils';
 
 const TRANSFER_CATEGORY_ID = 2;
 const TRANSACTION_FILTER_FIELD = {
@@ -67,10 +73,6 @@ const TRANSACTION_COLUMN_WIDTH = {
   description: 'w-5/28',
   action: 'w-1/14',
 } as const;
-const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
-const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
-const DEFAULT_TABLE_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'circle') as ZardIcon;
-const DEFAULT_TABLE_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
 interface TransactionTableRow {
   readonly id: number;
@@ -126,32 +128,6 @@ const DEFAULT_TRANSACTION_TABLE_FILTERS: TransactionTableFilters = {
   categoryType: null,
   categoryIds: [],
   accountIds: [],
-};
-
-const resolveIconByValue = (value: string | null): ZardIcon | null => {
-  if (!value || value.length === 0) {
-    return DEFAULT_TABLE_ICON;
-  }
-
-  return APP_ICON_BY_VALUE.get(value) ?? DEFAULT_TABLE_ICON;
-};
-
-const resolveColorHexByValue = (value: string | null): string | null => {
-  if (!value || value.length === 0) {
-    return DEFAULT_TABLE_COLOR_HEX;
-  }
-
-  return APP_COLOR_HEX_BY_VALUE.get(value) ?? DEFAULT_TABLE_COLOR_HEX;
-};
-
-const toCurrentMonthDateRange = (referenceDate: Date = new Date()): { dateFrom: Date; dateTo: Date } => {
-  const year = referenceDate.getFullYear();
-  const monthIndex = referenceDate.getMonth();
-
-  return {
-    dateFrom: new Date(year, monthIndex, 1, 0, 0, 0, 0),
-    dateTo: new Date(year, monthIndex + 1, 0, 23, 59, 59, 999),
-  };
 };
 
 const TRANSACTION_TABLE_COLUMNS: readonly TableDataItem[] = [
@@ -572,7 +548,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const settled = this.toBooleanValue(event.value);
+    const settled = toBooleanValue(event.value);
     if (settled === null) {
       return;
     }
@@ -618,7 +594,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         categoryType: null,
       };
     } else if (fieldId === TRANSACTION_FILTER_FIELD.categoryId) {
-      const categoryId = this.toPositiveInteger(rawValue);
+      const categoryId = toPositiveInteger(rawValue);
       if (!categoryId || !currentFilters.categoryIds.includes(categoryId)) {
         return;
       }
@@ -628,7 +604,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         categoryIds: currentFilters.categoryIds.filter((id) => id !== categoryId),
       };
     } else if (fieldId === TRANSACTION_FILTER_FIELD.accountId) {
-      const accountId = this.toPositiveInteger(rawValue);
+      const accountId = toPositiveInteger(rawValue);
       if (!accountId || !currentFilters.accountIds.includes(accountId)) {
         return;
       }
@@ -712,22 +688,6 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       itemNavigation: this.toolbarItemNavigation(),
       itemActions: [this.addTransactionToolbarAction],
     });
-  }
-
-  private toBooleanValue(value: unknown): boolean | null {
-    if (typeof value === 'boolean') {
-      return value;
-    }
-
-    if (value === 1 || value === '1' || value === 'true') {
-      return true;
-    }
-
-    if (value === 0 || value === '0' || value === 'false') {
-      return false;
-    }
-
-    return null;
   }
 
   private buildFilterFields(): readonly AppSheetField[] {
@@ -883,14 +843,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
   private applySheetFilters(values: AppSheetFieldValueMap): void {
     const nextFilters: TransactionTableFilters = {
-      dateFrom: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateFrom]),
-      dateTo: this.toDateValue(values[TRANSACTION_FILTER_FIELD.dateTo]),
-      amountFrom: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountFrom]),
-      amountTo: this.toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountTo]),
-      settled: this.toSettledFilterValue(values[TRANSACTION_FILTER_FIELD.settled]),
+      dateFrom: toDateValue(values[TRANSACTION_FILTER_FIELD.dateFrom]),
+      dateTo: toDateValue(values[TRANSACTION_FILTER_FIELD.dateTo]),
+      amountFrom: toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountFrom]),
+      amountTo: toAmountFilterValue(values[TRANSACTION_FILTER_FIELD.amountTo]),
+      settled: toSettledFilterValue(values[TRANSACTION_FILTER_FIELD.settled]),
       categoryType: this.toCategoryTypeFilterValue(values[TRANSACTION_FILTER_FIELD.categoryType]),
-      categoryIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.categoryId]),
-      accountIds: this.toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
+      categoryIds: toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.categoryId]),
+      accountIds: toPositiveIntegerArray(values[TRANSACTION_FILTER_FIELD.accountId]),
     };
 
     this.applyFiltersAndReload(nextFilters);
@@ -952,57 +912,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     };
   }
 
-  private toPositiveIntegerArray(value: unknown): readonly number[] {
-    if (Array.isArray(value)) {
-      const uniqueValues = new Set<number>();
-
-      for (const item of value) {
-        const parsedValue = this.toPositiveInteger(item);
-        if (parsedValue) {
-          uniqueValues.add(parsedValue);
-        }
-      }
-
-      return Array.from(uniqueValues);
-    }
-
-    const parsedValue = this.toPositiveInteger(value);
-    return parsedValue ? [parsedValue] : [];
-  }
-
-  private toSettledFilterValue(value: unknown): boolean | null {
-    if (value === true || value === 'true') {
-      return true;
-    }
-
-    if (value === false || value === 'false') {
-      return false;
-    }
-
-    return null;
-  }
-
   private toCategoryTypeFilterValue(value: unknown): CategoryType | null {
     if (value === 'income' || value === 'expense' || value === 'exclude') {
       return value;
-    }
-
-    return null;
-  }
-
-  private toDateValue(value: unknown): Date | null {
-    if (value instanceof Date && !Number.isNaN(value.getTime())) {
-      return value;
-    }
-
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? null : date;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const timestamp = Date.parse(value);
-      return Number.isNaN(timestamp) ? null : new Date(timestamp);
     }
 
     return null;
@@ -1403,8 +1315,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const parsedPageSize = this.toAllowedPageSize(persistedState.pageSize);
-    const parsedPage = this.toPositiveInteger(persistedState.page) ?? 1;
+    const parsedPageSize = toAllowedPageSize(persistedState.pageSize);
+    const parsedPage = toPositiveInteger(persistedState.page) ?? 1;
     const parsedFilters = this.toPersistedFilters(persistedState.filters);
 
     this.pageSize.set(parsedPageSize);
@@ -1443,50 +1355,15 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     const filters = value as Partial<PersistedTransactionTableFilters>;
     return {
-      dateFrom: this.toDateValue(filters.dateFrom),
-      dateTo: this.toDateValue(filters.dateTo),
-      amountFrom: this.toAmountFilterValue(filters.amountFrom),
-      amountTo: this.toAmountFilterValue(filters.amountTo),
-      settled: this.toSettledFilterValue(filters.settled),
+      dateFrom: toDateValue(filters.dateFrom),
+      dateTo: toDateValue(filters.dateTo),
+      amountFrom: toAmountFilterValue(filters.amountFrom),
+      amountTo: toAmountFilterValue(filters.amountTo),
+      settled: toSettledFilterValue(filters.settled),
       categoryType: this.toCategoryTypeFilterValue(filters.categoryType),
-      categoryIds: this.toPositiveIntegerArray(filters.categoryIds),
-      accountIds: this.toPositiveIntegerArray(filters.accountIds),
+      categoryIds: toPositiveIntegerArray(filters.categoryIds),
+      accountIds: toPositiveIntegerArray(filters.accountIds),
     };
-  }
-
-  private toPositiveInteger(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isInteger(value) && value > 0) {
-      return value;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number.parseInt(value, 10);
-      return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
-    }
-
-    return null;
-  }
-
-  private toAllowedPageSize(value: unknown): number {
-    const pageSize = this.toPositiveInteger(value);
-    if (!pageSize) {
-      return DEFAULT_PAGE_SIZE;
-    }
-
-    return PAGE_SIZE_OPTIONS.includes(pageSize as (typeof PAGE_SIZE_OPTIONS)[number]) ? pageSize : DEFAULT_PAGE_SIZE;
-  }
-
-  private toAmountFilterValue(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number(value);
-      return Number.isFinite(parsedValue) ? parsedValue : null;
-    }
-
-    return null;
   }
 
   private applyFiltersAndReload(nextFilters: TransactionTableFilters): void {
