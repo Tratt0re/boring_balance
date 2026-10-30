@@ -1,12 +1,21 @@
 import { type ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
-import { inject, Injectable, InjectionToken, Injector, PLATFORM_ID, TemplateRef } from '@angular/core';
+import {
+  inject,
+  Injectable,
+  InjectionToken,
+  Injector,
+  PLATFORM_ID,
+  TemplateRef,
+  ViewContainerRef,
+} from '@angular/core';
 
 import { ZardSheetRef } from './sheet-ref';
 import { ZardSheetComponent, ZardSheetOptions } from './sheet.component';
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string;
+// `any` on purpose: callers pick the data type with `inject<MyData>(Z_SHEET_DATA)`.
 export const Z_SHEET_DATA = new InjectionToken<any>('Z_SHEET_DATA');
 
 @Injectable({
@@ -26,7 +35,12 @@ export class ZardSheetService {
 
     if (!overlayRef) {
       // Return a mock sheet ref for SSR environments
-      return new ZardSheetRef(undefined as any, config, undefined as any, this.platformId);
+      return new ZardSheetRef(
+        undefined as unknown as OverlayRef,
+        config,
+        undefined as unknown as ZardSheetComponent<T, U>,
+        this.platformId,
+      );
     }
 
     const sheetContainer = this.attachSheetContainer<T, U>(overlayRef, config);
@@ -79,10 +93,9 @@ export class ZardSheetService {
 
     if (componentOrTemplateRef instanceof TemplateRef) {
       sheetContainer.attachTemplatePortal(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        new TemplatePortal<T>(componentOrTemplateRef, null!, {
-          sheetRef: sheetRef,
-        } as any),
+        new TemplatePortal<T>(componentOrTemplateRef, null as unknown as ViewContainerRef, {
+          sheetRef,
+        } as T),
       );
     } else if (typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T, U>(sheetRef, config);

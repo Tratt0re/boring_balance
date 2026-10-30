@@ -16,6 +16,7 @@ import { ZardDialogComponent, ZardDialogOptions } from './dialog.component';
 
 type ContentType<T> = ComponentType<T> | TemplateRef<T> | string;
 
+// `any` on purpose: callers pick the data type with `inject<MyData>(Z_MODAL_DATA)`.
 export const Z_MODAL_DATA = new InjectionToken<any>('Z_MODAL_DATA');
 
 @Injectable({
