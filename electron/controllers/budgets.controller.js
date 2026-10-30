@@ -17,12 +17,20 @@ const {
   MAX_PAGE_SIZE,
 } = require('./utils');
 
-const BUDGET_FIELDS = new Set(['category_id', 'amount_cents', 'include_children', 'description', 'archived']);
+const BUDGET_FIELDS = new Set([
+  'category_id',
+  'amount_cents',
+  'include_children',
+  'description',
+  'archived',
+]);
 const LIST_PAYLOAD_FIELDS = new Set(['where', 'options', 'page', 'page_size', 'all']);
 const DESCRIPTION_MAX_LENGTH = 75;
 
 function normalizeBudgetChanges(value, label, options = {}) {
-  const changesInput = options.partial ? ensureNonEmptyObject(value, label) : ensurePlainObject(value, label);
+  const changesInput = options.partial
+    ? ensureNonEmptyObject(value, label)
+    : ensurePlainObject(value, label);
   assertAllowedKeys(changesInput, BUDGET_FIELDS, label);
 
   const changes = pickDefined({
@@ -34,7 +42,10 @@ function normalizeBudgetChanges(value, label, options = {}) {
       changesInput.amount_cents === undefined
         ? undefined
         : normalizePositiveInteger(changesInput.amount_cents, `${label}.amount_cents`),
-    include_children: normalizeOptionalBooleanFlag(changesInput.include_children, `${label}.include_children`),
+    include_children: normalizeOptionalBooleanFlag(
+      changesInput.include_children,
+      `${label}.include_children`,
+    ),
     description: normalizeOptionalString(changesInput.description, `${label}.description`, {
       maxLength: DESCRIPTION_MAX_LENGTH,
     }),

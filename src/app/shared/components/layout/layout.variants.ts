@@ -16,14 +16,20 @@ export const layoutVariants = cva('flex w-full min-h-0', {
 export type LayoutVariants = NonNullable<VariantProps<typeof layoutVariants>['zDirection']>;
 
 // Header Variants
-export const headerVariants = cva('flex items-center px-4 bg-background border-b border-border shrink-0', {
-  variants: {},
-});
+export const headerVariants = cva(
+  'flex items-center px-4 bg-background border-b border-border shrink-0',
+  {
+    variants: {},
+  },
+);
 
 // Footer Variants
-export const footerVariants = cva('flex items-center px-6 bg-background border-t border-border shrink-0', {
-  variants: {},
-});
+export const footerVariants = cva(
+  'flex items-center px-6 bg-background border-t border-border shrink-0',
+  {
+    variants: {},
+  },
+);
 
 // Content Variants
 export const contentVariants = cva('flex-1 flex flex-col overflow-auto bg-background p-6');

@@ -11,10 +11,7 @@ type TransactionsPageView = 'common' | 'transfers';
 
 @Component({
   selector: 'app-transaction-page',
-  imports: [
-    TransactionsTableSectionComponent,
-    TransfersTableSectionComponent,
-  ],
+  imports: [TransactionsTableSectionComponent, TransfersTableSectionComponent],
   templateUrl: './transaction-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -16,7 +16,10 @@ import type { ClassValue } from 'clsx';
 
 import { ZardCommandInputComponent } from '@/shared/components/command/command-input.component';
 import { ZardCommandOptionComponent } from '@/shared/components/command/command-option.component';
-import { commandVariants, type ZardCommandSizeVariants } from '@/shared/components/command/command.variants';
+import {
+  commandVariants,
+  type ZardCommandSizeVariants,
+} from '@/shared/components/command/command.variants';
 import type { ZardIcon } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
@@ -35,7 +38,6 @@ export interface ZardCommandGroup {
   label: string;
   options: ZardCommandOption[];
 }
-
 
 export abstract class ZardCommand {
   abstract registerOption(option: ZardCommandOptionComponent): void;
@@ -75,7 +77,9 @@ export abstract class ZardCommand {
 })
 export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
   private readonly commandInput = contentChild(ZardCommandInputComponent);
-  private readonly optionComponentsAsChildren = contentChildren(ZardCommandOptionComponent, { descendants: true });
+  private readonly optionComponentsAsChildren = contentChildren(ZardCommandOptionComponent, {
+    descendants: true,
+  });
   private readonly registeredOptionComponents = signal<ZardCommandOptionComponent[]>([]);
 
   readonly size = input<ZardCommandSizeVariants>('default');
@@ -89,21 +93,25 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
   readonly selectedIndex = signal(-1);
 
   protected readonly optionComponents = computed(() =>
-    this.optionComponentsAsChildren().length ? this.optionComponentsAsChildren() : this.registeredOptionComponents(),
+    this.optionComponentsAsChildren().length
+      ? this.optionComponentsAsChildren()
+      : this.registeredOptionComponents(),
   );
 
   registerOption(option: ZardCommandOptionComponent) {
-    this.registeredOptionComponents.update(current => [...current, option]);
+    this.registeredOptionComponents.update((current) => [...current, option]);
   }
 
   unregisterOption(option: ZardCommandOptionComponent) {
-    this.registeredOptionComponents.update(current => current.filter(o => o !== option));
+    this.registeredOptionComponents.update((current) => current.filter((o) => o !== option));
   }
 
   // Signal to trigger updates when optionComponents change
   private readonly optionsUpdateTrigger = signal(0);
 
-  protected readonly classes = computed(() => mergeClasses(commandVariants({ size: this.size() }), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(commandVariants({ size: this.size() }), this.class()),
+  );
 
   // Computed signal for filtered options - this will automatically update when searchTerm or options change
   readonly filteredOptions = computed(() => {
@@ -120,7 +128,7 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
       return this.optionComponents();
     }
 
-    return this.optionComponents().filter(option => {
+    return this.optionComponents().filter((option) => {
       const label = option.zLabel().toLowerCase();
       const command = option.zCommand()?.toLowerCase() ?? '';
       return label.includes(lowerSearchTerm) || command.includes(lowerSearchTerm);
@@ -159,7 +167,7 @@ export class ZardCommandComponent implements ControlValueAccessor, ZardCommand {
    * Trigger an update to the filteredOptions computed signal
    */
   private triggerOptionsUpdate(): void {
-    this.optionsUpdateTrigger.update(value => value + 1);
+    this.optionsUpdateTrigger.update((value) => value + 1);
   }
 
   onSearch(searchTerm: string) {

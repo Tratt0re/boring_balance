@@ -3,10 +3,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
-import {
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
+import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -162,9 +159,14 @@ export class ManageArchivedCategoriesDialogComponent implements OnInit {
     } catch (error) {
       this.categories.set([]);
       this.loadError.set(
-        error instanceof Error ? error.message : 'Unexpected error while loading archived categories.',
+        error instanceof Error
+          ? error.message
+          : 'Unexpected error while loading archived categories.',
       );
-      console.error('[manage-archived-categories-dialog] Failed to load archived categories:', error);
+      console.error(
+        '[manage-archived-categories-dialog] Failed to load archived categories:',
+        error,
+      );
     } finally {
       this.isLoading.set(false);
     }

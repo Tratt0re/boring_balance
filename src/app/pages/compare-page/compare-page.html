@@ -36,8 +36,11 @@
       </div>
     </app-base-card>
   } @else if (loadError(); as loadErrorMessage) {
-    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-      {{ 'compare.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+    <div
+      role="alert"
+      class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+    >
+      {{ 'compare.loadFailedWithError' | translate: { error: loadErrorMessage } }}
     </div>
   } @else if (hasComparisonData()) {
     <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -63,7 +66,9 @@
         [zDescription]="'compare.cards.radar.description' | translate"
       >
         @if (radarSeries().length === 0) {
-          <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+          <div
+            class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
+          >
             {{ 'compare.cards.radar.empty' | translate }}
           </div>
         } @else {
@@ -86,7 +91,9 @@
       [zDescription]="'compare.cards.expensesByCategory.description' | translate"
     >
       @if (expenseCategoryTableRows().length === 0) {
-        <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+        <div
+          class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
+        >
           {{ 'compare.cards.expensesByCategory.empty' | translate }}
         </div>
       } @else {

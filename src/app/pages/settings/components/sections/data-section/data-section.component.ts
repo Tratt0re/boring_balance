@@ -12,7 +12,10 @@ import type { SettingsProblem } from '@/config/api';
 import { SettingsProblemService } from '@/services/settings-problem.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
-import { ResetConfirmDialogComponent, type ResetConfirmDialogData } from './reset-confirm-dialog.component';
+import {
+  ResetConfirmDialogComponent,
+  type ResetConfirmDialogData,
+} from './reset-confirm-dialog.component';
 
 @Component({
   selector: 'app-data-section',

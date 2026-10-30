@@ -23,7 +23,10 @@
             @if (snapshotRecency().daysSinceLatestSnapshot === 0) {
               {{ 'overview.cards.netWorth.snapshotBased.today' | translate }}
             } @else {
-              {{ 'overview.cards.netWorth.snapshotBased.daysAgo' | translate: { days: snapshotRecency().daysSinceLatestSnapshot } }}
+              {{
+                'overview.cards.netWorth.snapshotBased.daysAgo'
+                  | translate: { days: snapshotRecency().daysSinceLatestSnapshot }
+              }}
             }
           </p>
         }
@@ -67,7 +70,9 @@
             </span>
           </div>
           <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 pt-1">
-            <span class="text-xs leading-tight text-muted-foreground">{{ 'overview.cards.netWorth.totalAfterRP' | translate }}</span>
+            <span class="text-xs leading-tight text-muted-foreground">{{
+              'overview.cards.netWorth.totalAfterRP' | translate
+            }}</span>
             <span class="text-sm leading-tight font-semibold money">
               {{ formatCurrencyFromCents(totalAfterReceivablesPayablesCents()) }}
             </span>

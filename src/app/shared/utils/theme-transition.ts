@@ -25,11 +25,14 @@ export function applyThemeTransition(
     return;
   }
 
-  const triggerElement = origin instanceof MouseEvent
-    ? (origin.currentTarget instanceof HTMLElement ? origin.currentTarget : null)
-    : origin instanceof HTMLElement
-      ? origin
-      : null;
+  const triggerElement =
+    origin instanceof MouseEvent
+      ? origin.currentTarget instanceof HTMLElement
+        ? origin.currentTarget
+        : null
+      : origin instanceof HTMLElement
+        ? origin
+        : null;
   const transitionDocument = document as ThemeViewTransitionDocument;
   const startViewTransition = transitionDocument.startViewTransition?.bind(transitionDocument);
 
@@ -44,7 +47,10 @@ export function applyThemeTransition(
   const targetRect = triggerElement?.getBoundingClientRect();
   const x = targetRect ? targetRect.left + targetRect.width / 2 : window.innerWidth / 2;
   const y = targetRect ? targetRect.top + targetRect.height / 2 : window.innerHeight / 2;
-  const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y),
+  );
   const transition = startViewTransition(applyTheme);
 
   void transition.ready

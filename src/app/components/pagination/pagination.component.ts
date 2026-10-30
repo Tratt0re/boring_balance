@@ -1,4 +1,11 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -8,7 +15,13 @@ import { ZardSelectImports } from '@/shared/components/select';
 
 @Component({
   selector: 'app-pagination',
-  imports: [TranslatePipe, ZardButtonComponent, ZardIconComponent, ZardPaginationComponent, ...ZardSelectImports],
+  imports: [
+    TranslatePipe,
+    ZardButtonComponent,
+    ZardIconComponent,
+    ZardPaginationComponent,
+    ...ZardSelectImports,
+  ],
   templateUrl: './pagination.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,11 +38,15 @@ export class AppPaginationComponent {
   readonly pageChange = output<number>();
   readonly pageSizeChange = output<number>();
 
-  protected readonly normalizedTotalPages = computed(() => Math.max(1, Math.trunc(this.totalPages())));
+  protected readonly normalizedTotalPages = computed(() =>
+    Math.max(1, Math.trunc(this.totalPages())),
+  );
   protected readonly normalizedCurrentPage = computed(() =>
     Math.min(Math.max(1, Math.trunc(this.currentPage())), this.normalizedTotalPages()),
   );
-  protected readonly normalizedMaxVisiblePages = computed(() => Math.max(1, Math.trunc(this.maxVisiblePages())));
+  protected readonly normalizedMaxVisiblePages = computed(() =>
+    Math.max(1, Math.trunc(this.maxVisiblePages())),
+  );
   protected readonly normalizedPageSizeOptions = computed(() => {
     const sanitizedOptions = this.pageSizeOptions()
       .map((value) => Math.trunc(value))

@@ -1,4 +1,9 @@
-<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+<form
+  class="grid gap-4 sm:grid-cols-2"
+  [formGroup]="form"
+  novalidate
+  (submit)="$event.preventDefault()"
+>
   <div>
     <label class="mb-1.5 block text-sm font-medium" for="transfer-date">
       {{ 'common.labels.date' | translate }}
@@ -16,7 +21,9 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium" for="transfer-settled">{{ 'common.labels.settled' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium" for="transfer-settled">{{
+      'common.labels.settled' | translate
+    }}</label>
     <z-switch zId="transfer-settled" formControlName="settled">
       {{ settledValue() ? ('common.yes' | translate) : ('common.no' | translate) }}
     </z-switch>
@@ -94,7 +101,9 @@
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
       [attr.placeholder]="'common.placeholders.optionalDescription' | translate"
     ></textarea>
-    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
+    <p class="mt-1 text-xs text-muted-foreground">
+      {{ descriptionLength() }}/{{ descriptionMaxLength }}
+    </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }

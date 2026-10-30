@@ -19,7 +19,12 @@ import { type AppBarChartSeries, AppBarChartComponent } from '@/components/chart
 import { AnalyticsService } from '@/services/analytics.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
-import { formatMonthLabel, toAbsoluteAmount, toAmount, toYearRangeTimestamps } from '../../overview-cards.utils';
+import {
+  formatMonthLabel,
+  toAbsoluteAmount,
+  toAmount,
+  toYearRangeTimestamps,
+} from '../../overview-cards.utils';
 
 const MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP = '15rem';
 const MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE = '18rem';
@@ -57,10 +62,10 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
   protected readonly loadError = signal<string | null>(null);
   protected readonly labels = signal<readonly string[]>([]);
   protected readonly series = signal<readonly AppBarChartSeries[]>([]);
-  protected readonly resolvedChartHeight = computed(() =>
-    this.resolveChartHeight(),
+  protected readonly resolvedChartHeight = computed(() => this.resolveChartHeight());
+  protected readonly currencyCode = computed(() =>
+    this.localPreferencesService.currencyPreference(),
   );
-  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
 
   constructor(
     private readonly analyticsService: AnalyticsService,
@@ -102,7 +107,9 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
       this.series.set(this.buildMonthlyTotalsBarSeries(rows));
     } catch (error) {
       console.error('[overview-monthly-totals-card] Failed to load monthly analytics:', error);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading analytics.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading analytics.',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -125,11 +132,17 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
       return requestedHeight;
     }
 
-    return this.isSmallScreen() ? MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE : MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP;
+    return this.isSmallScreen()
+      ? MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE
+      : MONTHLY_TOTALS_BAR_CHART_HEIGHT_DESKTOP;
   }
 
   private buildMonthlyTotalsBarSeries(
-    rows: ReadonlyArray<{ incomes_cents: number; expenses_cents: number; net_cashflow_cents: number }>,
+    rows: ReadonlyArray<{
+      incomes_cents: number;
+      expenses_cents: number;
+      net_cashflow_cents: number;
+    }>,
   ): readonly AppBarChartSeries[] {
     return [
       {

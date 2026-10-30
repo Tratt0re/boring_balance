@@ -31,14 +31,12 @@ export class MenuConfiguration {
       items: [
         { label: 'nav.items.categories', icon: 'tags', path: '/categories' },
         { label: 'nav.items.recurringEvents', icon: 'calendar-plus', path: '/recurring-events' },
-      ]
+      ],
     },
     {
       label: '',
       placement: 'bottom',
-      items: [
-        { label: 'nav.items.settings', icon: 'settings', path: '/settings' },
-      ],
+      items: [{ label: 'nav.items.settings', icon: 'settings', path: '/settings' }],
     },
   ];
 }

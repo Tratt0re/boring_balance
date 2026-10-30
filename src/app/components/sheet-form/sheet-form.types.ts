@@ -10,7 +10,10 @@ export type AppSheetInputType = 'text' | 'number' | 'email' | 'password' | 'sear
 export type AppSheetFieldValue = Date | string | readonly string[] | boolean | null;
 export type AppSheetFieldValueMap = Record<string, AppSheetFieldValue>;
 
-export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue extends AppSheetFieldValue> {
+export interface AppSheetFieldBase<
+  TType extends AppSheetFieldType,
+  TValue extends AppSheetFieldValue,
+> {
   readonly id: string;
   readonly type: TType;
   readonly value?: TValue;
@@ -23,7 +26,10 @@ export interface AppSheetFieldBase<TType extends AppSheetFieldType, TValue exten
   readonly disabled?: boolean;
 }
 
-export interface AppSheetDatePickerField extends AppSheetFieldBase<'date-picker', Date | string | null> {
+export interface AppSheetDatePickerField extends AppSheetFieldBase<
+  'date-picker',
+  Date | string | null
+> {
   readonly zFormat?: string;
   readonly zIconPosition?: 'left' | 'right';
   readonly zPopoverPlacement?: ZardPopoverPlacement;
@@ -45,8 +51,10 @@ export interface AppSheetComboboxGroup extends Omit<ZardComboboxGroup, 'label' |
   readonly options: readonly AppSheetComboboxOption[];
 }
 
-export interface AppSheetComboboxField
-  extends AppSheetFieldBase<'combobox', string | readonly string[] | null> {
+export interface AppSheetComboboxField extends AppSheetFieldBase<
+  'combobox',
+  string | readonly string[] | null
+> {
   readonly multiple?: boolean;
   readonly maxLabelCount?: number;
   readonly searchable?: boolean;
@@ -66,7 +74,10 @@ export interface AppSheetSelectOption {
   readonly disabled?: boolean;
 }
 
-export interface AppSheetSelectField extends AppSheetFieldBase<'select', string | readonly string[] | null> {
+export interface AppSheetSelectField extends AppSheetFieldBase<
+  'select',
+  string | readonly string[] | null
+> {
   readonly multiple?: boolean;
   readonly maxLabelCount?: number;
   readonly showSelectedLabel?: boolean;

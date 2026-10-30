@@ -1,4 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, output, signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  output,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { I18nService } from '@/services/i18n.service';
@@ -59,7 +71,10 @@ export interface PreferencesData {
             (zSelectionChange)="onLanguageChange($event)"
           >
             @for (language of languages; track language) {
-              <z-select-item [zValue]="language" [zLabel]="getLanguageLabelKey(language) | translate" />
+              <z-select-item
+                [zValue]="language"
+                [zLabel]="getLanguageLabelKey(language) | translate"
+              />
             }
           </z-select>
         </div>
@@ -121,7 +136,9 @@ export class OnboardingPreferencesComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     const data = this.initialData();
-    this.selectedTheme.set(data?.theme ?? (this.localPreferencesService.getTheme() as ThemePreference));
+    this.selectedTheme.set(
+      data?.theme ?? (this.localPreferencesService.getTheme() as ThemePreference),
+    );
     this.selectedLanguage.set(data?.language ?? this.localPreferencesService.getLanguage());
     this.selectedCurrency.set(data?.currency ?? this.localPreferencesService.getCurrency());
   }

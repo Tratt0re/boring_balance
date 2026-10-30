@@ -45,7 +45,9 @@ export class ZardAlertDialogService {
     return this.create(confirmConfig);
   }
 
-  warning<T>(config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string }): ZardAlertDialogRef<T> {
+  warning<T>(
+    config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string },
+  ): ZardAlertDialogRef<T> {
     const warningConfig: ZardAlertDialogOptions<T> = {
       ...config,
       zOkText: config.zOkText ?? 'OK',
@@ -54,7 +56,9 @@ export class ZardAlertDialogService {
     return this.create(warningConfig);
   }
 
-  info<T>(config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string }): ZardAlertDialogRef<T> {
+  info<T>(
+    config: Omit<ZardAlertDialogOptions<T>, 'zOkText'> & { zOkText?: string },
+  ): ZardAlertDialogRef<T> {
     const infoConfig: ZardAlertDialogOptions<T> = {
       ...config,
       zOkText: config.zOkText ?? 'OK',
@@ -148,7 +152,10 @@ export class ZardAlertDialogService {
     return alertDialogRef;
   }
 
-  private createInjector<T>(alertDialogRef: ZardAlertDialogRef<T>, config: ZardAlertDialogOptions<T>) {
+  private createInjector<T>(
+    alertDialogRef: ZardAlertDialogRef<T>,
+    config: ZardAlertDialogOptions<T>,
+  ) {
     return Injector.create({
       parent: this.injector,
       providers: [

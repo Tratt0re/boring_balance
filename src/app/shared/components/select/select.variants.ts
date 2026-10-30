@@ -79,5 +79,9 @@ export const selectItemIconVariants = cva('absolute flex size-3.5 items-center j
   ],
 });
 
-export type ZardSelectSizeVariants = NonNullable<VariantProps<typeof selectTriggerVariants>['zSize']>;
-export type ZardSelectItemModeVariants = NonNullable<VariantProps<typeof selectItemVariants>['zMode']>;
+export type ZardSelectSizeVariants = NonNullable<
+  VariantProps<typeof selectTriggerVariants>['zSize']
+>;
+export type ZardSelectItemModeVariants = NonNullable<
+  VariantProps<typeof selectItemVariants>['zMode']
+>;

@@ -327,7 +327,9 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       this.accountNameById.clear();
       this.categoryNameById.clear();
       this.loadError.set(
-        error instanceof Error ? error.message : this.translateService.instant('recurringEvents.errors.loadUnexpected'),
+        error instanceof Error
+          ? error.message
+          : this.translateService.instant('recurringEvents.errors.loadUnexpected'),
       );
       console.error('[recurring-events-page] Failed to load recurring events:', error);
     } finally {
@@ -352,7 +354,9 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       this.total.set(0);
       this.page.set(1);
       this.loadError.set(
-        error instanceof Error ? error.message : this.translateService.instant('recurringEvents.errors.loadUnexpected'),
+        error instanceof Error
+          ? error.message
+          : this.translateService.instant('recurringEvents.errors.loadUnexpected'),
       );
       console.error('[recurring-events-page] Failed to load recurring events:', error);
     } finally {
@@ -384,7 +388,10 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       amount,
       amountCurrencyIconMode: planItem.type === 'transfer' ? 'transfer' : 'currency-trend',
       templateSummary: this.describeTemplate(planItem),
-      settled: planItem.templateJson.settled !== undefined ? toBooleanFlag(planItem.templateJson.settled) : false,
+      settled:
+        planItem.templateJson.settled !== undefined
+          ? toBooleanFlag(planItem.templateJson.settled)
+          : false,
     };
   }
 
@@ -398,7 +405,11 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   }
 
   private describeTemplate(planItem: PlanItemModel): string {
-    if (planItem.type === 'transaction' && 'account_id' in planItem.templateJson && 'category_id' in planItem.templateJson) {
+    if (
+      planItem.type === 'transaction' &&
+      'account_id' in planItem.templateJson &&
+      'category_id' in planItem.templateJson
+    ) {
       const categoryName = this.lookupCategoryName(planItem.templateJson.category_id);
       const accountName = this.lookupAccountName(planItem.templateJson.account_id);
       const description = planItem.templateJson.description.trim();
@@ -459,7 +470,10 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
 
     let isUpdatingPlanItem = false;
 
-    const dialogRef = this.dialogService.create<UpsertPlanItemDialogComponent, UpsertPlanItemDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertPlanItemDialogComponent,
+      UpsertPlanItemDialogData
+    >({
       zTitle: this.translateService.instant('recurringEvents.dialog.edit.title'),
       zDescription: this.translateService.instant('recurringEvents.dialog.edit.description'),
       zContent: UpsertPlanItemDialogComponent,
@@ -469,7 +483,8 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         planItem: this.toDialogInitialValue(planItem),
       },
       zWidth: 'min(calc(100dvw - 120px), 1040px)',
-      zCustomClasses: 'max-h-[calc(100dvh-120px)] max-w-[calc(100dvw-120px)] sm:max-w-[calc(100dvw-120px)]',
+      zCustomClasses:
+        'max-h-[calc(100dvh-120px)] max-w-[calc(100dvw-120px)] sm:max-w-[calc(100dvw-120px)]',
       zMaskClosable: true,
       zOkText: this.translateService.instant('recurringEvents.dialog.edit.actions.save'),
       zCancelText: this.translateService.instant('recurringEvents.dialog.edit.actions.cancel'),
@@ -485,11 +500,14 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         }
 
         isUpdatingPlanItem = true;
-        void this
-          .updateRecurringEventFromDialog(planItem.id, payload, dialogContent, dialogRef)
-          .finally(() => {
-            isUpdatingPlanItem = false;
-          });
+        void this.updateRecurringEventFromDialog(
+          planItem.id,
+          payload,
+          dialogContent,
+          dialogRef,
+        ).finally(() => {
+          isUpdatingPlanItem = false;
+        });
         return false;
       },
     });
@@ -510,7 +528,10 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       zMaskClosable: true,
       zClosable: true,
       zOnOk: (dialogContent) => {
-        void this.deleteRecurringEvent(recurringEvent.id, dialogContent?.shouldDeleteLinkedItems() ?? false);
+        void this.deleteRecurringEvent(
+          recurringEvent.id,
+          dialogContent?.shouldDeleteLinkedItems() ?? false,
+        );
       },
     });
   }
@@ -518,7 +539,10 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
   private openAddRecurringEventDialog(): void {
     let isCreatingPlanItem = false;
 
-    const dialogRef = this.dialogService.create<UpsertPlanItemDialogComponent, UpsertPlanItemDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertPlanItemDialogComponent,
+      UpsertPlanItemDialogData
+    >({
       zTitle: this.translateService.instant('recurringEvents.dialog.add.title'),
       zDescription: this.translateService.instant('recurringEvents.dialog.add.description'),
       zContent: UpsertPlanItemDialogComponent,
@@ -527,7 +551,8 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         categoryOptions: this.categoryOptions(),
       },
       zWidth: 'min(calc(100dvw - 120px), 1040px)',
-      zCustomClasses: 'max-h-[calc(100dvh-120px)] max-w-[calc(100dvw-120px)] sm:max-w-[calc(100dvw-120px)]',
+      zCustomClasses:
+        'max-h-[calc(100dvh-120px)] max-w-[calc(100dvw-120px)] sm:max-w-[calc(100dvw-120px)]',
       zMaskClosable: true,
       zOkText: this.translateService.instant('recurringEvents.dialog.add.actions.create'),
       zCancelText: this.translateService.instant('recurringEvents.dialog.add.actions.cancel'),
@@ -543,25 +568,26 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
         }
 
         isCreatingPlanItem = true;
-        void this
-          .createRecurringEvent(
-            {
-              ...payload,
-              create_and_run: 1,
-            },
-            dialogContent,
-            dialogRef,
-          )
-          .finally(() => {
-            isCreatingPlanItem = false;
-          });
+        void this.createRecurringEvent(
+          {
+            ...payload,
+            create_and_run: 1,
+          },
+          dialogContent,
+          dialogRef,
+        ).finally(() => {
+          isCreatingPlanItem = false;
+        });
         return false;
       },
     });
   }
 
   private toDialogInitialValue(planItem: PlanItemModel): PlanItemDialogInitialValue {
-    const commonValue: Omit<PlanItemDialogInitialValue, 'accountId' | 'categoryId' | 'fromAccountId' | 'toAccountId'> = {
+    const commonValue: Omit<
+      PlanItemDialogInitialValue,
+      'accountId' | 'categoryId' | 'fromAccountId' | 'toAccountId'
+    > = {
       title: planItem.title,
       type: planItem.type,
       startDate: planItem.ruleJson.start_date,
@@ -569,12 +595,19 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
       frequencyUnit: planItem.ruleJson.frequency.unit,
       frequencyInterval: planItem.ruleJson.frequency.interval,
       monthPolicy: (planItem.ruleJson.month_policy ?? null) as PlanItemMonthPolicy | null,
-      settled: planItem.templateJson.settled !== undefined ? toBooleanFlag(planItem.templateJson.settled) : false,
+      settled:
+        planItem.templateJson.settled !== undefined
+          ? toBooleanFlag(planItem.templateJson.settled)
+          : false,
       amount: centsToAmount(planItem.templateJson.amount_cents),
       description: planItem.templateJson.description,
     };
 
-    if (planItem.type === 'transaction' && 'account_id' in planItem.templateJson && 'category_id' in planItem.templateJson) {
+    if (
+      planItem.type === 'transaction' &&
+      'account_id' in planItem.templateJson &&
+      'category_id' in planItem.templateJson
+    ) {
       return {
         ...commonValue,
         accountId: planItem.templateJson.account_id,
@@ -688,7 +721,10 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     }
   }
 
-  private openRunResultAlert(result: PlanItemRunResult, titleKey = 'recurringEvents.runResult.title'): void {
+  private openRunResultAlert(
+    result: PlanItemRunResult,
+    titleKey = 'recurringEvents.runResult.title',
+  ): void {
     const data: RecurringEventRunResultAlertData = {
       title: result.planItem.title,
       totalOccurrences: result.summary.totalOccurrences,
@@ -711,7 +747,9 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
     this.alertDialogService.info({
       zTitle: this.translateService.instant('recurringEvents.updateResult.title'),
       zDescription: this.translateService.instant('recurringEvents.updateResult.description', {
-        ...(title ? { title } : { title: this.translateService.instant('nav.items.recurringEvents') }),
+        ...(title
+          ? { title }
+          : { title: this.translateService.instant('nav.items.recurringEvents') }),
       }),
       zOkText: this.translateService.instant('recurringEvents.updateResult.actions.ok'),
       zMaskClosable: true,

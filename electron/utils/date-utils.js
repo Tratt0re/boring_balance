@@ -39,17 +39,24 @@ function formatUnixTimestampMillisecondsToDate(unixTimestampMilliseconds, option
   return `${day}-${month}-${year}`;
 }
 
-function elapsedDaysBetweenUnixTimestampMilliseconds(startUnixTimestampMilliseconds, endUnixTimestampMilliseconds) {
+function elapsedDaysBetweenUnixTimestampMilliseconds(
+  startUnixTimestampMilliseconds,
+  endUnixTimestampMilliseconds,
+) {
   const normalizedStart = Number(startUnixTimestampMilliseconds);
   const normalizedEnd = Number(endUnixTimestampMilliseconds);
   if (!Number.isFinite(normalizedStart) || !Number.isFinite(normalizedEnd)) {
-    throw new Error('startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be finite numbers.');
+    throw new Error(
+      'startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be finite numbers.',
+    );
   }
 
   const startDate = new Date(normalizedStart);
   const endDate = new Date(normalizedEnd);
   if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-    throw new Error('startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be valid Unix timestamps in milliseconds.');
+    throw new Error(
+      'startUnixTimestampMilliseconds and endUnixTimestampMilliseconds must be valid Unix timestamps in milliseconds.',
+    );
   }
 
   const startDay = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());

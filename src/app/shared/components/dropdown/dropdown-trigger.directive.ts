@@ -64,7 +64,11 @@ export class ZardDropdownDirective implements OnInit {
 
     const menuContent = this.zDropdownMenu();
     if (menuContent) {
-      this.dropdownService.toggle(this.elementRef, menuContent.contentTemplate(), this.viewContainerRef);
+      this.dropdownService.toggle(
+        this.elementRef,
+        menuContent.contentTemplate(),
+        this.viewContainerRef,
+      );
     }
   }
 
@@ -75,7 +79,11 @@ export class ZardDropdownDirective implements OnInit {
 
     const menuContent = this.zDropdownMenu();
     if (menuContent && !this.dropdownService.isOpen()) {
-      this.dropdownService.toggle(this.elementRef, menuContent.contentTemplate(), this.viewContainerRef);
+      this.dropdownService.toggle(
+        this.elementRef,
+        menuContent.contentTemplate(),
+        this.viewContainerRef,
+      );
     }
   }
 

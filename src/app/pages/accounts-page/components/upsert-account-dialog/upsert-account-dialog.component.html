@@ -1,4 +1,9 @@
-<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+<form
+  class="grid gap-4 sm:grid-cols-2"
+  [formGroup]="form"
+  novalidate
+  (submit)="$event.preventDefault()"
+>
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="account-name">
       {{ 'common.labels.name' | translate }}
@@ -33,7 +38,9 @@
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
       [attr.placeholder]="'accounts.dialog.add.placeholders.description' | translate"
     ></textarea>
-    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
+    <p class="mt-1 text-xs text-muted-foreground">
+      {{ descriptionLength() }}/{{ descriptionMaxLength }}
+    </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
@@ -56,15 +63,24 @@
 
   <div>
     <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.color' | translate }}</label>
-    <z-select formControlName="colorKey" [zPlaceholder]="'common.placeholders.selectColor' | translate">
+    <z-select
+      formControlName="colorKey"
+      [zPlaceholder]="'common.placeholders.selectColor' | translate"
+    >
       @for (option of colorOptions; track option.value) {
-        <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" [zColorHex]="option.colorHex ?? null" />
+        <z-select-item
+          [zValue]="option.value"
+          [zLabel]="option.label | translate"
+          [zColorHex]="option.colorHex ?? null"
+        />
       }
     </z-select>
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium" for="account-icon">{{ 'common.labels.icon' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium" for="account-icon">{{
+      'common.labels.icon' | translate
+    }}</label>
     <z-combobox
       zId="account-icon"
       zWidth="full"

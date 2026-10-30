@@ -31,12 +31,19 @@ export interface BudgetCreateDto {
 export interface BudgetGetDto extends IdDto<RowId> {}
 
 export interface BudgetListDto
-  extends ListQueryDto<
-    Pick<
-      BudgetDto,
-      'id' | 'category_id' | 'amount_cents' | 'description' | 'archived' | 'created_at' | 'updated_at'
-    >
-  >,
+  extends
+    ListQueryDto<
+      Pick<
+        BudgetDto,
+        | 'id'
+        | 'category_id'
+        | 'amount_cents'
+        | 'description'
+        | 'archived'
+        | 'created_at'
+        | 'updated_at'
+      >
+    >,
     PageRequestWithAllDto {}
 
 export interface BudgetListResponseDto extends PaginatedResponseDto<BudgetDto> {}

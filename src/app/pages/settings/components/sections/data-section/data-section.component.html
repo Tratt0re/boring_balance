@@ -15,8 +15,7 @@
           @if (problem.keptFileName) {
             <p class="mt-2 break-all text-sm text-muted-foreground">
               {{
-                'settings.data.settings_problem.kept_as'
-                  | translate: { file: problem.keptFileName }
+                'settings.data.settings_problem.kept_as' | translate: { file: problem.keptFileName }
               }}
             </p>
           } @else {
@@ -70,11 +69,7 @@
         </div>
 
         <div class="flex shrink-0 items-center">
-          <button
-            z-button
-            zType="destructive"
-            (click)="onFactoryReset()"
-          >
+          <button z-button zType="destructive" (click)="onFactoryReset()">
             {{ 'settings.data.factory_reset.button' | translate }}
           </button>
         </div>

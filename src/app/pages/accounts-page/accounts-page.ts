@@ -11,10 +11,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
-import {
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
+import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type { AccountCreateDto, AccountUpdateDto } from '@/dtos';
 import { AccountModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
@@ -282,7 +279,10 @@ export class AccountsPage implements OnInit, OnDestroy {
 
     let isUpdatingAccount = false;
 
-    const dialogRef = this.dialogService.create<UpsertAccountDialogComponent, UpsertAccountDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertAccountDialogComponent,
+      UpsertAccountDialogData
+    >({
       zTitle: this.translateService.instant('accounts.dialog.edit.title'),
       zDescription: this.translateService.instant('accounts.dialog.edit.description'),
       zContent: UpsertAccountDialogComponent,
@@ -311,11 +311,11 @@ export class AccountsPage implements OnInit, OnDestroy {
         }
 
         isUpdatingAccount = true;
-        void this
-          .updateAccountFromDialog(account.id, changes, dialogContent, dialogRef)
-          .finally(() => {
+        void this.updateAccountFromDialog(account.id, changes, dialogContent, dialogRef).finally(
+          () => {
             isUpdatingAccount = false;
-          });
+          },
+        );
         return false;
       },
     });
@@ -344,7 +344,10 @@ export class AccountsPage implements OnInit, OnDestroy {
   }
 
   private openManageArchivedAccountsDialog(): void {
-    this.dialogService.create<ManageArchivedAccountsDialogComponent, ManageArchivedAccountsDialogData>({
+    this.dialogService.create<
+      ManageArchivedAccountsDialogComponent,
+      ManageArchivedAccountsDialogData
+    >({
       zTitle: this.translateService.instant('accounts.archivedDialog.title'),
       zDescription: this.translateService.instant('accounts.archivedDialog.description'),
       zContent: ManageArchivedAccountsDialogComponent,
@@ -380,11 +383,9 @@ export class AccountsPage implements OnInit, OnDestroy {
         }
 
         isCreatingAccount = true;
-        void this
-          .createAccount(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingAccount = false;
-          });
+        void this.createAccount(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingAccount = false;
+        });
         return false;
       },
     });
@@ -414,7 +415,9 @@ export class AccountsPage implements OnInit, OnDestroy {
       this.accounts.set([]);
       this.total.set(0);
       this.page.set(1);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading accounts.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading accounts.',
+      );
       console.error('[accounts-page] Failed to load accounts:', error);
     } finally {
       this.isLoading.set(false);
@@ -431,7 +434,9 @@ export class AccountsPage implements OnInit, OnDestroy {
       const result = await this.accountsService.update({ id, changes });
 
       if (result.row) {
-        const nextAccounts = this.accounts().map((row) => (row.id === id ? this.toAccountTableRow(result.row!) : row));
+        const nextAccounts = this.accounts().map((row) =>
+          row.id === id ? this.toAccountTableRow(result.row!) : row,
+        );
         this.accounts.set(nextAccounts);
         dialogRef.close(result.row);
         toast.success(this.translateService.instant('accounts.toasts.updateSuccess'));

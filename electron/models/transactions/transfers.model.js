@@ -1,9 +1,4 @@
-const {
-  buildWhereClause,
-  deleteRows,
-  getDatabase,
-  selectRows,
-} = require('../../database');
+const { buildWhereClause, deleteRows, getDatabase, selectRows } = require('../../database');
 const { randomUUID } = require('node:crypto');
 const { createBaseModel } = require('../base-model');
 const { DEFAULT_PAGE, resolvePaginationWindow } = require('../pagination');

@@ -32,8 +32,12 @@ type OnChangeType = (value: boolean) => void;
   selector: 'z-switch',
   imports: [ZardIdDirective],
   template: `
-    <span class="inline-flex min-h-11 items-center" zardId="switch" #z="zardId"
-    [class.gap-2]="hasLabel()">
+    <span
+      class="inline-flex min-h-11 items-center"
+      zardId="switch"
+      #z="zardId"
+      [class.gap-2]="hasLabel()"
+    >
       <button
         [id]="zId() || z.id()"
         type="button"
@@ -120,7 +124,7 @@ export class ZardSwitchComponent implements ControlValueAccessor {
       return;
     }
 
-    this.zChecked.update(checked => !checked);
+    this.zChecked.update((checked) => !checked);
     this.onTouched();
     this.onChange(this.zChecked());
   }

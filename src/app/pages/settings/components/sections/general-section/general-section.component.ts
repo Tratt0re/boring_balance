@@ -14,7 +14,11 @@ import { applyThemeTransition } from '@/shared/utils/theme-transition';
 const CUSTOM_CURRENCY_VALUE = '__custom__';
 const DEFAULT_CUSTOM_CURRENCY_SYMBOL = 'CHF';
 const COMMON_CURRENCY_SYMBOLS = ['€', '$', '£', '¥'] as const;
-const CURRENCY_FORMAT_STYLE_VALUES: readonly CurrencyFormatStyle[] = ['US', 'EU_DOT', 'EU_SPACE'] as const;
+const CURRENCY_FORMAT_STYLE_VALUES: readonly CurrencyFormatStyle[] = [
+  'US',
+  'EU_DOT',
+  'EU_SPACE',
+] as const;
 const DASHBOARD_VALUATION_MODE_VALUES = ['include', 'exclude'] as const;
 type DashboardValuationMode = (typeof DASHBOARD_VALUATION_MODE_VALUES)[number];
 
@@ -39,10 +43,14 @@ export class GeneralSectionComponent {
   protected readonly selectedTheme = this.darkMode.currentTheme;
   protected readonly selectedLanguage = this.i18nService.language;
   protected readonly selectedCurrencySymbol = this.localPreferencesService.currencyPreference;
-  protected readonly selectedCurrencyFormatStyle = this.localPreferencesService.currencyFormatStylePreference;
-  protected readonly selectedDashboardUseValuation = this.localPreferencesService.dashboardUseValuationPreference;
+  protected readonly selectedCurrencyFormatStyle =
+    this.localPreferencesService.currencyFormatStylePreference;
+  protected readonly selectedDashboardUseValuation =
+    this.localPreferencesService.dashboardUseValuationPreference;
   protected readonly selectedCurrencyOption = computed(() =>
-    this.isCommonCurrencySymbol(this.selectedCurrencySymbol()) ? this.selectedCurrencySymbol() : CUSTOM_CURRENCY_VALUE,
+    this.isCommonCurrencySymbol(this.selectedCurrencySymbol())
+      ? this.selectedCurrencySymbol()
+      : CUSTOM_CURRENCY_VALUE,
   );
   protected readonly selectedDashboardValuationMode = computed<DashboardValuationMode>(() =>
     this.selectedDashboardUseValuation() ? 'include' : 'exclude',
@@ -74,7 +82,11 @@ export class GeneralSectionComponent {
 
   protected onThemeChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
-    if (selectedValue === EDarkModes.SYSTEM || selectedValue === EDarkModes.LIGHT || selectedValue === EDarkModes.DARK) {
+    if (
+      selectedValue === EDarkModes.SYSTEM ||
+      selectedValue === EDarkModes.LIGHT ||
+      selectedValue === EDarkModes.DARK
+    ) {
       applyThemeTransition(this.darkMode, {
         targetMode: selectedValue,
       });
@@ -83,7 +95,10 @@ export class GeneralSectionComponent {
 
   protected onLanguageChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
-    if (selectedValue && this.languages.includes(selectedValue as (typeof this.languages)[number])) {
+    if (
+      selectedValue &&
+      this.languages.includes(selectedValue as (typeof this.languages)[number])
+    ) {
       void this.i18nService.use(selectedValue);
     }
   }
@@ -124,11 +139,7 @@ export class GeneralSectionComponent {
 
   protected onCurrencyFormatStyleChange(value: string | string[]): void {
     const selectedValue = this.asSingleValue(value);
-    if (
-      selectedValue === 'US'
-      || selectedValue === 'EU_DOT'
-      || selectedValue === 'EU_SPACE'
-    ) {
+    if (selectedValue === 'US' || selectedValue === 'EU_DOT' || selectedValue === 'EU_SPACE') {
       this.localPreferencesService.setCurrencyFormatStyle(selectedValue);
     }
   }

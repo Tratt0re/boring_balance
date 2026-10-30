@@ -8,7 +8,7 @@
   <app-base-card
     class="flex min-h-0 flex-1 flex-col"
     [zBodyFill]="true"
-    [zTitle]="'breakdown.cards.moneyFlow.titleYear' | translate : { year: year() }"
+    [zTitle]="'breakdown.cards.moneyFlow.titleYear' | translate: { year: year() }"
   >
     @if (isLoading()) {
       <div class="mt-2 flex h-64 items-center justify-center">
@@ -18,11 +18,18 @@
         </div>
       </div>
     } @else if (loadError(); as loadErrorMessage) {
-      <div class="mt-2 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-        {{ 'overview.cards.moneyFlowSankey.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+      <div
+        class="mt-2 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+      >
+        {{
+          'overview.cards.moneyFlowSankey.loadFailedWithError'
+            | translate: { error: loadErrorMessage }
+        }}
       </div>
     } @else if (!hasData()) {
-      <div class="mt-2 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
+      <div
+        class="mt-2 rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
+      >
         {{ 'breakdown.cards.moneyFlow.empty' | translate }}
       </div>
     } @else {

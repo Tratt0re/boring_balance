@@ -40,10 +40,13 @@ export const commandGroupVariants = cva('overflow-hidden text-foreground', {
   defaultVariants: {},
 });
 
-export const commandGroupHeadingVariants = cva('px-2 py-1.5 text-xs font-medium text-muted-foreground', {
-  variants: {},
-  defaultVariants: {},
-});
+export const commandGroupHeadingVariants = cva(
+  'px-2 py-1.5 text-xs font-medium text-muted-foreground',
+  {
+    variants: {},
+    defaultVariants: {},
+  },
+);
 
 export const commandItemVariants = cva(
   'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
@@ -66,10 +69,15 @@ export const commandSeparatorVariants = cva('-mx-1 my-1 h-px bg-border', {
   defaultVariants: {},
 });
 
-export const commandShortcutVariants = cva('ml-auto text-xs tracking-widest text-muted-foreground', {
-  variants: {},
-  defaultVariants: {},
-});
+export const commandShortcutVariants = cva(
+  'ml-auto text-xs tracking-widest text-muted-foreground',
+  {
+    variants: {},
+    defaultVariants: {},
+  },
+);
 
 export type ZardCommandSizeVariants = NonNullable<VariantProps<typeof commandVariants>['size']>;
-export type ZardCommandItemVariants = NonNullable<VariantProps<typeof commandItemVariants>['variant']>;
+export type ZardCommandItemVariants = NonNullable<
+  VariantProps<typeof commandItemVariants>['variant']
+>;

@@ -79,7 +79,9 @@ type CurrencyCellIcon = {
   readonly icon: ZardIcon;
   readonly color: string;
 };
-const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
+const APP_ICON_BY_VALUE = new Map(
+  APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const),
+);
 
 @Component({
   selector: 'app-data-table',
@@ -223,7 +225,9 @@ export class AppDataTableComponent {
     return false;
   });
 
-  protected readonly showActionColumn = computed(() => this.hasActionColumn() || this.hasAnyVisibleRowAction());
+  protected readonly showActionColumn = computed(
+    () => this.hasActionColumn() || this.hasAnyVisibleRowAction(),
+  );
   protected readonly renderActionColumnAtStart = computed(
     () => this.showActionColumn() && this.actionColumnPosition() === 'start',
   );
@@ -244,14 +248,19 @@ export class AppDataTableComponent {
     return count;
   });
 
-  protected readonly hasColumnWidthConstraints = computed(() =>
-    this.columns().some((column) => column.minWidth !== undefined || column.maxWidth !== undefined) ||
-    this.hasActionColumnWidthConstraints(),
+  protected readonly hasColumnWidthConstraints = computed(
+    () =>
+      this.columns().some(
+        (column) => column.minWidth !== undefined || column.maxWidth !== undefined,
+      ) || this.hasActionColumnWidthConstraints(),
   );
 
   protected readonly hasActionColumnWidthConstraints = computed(() => {
     const actionColumn = this.actionColumn();
-    return actionColumn !== null && (actionColumn.minWidth !== undefined || actionColumn.maxWidth !== undefined);
+    return (
+      actionColumn !== null &&
+      (actionColumn.minWidth !== undefined || actionColumn.maxWidth !== undefined)
+    );
   });
 
   protected readonly containerClasses = computed(() =>
@@ -637,7 +646,10 @@ export class AppDataTableComponent {
     return this.formatColumnValue(this.getEditableValue(row, column), column);
   }
 
-  protected getEditableSelectOption(row: TableRow, column: EditableColumnDataItem): EditableOptionItem | null {
+  protected getEditableSelectOption(
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): EditableOptionItem | null {
     const rawValue = this.getEditableValue(row, column);
     const normalizedValue = rawValue === null || rawValue === undefined ? '' : `${rawValue}`;
 
@@ -707,7 +719,11 @@ export class AppDataTableComponent {
     }
   }
 
-  protected onEditableTextBlur(event: FocusEvent, row: TableRow, column: EditableColumnDataItem): void {
+  protected onEditableTextBlur(
+    event: FocusEvent,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
     this.commitEditableTextValue(event.target, row, column);
   }
 
@@ -723,7 +739,10 @@ export class AppDataTableComponent {
     column: EditableColumnDataItem,
   ): void {
     if (Array.isArray(value)) {
-      console.warn('[app-data-table] Select editor received multiple values, expected a single value.', value);
+      console.warn(
+        '[app-data-table] Select editor received multiple values, expected a single value.',
+        value,
+      );
       return;
     }
 
@@ -737,7 +756,10 @@ export class AppDataTableComponent {
     column: EditableColumnDataItem,
   ): void {
     if (Array.isArray(value)) {
-      console.warn('[app-data-table] Combobox editor received multiple values, expected a single value.', value);
+      console.warn(
+        '[app-data-table] Combobox editor received multiple values, expected a single value.',
+        value,
+      );
       return;
     }
 
@@ -745,15 +767,27 @@ export class AppDataTableComponent {
     this.applyEditableChange(row, column, normalizedValue);
   }
 
-  protected onEditableSwitchChange(checked: boolean, row: TableRow, column: EditableColumnDataItem): void {
+  protected onEditableSwitchChange(
+    checked: boolean,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
     this.applyEditableChange(row, column, checked);
   }
 
-  protected onEditableCheckboxValueChange(checked: boolean, row: TableRow, column: EditableColumnDataItem): void {
+  protected onEditableCheckboxValueChange(
+    checked: boolean,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
     this.applyEditableChange(row, column, checked);
   }
 
-  protected onEditableDateChange(value: Date | null, row: TableRow, column: EditableColumnDataItem): void {
+  protected onEditableDateChange(
+    value: Date | null,
+    row: TableRow,
+    column: EditableColumnDataItem,
+  ): void {
     this.applyEditableChange(row, column, value);
   }
 
@@ -808,7 +842,9 @@ export class AppDataTableComponent {
     }
 
     const fallbackColor = column.cellIcon?.colorHex;
-    return typeof fallbackColor === 'string' && fallbackColor.trim().length > 0 ? fallbackColor : null;
+    return typeof fallbackColor === 'string' && fallbackColor.trim().length > 0
+      ? fallbackColor
+      : null;
   }
 
   protected columnMinWidth(column: TableColumn): string | null {
@@ -1254,7 +1290,11 @@ export class AppDataTableComponent {
     });
   }
 
-  private areEditableValuesEqual(leftValue: unknown, rightValue: unknown, column: EditableColumnDataItem): boolean {
+  private areEditableValuesEqual(
+    leftValue: unknown,
+    rightValue: unknown,
+    column: EditableColumnDataItem,
+  ): boolean {
     if (Object.is(leftValue, rightValue)) {
       return true;
     }
@@ -1272,7 +1312,11 @@ export class AppDataTableComponent {
     return leftDate !== null && rightDate !== null && leftDate.getTime() === rightDate.getTime();
   }
 
-  private validateEditableValue(row: TableRow, column: EditableColumnDataItem, value: unknown): string | null {
+  private validateEditableValue(
+    row: TableRow,
+    column: EditableColumnDataItem,
+    value: unknown,
+  ): string | null {
     const rules = column.validation;
     if (!rules) {
       return null;
@@ -1444,5 +1488,4 @@ export class AppDataTableComponent {
     this.selectedRowsState.set(nextSelection);
     this.selectedRowsChange.emit(Array.from(nextSelection));
   }
-
 }

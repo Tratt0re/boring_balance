@@ -37,11 +37,16 @@ function normalizeDateRangeValue(filters, shortKey, legacyKey, labelPrefix) {
     return undefined;
   }
 
-  if (shortValue !== undefined && legacyValue !== undefined && Number(shortValue) !== Number(legacyValue)) {
+  if (
+    shortValue !== undefined &&
+    legacyValue !== undefined &&
+    Number(shortValue) !== Number(legacyValue)
+  ) {
     throw new Error(`${labelPrefix}.${shortKey} and ${labelPrefix}.${legacyKey} must match.`);
   }
 
-  const sourceLabel = shortValue !== undefined ? `${labelPrefix}.${shortKey}` : `${labelPrefix}.${legacyKey}`;
+  const sourceLabel =
+    shortValue !== undefined ? `${labelPrefix}.${shortKey}` : `${labelPrefix}.${legacyKey}`;
   return normalizeUnixTimestampMilliseconds(shortValue ?? legacyValue, sourceLabel);
 }
 
@@ -56,7 +61,8 @@ function normalizePayloadFilters(payload) {
 
   if ('filters' in body) {
     assertAllowedKeys(body, new Set(['filters']), 'payload');
-    filtersInput = body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
+    filtersInput =
+      body.filters === undefined ? {} : ensurePlainObject(body.filters, 'payload.filters');
     filtersLabel = 'payload.filters';
   }
 
@@ -71,14 +77,23 @@ function normalizePayloadFilters(payload) {
   return pickDefined({
     date_from: dateFrom,
     date_to: dateTo,
-    useValuation: normalizeOptionalBooleanFlag(filtersInput.useValuation, `${filtersLabel}.useValuation`),
-    account_ids: normalizeOptionalIdArray(filtersInput.account_ids, `${filtersLabel}.account_ids`, { dedupe: true }),
+    useValuation: normalizeOptionalBooleanFlag(
+      filtersInput.useValuation,
+      `${filtersLabel}.useValuation`,
+    ),
+    account_ids: normalizeOptionalIdArray(filtersInput.account_ids, `${filtersLabel}.account_ids`, {
+      dedupe: true,
+    }),
     account_types: normalizeOptionalEnumArray(
       filtersInput.account_types,
       `${filtersLabel}.account_types`,
       ALLOWED_ACCOUNT_TYPES,
     ),
-    category_ids: normalizeOptionalIdArray(filtersInput.category_ids, `${filtersLabel}.category_ids`, { dedupe: true }),
+    category_ids: normalizeOptionalIdArray(
+      filtersInput.category_ids,
+      `${filtersLabel}.category_ids`,
+      { dedupe: true },
+    ),
     category_types: normalizeOptionalEnumArray(
       filtersInput.category_types,
       `${filtersLabel}.category_types`,

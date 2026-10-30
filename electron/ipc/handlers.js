@@ -19,7 +19,6 @@ const {
 const { CHANNELS } = require('./channels');
 
 const IPC_HANDLERS = Object.freeze({
-
   [CHANNELS.accountValuations.create]: accountValuationsController.create,
   [CHANNELS.accountValuations.get]: accountValuationsController.get,
   [CHANNELS.accountValuations.list]: accountValuationsController.list,

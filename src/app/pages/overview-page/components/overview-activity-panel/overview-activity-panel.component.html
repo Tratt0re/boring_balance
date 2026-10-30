@@ -39,25 +39,48 @@
       <z-loader zSize="default" />
     </div>
   } @else if (loadError()) {
-    <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+    <div
+      role="alert"
+      class="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"
+    >
       {{ 'overview.cards.activity.loadFailed' | translate }}
     </div>
   } @else {
     <div class="flex h-full min-h-0 flex-col gap-4">
       <div class="shrink-0 space-y-3">
-        <z-segmented zSize="sm" [zFull]="true" [zDefaultValue]="activeTab()" (zChange)="onTabChange($event)">
-          <z-segmented-item value="transactions" [label]="'nav.items.transactions' | translate"></z-segmented-item>
-          <z-segmented-item value="transfers" [label]="'transactions.view.transfers' | translate"></z-segmented-item>
+        <z-segmented
+          zSize="sm"
+          [zFull]="true"
+          [zDefaultValue]="activeTab()"
+          (zChange)="onTabChange($event)"
+        >
+          <z-segmented-item
+            value="transactions"
+            [label]="'nav.items.transactions' | translate"
+          ></z-segmented-item>
+          <z-segmented-item
+            value="transfers"
+            [label]="'transactions.view.transfers' | translate"
+          ></z-segmented-item>
         </z-segmented>
 
-        <button z-button zType="secondary" zSize="sm" class="w-full justify-center" [zDisabled]="isLoading()" (click)="onQuickAction()">
+        <button
+          z-button
+          zType="secondary"
+          zSize="sm"
+          class="w-full justify-center"
+          [zDisabled]="isLoading()"
+          (click)="onQuickAction()"
+        >
           + {{ quickActionLabelKey() | translate }}
         </button>
       </div>
 
       @if (activeTab() === 'transactions') {
         @if (transactionRows().length === 0) {
-          <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
+          <div
+            class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center"
+          >
             <p class="text-sm text-muted-foreground">{{ emptyMessageKey() | translate }}</p>
             <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
               + {{ quickActionLabelKey() | translate }}
@@ -76,7 +99,9 @@
         }
       } @else {
         @if (transferRows().length === 0) {
-          <div class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center">
+          <div
+            class="flex flex-1 flex-col items-center justify-center gap-3 rounded-md border border-border/50 bg-muted/20 px-4 py-8 text-center"
+          >
             <p class="text-sm text-muted-foreground">{{ emptyMessageKey() | translate }}</p>
             <button z-button zType="outline" zSize="sm" (click)="onQuickAction()">
               + {{ quickActionLabelKey() | translate }}

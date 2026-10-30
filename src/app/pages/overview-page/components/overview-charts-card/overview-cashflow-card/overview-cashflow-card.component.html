@@ -1,5 +1,10 @@
 <ng-template #cardSegmentedTitleTpl>
-  <z-segmented zSize="sm" [zFull]="true" [zDefaultValue]="activeView()" (zChange)="onViewChange($event)">
+  <z-segmented
+    zSize="sm"
+    [zFull]="true"
+    [zDefaultValue]="activeView()"
+    (zChange)="onViewChange($event)"
+  >
     <z-segmented-item
       value="incomeExpenses"
       [label]="'overview.cards.monthlyTotals.segmentTitle' | translate"

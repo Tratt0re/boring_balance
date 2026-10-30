@@ -1,4 +1,12 @@
-const { countRows, deleteRows, getDatabase, insertRow, selectOne, selectRows, updateRows } = require('../database');
+const {
+  countRows,
+  deleteRows,
+  getDatabase,
+  insertRow,
+  selectOne,
+  selectRows,
+  updateRows,
+} = require('../database');
 
 function createBaseModel(tableName, options = {}) {
   const idField = options.idField ?? 'id';

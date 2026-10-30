@@ -3,7 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { APP_COLOR_OPTIONS, APP_ICON_OPTIONS, normalizeColorKey, normalizeIconKey } from '@/config/visual-options.config';
+import {
+  APP_COLOR_OPTIONS,
+  APP_ICON_OPTIONS,
+  normalizeColorKey,
+  normalizeIconKey,
+} from '@/config/visual-options.config';
 import type { AccountCreateDto, AccountType, AccountUpdateDto } from '@/dtos';
 import { normalizeNullableString, normalizeRequiredString } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
@@ -38,7 +43,13 @@ export interface UpsertAccountDialogData {
 
 @Component({
   selector: 'app-upsert-account-dialog',
-  imports: [ReactiveFormsModule, TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ZardInputDirective,
+    ZardComboboxComponent,
+    ...ZardSelectImports,
+  ],
   templateUrl: './upsert-account-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -140,7 +151,9 @@ export class UpsertAccountDialogComponent {
     }));
   }
 
-  private collectNormalizedChanges(invalidFormErrorKey: string): AccountUpdateDto['changes'] | null {
+  private collectNormalizedChanges(
+    invalidFormErrorKey: string,
+  ): AccountUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
     this.form.markAllAsTouched();
 

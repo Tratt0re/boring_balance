@@ -42,12 +42,23 @@ export interface CategoryCreateDto {
 export interface CategoryGetDto extends IdDto<RowId> {}
 
 export interface CategoryListDto
-  extends ListQueryDto<
-    Pick<
-      CategoryDto,
-      'id' | 'name' | 'parent_id' | 'description' | 'color_key' | 'icon' | 'type' | 'locked' | 'archived' | 'created_at' | 'updated_at'
-    >
-  >,
+  extends
+    ListQueryDto<
+      Pick<
+        CategoryDto,
+        | 'id'
+        | 'name'
+        | 'parent_id'
+        | 'description'
+        | 'color_key'
+        | 'icon'
+        | 'type'
+        | 'locked'
+        | 'archived'
+        | 'created_at'
+        | 'updated_at'
+      >
+    >,
     PageRequestWithAllDto {}
 
 export interface CategoryListResponseDto extends PaginatedResponseDto<CategoryDto> {}

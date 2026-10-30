@@ -56,12 +56,14 @@ export class ExportService extends BaseIpcService<APIChannel.DATA_EXPORT> {
       return null;
     }
 
-    const filePath = typeof value.filePath === 'string' && value.filePath.trim().length > 0
-      ? value.filePath.trim()
-      : null;
-    const fileName = typeof value.fileName === 'string' && value.fileName.trim().length > 0
-      ? value.fileName.trim()
-      : null;
+    const filePath =
+      typeof value.filePath === 'string' && value.filePath.trim().length > 0
+        ? value.filePath.trim()
+        : null;
+    const fileName =
+      typeof value.fileName === 'string' && value.fileName.trim().length > 0
+        ? value.fileName.trim()
+        : null;
 
     if (!filePath || !fileName) {
       return null;

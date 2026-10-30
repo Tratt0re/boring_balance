@@ -67,7 +67,10 @@ export function getCalendarWeekdayLabels(locale?: string | null): readonly strin
   const resolvedLocale = resolveCalendarLocale(locale);
 
   try {
-    const formatter = new Intl.DateTimeFormat(resolvedLocale, { weekday: 'short', timeZone: 'UTC' });
+    const formatter = new Intl.DateTimeFormat(resolvedLocale, {
+      weekday: 'short',
+      timeZone: 'UTC',
+    });
     // 2024-01-07 is a Sunday; keep Sunday-first order to match the grid implementation.
     return Array.from({ length: 7 }, (_, dayOffset) =>
       normalizeIntlLabel(formatter.format(new Date(Date.UTC(2024, 0, 7 + dayOffset)))),
@@ -145,7 +148,7 @@ export function generateCalendarDays(config: CalendarDayConfig): CalendarDay[] {
     if (mode === 'single') {
       isSelected = selectedDates.length > 0 && isSameDay(date, selectedDates[0]);
     } else if (mode === 'multiple') {
-      isSelected = selectedDates.some(d => isSameDay(date, d));
+      isSelected = selectedDates.some((d) => isSameDay(date, d));
     } else if (mode === 'range') {
       if (rangeStart && isSameDay(date, rangeStart)) {
         isRangeStart = true;

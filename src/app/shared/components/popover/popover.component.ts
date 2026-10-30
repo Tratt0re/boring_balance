@@ -1,4 +1,9 @@
-import { type ConnectedPosition, Overlay, OverlayPositionBuilder, type OverlayRef } from '@angular/cdk/overlay';
+import {
+  type ConnectedPosition,
+  Overlay,
+  OverlayPositionBuilder,
+  type OverlayRef,
+} from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { isPlatformBrowser } from '@angular/common';
 import {
@@ -103,7 +108,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   constructor() {
     toObservable(this.zVisible)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(visible => {
+      .subscribe((visible) => {
         const currentlyVisible = this.isVisible();
         if (visible && !currentlyVisible) {
           this.show();
@@ -114,7 +119,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
 
     toObservable(this.zTrigger)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(trigger => {
+      .subscribe((trigger) => {
         if (this.listeners.length) {
           this.unlistenAll();
         }
@@ -196,7 +201,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
     ) {
       this.overlayRefSubscription = this.overlayRef
         .outsidePointerEvents()
-        .pipe(filter(event => !this.nativeElement.contains(event.target)))
+        .pipe(filter((event) => !this.nativeElement.contains(event.target)))
         .subscribe(() => this.hide());
     }
   }
@@ -208,11 +213,17 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
     }
 
     if (trigger === 'click') {
-      this.listeners.push(this.renderer.listen(this.nativeElement, 'click.stop', () => this.toggle()));
+      this.listeners.push(
+        this.renderer.listen(this.nativeElement, 'click.stop', () => this.toggle()),
+      );
     } else if (trigger === 'hover') {
-      this.listeners.push(this.renderer.listen(this.nativeElement, 'mouseenter', () => this.show()));
+      this.listeners.push(
+        this.renderer.listen(this.nativeElement, 'mouseenter', () => this.show()),
+      );
 
-      this.listeners.push(this.renderer.listen(this.nativeElement, 'mouseleave', () => this.hide()));
+      this.listeners.push(
+        this.renderer.listen(this.nativeElement, 'mouseleave', () => this.hide()),
+      );
     }
   }
 
@@ -379,9 +390,7 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
   selector: 'z-popover',
   imports: [],
   standalone: true,
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'classes()',

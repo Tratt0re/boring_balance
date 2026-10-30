@@ -39,10 +39,7 @@ import { type ZardDialogRef, ZardDialogService } from '@/shared/components/dialo
 import { ZardButtonComponent } from '@/shared/components/button';
 import { type ZardIcon } from '@/shared/components/icon';
 import { ZardLoaderComponent } from '@/shared/components/loader';
-import {
-  ZardSegmentedComponent,
-  ZardSegmentedItemComponent,
-} from '@/shared/components/segmented';
+import { ZardSegmentedComponent, ZardSegmentedItemComponent } from '@/shared/components/segmented';
 import { toMonthRangeTimestamps } from '../overview-cards.utils';
 import { ActivityTransactionRowComponent } from './activity-transaction-row.component';
 import { ActivityTransferRowComponent } from './activity-transfer-row.component';
@@ -54,11 +51,17 @@ const DEFAULT_TAB: OverviewActivityTab = 'transactions';
 const MAX_ACTIVITY_ITEMS = 10;
 const DEFAULT_LIMIT = MAX_ACTIVITY_ITEMS;
 const TRANSFER_CATEGORY_ID = 2;
-const APP_ICON_BY_VALUE = new Map(APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const));
-const APP_COLOR_HEX_BY_VALUE = new Map(APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const));
-const DEFAULT_ACCOUNT_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'wallet') as ZardIcon;
+const APP_ICON_BY_VALUE = new Map(
+  APP_ICON_OPTIONS.map((option) => [option.value, option.icon ?? null] as const),
+);
+const APP_COLOR_HEX_BY_VALUE = new Map(
+  APP_COLOR_OPTIONS.map((option) => [option.value, option.colorHex ?? null] as const),
+);
+const DEFAULT_ACCOUNT_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ??
+  'wallet') as ZardIcon;
 const DEFAULT_CATEGORY_ICON = (APP_ICON_BY_VALUE.get(DEFAULT_VISUAL_ICON_KEY) ?? 'tag') as ZardIcon;
-const DEFAULT_COLOR_HEX = APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
+const DEFAULT_COLOR_HEX =
+  APP_COLOR_HEX_BY_VALUE.get(DEFAULT_VISUAL_COLOR_KEY) ?? `var(--${DEFAULT_VISUAL_COLOR_KEY})`;
 
 @Component({
   selector: 'app-overview-activity-panel',
@@ -98,7 +101,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   protected readonly transferRows = signal<readonly ActivityTransferRow[]>([]);
   protected readonly pendingTransactionSettledIds = signal<ReadonlySet<number>>(new Set<number>());
   protected readonly pendingTransferSettledIds = signal<ReadonlySet<string>>(new Set<string>());
-  protected readonly activityItemLimit = computed(() => Math.min(MAX_ACTIVITY_ITEMS, this.normalizeLimit(this.limit())));
+  protected readonly activityItemLimit = computed(() =>
+    Math.min(MAX_ACTIVITY_ITEMS, this.normalizeLimit(this.limit())),
+  );
   protected readonly titleKey = 'overview.cards.activity.title';
   protected readonly descriptionKey = computed(() =>
     this.activeTab() === 'transactions'
@@ -107,9 +112,7 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   );
   protected readonly accountCount = computed(() => this.accountOptions().length);
   protected readonly shouldPromptAccountCreation = computed(() =>
-    this.activeTab() === 'transactions'
-      ? this.accountCount() === 0
-      : this.accountCount() < 2,
+    this.activeTab() === 'transactions' ? this.accountCount() === 0 : this.accountCount() < 2,
   );
   protected readonly emptyMessageKey = computed(() => {
     if (this.activeTab() === 'transactions') {
@@ -268,7 +271,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
     } catch (error) {
       console.error('[overview-activity-panel] Failed to update transfer settled state:', error);
       this.transferRows.update((rows) =>
-        rows.map((row) => (row.transferId === transferId ? { ...row, settled: previousSettled } : row)),
+        rows.map((row) =>
+          row.transferId === transferId ? { ...row, settled: previousSettled } : row,
+        ),
       );
       toast.error(this.translateService.instant('transactions.transfers.toasts.updateError'));
     } finally {
@@ -326,25 +331,37 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
 
       const activeAccounts = accounts.filter((account) => !account.archived);
       const activeCategories = categories.filter((category) => !category.archived);
-      const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
+      const accountNameById = new Map(
+        accounts.map((account) => [account.id, account.name] as const),
+      );
       const accountIconById = new Map(
         accounts.map(
-          (account) => [account.id, this.resolveVisualIcon(account.icon, DEFAULT_ACCOUNT_ICON)] as const,
+          (account) =>
+            [account.id, this.resolveVisualIcon(account.icon, DEFAULT_ACCOUNT_ICON)] as const,
         ),
       );
       const accountColorHexById = new Map(
-        accounts.map((account) => [account.id, this.resolveVisualColorHex(account.colorKey)] as const),
+        accounts.map(
+          (account) => [account.id, this.resolveVisualColorHex(account.colorKey)] as const,
+        ),
       );
-      const categoryNameById = new Map(categories.map((category) => [category.id, category.name] as const));
+      const categoryNameById = new Map(
+        categories.map((category) => [category.id, category.name] as const),
+      );
       const categoryIconById = new Map(
         categories.map(
-          (category) => [category.id, this.resolveVisualIcon(category.icon, DEFAULT_CATEGORY_ICON)] as const,
+          (category) =>
+            [category.id, this.resolveVisualIcon(category.icon, DEFAULT_CATEGORY_ICON)] as const,
         ),
       );
       const categoryColorHexById = new Map(
-        categories.map((category) => [category.id, this.resolveVisualColorHex(category.colorKey)] as const),
+        categories.map(
+          (category) => [category.id, this.resolveVisualColorHex(category.colorKey)] as const,
+        ),
       );
-      const visibleCategories = activeCategories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
+      const visibleCategories = activeCategories.filter(
+        (category) => category.id !== TRANSFER_CATEGORY_ID,
+      );
 
       this.accountOptions.set(
         activeAccounts.map((account) => ({
@@ -367,37 +384,42 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       const unknownCategory = this.translate('overview.cards.recentTransactions.unknownCategory');
 
       this.transactionRows.set(
-        transactions.rows.map((transaction) => ({
-          id: transaction.id,
-          occurredAt: transaction.occurredAt,
-          amount: transaction.amount,
-          settled: transaction.settled,
-          accountName: accountNameById.get(transaction.accountId) ?? unknownAccount,
-          accountIcon: accountIconById.get(transaction.accountId) ?? DEFAULT_ACCOUNT_ICON,
-          accountColorHex: accountColorHexById.get(transaction.accountId) ?? DEFAULT_COLOR_HEX,
-          categoryName: categoryNameById.get(transaction.categoryId) ?? unknownCategory,
-          categoryIcon: categoryIconById.get(transaction.categoryId) ?? DEFAULT_CATEGORY_ICON,
-          categoryColorHex: categoryColorHexById.get(transaction.categoryId) ?? DEFAULT_COLOR_HEX,
-          description: transaction.description,
-        })).slice(0, safeLimit),
+        transactions.rows
+          .map((transaction) => ({
+            id: transaction.id,
+            occurredAt: transaction.occurredAt,
+            amount: transaction.amount,
+            settled: transaction.settled,
+            accountName: accountNameById.get(transaction.accountId) ?? unknownAccount,
+            accountIcon: accountIconById.get(transaction.accountId) ?? DEFAULT_ACCOUNT_ICON,
+            accountColorHex: accountColorHexById.get(transaction.accountId) ?? DEFAULT_COLOR_HEX,
+            categoryName: categoryNameById.get(transaction.categoryId) ?? unknownCategory,
+            categoryIcon: categoryIconById.get(transaction.categoryId) ?? DEFAULT_CATEGORY_ICON,
+            categoryColorHex: categoryColorHexById.get(transaction.categoryId) ?? DEFAULT_COLOR_HEX,
+            description: transaction.description,
+          }))
+          .slice(0, safeLimit),
       );
 
       this.transferRows.set(
-        transfers.rows.map((transfer) => ({
-          transferId: transfer.transferId,
-          occurredAt: transfer.occurredAt,
-          amount: transfer.amount,
-          settled: transfer.settled,
-          fromAccountId: transfer.fromAccountId,
-          toAccountId: transfer.toAccountId,
-          fromAccountName: accountNameById.get(transfer.fromAccountId) ?? unknownAccount,
-          fromAccountIcon: accountIconById.get(transfer.fromAccountId) ?? DEFAULT_ACCOUNT_ICON,
-          fromAccountColorHex: accountColorHexById.get(transfer.fromAccountId) ?? DEFAULT_COLOR_HEX,
-          toAccountName: accountNameById.get(transfer.toAccountId) ?? unknownAccount,
-          toAccountIcon: accountIconById.get(transfer.toAccountId) ?? DEFAULT_ACCOUNT_ICON,
-          toAccountColorHex: accountColorHexById.get(transfer.toAccountId) ?? DEFAULT_COLOR_HEX,
-          description: transfer.description,
-        })).slice(0, safeLimit),
+        transfers.rows
+          .map((transfer) => ({
+            transferId: transfer.transferId,
+            occurredAt: transfer.occurredAt,
+            amount: transfer.amount,
+            settled: transfer.settled,
+            fromAccountId: transfer.fromAccountId,
+            toAccountId: transfer.toAccountId,
+            fromAccountName: accountNameById.get(transfer.fromAccountId) ?? unknownAccount,
+            fromAccountIcon: accountIconById.get(transfer.fromAccountId) ?? DEFAULT_ACCOUNT_ICON,
+            fromAccountColorHex:
+              accountColorHexById.get(transfer.fromAccountId) ?? DEFAULT_COLOR_HEX,
+            toAccountName: accountNameById.get(transfer.toAccountId) ?? unknownAccount,
+            toAccountIcon: accountIconById.get(transfer.toAccountId) ?? DEFAULT_ACCOUNT_ICON,
+            toAccountColorHex: accountColorHexById.get(transfer.toAccountId) ?? DEFAULT_COLOR_HEX,
+            description: transfer.description,
+          }))
+          .slice(0, safeLimit),
       );
     } catch (error) {
       console.error('[overview-activity-panel] Failed to load activity:', error);
@@ -405,7 +427,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       this.categoryOptions.set([]);
       this.transactionRows.set([]);
       this.transferRows.set([]);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading activity.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading activity.',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -414,7 +438,10 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   private openAddTransactionDialog(): void {
     let isCreatingTransaction = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransactionDialogComponent, UpsertTransactionDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransactionDialogComponent,
+      UpsertTransactionDialogData
+    >({
       zTitle: this.translateService.instant('transactions.dialog.add.title'),
       zDescription: this.translateService.instant('transactions.dialog.add.description'),
       zContent: UpsertTransactionDialogComponent,
@@ -438,11 +465,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         }
 
         isCreatingTransaction = true;
-        void this
-          .createTransaction(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingTransaction = false;
-          });
+        void this.createTransaction(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingTransaction = false;
+        });
         return false;
       },
     });
@@ -475,7 +500,10 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
   private openAddTransferDialog(): void {
     let isCreatingTransfer = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransferDialogComponent, UpsertTransferDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransferDialogComponent,
+      UpsertTransferDialogData
+    >({
       zTitle: this.translateService.instant('transactions.transfers.dialog.add.title'),
       zDescription: this.translateService.instant('transactions.transfers.dialog.add.description'),
       zContent: UpsertTransferDialogComponent,
@@ -485,7 +513,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
       zOkText: this.translateService.instant('transactions.transfers.dialog.add.actions.create'),
-      zCancelText: this.translateService.instant('transactions.transfers.dialog.add.actions.cancel'),
+      zCancelText: this.translateService.instant(
+        'transactions.transfers.dialog.add.actions.cancel',
+      ),
       zOkIcon: 'plus',
       zOnOk: (dialogContent) => {
         if (isCreatingTransfer) {
@@ -498,11 +528,9 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         }
 
         isCreatingTransfer = true;
-        void this
-          .createTransfer(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingTransfer = false;
-          });
+        void this.createTransfer(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingTransfer = false;
+        });
         return false;
       },
     });
@@ -560,7 +588,10 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
     });
   }
 
-  private resolveVisualIcon(iconValue: string | null | undefined, fallbackIcon: ZardIcon): ZardIcon {
+  private resolveVisualIcon(
+    iconValue: string | null | undefined,
+    fallbackIcon: ZardIcon,
+  ): ZardIcon {
     if (typeof iconValue !== 'string' || iconValue.trim().length === 0) {
       return fallbackIcon;
     }
@@ -575,7 +606,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
 
     return APP_COLOR_HEX_BY_VALUE.get(colorKey) ?? `var(--${colorKey})`;
   }
-
 
   private translate(key: string, params?: Record<string, unknown>): string {
     const translated = this.translateService.instant(key, params);

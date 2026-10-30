@@ -4,7 +4,11 @@ import { filter, Subject, takeUntil } from 'rxjs';
 
 import { noopFn } from '@/shared/utils/merge-classes';
 
-import type { OnClickCallback, ZardAlertDialogComponent, ZardAlertDialogOptions } from './alert-dialog.component';
+import type {
+  OnClickCallback,
+  ZardAlertDialogComponent,
+  ZardAlertDialogOptions,
+} from './alert-dialog.component';
 
 export class ZardAlertDialogRef<T = unknown> {
   private readonly destroy$ = new Subject<void>();
@@ -77,7 +81,7 @@ export class ZardAlertDialogRef<T = unknown> {
     this.overlayRef
       .keydownEvents()
       .pipe(
-        filter(event => event.key === 'Escape'),
+        filter((event) => event.key === 'Escape'),
         takeUntil(this.destroy$),
       )
       .subscribe(() => this.close());
@@ -85,19 +89,19 @@ export class ZardAlertDialogRef<T = unknown> {
 
   private async waitForTransitionEnd(element: HTMLElement | null): Promise<void> {
     if (!element) {
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise((resolve) => setTimeout(resolve, 150));
       return;
     }
 
     await Promise.race([
-      new Promise<void>(resolve => {
+      new Promise<void>((resolve) => {
         const handler = () => {
           element.removeEventListener('transitionend', handler);
           resolve();
         };
         element.addEventListener('transitionend', handler, { once: true });
       }),
-      new Promise(resolve => setTimeout(resolve, 150)),
+      new Promise((resolve) => setTimeout(resolve, 150)),
     ]);
   }
 

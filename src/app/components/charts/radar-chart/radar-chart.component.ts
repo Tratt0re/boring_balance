@@ -77,7 +77,8 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
     this.numberFormatService.currencyFormatStyle();
-    const { foreground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
+    const { foreground, border, tooltipBackground, tooltipForeground } =
+      resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const tooltipFontFamily = resolveChartTooltipFontFamily();
     const sourceSeries = this.series();
@@ -109,10 +110,18 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
       });
       const showArea = seriesItem.showArea ?? this.showArea();
       const lineWidth = Math.max(1, seriesItem.lineWidth ?? 2.4);
-      const lineOpacity = Math.min(Math.max(seriesItem.lineOpacity ?? normalizedDefaultLineOpacity, 0), 1);
-      const pointOpacity = Math.min(Math.max(seriesItem.pointOpacity ?? normalizedDefaultPointOpacity, 0), 1);
+      const lineOpacity = Math.min(
+        Math.max(seriesItem.lineOpacity ?? normalizedDefaultLineOpacity, 0),
+        1,
+      );
+      const pointOpacity = Math.min(
+        Math.max(seriesItem.pointOpacity ?? normalizedDefaultPointOpacity, 0),
+        1,
+      );
       const pointSize = Math.max(1, seriesItem.pointSize ?? normalizedDefaultPointSize);
-      const areaOpacity = showArea ? Math.min(Math.max(seriesItem.areaOpacity ?? normalizedDefaultAreaOpacity, 0), 1) : 0;
+      const areaOpacity = showArea
+        ? Math.min(Math.max(seriesItem.areaOpacity ?? normalizedDefaultAreaOpacity, 0), 1)
+        : 0;
 
       const lineStyle = {
         color,
@@ -123,12 +132,13 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
         color,
         opacity: pointOpacity,
       };
-      const areaStyle = showArea && areaOpacity > 0
-        ? {
-            color,
-            opacity: areaOpacity,
-          }
-        : undefined;
+      const areaStyle =
+        showArea && areaOpacity > 0
+          ? {
+              color,
+              opacity: areaOpacity,
+            }
+          : undefined;
 
       return {
         type: 'radar' as const,
@@ -232,9 +242,7 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
           },
         },
       },
-      series: [
-        ...radarSeries,
-      ],
+      series: [...radarSeries],
     };
   });
 
@@ -326,7 +334,9 @@ export class AppRadarChartComponent implements OnInit, OnDestroy {
     }
 
     const normalizedValue = value.trim();
-    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
+    return normalizedValue.length > 0
+      ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue)
+      : null;
   }
 
   private formatCurrencyValue(value: unknown, currencyCode: string): string {

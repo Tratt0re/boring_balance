@@ -79,19 +79,18 @@ function resolveAuthorName(author) {
 }
 
 function resolveRepositoryUrl(repository) {
-  const rawUrl = typeof repository === 'string'
-    ? repository
-    : repository && typeof repository === 'object'
-      ? repository.url
-      : null;
+  const rawUrl =
+    typeof repository === 'string'
+      ? repository
+      : repository && typeof repository === 'object'
+        ? repository.url
+        : null;
   const normalizedUrl = normalizeText(rawUrl);
   if (!normalizedUrl) {
     return null;
   }
 
-  return normalizedUrl
-    .replace(/^git\+/, '')
-    .replace(/\.git$/i, '');
+  return normalizedUrl.replace(/^git\+/, '').replace(/\.git$/i, '');
 }
 
 const appInfo = Object.freeze({

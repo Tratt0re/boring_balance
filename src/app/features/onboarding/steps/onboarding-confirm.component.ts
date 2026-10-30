@@ -1,4 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, output, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+  output,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ZardButtonComponent } from '@/shared/components/button';

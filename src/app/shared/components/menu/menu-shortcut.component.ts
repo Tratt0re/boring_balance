@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 
@@ -7,9 +13,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
   selector: 'z-menu-shortcut, [z-menu-shortcut]',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

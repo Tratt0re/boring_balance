@@ -32,7 +32,9 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     return mapNullableRow(row, (value) => TransactionModel.fromDTO(value));
   }
 
-  async createTransfer(payload: DTO.TransactionCreateTransferDto): Promise<TransactionTransferResult> {
+  async createTransfer(
+    payload: DTO.TransactionCreateTransferDto,
+  ): Promise<TransactionTransferResult> {
     const transfer = await this.ipcClient.createTransfer(payload);
     return mapTransferBundleResult(
       transfer,
@@ -41,7 +43,9 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     );
   }
 
-  async updateTransfer(payload: DTO.TransactionUpdateTransferDto): Promise<TransactionTransferResult> {
+  async updateTransfer(
+    payload: DTO.TransactionUpdateTransferDto,
+  ): Promise<TransactionTransferResult> {
     const transfer = await this.ipcClient.updateTransfer(payload);
     return mapTransferBundleResult(
       transfer,
@@ -50,7 +54,9 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     );
   }
 
-  deleteTransfer(payload: DTO.TransactionDeleteTransferDto): Promise<DTO.TransactionDeleteTransferResponse> {
+  deleteTransfer(
+    payload: DTO.TransactionDeleteTransferDto,
+  ): Promise<DTO.TransactionDeleteTransferResponse> {
     return this.ipcClient.deleteTransfer(payload);
   }
 
@@ -59,7 +65,9 @@ export class TransactionsService extends BaseIpcService<APIChannel.TRANSACTIONS>
     return mapNullableRow(row, (value) => TransactionModel.fromDTO(value));
   }
 
-  async listTransactions(payload?: DTO.TransactionListTransactionsDto): Promise<TransactionListResult> {
+  async listTransactions(
+    payload?: DTO.TransactionListTransactionsDto,
+  ): Promise<TransactionListResult> {
     const response = await this.ipcClient.listTransactions(payload);
     return mapPaginatedResult(response, (row) => TransactionModel.fromDTO(row));
   }

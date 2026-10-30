@@ -10,7 +10,9 @@ import { BaseIpcService } from '@/services/base-ipc.service';
 })
 export class ImportExcelService extends BaseIpcService<APIChannel.IMPORT_EXCEL> {
   private readonly selectedFilePathSubject = new BehaviorSubject<string | null>(null);
-  private readonly validationSubject = new BehaviorSubject<DTO.ImportExcelValidationDto | null>(null);
+  private readonly validationSubject = new BehaviorSubject<DTO.ImportExcelValidationDto | null>(
+    null,
+  );
   private readonly selectingSubject = new BehaviorSubject(false);
   private readonly validatingSubject = new BehaviorSubject(false);
   private readonly importingSubject = new BehaviorSubject(false);
@@ -76,7 +78,11 @@ export class ImportExcelService extends BaseIpcService<APIChannel.IMPORT_EXCEL> 
   }
 
   clearSelection(): void {
-    if (this.selectingSubject.value || this.validatingSubject.value || this.importingSubject.value) {
+    if (
+      this.selectingSubject.value ||
+      this.validatingSubject.value ||
+      this.importingSubject.value
+    ) {
       return;
     }
 
@@ -84,9 +90,13 @@ export class ImportExcelService extends BaseIpcService<APIChannel.IMPORT_EXCEL> 
     this.validationSubject.next(null);
   }
 
-  private normalizeSelectFileResult(value: DTO.ImportExcelSelectFileResponse): DTO.ImportExcelSelectFileResponse {
+  private normalizeSelectFileResult(
+    value: DTO.ImportExcelSelectFileResponse,
+  ): DTO.ImportExcelSelectFileResponse {
     const filePath =
-      typeof value?.filePath === 'string' && value.filePath.trim().length > 0 ? value.filePath.trim() : null;
+      typeof value?.filePath === 'string' && value.filePath.trim().length > 0
+        ? value.filePath.trim()
+        : null;
 
     return filePath
       ? {
@@ -95,7 +105,9 @@ export class ImportExcelService extends BaseIpcService<APIChannel.IMPORT_EXCEL> 
       : null;
   }
 
-  private normalizeValidationResult(value: DTO.ImportExcelValidateResponse): DTO.ImportExcelValidationDto {
+  private normalizeValidationResult(
+    value: DTO.ImportExcelValidateResponse,
+  ): DTO.ImportExcelValidationDto {
     const summary = this.normalizeValidationSummary(value?.summary);
 
     return {
@@ -136,7 +148,10 @@ export class ImportExcelService extends BaseIpcService<APIChannel.IMPORT_EXCEL> 
         ? { column: columnValue.trim() }
         : {}),
       code: this.normalizeString((rawValue as DTO.ImportExcelErrorDto).code, 'UNKNOWN'),
-      message: this.normalizeString((rawValue as DTO.ImportExcelErrorDto).message, 'Unknown import error.'),
+      message: this.normalizeString(
+        (rawValue as DTO.ImportExcelErrorDto).message,
+        'Unknown import error.',
+      ),
     };
   }
 

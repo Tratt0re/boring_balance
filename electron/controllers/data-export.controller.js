@@ -14,10 +14,7 @@ function resolveDefaultExportPath() {
 }
 
 function resolveDefaultImportTemplatePath() {
-  return path.join(
-    app.getPath('documents'),
-    dataExportModel.IMPORT_TEMPLATE_FILE_NAME,
-  );
+  return path.join(app.getPath('documents'), dataExportModel.IMPORT_TEMPLATE_FILE_NAME);
 }
 
 function ensureXlsxExtension(filePath) {

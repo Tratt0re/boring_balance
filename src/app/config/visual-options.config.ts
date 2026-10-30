@@ -12,17 +12,61 @@ export const DEFAULT_VISUAL_ICON_KEY = 'circle';
 
 export const APP_COLOR_OPTIONS: readonly AppVisualOption[] = [
   { label: 'options.colors.none', value: '', colorHex: 'var(--system-app-color-11)' },
-  { label: 'options.colors.gray', value: 'system-app-color-11', colorHex: 'var(--system-app-color-11)' },
-  { label: 'options.colors.coral', value: 'system-app-color-1', colorHex: 'var(--system-app-color-1)' },
-  { label: 'options.colors.amber', value: 'system-app-color-2', colorHex: 'var(--system-app-color-2)' },
-  { label: 'options.colors.gold', value: 'system-app-color-3', colorHex: 'var(--system-app-color-3)' },
-  { label: 'options.colors.lime', value: 'system-app-color-4', colorHex: 'var(--system-app-color-4)' },
-  { label: 'options.colors.green', value: 'system-app-color-5', colorHex: 'var(--system-app-color-5)' },
-  { label: 'options.colors.teal', value: 'system-app-color-6', colorHex: 'var(--system-app-color-6)' },
-  { label: 'options.colors.sky', value: 'system-app-color-7', colorHex: 'var(--system-app-color-7)' },
-  { label: 'options.colors.blue', value: 'system-app-color-8', colorHex: 'var(--system-app-color-8)' },
-  { label: 'options.colors.violet', value: 'system-app-color-9', colorHex: 'var(--system-app-color-9)' },
-  { label: 'options.colors.rose', value: 'system-app-color-10', colorHex: 'var(--system-app-color-10)' },
+  {
+    label: 'options.colors.gray',
+    value: 'system-app-color-11',
+    colorHex: 'var(--system-app-color-11)',
+  },
+  {
+    label: 'options.colors.coral',
+    value: 'system-app-color-1',
+    colorHex: 'var(--system-app-color-1)',
+  },
+  {
+    label: 'options.colors.amber',
+    value: 'system-app-color-2',
+    colorHex: 'var(--system-app-color-2)',
+  },
+  {
+    label: 'options.colors.gold',
+    value: 'system-app-color-3',
+    colorHex: 'var(--system-app-color-3)',
+  },
+  {
+    label: 'options.colors.lime',
+    value: 'system-app-color-4',
+    colorHex: 'var(--system-app-color-4)',
+  },
+  {
+    label: 'options.colors.green',
+    value: 'system-app-color-5',
+    colorHex: 'var(--system-app-color-5)',
+  },
+  {
+    label: 'options.colors.teal',
+    value: 'system-app-color-6',
+    colorHex: 'var(--system-app-color-6)',
+  },
+  {
+    label: 'options.colors.sky',
+    value: 'system-app-color-7',
+    colorHex: 'var(--system-app-color-7)',
+  },
+  {
+    label: 'options.colors.blue',
+    value: 'system-app-color-8',
+    colorHex: 'var(--system-app-color-8)',
+  },
+  {
+    label: 'options.colors.violet',
+    value: 'system-app-color-9',
+    colorHex: 'var(--system-app-color-9)',
+  },
+  {
+    label: 'options.colors.rose',
+    value: 'system-app-color-10',
+    colorHex: 'var(--system-app-color-10)',
+  },
 ] as const;
 
 export const APP_COLOR_KEY_SET = new Set(
@@ -108,7 +152,6 @@ export const APP_ICON_OPTIONS: readonly AppVisualOption[] = [
   { label: 'options.icons.crypto', value: 'bitcoin', icon: 'bitcoin' },
   { label: 'options.icons.factory', value: 'factory', icon: 'factory' },
   { label: 'options.icons.car', value: 'car', icon: 'car' },
-
 ] as const;
 
 export const APP_ICON_KEY_SET = new Set(

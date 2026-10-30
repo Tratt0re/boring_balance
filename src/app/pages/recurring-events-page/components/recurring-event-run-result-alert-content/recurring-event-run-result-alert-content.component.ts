@@ -25,17 +25,23 @@ export interface RecurringEventRunResultAlertData {
 
       <div class="grid gap-2 sm:grid-cols-3">
         <div class="rounded-md border p-3">
-          <p class="text-xs text-muted-foreground">{{ 'recurringEvents.runResult.labels.created' | translate }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ 'recurringEvents.runResult.labels.created' | translate }}
+          </p>
           <p class="mt-1 text-xl font-semibold">{{ data.created }}</p>
         </div>
 
         <div class="rounded-md border p-3">
-          <p class="text-xs text-muted-foreground">{{ 'recurringEvents.runResult.labels.skipped' | translate }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ 'recurringEvents.runResult.labels.skipped' | translate }}
+          </p>
           <p class="mt-1 text-xl font-semibold">{{ data.skippedExisting }}</p>
         </div>
 
         <div class="rounded-md border p-3">
-          <p class="text-xs text-muted-foreground">{{ 'recurringEvents.runResult.labels.total' | translate }}</p>
+          <p class="text-xs text-muted-foreground">
+            {{ 'recurringEvents.runResult.labels.total' | translate }}
+          </p>
           <p class="mt-1 text-xl font-semibold">{{ data.totalOccurrences }}</p>
         </div>
       </div>

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { UpdateService } from '@/core/services/update.service';
@@ -33,7 +39,7 @@ import { ZardIconComponent } from '@/shared/components/icon/icon.component';
                 | translate
                   : {
                       current: updateService.updateResult()?.currentVersion,
-                      latest: updateService.updateResult()?.latestVersion
+                      latest: updateService.updateResult()?.latestVersion,
                     }
             }}
           </p>

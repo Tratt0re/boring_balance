@@ -32,7 +32,10 @@ export interface AccountValuationCreateDto {
 export interface AccountValuationGetDto extends IdDto<RowId> {}
 
 export interface AccountValuationListDto
-  extends ListQueryDto<Pick<AccountValuationDto, 'id' | 'account_id' | 'valued_at' | 'value_cents' | 'source'>>,
+  extends
+    ListQueryDto<
+      Pick<AccountValuationDto, 'id' | 'account_id' | 'valued_at' | 'value_cents' | 'source'>
+    >,
     PageRequestWithAllDto {}
 
 export interface AccountValuationUpdateDto extends IdDto<RowId> {

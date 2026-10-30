@@ -57,9 +57,12 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewPage implements OnInit, OnDestroy {
-  @ViewChild(OverviewNetWorthCardComponent) private overviewNetWorthCardComponent?: OverviewNetWorthCardComponent;
-  @ViewChild(OverviewAllocationCardComponent) private overviewAllocationCardComponent?: OverviewAllocationCardComponent;
-  @ViewChild(OverviewCashflowCardComponent) private overviewCashflowCardComponent?: OverviewCashflowCardComponent;
+  @ViewChild(OverviewNetWorthCardComponent)
+  private overviewNetWorthCardComponent?: OverviewNetWorthCardComponent;
+  @ViewChild(OverviewAllocationCardComponent)
+  private overviewAllocationCardComponent?: OverviewAllocationCardComponent;
+  @ViewChild(OverviewCashflowCardComponent)
+  private overviewCashflowCardComponent?: OverviewCashflowCardComponent;
 
   private releaseToolbarActions: (() => void) | null = null;
   private readonly syncService = inject(SyncService);
@@ -70,15 +73,19 @@ export class OverviewPage implements OnInit, OnDestroy {
   private readonly currentDateReference = new Date();
 
   protected readonly isSingleColumnLayout = signal(false);
-  protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
+  protected readonly snapshotRecency =
+    signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
   protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
   protected readonly hasNewerSyncVersion = signal(false);
-  protected readonly syncNowLoading = toSignal(this.syncService.syncNowLoading$, { initialValue: false });
-  protected readonly showSnapshotsOutdatedBanner = computed(() =>
-    this.netWorthMode() === 'valued'
-    && this.snapshotRecency().hasSnapshots
-    && this.snapshotRecency().isOutdated
-    && this.snapshotRecency().daysSinceLatestSnapshot !== null,
+  protected readonly syncNowLoading = toSignal(this.syncService.syncNowLoading$, {
+    initialValue: false,
+  });
+  protected readonly showSnapshotsOutdatedBanner = computed(
+    () =>
+      this.netWorthMode() === 'valued' &&
+      this.snapshotRecency().hasSnapshots &&
+      this.snapshotRecency().isOutdated &&
+      this.snapshotRecency().daysSinceLatestSnapshot !== null,
   );
   protected readonly currentCalendarYear = this.currentDateReference.getFullYear();
   protected readonly currentCalendarMonthIndex = this.currentDateReference.getMonth();

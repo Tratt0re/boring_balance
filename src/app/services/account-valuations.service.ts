@@ -47,7 +47,9 @@ export class AccountValuationsService extends BaseIpcService<APIChannel.ACCOUNT_
     return this.ipcClient.remove(payload);
   }
 
-  async getLatestByAccount(payload: DTO.AccountValuationGetLatestByAccountDto): Promise<AccountValuationModel | null> {
+  async getLatestByAccount(
+    payload: DTO.AccountValuationGetLatestByAccountDto,
+  ): Promise<AccountValuationModel | null> {
     const row = await this.ipcClient.getLatestByAccount(payload);
     return mapNullableRow(row, (value) => AccountValuationModel.fromDTO(value));
   }

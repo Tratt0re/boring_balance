@@ -38,7 +38,10 @@
           (zSelectionChange)="onLanguageChange($event)"
         >
           @for (language of languages; track language) {
-            <z-select-item [zValue]="language" [zLabel]="getLanguageLabelKey(language) | translate" />
+            <z-select-item
+              [zValue]="language"
+              [zLabel]="getLanguageLabelKey(language) | translate"
+            />
           }
         </z-select>
         <p class="mt-2 text-xs text-muted-foreground">
@@ -56,7 +59,10 @@
           (zSelectionChange)="onDashboardValuationModeChange($event)"
         >
           @for (mode of dashboardValuationModeValues; track mode) {
-            <z-select-item [zValue]="mode" [zLabel]="dashboardValuationModeLabelKey(mode) | translate" />
+            <z-select-item
+              [zValue]="mode"
+              [zLabel]="dashboardValuationModeLabelKey(mode) | translate"
+            />
           }
         </z-select>
         <p class="mt-2 text-xs text-muted-foreground">
@@ -109,7 +115,10 @@
           (zSelectionChange)="onCurrencyFormatStyleChange($event)"
         >
           @for (style of currencyFormatStyleValues; track style) {
-            <z-select-item [zValue]="style" [zLabel]="currencyFormatStyleLabelKey(style) | translate" />
+            <z-select-item
+              [zValue]="style"
+              [zLabel]="currencyFormatStyleLabelKey(style) | translate"
+            />
           }
         </z-select>
         <p class="mt-2 text-xs text-muted-foreground">

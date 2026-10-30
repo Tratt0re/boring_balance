@@ -50,7 +50,8 @@ export interface PlanItemRunSkippedExistingTransferResult {
 export interface PlanItemRunSkippedExistingEntryResult {
   readonly occurredAt: number;
   readonly status: 'skipped_existing';
-  readonly existing: PlanItemRunSkippedExistingTransactionResult | PlanItemRunSkippedExistingTransferResult;
+  readonly existing:
+    PlanItemRunSkippedExistingTransactionResult | PlanItemRunSkippedExistingTransferResult;
 }
 
 export interface PlanItemRunWouldCreateEntryResult {
@@ -64,14 +65,18 @@ export interface PlanItemRunCreatedTransactionPayloadResult {
   readonly row: TransactionModel;
 }
 
-export interface PlanItemRunCreatedTransferPayloadResult extends TransferBundleResult<TransferModel, TransactionModel> {
+export interface PlanItemRunCreatedTransferPayloadResult extends TransferBundleResult<
+  TransferModel,
+  TransactionModel
+> {
   readonly type: 'transfer';
 }
 
 export interface PlanItemRunCreatedEntryResult {
   readonly occurredAt: number;
   readonly status: 'created';
-  readonly created: PlanItemRunCreatedTransactionPayloadResult | PlanItemRunCreatedTransferPayloadResult;
+  readonly created:
+    PlanItemRunCreatedTransactionPayloadResult | PlanItemRunCreatedTransferPayloadResult;
 }
 
 export type PlanItemRunEntryResult =
@@ -239,7 +244,9 @@ export class PlanItemsService extends BaseIpcService<APIChannel.PLAN_ITEMS> {
     return this.mapRunResult(result);
   }
 
-  async deletePlannedItems(payload: DTO.PlanItemDeletePlannedItemsDto): Promise<PlanItemDeletePlannedItemsResult> {
+  async deletePlannedItems(
+    payload: DTO.PlanItemDeletePlannedItemsDto,
+  ): Promise<PlanItemDeletePlannedItemsResult> {
     const result = await this.ipcClient.deletePlannedItems(payload);
     return this.mapDeletePlannedItemsResult(result);
   }

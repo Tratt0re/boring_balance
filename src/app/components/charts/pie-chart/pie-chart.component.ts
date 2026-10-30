@@ -68,7 +68,8 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
     this.numberFormatService.currencyFormatStyle();
-    const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
+    const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } =
+      resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const tooltipFontFamily = resolveChartTooltipFontFamily();
     const showLegend = this.showLegend();
@@ -83,7 +84,10 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
     const shouldScaleOnFocus = this.scaleOnFocus();
     const normalizedScaleSize = Math.max(0, this.scaleSize());
     const tooltipShowPercentage = this.tooltipShowPercentage();
-    const separatorColor = resolveChartCssColor('--card', resolveChartCssColor('--background', '#ffffff'));
+    const separatorColor = resolveChartCssColor(
+      '--card',
+      resolveChartCssColor('--background', '#ffffff'),
+    );
     const labelStyle = 'font-weight: 300; opacity: 0.78;';
     const valueStyle = 'font-weight: 700;';
     const escapeHtml = (value: unknown): string =>
@@ -118,14 +122,17 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
         index,
       });
       const numericValue = Number(item.value ?? 0);
-      const percent = totalValue > 0 && Number.isFinite(numericValue) ? (numericValue / totalValue) * 100 : 0;
+      const percent =
+        totalValue > 0 && Number.isFinite(numericValue) ? (numericValue / totalValue) * 100 : 0;
       const useOutsideLabel = smartPercentLabels && percent < insideLabelMinPercent;
       const itemLabel =
         smartPercentLabels && showLabels
           ? {
               show: true,
               position: useOutsideLabel ? ('outside' as const) : ('inside' as const),
-              color: useOutsideLabel ? foreground : resolveChartCssColor('--primary-foreground', '#ffffff'),
+              color: useOutsideLabel
+                ? foreground
+                : resolveChartCssColor('--primary-foreground', '#ffffff'),
               formatter: labelFormatter,
               fontSize: CHART_LABEL_FONT_SIZE,
               fontFamily,
@@ -172,7 +179,8 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
         },
       };
     });
-    const scalePercent = (value: number, max = 90): string => `${Math.min(max, Math.max(0, value * normalizedRadiusScale))}%`;
+    const scalePercent = (value: number, max = 90): string =>
+      `${Math.min(max, Math.max(0, value * normalizedRadiusScale))}%`;
     const pieRadius = useRightLegend
       ? this.donut()
         ? ([scalePercent(34), scalePercent(58, 72)] as const)
@@ -212,19 +220,29 @@ export class AppPieChartComponent implements OnInit, OnDestroy {
                 ? this.numberFormatService.formatNumber(rawValue)
                 : `${params?.value ?? ''}`;
           const percent = Number(params?.percent ?? 0);
-          const details = Array.isArray(params?.data?.tooltipDetails) ? params.data.tooltipDetails : [];
+          const details = Array.isArray(params?.data?.tooltipDetails)
+            ? params.data.tooltipDetails
+            : [];
           const baseWithoutPercent = `${marker}${formatTooltipLabelValue(`${name}:`, formattedValue)}`;
 
           if (!tooltipShowPercentage) {
-            const formattedDetails = details.map((line) => formatTooltipDetailLine(line)).join('<br/>');
-            return details.length === 0 ? baseWithoutPercent : `${baseWithoutPercent}<br/>${formattedDetails}`;
+            const formattedDetails = details
+              .map((line) => formatTooltipDetailLine(line))
+              .join('<br/>');
+            return details.length === 0
+              ? baseWithoutPercent
+              : `${baseWithoutPercent}<br/>${formattedDetails}`;
           }
 
           const baseWithPercent =
             `${baseWithoutPercent} <span style="${labelStyle}">(` +
             `${escapeHtml(this.numberFormatService.formatPercent(percent, { maximumFractionDigits: 2 }))})</span>`;
-          const formattedDetails = details.map((line) => formatTooltipDetailLine(line)).join('<br/>');
-          return details.length === 0 ? baseWithPercent : `${baseWithPercent}<br/>${formattedDetails}`;
+          const formattedDetails = details
+            .map((line) => formatTooltipDetailLine(line))
+            .join('<br/>');
+          return details.length === 0
+            ? baseWithPercent
+            : `${baseWithPercent}<br/>${formattedDetails}`;
         },
       },
       legend: {

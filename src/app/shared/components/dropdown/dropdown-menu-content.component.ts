@@ -34,5 +34,7 @@ export class ZardDropdownMenuContentComponent {
 
   readonly class = input<ClassValue>('');
 
-  protected readonly contentClasses = computed(() => mergeClasses(dropdownContentVariants(), this.class()));
+  protected readonly contentClasses = computed(() =>
+    mergeClasses(dropdownContentVariants(), this.class()),
+  );
 }

@@ -17,8 +17,17 @@ import { map, startWith } from 'rxjs';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import type { CalendarDay } from './calendar.types';
-import { getCalendarWeekdayLabels, getDayAriaLabel, getDayId, resolveCalendarLocale } from './calendar.utils';
-import { calendarDayButtonVariants, calendarDayVariants, calendarWeekdayVariants } from './calendar.variants';
+import {
+  getCalendarWeekdayLabels,
+  getDayAriaLabel,
+  getDayId,
+  resolveCalendarLocale,
+} from './calendar.utils';
+import {
+  calendarDayButtonVariants,
+  calendarDayVariants,
+  calendarWeekdayVariants,
+} from './calendar.variants';
 
 @Component({
   selector: 'z-calendar-grid',
@@ -70,9 +79,14 @@ export class ZardCalendarGridComponent {
   private readonly currentLocale = toSignal(
     this.translateService.onLangChange.pipe(
       map((event) => event.lang),
-      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+      startWith(
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+      ),
     ),
-    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+    {
+      initialValue:
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+    },
   );
   private readonly gridContainer = viewChild.required<ElementRef<HTMLElement>>('gridContainer');
 
@@ -143,18 +157,18 @@ export class ZardCalendarGridComponent {
 
     // Default focus to selected date or today
     const days = this.calendarDays();
-    const selectedIndex = days.findIndex(day => day.isSelected);
+    const selectedIndex = days.findIndex((day) => day.isSelected);
     if (selectedIndex >= 0) {
       return selectedIndex;
     }
 
-    const todayIndex = days.findIndex(day => day.isToday && day.isCurrentMonth);
+    const todayIndex = days.findIndex((day) => day.isToday && day.isCurrentMonth);
     if (todayIndex >= 0) {
       return todayIndex;
     }
 
     // Fall back to first enabled day of current month
-    const firstCurrentMonthIndex = days.findIndex(day => day.isCurrentMonth && !day.isDisabled);
+    const firstCurrentMonthIndex = days.findIndex((day) => day.isCurrentMonth && !day.isDisabled);
     return firstCurrentMonthIndex >= 0 ? firstCurrentMonthIndex : 0;
   }
 
@@ -275,7 +289,12 @@ export class ZardCalendarGridComponent {
     return null;
   }
 
-  private findEnabledInRange(start: number, fallback: number, days: CalendarDay[], reverse = false): number {
+  private findEnabledInRange(
+    start: number,
+    fallback: number,
+    days: CalendarDay[],
+    reverse = false,
+  ): number {
     const clampedStart = Math.max(0, Math.min(start, days.length - 1));
     const clampedFallback = Math.max(0, Math.min(fallback, days.length - 1));
 
@@ -313,7 +332,9 @@ export class ZardCalendarGridComponent {
   private setFocus(index: number): void {
     this.focusedDayIndex.set(index);
     setTimeout(() => {
-      const dayElement = this.gridContainer()?.nativeElement.querySelector(`#${getDayId(index)}`) as HTMLElement;
+      const dayElement = this.gridContainer()?.nativeElement.querySelector(
+        `#${getDayId(index)}`,
+      ) as HTMLElement;
       dayElement?.focus();
     }, 0);
   }

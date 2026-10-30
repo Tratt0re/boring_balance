@@ -1,18 +1,29 @@
-<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+<form
+  class="grid gap-4 sm:grid-cols-2"
+  [formGroup]="form"
+  novalidate
+  (submit)="$event.preventDefault()"
+>
   <div>
     <label class="mb-1.5 block text-sm font-medium" for="transaction-date">
       {{ 'common.labels.date' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-date-picker zId="transaction-date" zIconPosition="right" formControlName="occurredAt"
-      [placeholder]="'common.placeholders.pickDate' | translate" />
+    <z-date-picker
+      zId="transaction-date"
+      zIconPosition="right"
+      formControlName="occurredAt"
+      [placeholder]="'common.placeholders.pickDate' | translate"
+    />
     @if (visibleOccurredAtErrorKey(); as currentError) {
-    <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium" for="transaction-settled">{{ 'common.labels.settled' | translate }}</label>
+    <label class="mb-1.5 block text-sm font-medium" for="transaction-settled">{{
+      'common.labels.settled' | translate
+    }}</label>
     <z-switch zId="transaction-settled" formControlName="settled">
       <span #labelContent>
         {{ settledValue() ? ('common.yes' | translate) : ('common.no' | translate) }}
@@ -25,12 +36,16 @@
       {{ 'common.labels.category' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-combobox zId="transaction-category" zWidth="full" formControlName="categoryId"
+    <z-combobox
+      zId="transaction-category"
+      zWidth="full"
+      formControlName="categoryId"
       [placeholder]="'common.placeholders.selectCategory' | translate"
       [searchPlaceholder]="'common.filters.placeholders.searchCategory' | translate"
-      [options]="$any(categoryOptions)" />
+      [options]="$any(categoryOptions)"
+    />
     @if (visibleCategoryIdErrorKey(); as currentError) {
-    <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -39,13 +54,17 @@
       {{ 'common.labels.account' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-combobox zId="transaction-account" zWidth="full" formControlName="accountId"
+    <z-combobox
+      zId="transaction-account"
+      zWidth="full"
+      formControlName="accountId"
       [placeholder]="'common.placeholders.selectAccount' | translate"
       [searchPlaceholder]="'common.filters.placeholders.searchAccount' | translate"
       [options]="$any(accountOptions)"
-      [disabled]="isAccountFixed" />
+      [disabled]="isAccountFixed"
+    />
     @if (visibleAccountIdErrorKey(); as currentError) {
-    <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -54,11 +73,18 @@
       {{ 'common.labels.amount' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <input id="transaction-amount" z-input type="number" formControlName="amount" step="0.01" aria-required="true"
+    <input
+      id="transaction-amount"
+      z-input
+      type="number"
+      formControlName="amount"
+      step="0.01"
+      aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
-      [attr.placeholder]="numberFormatService.amountPlaceholder()" />
+      [attr.placeholder]="numberFormatService.amountPlaceholder()"
+    />
     @if (visibleAmountErrorKey(); as currentError) {
-    <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -66,16 +92,25 @@
     <label class="mb-1.5 block text-sm font-medium" for="transaction-description">
       {{ 'common.labels.description' | translate }}
     </label>
-    <textarea id="transaction-description" z-input formControlName="description" rows="3" class="max-h-32 resize-y"
-      [attr.maxlength]="descriptionMaxLength" [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
-      [attr.placeholder]="'common.placeholders.transactionDescription' | translate"></textarea>
-    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
+    <textarea
+      id="transaction-description"
+      z-input
+      formControlName="description"
+      rows="3"
+      class="max-h-32 resize-y"
+      [attr.maxlength]="descriptionMaxLength"
+      [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
+      [attr.placeholder]="'common.placeholders.transactionDescription' | translate"
+    ></textarea>
+    <p class="mt-1 text-xs text-muted-foreground">
+      {{ descriptionLength() }}/{{ descriptionMaxLength }}
+    </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
-    <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
   @if (errorKey(); as currentError) {
-  <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
   }
 </form>

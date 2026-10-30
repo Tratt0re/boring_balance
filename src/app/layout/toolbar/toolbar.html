@@ -1,6 +1,9 @@
 <z-header [zHeight]="64" class="justify-between gap-4">
   <div class="flex min-w-0 items-center gap-2">
-    <app-sidebar-toggle [sidebarCollapsed]="sidebarCollapsed()" (sidebarToggle)="onSidebarToggle()"></app-sidebar-toggle>
+    <app-sidebar-toggle
+      [sidebarCollapsed]="sidebarCollapsed()"
+      (sidebarToggle)="onSidebarToggle()"
+    ></app-sidebar-toggle>
 
     <div class="flex min-w-0 items-center">
       @if (!hasItemNavigation() && hasTitleBreadcrumbs()) {
@@ -12,7 +15,10 @@
               @for (item of titleBreadcrumbs(); track item.path ?? item.label; let isLast = $last) {
                 <li class="flex min-w-0 items-center gap-2">
                   @if (item.path && !isLast) {
-                    <a [routerLink]="item.path" class="truncate transition-colors hover:text-foreground">
+                    <a
+                      [routerLink]="item.path"
+                      class="truncate transition-colors hover:text-foreground"
+                    >
                       @if (isBreadcrumbLabelTranslated(item)) {
                         {{ item.label | translate }}
                       } @else {

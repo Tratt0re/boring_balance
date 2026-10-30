@@ -32,9 +32,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
   selector: 'ul[z-pagination-content]',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -46,14 +44,14 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 export class ZardPaginationContentComponent {
   readonly class = input<ClassValue>('');
 
-  protected readonly classes = computed(() => mergeClasses(paginationContentVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(paginationContentVariants(), this.class()),
+  );
 }
 
 @Component({
   selector: 'li[z-pagination-item]',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -92,8 +90,8 @@ export class ZardPaginationButtonComponent {
   readonly zSize = input<ZardButtonSizeVariants>('default');
   readonly zType = input<ZardButtonTypeVariants | null>(null);
 
-  protected readonly zButtonType = computed<ZardButtonTypeVariants>(() =>
-    this.zType() ?? (this.zActive() ? 'outline' : 'ghost'),
+  protected readonly zButtonType = computed<ZardButtonTypeVariants>(
+    () => this.zType() ?? (this.zActive() ? 'outline' : 'ghost'),
   );
 }
 
@@ -124,7 +122,9 @@ export class ZardPaginationPreviousComponent {
   readonly zDisabled = input(false, { transform: booleanAttribute });
   readonly zSize = input<ZardButtonSizeVariants>('default');
 
-  protected readonly classes = computed(() => mergeClasses(paginationPreviousVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(paginationPreviousVariants(), this.class()),
+  );
 }
 
 @Component({
@@ -220,9 +220,7 @@ export class ZardPaginationLastComponent {
 @Component({
   selector: 'z-pagination-ellipsis',
   imports: [ZardIconComponent],
-  template: `
-    <z-icon zType="ellipsis" aria-hidden="true" />
-  `,
+  template: ` <z-icon zType="ellipsis" aria-hidden="true" /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -234,7 +232,9 @@ export class ZardPaginationLastComponent {
 export class ZardPaginationEllipsisComponent {
   readonly class = input<ClassValue>('');
 
-  protected readonly classes = computed(() => mergeClasses(paginationEllipsisVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(paginationEllipsisVariants(), this.class()),
+  );
 }
 
 @Component({

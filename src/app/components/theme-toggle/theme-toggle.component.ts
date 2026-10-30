@@ -17,11 +17,15 @@ export class ThemeToggleComponent {
   protected readonly darkMode = inject(ZardDarkMode);
 
   protected getThemeToggleAriaLabelKey(): string {
-    return this.darkMode.themeMode() === EDarkModes.DARK ? 'header.theme.activateLight' : 'header.theme.activateDark';
+    return this.darkMode.themeMode() === EDarkModes.DARK
+      ? 'header.theme.activateLight'
+      : 'header.theme.activateDark';
   }
 
   protected getThemeToggleTitleKey(): string {
-    return this.darkMode.themeMode() === EDarkModes.DARK ? 'header.theme.lightMode' : 'header.theme.darkMode';
+    return this.darkMode.themeMode() === EDarkModes.DARK
+      ? 'header.theme.lightMode'
+      : 'header.theme.darkMode';
   }
 
   protected toggleTheme(event: MouseEvent): void {

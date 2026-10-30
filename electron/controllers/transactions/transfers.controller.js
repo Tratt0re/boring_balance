@@ -29,7 +29,14 @@ const LIST_FILTER_FIELDS = new Set([
   'accounts',
   'settled',
 ]);
-const CREATE_FIELDS = new Set(['occurred_at', 'from_account_id', 'to_account_id', 'amount', 'description', 'settled']);
+const CREATE_FIELDS = new Set([
+  'occurred_at',
+  'from_account_id',
+  'to_account_id',
+  'amount',
+  'description',
+  'settled',
+]);
 const UPDATE_FIELDS = new Set([
   'transfer_id',
   'occurred_at',

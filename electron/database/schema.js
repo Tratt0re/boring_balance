@@ -36,19 +36,25 @@ function ensureRequiredAppMeta(database) {
     ensureAppMetaValue(database, APP_META_DB_UUID_KEY, randomUUID());
   }
 
-  const existingChangeCounterRow = selectOne(database, 'app_meta', { key: APP_META_CHANGE_COUNTER_KEY });
+  const existingChangeCounterRow = selectOne(database, 'app_meta', {
+    key: APP_META_CHANGE_COUNTER_KEY,
+  });
   const existingChangeCounter = Number(existingChangeCounterRow?.value);
   if (!Number.isInteger(existingChangeCounter) || existingChangeCounter < 0) {
     ensureAppMetaValue(database, APP_META_CHANGE_COUNTER_KEY, 0);
   }
 
-  const existingLastWriteMsRow = selectOne(database, 'app_meta', { key: APP_META_LAST_WRITE_MS_KEY });
+  const existingLastWriteMsRow = selectOne(database, 'app_meta', {
+    key: APP_META_LAST_WRITE_MS_KEY,
+  });
   const existingLastWriteMs = Number(existingLastWriteMsRow?.value);
   if (!Number.isInteger(existingLastWriteMs) || existingLastWriteMs < 0) {
     ensureAppMetaValue(database, APP_META_LAST_WRITE_MS_KEY, Date.now());
   }
 
-  const existingSchemaVersionRow = selectOne(database, 'app_meta', { key: APP_META_SCHEMA_VERSION_KEY });
+  const existingSchemaVersionRow = selectOne(database, 'app_meta', {
+    key: APP_META_SCHEMA_VERSION_KEY,
+  });
   const existingSchemaVersion = Number(existingSchemaVersionRow?.value);
   if (!Number.isInteger(existingSchemaVersion) || existingSchemaVersion < 0) {
     ensureAppMetaValue(database, APP_META_SCHEMA_VERSION_KEY, APP_META_SCHEMA_VERSION);

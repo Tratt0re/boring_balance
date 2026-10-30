@@ -42,7 +42,8 @@ const DEFAULT_MUTED_FOREGROUND = 'oklch(0.556 0 0)';
 const DEFAULT_FOREGROUND = 'oklch(0.145 0 0)';
 const DEFAULT_BORDER = 'oklch(0.922 0 0)';
 const DEFAULT_BACKGROUND = 'oklch(1 0 0)';
-const DEFAULT_FONT_FAMILY = 'Manrope, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+const DEFAULT_FONT_FAMILY =
+  'Manrope, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
 let chartColorContext: CanvasRenderingContext2D | null | undefined;
 const normalizedColorCache = new Map<string, string | null>();
@@ -63,7 +64,10 @@ export function resolveChartSurfaceColors(): AppChartSurfaceColors {
       DEFAULT_BACKGROUND,
     ),
     foreground: normalizeChartColor(
-      readChartCssVariable('--card-foreground', readChartCssVariable('--foreground', DEFAULT_FOREGROUND)),
+      readChartCssVariable(
+        '--card-foreground',
+        readChartCssVariable('--foreground', DEFAULT_FOREGROUND),
+      ),
       DEFAULT_FOREGROUND,
     ),
     mutedForeground: normalizeChartColor(
@@ -72,13 +76,19 @@ export function resolveChartSurfaceColors(): AppChartSurfaceColors {
     ),
     border: normalizeChartColor(readChartCssVariable('--border', DEFAULT_BORDER), DEFAULT_BORDER),
     tooltipBackground: normalizeChartColor(
-      readChartCssVariable('--popover', readChartCssVariable('--card', readChartCssVariable('--background', DEFAULT_BACKGROUND))),
+      readChartCssVariable(
+        '--popover',
+        readChartCssVariable('--card', readChartCssVariable('--background', DEFAULT_BACKGROUND)),
+      ),
       DEFAULT_BACKGROUND,
     ),
     tooltipForeground: normalizeChartColor(
       readChartCssVariable(
         '--popover-foreground',
-        readChartCssVariable('--card-foreground', readChartCssVariable('--foreground', DEFAULT_FOREGROUND)),
+        readChartCssVariable(
+          '--card-foreground',
+          readChartCssVariable('--foreground', DEFAULT_FOREGROUND),
+        ),
       ),
       DEFAULT_FOREGROUND,
     ),
@@ -92,7 +102,8 @@ export interface ResolveChartSeriesColorOptions {
 }
 
 export function resolveChartSeriesColor(options: ResolveChartSeriesColorOptions): string {
-  const fallbackToken = APP_CHART_PALETTE_COLOR_TOKENS[options.index % APP_CHART_PALETTE_COLOR_TOKENS.length];
+  const fallbackToken =
+    APP_CHART_PALETTE_COLOR_TOKENS[options.index % APP_CHART_PALETTE_COLOR_TOKENS.length];
   const fallbackColor = APP_CHART_FALLBACK_COLORS[fallbackToken];
 
   if (options.color) {
@@ -100,7 +111,10 @@ export function resolveChartSeriesColor(options: ResolveChartSeriesColorOptions)
   }
 
   const themeColor = options.themeColor ?? fallbackToken;
-  const colorFromTheme = readChartCssVariable(`--${themeColor}`, APP_CHART_FALLBACK_COLORS[themeColor]);
+  const colorFromTheme = readChartCssVariable(
+    `--${themeColor}`,
+    APP_CHART_FALLBACK_COLORS[themeColor],
+  );
   return normalizeChartColor(colorFromTheme, APP_CHART_FALLBACK_COLORS[themeColor]);
 }
 
@@ -168,7 +182,10 @@ function readChartCssVariable(variableName: string, fallback: string): string {
     return fallback;
   }
 
-  const value = window.getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+  const value = window
+    .getComputedStyle(document.documentElement)
+    .getPropertyValue(variableName)
+    .trim();
   return value.length > 0 ? value : fallback;
 }
 
@@ -228,19 +245,24 @@ function getChartColorContext(): CanvasRenderingContext2D | null {
   }
 
   const canvas = document.createElement('canvas');
-  chartColorContext = canvas.getContext('2d', { willReadFrequently: true }) ?? canvas.getContext('2d');
+  chartColorContext =
+    canvas.getContext('2d', { willReadFrequently: true }) ?? canvas.getContext('2d');
   return chartColorContext;
 }
 
 function resolveChartColorReference(color: string, fallback: string): string {
   const trimmedColor = color.trim();
-  const variableReferenceMatch = trimmedColor.match(/^var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,\s*(.+))?\)$/);
+  const variableReferenceMatch = trimmedColor.match(
+    /^var\(\s*(--[A-Za-z0-9_-]+)\s*(?:,\s*(.+))?\)$/,
+  );
   if (!variableReferenceMatch) {
     return trimmedColor;
   }
 
   const variableName = variableReferenceMatch[1];
   const fallbackExpression = variableReferenceMatch[2]?.trim();
-  const resolvedFallback = fallbackExpression ? resolveChartColorReference(fallbackExpression, fallback) : fallback;
+  const resolvedFallback = fallbackExpression
+    ? resolveChartColorReference(fallbackExpression, fallback)
+    : fallback;
   return readChartCssVariable(variableName, resolvedFallback);
 }

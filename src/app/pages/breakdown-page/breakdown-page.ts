@@ -87,7 +87,11 @@ export class BreakdownPage implements OnInit, OnDestroy {
 
   protected onYearChange(value: string): void {
     const nextYear = Number.parseInt(value, 10);
-    if (!Number.isInteger(nextYear) || nextYear < BREAKDOWN_YEAR_SELECTOR_MIN_YEAR || nextYear > this.currentYearReference) {
+    if (
+      !Number.isInteger(nextYear) ||
+      nextYear < BREAKDOWN_YEAR_SELECTOR_MIN_YEAR ||
+      nextYear > this.currentYearReference
+    ) {
       return;
     }
 
@@ -141,7 +145,9 @@ export class BreakdownPage implements OnInit, OnDestroy {
       const availableYears = await this.analyticsService.availableYears();
       const normalizedYears = availableYears
         .filter((year) => Number.isInteger(year))
-        .filter((year) => year >= BREAKDOWN_YEAR_SELECTOR_MIN_YEAR && year <= this.currentYearReference);
+        .filter(
+          (year) => year >= BREAKDOWN_YEAR_SELECTOR_MIN_YEAR && year <= this.currentYearReference,
+        );
 
       if (normalizedYears.length === 0) {
         return;

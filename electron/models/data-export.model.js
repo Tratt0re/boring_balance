@@ -32,16 +32,8 @@ const TRANSFERS_COLUMNS = Object.freeze([
   'amount',
   'description',
 ]);
-const ACCOUNTS_COLUMNS = Object.freeze([
-  'account',
-  'type',
-  'archived',
-]);
-const CATEGORIES_COLUMNS = Object.freeze([
-  'category',
-  'type',
-  'archived',
-]);
+const ACCOUNTS_COLUMNS = Object.freeze(['account', 'type', 'archived']);
+const CATEGORIES_COLUMNS = Object.freeze(['category', 'type', 'archived']);
 
 function ensureDatabase(database) {
   if (!database || typeof database.prepare !== 'function') {
@@ -99,15 +91,18 @@ function selectTransactionSheetRows(database, transferCategoryId) {
       t.id ASC
   `;
 
-  return database.prepare(sql).all(transferCategoryId).map((row) => ({
-    date: formatDateCell(row.occurred_at),
-    settled: formatBooleanCell(row.settled),
-    amount: formatAmountFromCents(row.amount_cents),
-    category: row.category,
-    category_type: row.category_type,
-    account: row.account,
-    description: row.description ?? '',
-  }));
+  return database
+    .prepare(sql)
+    .all(transferCategoryId)
+    .map((row) => ({
+      date: formatDateCell(row.occurred_at),
+      settled: formatBooleanCell(row.settled),
+      amount: formatAmountFromCents(row.amount_cents),
+      category: row.category,
+      category_type: row.category_type,
+      account: row.account,
+      description: row.description ?? '',
+    }));
 }
 
 function selectTransferSheetRows(database) {
@@ -128,23 +123,31 @@ function selectTransferSheetRows(database) {
       t.id ASC
   `;
 
-  return database.prepare(sql).all().map((row) => ({
-    date: formatDateCell(row.occurred_at),
-    settled: formatBooleanCell(row.settled),
-    sender_account: row.sender_account,
-    receiver_account: row.receiver_account,
-    amount: formatAmountFromCents(row.amount_cents),
-    description: row.description ?? '',
-  }));
+  return database
+    .prepare(sql)
+    .all()
+    .map((row) => ({
+      date: formatDateCell(row.occurred_at),
+      settled: formatBooleanCell(row.settled),
+      sender_account: row.sender_account,
+      receiver_account: row.receiver_account,
+      amount: formatAmountFromCents(row.amount_cents),
+      description: row.description ?? '',
+    }));
 }
 
 function selectAccountSheetRows(database) {
-  return selectRows(database, 'accounts', {}, {
-    orderBy: [
-      { column: 'name', direction: 'ASC' },
-      { column: 'id', direction: 'ASC' },
-    ],
-  }).map((row) => ({
+  return selectRows(
+    database,
+    'accounts',
+    {},
+    {
+      orderBy: [
+        { column: 'name', direction: 'ASC' },
+        { column: 'id', direction: 'ASC' },
+      ],
+    },
+  ).map((row) => ({
     account: row.name,
     type: row.type,
     archived: formatBooleanCell(row.archived),
@@ -152,12 +155,17 @@ function selectAccountSheetRows(database) {
 }
 
 function selectCategorySheetRows(database) {
-  return selectRows(database, 'categories', {}, {
-    orderBy: [
-      { column: 'name', direction: 'ASC' },
-      { column: 'id', direction: 'ASC' },
-    ],
-  }).map((row) => ({
+  return selectRows(
+    database,
+    'categories',
+    {},
+    {
+      orderBy: [
+        { column: 'name', direction: 'ASC' },
+        { column: 'id', direction: 'ASC' },
+      ],
+    },
+  ).map((row) => ({
     category: row.name,
     type: row.type,
     archived: formatBooleanCell(row.archived),

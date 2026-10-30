@@ -1,6 +1,14 @@
 import { MediaMatcher } from '@angular/cdk/layout';
 import { isPlatformBrowser, DOCUMENT } from '@angular/common';
-import { DestroyRef, Injectable, PLATFORM_ID, computed, effect, inject, signal } from '@angular/core';
+import {
+  DestroyRef,
+  Injectable,
+  PLATFORM_ID,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 
 import type { ThemePreference } from '@/config/local-preferences.config';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
@@ -20,7 +28,8 @@ export class ZardDarkMode {
   private readonly destroyRef = inject(DestroyRef);
   private readonly localPreferencesService = inject(LocalPreferencesService);
 
-  private handleThemeChange = (event: MediaQueryListEvent) => this.updateThemeMode(event.matches, EDarkModes.SYSTEM);
+  private handleThemeChange = (event: MediaQueryListEvent) =>
+    this.updateThemeMode(event.matches, EDarkModes.SYSTEM);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly themeSignal = signal<DarkModeOptions>(EDarkModes.SYSTEM);
   private _query?: MediaQueryList;
@@ -118,7 +127,9 @@ export class ZardDarkMode {
       return false;
     }
 
-    return currentTheme === EDarkModes.DARK || (currentTheme === EDarkModes.SYSTEM && this.query.matches);
+    return (
+      currentTheme === EDarkModes.DARK || (currentTheme === EDarkModes.SYSTEM && this.query.matches)
+    );
   }
 
   private handleSystemChanges(addListener = true): void {

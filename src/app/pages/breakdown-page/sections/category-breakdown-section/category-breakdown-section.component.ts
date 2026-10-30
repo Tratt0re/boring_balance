@@ -17,7 +17,13 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
-import { AppBarChartComponent, AppLineChartComponent, resolveChartCssColor, type AppBarChartSeries, type AppLineChartSeries } from '@/components/charts';
+import {
+  AppBarChartComponent,
+  AppLineChartComponent,
+  resolveChartCssColor,
+  type AppBarChartSeries,
+  type AppLineChartSeries,
+} from '@/components/charts';
 import { DEFAULT_VISUAL_COLOR_KEY } from '@/config/visual-options.config';
 import type { AnalyticsCategoryByMonthRowDto, AnalyticsFilterPayload, CategoryType } from '@/dtos';
 import { AnalyticsService } from '@/services/analytics.service';
@@ -120,7 +126,10 @@ function formatMonthLabel(monthKey: string, locale?: string): string {
 }
 
 function resolveVisualColorHex(colorKey: string | null | undefined): string {
-  const fallbackColor = resolveChartCssColor(`--${DEFAULT_VISUAL_COLOR_KEY}`, resolveChartCssColor('--muted-foreground', '#9ca3af'));
+  const fallbackColor = resolveChartCssColor(
+    `--${DEFAULT_VISUAL_COLOR_KEY}`,
+    resolveChartCssColor('--muted-foreground', '#9ca3af'),
+  );
   if (typeof colorKey !== 'string' || colorKey.trim().length === 0) {
     return fallbackColor;
   }
@@ -137,7 +146,13 @@ function parseMonthIndexFromMonthKey(monthKey: string, targetYear: number): numb
   const [yearText, monthText] = monthKey.split('-');
   const year = Number.parseInt(yearText ?? '', 10);
   const month = Number.parseInt(monthText ?? '', 10);
-  if (!Number.isInteger(year) || year !== targetYear || !Number.isInteger(month) || month < 1 || month > 12) {
+  if (
+    !Number.isInteger(year) ||
+    year !== targetYear ||
+    !Number.isInteger(month) ||
+    month < 1 ||
+    month > 12
+  ) {
     return null;
   }
 
@@ -179,7 +194,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
   protected readonly averageBaseTotalCents = signal(0);
   protected readonly averageMonthsDivisor = signal(1);
   protected readonly categorySummaryTableStructure = CATEGORY_SUMMARY_TABLE_STRUCTURE;
-  protected readonly categorySummaryTableRows = computed<readonly CategoryBreakdownSummaryTableRow[]>(() =>
+  protected readonly categorySummaryTableRows = computed<
+    readonly CategoryBreakdownSummaryTableRow[]
+  >(() =>
     this.categorySummaries().map((item) => ({
       categoryId: item.categoryId,
       categoryName: item.categoryName,
@@ -190,7 +207,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
     })),
   );
 
-  protected readonly hasData = computed(() => this.categorySummaries().length > 0 && this.yearTotalCents() > 0);
+  protected readonly hasData = computed(
+    () => this.categorySummaries().length > 0 && this.yearTotalCents() > 0,
+  );
   protected readonly avgMonthlyCents = computed(() => {
     const divisor = Math.max(1, this.averageMonthsDivisor());
     return this.averageBaseTotalCents() / divisor;
@@ -199,7 +218,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
     this.isSmallScreen() ? MONTHLY_TREND_CHART_HEIGHT_MOBILE : MONTHLY_TREND_CHART_HEIGHT_DESKTOP,
   );
   protected readonly monthlyByCategoryChartHeight = computed(() =>
-    this.isSmallScreen() ? MONTHLY_BY_CATEGORY_CHART_HEIGHT_MOBILE : MONTHLY_BY_CATEGORY_CHART_HEIGHT_DESKTOP,
+    this.isSmallScreen()
+      ? MONTHLY_BY_CATEGORY_CHART_HEIGHT_MOBILE
+      : MONTHLY_BY_CATEGORY_CHART_HEIGHT_DESKTOP,
   );
   protected readonly sectionLabelKey = computed(() =>
     this.categoryType() === 'expense'
@@ -303,7 +324,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
       ]);
 
       this.categoryColorHexById = new Map(
-        categories.map((category) => [category.id, resolveVisualColorHex(category.colorKey)] as const),
+        categories.map(
+          (category) => [category.id, resolveVisualColorHex(category.colorKey)] as const,
+        ),
       );
       this.categoryIconById = new Map(
         categories.map((category) => [category.id, category.icon ?? null] as const),
@@ -319,15 +342,21 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
       this.categorySummaries.set([]);
       this.yearTotalCents.set(0);
       this.averageBaseTotalCents.set(0);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading analytics.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading analytics.',
+      );
     } finally {
       this.isLoading.set(false);
     }
   }
 
   private initializeLocalizedPlaceholders(): void {
-    const monthKeys = Array.from({ length: MONTHS_IN_YEAR }, (_, index) => toMonthKey(this.year(), index));
-    const monthLabels = monthKeys.map((monthKey) => formatMonthLabel(monthKey, this.resolveLocale()));
+    const monthKeys = Array.from({ length: MONTHS_IN_YEAR }, (_, index) =>
+      toMonthKey(this.year(), index),
+    );
+    const monthLabels = monthKeys.map((monthKey) =>
+      formatMonthLabel(monthKey, this.resolveLocale()),
+    );
 
     this.monthlyLabels.set(monthLabels);
     this.monthlyTrendSeries.set([
@@ -420,18 +449,23 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
 
         return (valueCents / monthTotalCents) * 100;
       }),
-      tooltipValueTextByIndex: bucket.monthlyTotalsCents.map((valueCents) => this.formatCurrencyFromCents(valueCents)),
+      tooltipValueTextByIndex: bucket.monthlyTotalsCents.map((valueCents) =>
+        this.formatCurrencyFromCents(valueCents),
+      ),
       color: this.categoryColorHexById.get(bucket.categoryId),
     }));
 
-    const categorySummaries: readonly CategoryBreakdownSummaryItem[] = categoryBuckets.map((bucket) => ({
-      categoryId: bucket.categoryId,
-      categoryName: this.translateCategoryName(bucket.rawCategoryName),
-      totalCents: bucket.totalCents,
-      averageMonthlyCents: this.resolveAverageBaseTotalCents(bucket.monthlyTotalsCents) / averageMonthsDivisor,
-      icon: this.categoryIconById.get(bucket.categoryId) ?? null,
-      colorHex: this.categoryColorHexById.get(bucket.categoryId) ?? null,
-    }));
+    const categorySummaries: readonly CategoryBreakdownSummaryItem[] = categoryBuckets.map(
+      (bucket) => ({
+        categoryId: bucket.categoryId,
+        categoryName: this.translateCategoryName(bucket.rawCategoryName),
+        totalCents: bucket.totalCents,
+        averageMonthlyCents:
+          this.resolveAverageBaseTotalCents(bucket.monthlyTotalsCents) / averageMonthsDivisor,
+        icon: this.categoryIconById.get(bucket.categoryId) ?? null,
+        colorHex: this.categoryColorHexById.get(bucket.categoryId) ?? null,
+      }),
+    );
 
     const yearTotalCents = totalByMonthCents.reduce((sum, valueCents) => sum + valueCents, 0);
 
@@ -471,10 +505,16 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
 
   private resolveAverageBaseTotalCents(monthlyTotalsCents: readonly number[]): number {
     if (!this.shouldUseElapsedMonthsAverage()) {
-      return monthlyTotalsCents.reduce((sum, totalCents) => sum + Math.max(0, Number(totalCents ?? 0)), 0);
+      return monthlyTotalsCents.reduce(
+        (sum, totalCents) => sum + Math.max(0, Number(totalCents ?? 0)),
+        0,
+      );
     }
 
-    const lastIncludedMonthIndex = Math.min(MONTHS_IN_YEAR - 1, this.currentDateReference.getMonth());
+    const lastIncludedMonthIndex = Math.min(
+      MONTHS_IN_YEAR - 1,
+      this.currentDateReference.getMonth(),
+    );
     let totalCents = 0;
 
     for (let monthIndex = 0; monthIndex <= lastIncludedMonthIndex; monthIndex += 1) {
@@ -485,7 +525,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
   }
 
   private shouldUseElapsedMonthsAverage(): boolean {
-    return this.useElapsedMonthsAverage() && this.year() === this.currentDateReference.getFullYear();
+    return (
+      this.useElapsedMonthsAverage() && this.year() === this.currentDateReference.getFullYear()
+    );
   }
 
   private resolveLocale(): string | undefined {

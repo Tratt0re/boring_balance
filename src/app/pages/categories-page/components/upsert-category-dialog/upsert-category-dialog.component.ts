@@ -3,7 +3,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { APP_COLOR_OPTIONS, APP_ICON_OPTIONS, normalizeColorKey, normalizeIconKey } from '@/config/visual-options.config';
+import {
+  APP_COLOR_OPTIONS,
+  APP_ICON_OPTIONS,
+  normalizeColorKey,
+  normalizeIconKey,
+} from '@/config/visual-options.config';
 import type { CategoryCreateDto, CategoryType, CategoryUpdateDto } from '@/dtos';
 import { normalizeNullableString, normalizeRequiredString } from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
@@ -35,7 +40,13 @@ export interface UpsertCategoryDialogData {
 
 @Component({
   selector: 'app-upsert-category-dialog',
-  imports: [ReactiveFormsModule, TranslatePipe, ZardInputDirective, ZardComboboxComponent, ...ZardSelectImports],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+    ZardInputDirective,
+    ZardComboboxComponent,
+    ...ZardSelectImports,
+  ],
   templateUrl: './upsert-category-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -53,7 +64,9 @@ export class UpsertCategoryDialogComponent {
     description: new FormControl(this.initialCategory?.description ?? '', { nonNullable: true }),
     colorKey: new FormControl(this.initialCategory?.colorKey ?? '', { nonNullable: true }),
     icon: new FormControl<string | null>(this.initialCategory?.icon ?? null),
-    type: new FormControl<CategoryType | ''>(this.initialCategory?.type ?? '', { nonNullable: true }),
+    type: new FormControl<CategoryType | ''>(this.initialCategory?.type ?? '', {
+      nonNullable: true,
+    }),
   });
 
   protected readonly submitAttempted = signal(false);
@@ -125,7 +138,9 @@ export class UpsertCategoryDialogComponent {
     }));
   }
 
-  private collectNormalizedChanges(invalidFormErrorKey: string): CategoryUpdateDto['changes'] | null {
+  private collectNormalizedChanges(
+    invalidFormErrorKey: string,
+  ): CategoryUpdateDto['changes'] | null {
     this.submitAttempted.set(true);
     this.form.markAllAsTouched();
 

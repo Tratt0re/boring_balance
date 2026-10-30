@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -32,7 +41,11 @@ import { AccountsService } from '@/services/accounts.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { TransactionsService } from '@/services/transactions.service';
-import { ToolbarContextService, type ToolbarAction, type ToolbarItemNavigation } from '@/services/toolbar-context.service';
+import {
+  ToolbarContextService,
+  type ToolbarAction,
+  type ToolbarItemNavigation,
+} from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -172,7 +185,7 @@ const TRANSFER_TABLE_COLUMNS: readonly TableDataItem[] = [
     columnKey: 'description',
     type: 'string',
     sortable: true,
-    maxWidth: TRANSFER_COLUMN_WIDTH.description
+    maxWidth: TRANSFER_COLUMN_WIDTH.description,
   },
 ] as const;
 
@@ -225,7 +238,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   protected readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
-  protected readonly pageCount = computed(() => Math.max(1, Math.ceil(this.total() / this.pageSize())));
+  protected readonly pageCount = computed(() =>
+    Math.max(1, Math.ceil(this.total() / this.pageSize())),
+  );
   protected readonly isPlanItemContext = computed(() => this.planItemId() !== null);
   protected readonly isAccountContext = computed(() => this.accountId() !== null);
   private readonly isEmbeddedContext = computed(
@@ -275,7 +290,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       return '';
     }
 
-    return this.accountCount() < 2 ? 'accounts.table.actions.add' : 'transactions.transfers.table.actions.add';
+    return this.accountCount() < 2
+      ? 'accounts.table.actions.add'
+      : 'transactions.transfers.table.actions.add';
   });
   protected readonly rows = computed<readonly TransferTableRow[]>(() =>
     this.transfers().map((transfer) => this.toTransferRow(transfer)),
@@ -725,10 +742,8 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       [TRANSFER_FILTER_FIELD.dateTo]: filters.dateTo,
       [TRANSFER_FILTER_FIELD.amountFrom]:
         filters.amountFrom === null ? null : `${filters.amountFrom}`,
-      [TRANSFER_FILTER_FIELD.amountTo]:
-        filters.amountTo === null ? null : `${filters.amountTo}`,
-      [TRANSFER_FILTER_FIELD.settled]:
-        filters.settled === null ? null : `${filters.settled}`,
+      [TRANSFER_FILTER_FIELD.amountTo]: filters.amountTo === null ? null : `${filters.amountTo}`,
+      [TRANSFER_FILTER_FIELD.settled]: filters.settled === null ? null : `${filters.settled}`,
       [TRANSFER_FILTER_FIELD.accountId]: filters.accountIds.map((id) => `${id}`),
     };
   }
@@ -762,9 +777,12 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     const amountFrom = filters.amountFrom ?? undefined;
     const amountTo = filters.amountTo ?? undefined;
     const settled = filters.settled === null ? undefined : filters.settled;
-    const accounts = accountId === undefined
-      ? (filters.accountIds.length > 0 ? [...filters.accountIds] : undefined)
-      : [accountId];
+    const accounts =
+      accountId === undefined
+        ? filters.accountIds.length > 0
+          ? [...filters.accountIds]
+          : undefined
+        : [accountId];
     const hasFilters =
       planItemId !== undefined ||
       dateFrom !== undefined ||
@@ -820,7 +838,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
 
       const activeAccounts = accounts.filter((account) => !account.archived);
       const archivedLabel = this.translateService.instant('common.labels.archived');
-      const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
+      const accountNameById = new Map(
+        accounts.map((account) => [account.id, account.name] as const),
+      );
       const accountIconById = new Map(
         accounts.map((account) => [account.id, resolveIconByValue(account.icon)] as const),
       );
@@ -862,7 +882,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       this.accountNameById.set(new Map());
       this.accountIconById.set(new Map());
       this.accountColorHexById.set(new Map());
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transfers.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading transfers.',
+      );
       console.error('[transfers-table-section] Failed to load transfers:', error);
     } finally {
       this.isLoading.set(false);
@@ -872,14 +894,18 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   private async reloadTransfersPage(): Promise<void> {
     try {
       this.loadError.set(null);
-      const transfers = await this.transactionsService.listTransfers(this.buildListTransfersPayload());
+      const transfers = await this.transactionsService.listTransfers(
+        this.buildListTransfersPayload(),
+      );
 
       this.page.set(transfers.page);
       this.total.set(transfers.total);
       this.transfers.set(transfers.rows);
       this.persistTableState();
     } catch (error) {
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transfers.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading transfers.',
+      );
       console.error('[transfers-table-section] Failed to reload transfers:', error);
     }
   }
@@ -1048,7 +1074,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
     const transfer = row as TransferTableRow;
     let isUpdatingTransfer = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransferDialogComponent, UpsertTransferDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransferDialogComponent,
+      UpsertTransferDialogData
+    >({
       zTitle: this.translateService.instant('transactions.transfers.dialog.edit.title'),
       zDescription: this.translateService.instant('transactions.transfers.dialog.edit.description'),
       zContent: UpsertTransferDialogComponent,
@@ -1072,7 +1101,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
       zOkText: this.translateService.instant('transactions.transfers.dialog.edit.actions.save'),
-      zCancelText: this.translateService.instant('transactions.transfers.dialog.edit.actions.cancel'),
+      zCancelText: this.translateService.instant(
+        'transactions.transfers.dialog.edit.actions.cancel',
+      ),
       zOkIcon: 'pencil',
       zOnOk: (dialogContent) => {
         if (isUpdatingTransfer) {
@@ -1085,11 +1116,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         }
 
         isUpdatingTransfer = true;
-        void this
-          .updateTransfer(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isUpdatingTransfer = false;
-          });
+        void this.updateTransfer(payload, dialogContent, dialogRef).finally(() => {
+          isUpdatingTransfer = false;
+        });
         return false;
       },
     });
@@ -1102,7 +1131,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zTitle: this.translateService.instant('transactions.transfers.deleteAlert.title'),
       zDescription: this.translateService.instant('transactions.transfers.deleteAlert.description'),
       zOkText: this.translateService.instant('transactions.transfers.deleteAlert.actions.delete'),
-      zCancelText: this.translateService.instant('transactions.transfers.deleteAlert.actions.cancel'),
+      zCancelText: this.translateService.instant(
+        'transactions.transfers.deleteAlert.actions.cancel',
+      ),
       zOkDestructive: true,
       zMaskClosable: true,
       zClosable: true,
@@ -1115,7 +1146,10 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
   private openCreateTransferDialog(): void {
     let isCreatingTransfer = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransferDialogComponent, UpsertTransferDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransferDialogComponent,
+      UpsertTransferDialogData
+    >({
       zTitle: this.translateService.instant('transactions.transfers.dialog.add.title'),
       zDescription: this.translateService.instant('transactions.transfers.dialog.add.description'),
       zContent: UpsertTransferDialogComponent,
@@ -1126,7 +1160,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
       zWidth: 'min(96vw, 720px)',
       zMaskClosable: true,
       zOkText: this.translateService.instant('transactions.transfers.dialog.add.actions.create'),
-      zCancelText: this.translateService.instant('transactions.transfers.dialog.add.actions.cancel'),
+      zCancelText: this.translateService.instant(
+        'transactions.transfers.dialog.add.actions.cancel',
+      ),
       zOkIcon: 'plus',
       zOnOk: (dialogContent) => {
         if (isCreatingTransfer) {
@@ -1139,11 +1175,9 @@ export class TransfersTableSectionComponent implements OnInit, OnDestroy {
         }
 
         isCreatingTransfer = true;
-        void this
-          .createTransfer(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingTransfer = false;
-          });
+        void this.createTransfer(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingTransfer = false;
+        });
         return false;
       },
     });

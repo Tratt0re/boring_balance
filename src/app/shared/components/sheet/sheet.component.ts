@@ -67,7 +67,12 @@ export class ZardSheetOptions<T, U> {
   selector: 'z-sheet',
   imports: [OverlayModule, PortalModule, A11yModule, ZardButtonComponent, ZardIconComponent],
   template: `
-    <div cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
+    <div
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+      tabindex="-1"
+      class="flex h-full min-h-0 flex-col"
+    >
       @if (config.zClosable || config.zClosable === undefined) {
         <button
           type="button"
@@ -85,12 +90,20 @@ export class ZardSheetOptions<T, U> {
       @if (config.zTitle || config.zDescription) {
         <header data-slot="sheet-header" class="flex flex-col gap-1.5 p-4">
           @if (config.zTitle) {
-            <h4 data-testid="z-title" data-slot="sheet-title" class="text-lg leading-none font-semibold tracking-tight">
+            <h4
+              data-testid="z-title"
+              data-slot="sheet-title"
+              class="text-lg leading-none font-semibold tracking-tight"
+            >
               {{ config.zTitle }}
             </h4>
 
             @if (config.zDescription) {
-              <p data-testid="z-description" data-slot="sheet-description" class="text-muted-foreground text-sm">
+              <p
+                data-testid="z-description"
+                data-slot="sheet-description"
+                class="text-muted-foreground text-sm"
+              >
                 {{ config.zDescription }}
               </p>
             }
@@ -102,7 +115,11 @@ export class ZardSheetOptions<T, U> {
         <ng-template cdkPortalOutlet />
 
         @if (isStringContent) {
-          <div data-testid="z-content" data-slot="sheet-content" [innerHTML]="config.zContent"></div>
+          <div
+            data-testid="z-content"
+            data-slot="sheet-content"
+            [innerHTML]="config.zContent"
+          ></div>
         }
       </main>
 

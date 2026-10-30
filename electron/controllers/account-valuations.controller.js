@@ -61,9 +61,18 @@ function list(payload) {
     defaultPageSize: DEFAULT_PAGE_SIZE,
     maxPageSize: MAX_PAGE_SIZE,
   });
-  const { limit: _l, offset: _o, ...listOptions } = { ...options, orderBy: 'valued_at', orderDirection: 'DESC' };
+  const {
+    limit: _l,
+    offset: _o,
+    ...listOptions
+  } = { ...options, orderBy: 'valued_at', orderDirection: 'DESC' };
 
-  return executeWhereOptionsListQuery(accountValuationsModel, { where, listOptions, pagination, all });
+  return executeWhereOptionsListQuery(accountValuationsModel, {
+    where,
+    listOptions,
+    pagination,
+    all,
+  });
 }
 
 function update(payload) {

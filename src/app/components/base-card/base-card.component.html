@@ -8,7 +8,11 @@
 
       @let description = zDescription();
       @if (description) {
-        <div class="text-muted-foreground text-sm" [id]="descriptionId()" data-slot="card-description">
+        <div
+          class="text-muted-foreground text-sm"
+          [id]="descriptionId()"
+          data-slot="card-description"
+        >
           <ng-container *zStringTemplateOutlet="description">{{ description }}</ng-container>
         </div>
       }

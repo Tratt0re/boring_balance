@@ -27,7 +27,9 @@ describe('DataSectionComponent settings problem notice', () => {
     });
     const translate = TestBed.inject(TranslateService);
     translate.setTranslation('en', {
-      settings: { data: { settings_problem: { kept_as: 'Kept as {{file}}', not_moved: 'Not moved' } } },
+      settings: {
+        data: { settings_problem: { kept_as: 'Kept as {{file}}', not_moved: 'Not moved' } },
+      },
     });
     translate.use('en');
     const fixture = TestBed.createComponent(DataSectionComponent);

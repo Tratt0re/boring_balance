@@ -1,5 +1,10 @@
 <section class="flex flex-col gap-3">
-  @if (title() || description() || visibleActiveFilters().length > 0 || visibleTableActions().length > 0) {
+  @if (
+    title() ||
+    description() ||
+    visibleActiveFilters().length > 0 ||
+    visibleTableActions().length > 0
+  ) {
     <header class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
       @if (title() || description() || visibleActiveFilters().length > 0) {
         <div class="flex min-w-0 flex-1 flex-col gap-1">
@@ -107,7 +112,9 @@
                   [zNoLabelSpacing]="true"
                   [zChecked]="allVisibleRowsSelected()"
                   [zDisabled]="sortedRows().length === 0"
-                  [class]="partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''"
+                  [class]="
+                    partiallySelectedVisibleRows() && !allVisibleRowsSelected() ? 'opacity-70' : ''
+                  "
                   (zCheckedChange)="onToggleAllRowsChange($event)"
                 >
                   <span class="sr-only">Select all rows</span>
@@ -174,7 +181,11 @@
         <tbody z-table-body>
           @if (sortedRows().length > 0) {
             @for (row of sortedRows(); track rowTrackKey($index, row)) {
-              <tr z-table-row [class]="rowClassName(row)" [attr.data-state]="isRowSelected(row) ? 'selected' : null">
+              <tr
+                z-table-row
+                [class]="rowClassName(row)"
+                [attr.data-state]="isRowSelected(row) ? 'selected' : null"
+              >
                 @if (selectable()) {
                   <td z-table-cell class="w-10">
                     <z-checkbox
@@ -211,7 +222,9 @@
                 @for (column of columns(); track column.columnKey) {
                   <td z-table-cell [class]="columnBodyCellClasses(column)">
                     @if (isEditableColumn(column)) {
-                      <div class="group flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary">
+                      <div
+                        class="group flex flex-col gap-1 rounded-sm px-1 py-0.5 transition-shadow focus-within:ring-1 focus-within:ring-inset focus-within:ring-primary"
+                      >
                         @switch (column.editableType) {
                           @case ('checkbox') {
                             <z-checkbox
@@ -246,14 +259,21 @@
                                     ></span>
                                   }
                                   @if (selectedOption.icon; as optionIcon) {
-                                    <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                    <z-icon
+                                      [zType]="optionIcon"
+                                      class="size-3.5 shrink-0 text-primary opacity-70"
+                                    />
                                   }
                                   @if (shouldShowEditableSelectLabel(column)) {
-                                    <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                    <span class="truncate">{{
+                                      getEditableOptionLabel(selectedOption)
+                                    }}</span>
                                   }
                                 </span>
                               } @else {
-                                <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                                <span class="text-sm">{{
+                                  getEditableSelectReadonlyValue(row, column)
+                                }}</span>
                               }
                             } @else {
                               <z-select
@@ -262,8 +282,12 @@
                                 [zValue]="getEditableSelectValue(row, column)"
                                 [zShowSelectedLabel]="shouldShowEditableSelectLabel(column)"
                                 [zDisabled]="isEditableDisabled(column, row)"
-                                [zPlaceholder]="column.placeholder ? (column.placeholder | translate) : ''"
-                                (zSelectionChange)="onEditableSelectValueChange($event, row, column)"
+                                [zPlaceholder]="
+                                  column.placeholder ? (column.placeholder | translate) : ''
+                                "
+                                (zSelectionChange)="
+                                  onEditableSelectValueChange($event, row, column)
+                                "
                               >
                                 @for (option of column.options ?? []; track option.value) {
                                   <z-select-item
@@ -288,14 +312,21 @@
                                     ></span>
                                   }
                                   @if (selectedOption.icon; as optionIcon) {
-                                    <z-icon [zType]="optionIcon" class="size-3.5 shrink-0 text-primary opacity-70" />
+                                    <z-icon
+                                      [zType]="optionIcon"
+                                      class="size-3.5 shrink-0 text-primary opacity-70"
+                                    />
                                   }
                                   @if (shouldShowEditableSelectLabel(column)) {
-                                    <span class="truncate">{{ getEditableOptionLabel(selectedOption) }}</span>
+                                    <span class="truncate">{{
+                                      getEditableOptionLabel(selectedOption)
+                                    }}</span>
                                   }
                                 </span>
                               } @else {
-                                <span class="text-sm">{{ getEditableSelectReadonlyValue(row, column) }}</span>
+                                <span class="text-sm">{{
+                                  getEditableSelectReadonlyValue(row, column)
+                                }}</span>
                               }
                             } @else {
                               <z-combobox
@@ -305,7 +336,9 @@
                                 [zChevronClass]="editablePickerIconClass()"
                                 [value]="getEditableComboboxValue(row, column)"
                                 [options]="getEditableComboboxOptions(column)"
-                                [placeholder]="column.placeholder ? (column.placeholder | translate) : ''"
+                                [placeholder]="
+                                  column.placeholder ? (column.placeholder | translate) : ''
+                                "
                                 [disabled]="isEditableDisabled(column, row)"
                                 (zValueChange)="onEditableComboboxValueChange($event, row, column)"
                               />
@@ -314,7 +347,9 @@
 
                           @case ('date') {
                             @if (isEditableDisabled(column, row)) {
-                              <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                              <span class="text-sm">{{
+                                formatEditableReadonlyValue(row, column)
+                              }}</span>
                             } @else {
                               <z-date-picker
                                 zCalendarIconClass="text-primary opacity-70"
@@ -323,7 +358,11 @@
                                 [zBorderless]="true"
                                 [zPaddingless]="true"
                                 [disabled]="isEditableDisabled(column, row)"
-                                [placeholder]="column.placeholder ? (column.placeholder | translate) : ('Pick a date' | translate)"
+                                [placeholder]="
+                                  column.placeholder
+                                    ? (column.placeholder | translate)
+                                    : ('Pick a date' | translate)
+                                "
                                 (dateChange)="onEditableDateChange($event, row, column)"
                               />
                             }
@@ -331,7 +370,9 @@
 
                           @default {
                             @if (isEditableDisabled(column, row)) {
-                              <span class="text-sm">{{ formatEditableReadonlyValue(row, column) }}</span>
+                              <span class="text-sm">{{
+                                formatEditableReadonlyValue(row, column)
+                              }}</span>
                             } @else {
                               <div class="relative">
                                 <input
@@ -341,7 +382,9 @@
                                   [type]="getEditableInputType(column)"
                                   [value]="getEditableInputValue(row, column)"
                                   [zStatus]="getEditableError(row, column) ? 'error' : undefined"
-                                  [attr.placeholder]="column.placeholder ? (column.placeholder | translate) : null"
+                                  [attr.placeholder]="
+                                    column.placeholder ? (column.placeholder | translate) : null
+                                  "
                                   [attr.aria-label]="column.columnName | translate"
                                   (input)="onEditableTextInput($event, row, column)"
                                   (keydown.enter)="onEditableTextEnter($event, row, column)"
@@ -383,7 +426,11 @@
                               [attr.style]="badgeIconInlineStyle(row, column)"
                             />
                           }
-                          <span [class]="(column.badge?.colorMode ?? 'badge') === 'icon' ? 'truncate' : ''">
+                          <span
+                            [class]="
+                              (column.badge?.colorMode ?? 'badge') === 'icon' ? 'truncate' : ''
+                            "
+                          >
                             {{ formatCellValue(row, column) }}
                           </span>
                         </z-badge>
@@ -401,7 +448,9 @@
                           <z-icon
                             [zType]="cellIcon"
                             class="size-3.5 shrink-0 text-(--app-data-table-cell-icon-color) opacity-80"
-                            [style.--app-data-table-cell-icon-color]="cellIconColor(row, column) ?? 'var(--color-primary)'"
+                            [style.--app-data-table-cell-icon-color]="
+                              cellIconColor(row, column) ?? 'var(--color-primary)'
+                            "
                           />
                           <span class="truncate">{{ formatCellValue(row, column) }}</span>
                         </span>
@@ -435,7 +484,11 @@
             }
           } @else if (showEmpty()) {
             <tr z-table-row>
-              <td z-table-cell [attr.colspan]="visibleColumnCount()" class="py-6 text-center text-muted-foreground">
+              <td
+                z-table-cell
+                [attr.colspan]="visibleColumnCount()"
+                class="py-6 text-center text-muted-foreground"
+              >
                 <div class="flex flex-col items-center justify-center gap-3">
                   <p>{{ emptyMessage() | translate }}</p>
                   @if (showEmptyAction()) {

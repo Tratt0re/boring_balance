@@ -10,11 +10,7 @@ import type { ActivityTransferRow } from './activity-row.types';
 
 @Component({
   selector: 'app-activity-transfer-row',
-  imports: [
-    ZardIconComponent,
-    ZardSwitchComponent,
-    ...ZardTooltipImports,
-  ],
+  imports: [ZardIconComponent, ZardSwitchComponent, ...ZardTooltipImports],
   templateUrl: './activity-transfer-row.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

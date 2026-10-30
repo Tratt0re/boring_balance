@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -9,8 +16,15 @@ import { applyThemeTransition } from '@/shared/utils/theme-transition';
 import { AppBrandIconComponent } from '@/components/brand-icon/brand-icon.component';
 
 import { OnboardingWelcomeComponent } from './steps/onboarding-welcome.component';
-import { OnboardingPreferencesComponent, type PreferencesData } from './steps/onboarding-preferences.component';
-import { OnboardingStartComponent, type StartData, type StartMode } from './steps/onboarding-start.component';
+import {
+  OnboardingPreferencesComponent,
+  type PreferencesData,
+} from './steps/onboarding-preferences.component';
+import {
+  OnboardingStartComponent,
+  type StartData,
+  type StartMode,
+} from './steps/onboarding-start.component';
 import { OnboardingConfirmComponent } from './steps/onboarding-confirm.component';
 import type { ThemePreference } from '@/config/local-preferences.config';
 
@@ -43,7 +57,9 @@ interface OnboardingState {
 
           @if (currentStep() > 1) {
             <p class="mb-6 text-sm text-muted-foreground" aria-live="polite">
-              {{ 'onboarding.step_counter' | translate: { current: currentStep(), total: totalSteps } }}
+              {{
+                'onboarding.step_counter' | translate: { current: currentStep(), total: totalSteps }
+              }}
             </p>
           }
 
@@ -66,10 +82,7 @@ interface OnboardingState {
               />
             }
             @if (currentStep() === 4) {
-              <app-onboarding-confirm
-                [startMode]="state().startMode"
-                (advance)="onComplete()"
-              />
+              <app-onboarding-confirm [startMode]="state().startMode" (advance)="onComplete()" />
             }
           </div>
         </div>

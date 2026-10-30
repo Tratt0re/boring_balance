@@ -16,7 +16,11 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
-import { type AppPieChartItem, AppPieChartComponent, resolveChartCssColor } from '@/components/charts';
+import {
+  type AppPieChartItem,
+  AppPieChartComponent,
+  resolveChartCssColor,
+} from '@/components/charts';
 import { DEFAULT_VISUAL_COLOR_KEY } from '@/config/visual-options.config';
 import type { AnalyticsNetWorthByAccountResponse } from '@/dtos';
 import { AccountsService } from '@/services/accounts.service';
@@ -142,18 +146,23 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
       const useValuation = this.localPreferencesService.dashboardUseValuationPreference();
       const [netWorthResponse, accounts] = await Promise.all([
         this.analyticsService.netWorthByAccount({ useValuation }),
-        this.accountsService.listAll({
-          where: {
-            archived: 0,
-          },
-          options: {
-            orderBy: 'id',
-            orderDirection: 'ASC',
-          },
-        }).catch((error) => {
-          console.warn('[overview-allocation-card] Failed to load account colors for allocation chart:', error);
-          return [];
-        }),
+        this.accountsService
+          .listAll({
+            where: {
+              archived: 0,
+            },
+            options: {
+              orderBy: 'id',
+              orderDirection: 'ASC',
+            },
+          })
+          .catch((error) => {
+            console.warn(
+              '[overview-allocation-card] Failed to load account colors for allocation chart:',
+              error,
+            );
+            return [];
+          }),
       ]);
 
       this.accountCount.set(accounts.length);
@@ -168,7 +177,9 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
       this.accountColorHexById = new Map();
       this.netWorthResponseCache = null;
       this.distributionPieItems.set([]);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading allocation.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading allocation.',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -188,13 +199,12 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
       .map((row) => {
         const netWorthLedgerCents = Number(row.net_worth_cents ?? 0);
         const valuedCents = row.net_worth_valued_cents;
-        const netWorthValuedCents = valuedCents === null || valuedCents === undefined
-          ? null
-          : Number(valuedCents);
+        const netWorthValuedCents =
+          valuedCents === null || valuedCents === undefined ? null : Number(valuedCents);
         const netWorthCents = useValuedMode
-          ? (netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
-              ? netWorthValuedCents
-              : netWorthLedgerCents)
+          ? netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
+            ? netWorthValuedCents
+            : netWorthLedgerCents
           : netWorthLedgerCents;
         const absoluteCents = Math.abs(netWorthCents);
 
@@ -204,15 +214,19 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
           accountType: String(row.account_type ?? ''),
           netWorthCents,
           netWorthLedgerCents,
-          netWorthValuedCents: netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
-            ? netWorthValuedCents
-            : null,
+          netWorthValuedCents:
+            netWorthValuedCents !== null && Number.isFinite(netWorthValuedCents)
+              ? netWorthValuedCents
+              : null,
           absoluteCents,
         };
       })
       .filter((entry) => entry.absoluteCents > 0);
 
-    const totalAbsoluteCents = distributionEntries.reduce((total, entry) => total + entry.absoluteCents, 0);
+    const totalAbsoluteCents = distributionEntries.reduce(
+      (total, entry) => total + entry.absoluteCents,
+      0,
+    );
     if (totalAbsoluteCents <= 0) {
       this.distributionPieItems.set([]);
       return;
@@ -224,10 +238,14 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
       : NET_WORTH_PIE_OTHERS_THRESHOLD;
     const shouldGroupSmallSegments = this.groupSmallSegments();
     const majorEntries = shouldGroupSmallSegments
-      ? distributionEntries.filter((entry) => entry.absoluteCents / totalAbsoluteCents >= groupingThreshold)
+      ? distributionEntries.filter(
+          (entry) => entry.absoluteCents / totalAbsoluteCents >= groupingThreshold,
+        )
       : distributionEntries;
     const minorEntries = shouldGroupSmallSegments
-      ? distributionEntries.filter((entry) => entry.absoluteCents / totalAbsoluteCents < groupingThreshold)
+      ? distributionEntries.filter(
+          (entry) => entry.absoluteCents / totalAbsoluteCents < groupingThreshold,
+        )
       : [];
 
     const distributionPieItems: AppPieChartItem[] = majorEntries.map((entry) => ({
@@ -239,11 +257,20 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
     }));
 
     if (minorEntries.length > 0) {
-      const othersAbsoluteCents = minorEntries.reduce((total, entry) => total + entry.absoluteCents, 0);
+      const othersAbsoluteCents = minorEntries.reduce(
+        (total, entry) => total + entry.absoluteCents,
+        0,
+      );
       const tooltipDetails = minorEntries
         .slice()
-        .sort((left, right) => right.absoluteCents - left.absoluteCents || left.accountName.localeCompare(right.accountName))
-        .map((entry) => `• ${entry.accountName}: ${this.formatCurrencyFromCents(entry.netWorthCents)}`);
+        .sort(
+          (left, right) =>
+            right.absoluteCents - left.absoluteCents ||
+            left.accountName.localeCompare(right.accountName),
+        )
+        .map(
+          (entry) => `• ${entry.accountName}: ${this.formatCurrencyFromCents(entry.netWorthCents)}`,
+        );
 
       distributionPieItems.push({
         name: this.translate('overview.pie.others'),
@@ -262,8 +289,13 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
     return this.numberFormatService.formatCurrency(amount);
   }
 
-  private buildValuationTooltipDetails(entry: NetWorthDistributionEntry): readonly string[] | undefined {
-    if (!this.isValuationTooltipAccountType(entry.accountType) || entry.netWorthValuedCents === null) {
+  private buildValuationTooltipDetails(
+    entry: NetWorthDistributionEntry,
+  ): readonly string[] | undefined {
+    if (
+      !this.isValuationTooltipAccountType(entry.accountType) ||
+      entry.netWorthValuedCents === null
+    ) {
       return undefined;
     }
 

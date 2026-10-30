@@ -60,8 +60,12 @@ export class Sidebar {
   protected readonly bottomMenuSections = computed(() =>
     this.menuSections().filter((section) => section.placement === 'bottom'),
   );
-  protected readonly isSmallScreenCollapsed = computed(() => this.isSmallScreen() && this.sidebarCollapsed());
-  protected readonly shouldTrapFocus = computed(() => this.isSmallScreen() && !this.sidebarCollapsed());
+  protected readonly isSmallScreenCollapsed = computed(
+    () => this.isSmallScreen() && this.sidebarCollapsed(),
+  );
+  protected readonly shouldTrapFocus = computed(
+    () => this.isSmallScreen() && !this.sidebarCollapsed(),
+  );
 
   readonly sidebarCollapsedChange = output<boolean>();
 

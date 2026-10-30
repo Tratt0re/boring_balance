@@ -35,11 +35,7 @@ const INVESTMENT_ACCOUNT_TYPES = new Set(['brokerage', 'crypto']);
 
 @Component({
   selector: 'app-overview-net-worth-card',
-  imports: [
-    AppBaseCardComponent,
-    TranslatePipe,
-    ZardLoaderComponent,
-  ],
+  imports: [AppBaseCardComponent, TranslatePipe, ZardLoaderComponent],
   templateUrl: './overview-net-worth-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -56,15 +52,17 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   protected readonly loadError = signal<string | null>(null);
   protected readonly totalNetWorthCents = signal(0);
   protected readonly netWorthMode = signal<'valued' | 'ledger'>('ledger');
-  protected readonly snapshotRecency = signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
+  protected readonly snapshotRecency =
+    signal<AnalyticsNetWorthSnapshotsDto>(EMPTY_SNAPSHOT_RECENCY);
   protected readonly totalLiquidAssetsCents = signal(0);
   protected readonly totalInvestmentsCents = signal(0);
   protected readonly totalReceivablesCents = signal(0);
   protected readonly totalPayablesCents = signal(0);
-  protected readonly showSnapshotAsOfCaption = computed(() =>
-    this.netWorthMode() === 'valued'
-    && this.snapshotRecency().hasSnapshots
-    && this.snapshotRecency().daysSinceLatestSnapshot !== null,
+  protected readonly showSnapshotAsOfCaption = computed(
+    () =>
+      this.netWorthMode() === 'valued' &&
+      this.snapshotRecency().hasSnapshots &&
+      this.snapshotRecency().daysSinceLatestSnapshot !== null,
   );
   protected readonly totalAfterReceivablesPayablesCents = computed(
     () => this.totalNetWorthCents() + this.totalReceivablesCents() - this.totalPayablesCents(),
@@ -83,7 +81,10 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const yearChange = changes['year'];
     const monthIndexChange = changes['monthIndex'];
-    if ((yearChange && !yearChange.firstChange) || (monthIndexChange && !monthIndexChange.firstChange)) {
+    if (
+      (yearChange && !yearChange.firstChange) ||
+      (monthIndexChange && !monthIndexChange.firstChange)
+    ) {
       void this.loadData();
     }
   }
@@ -115,7 +116,9 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       ]);
 
       this.applyNetWorthResponse(netWorthResponse);
-      this.totalReceivablesCents.set(Number(receivablesPayablesResponse.totals?.receivables_cents ?? 0));
+      this.totalReceivablesCents.set(
+        Number(receivablesPayablesResponse.totals?.receivables_cents ?? 0),
+      );
       this.totalPayablesCents.set(Number(receivablesPayablesResponse.totals?.payables_cents ?? 0));
     } catch (error) {
       console.error('[overview-net-worth-card] Failed to load net worth card data:', error);
@@ -128,7 +131,9 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       this.totalInvestmentsCents.set(0);
       this.totalReceivablesCents.set(0);
       this.totalPayablesCents.set(0);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading summary cards.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading summary cards.',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -152,27 +157,37 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       INVESTMENT_ACCOUNT_TYPES,
       useValuedBalances,
     );
-    const liquidAssetsCents = Number(netWorthResponse.liquidAssetsCents ?? liquidAssetsCentsFallback);
+    const liquidAssetsCents = Number(
+      netWorthResponse.liquidAssetsCents ?? liquidAssetsCentsFallback,
+    );
     const investmentsCents = Number(netWorthResponse.investmentsCents ?? investmentsCentsFallback);
     const snapshots = netWorthResponse.snapshots ?? EMPTY_SNAPSHOT_RECENCY;
-    const normalizedDaysSinceLatestSnapshot = snapshots.daysSinceLatestSnapshot === null
-      ? null
-      : Number(snapshots.daysSinceLatestSnapshot);
-    this.totalNetWorthCents.set(Number.isFinite(totalNetWorthCents) ? totalNetWorthCents : totalNetWorthFromRowsCents);
+    const normalizedDaysSinceLatestSnapshot =
+      snapshots.daysSinceLatestSnapshot === null ? null : Number(snapshots.daysSinceLatestSnapshot);
+    this.totalNetWorthCents.set(
+      Number.isFinite(totalNetWorthCents) ? totalNetWorthCents : totalNetWorthFromRowsCents,
+    );
     this.netWorthMode.set(netWorthMode);
     this.netWorthModeChange.emit(netWorthMode);
     const normalizedSnapshotRecency: AnalyticsNetWorthSnapshotsDto = {
       hasSnapshots: snapshots.hasSnapshots === true,
-      latestSnapshotAtMs: snapshots.latestSnapshotAtMs === null ? null : Number(snapshots.latestSnapshotAtMs),
-      daysSinceLatestSnapshot: normalizedDaysSinceLatestSnapshot !== null && Number.isFinite(normalizedDaysSinceLatestSnapshot)
-        ? normalizedDaysSinceLatestSnapshot
-        : null,
+      latestSnapshotAtMs:
+        snapshots.latestSnapshotAtMs === null ? null : Number(snapshots.latestSnapshotAtMs),
+      daysSinceLatestSnapshot:
+        normalizedDaysSinceLatestSnapshot !== null &&
+        Number.isFinite(normalizedDaysSinceLatestSnapshot)
+          ? normalizedDaysSinceLatestSnapshot
+          : null,
       isOutdated: snapshots.isOutdated === true,
     };
     this.snapshotRecency.set(normalizedSnapshotRecency);
     this.snapshotsChange.emit(normalizedSnapshotRecency);
-    this.totalLiquidAssetsCents.set(Number.isFinite(liquidAssetsCents) ? liquidAssetsCents : liquidAssetsCentsFallback);
-    this.totalInvestmentsCents.set(Number.isFinite(investmentsCents) ? investmentsCents : investmentsCentsFallback);
+    this.totalLiquidAssetsCents.set(
+      Number.isFinite(liquidAssetsCents) ? liquidAssetsCents : liquidAssetsCentsFallback,
+    );
+    this.totalInvestmentsCents.set(
+      Number.isFinite(investmentsCents) ? investmentsCents : investmentsCentsFallback,
+    );
   }
 
   private sumRowsByAccountTypes(
@@ -186,12 +201,12 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
       }
 
       const ledgerCents = Number(row.net_worth_cents ?? 0);
-      const valuedCents = row.net_worth_valued_cents === null || row.net_worth_valued_cents === undefined
-        ? ledgerCents
-        : Number(row.net_worth_valued_cents);
-      const effectiveCents = useValuedBalances && Number.isFinite(valuedCents)
-        ? valuedCents
-        : ledgerCents;
+      const valuedCents =
+        row.net_worth_valued_cents === null || row.net_worth_valued_cents === undefined
+          ? ledgerCents
+          : Number(row.net_worth_valued_cents);
+      const effectiveCents =
+        useValuedBalances && Number.isFinite(valuedCents) ? valuedCents : ledgerCents;
 
       return totalCents + (Number.isFinite(effectiveCents) ? effectiveCents : 0);
     }, 0);

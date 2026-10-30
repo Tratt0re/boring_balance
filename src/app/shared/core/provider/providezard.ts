@@ -1,4 +1,9 @@
-import { makeEnvironmentProviders, type EnvironmentProviders, inject, provideAppInitializer } from '@angular/core';
+import {
+  makeEnvironmentProviders,
+  type EnvironmentProviders,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { EVENT_MANAGER_PLUGINS } from '@angular/platform-browser';
 
 import { LocalPreferencesService } from '@/services/local-preferences.service';

@@ -7,11 +7,17 @@
       </div>
     </div>
   } @else if (loadError(); as loadError) {
-    <div class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive" [class.mt-2]="showCard()">
+    <div
+      class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+      [class.mt-2]="showCard()"
+    >
       {{ 'overview.cards.moneyFlowSankey.loadFailedWithError' | translate: { error: loadError } }}
     </div>
   } @else if (links().length === 0) {
-    <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground" [class.mt-2]="showCard()">
+    <div
+      class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
+      [class.mt-2]="showCard()"
+    >
       {{ 'overview.cards.moneyFlowSankey.empty' | translate }}
     </div>
   } @else {
@@ -39,7 +45,9 @@
   <app-base-card
     [style.height.%]="100"
     [zTitle]="'overview.cards.moneyFlowSankey.title' | translate"
-    [zDescription]="'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }"
+    [zDescription]="
+      'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }
+    "
   >
     <ng-container [ngTemplateOutlet]="cardContent"></ng-container>
   </app-base-card>

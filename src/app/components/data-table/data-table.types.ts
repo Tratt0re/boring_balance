@@ -2,7 +2,8 @@ import type { ZardBadgeShapeVariants, ZardBadgeTypeVariants } from '@/shared/com
 import type { ZardButtonTypeVariants } from '@/shared/components/button';
 import type { ZardIcon } from '@/shared/components/icon';
 
-export type TableCellType = 'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
+export type TableCellType =
+  'string' | 'number' | 'currency' | 'date' | 'datetime' | 'boolean' | 'badge';
 export type TableCellAlign = 'left' | 'center' | 'right';
 export type TableActionColumnPosition = 'start' | 'end';
 export type TableSortDirection = 'asc' | 'desc';

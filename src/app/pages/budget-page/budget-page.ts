@@ -12,10 +12,7 @@ import { toast } from 'ngx-sonner';
 import { AppBaseCardComponent } from '@/components/base-card';
 import { AppBarChartComponent, type AppBarChartSeries } from '@/components/charts';
 import { AppDataTableComponent, type EditableOptionItem } from '@/components/data-table';
-import {
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
+import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type {
   AnalyticsBudgetVsExpensesByCategoryByYearResponse,
   AnalyticsBudgetVsExpensesByCategoryByYearRowDto,
@@ -90,7 +87,9 @@ export class BudgetPage implements OnInit, OnDestroy {
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly pageCount = computed(() => computePageCount(this.total(), this.pageSize()));
-  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
+  protected readonly currencyCode = computed(() =>
+    this.localPreferencesService.currencyPreference(),
+  );
   protected readonly budgetTableStructure = createBudgetTableStructure(
     (row) => this.onEditBudget(row),
     (row) => this.onDeleteBudget(row),
@@ -102,7 +101,9 @@ export class BudgetPage implements OnInit, OnDestroy {
       label: String(this.currentCalendarYear),
     },
   ]);
-  protected readonly analysisRows = signal<readonly AnalyticsBudgetVsExpensesByCategoryByYearRowDto[]>([]);
+  protected readonly analysisRows = signal<
+    readonly AnalyticsBudgetVsExpensesByCategoryByYearRowDto[]
+  >([]);
   protected readonly analysisTotals = signal<BudgetAnalysisTotals>({
     budget_amount_cents: 0,
     expenses_total_cents: 0,
@@ -138,7 +139,9 @@ export class BudgetPage implements OnInit, OnDestroy {
       },
     ] as const;
   });
-  protected readonly analysisAxisTooltipDetailsByIndex = computed<readonly (readonly string[] | undefined)[]>(() => {
+  protected readonly analysisAxisTooltipDetailsByIndex = computed<
+    readonly (readonly string[] | undefined)[]
+  >(() => {
     const label = this.translateService.instant('budgets.analysis.metrics.availablePercent');
 
     return this.analysisRows().map((row) => {
@@ -272,7 +275,9 @@ export class BudgetPage implements OnInit, OnDestroy {
   private onAnalysisYearChange(value: string): void {
     const nextYear = Number.parseInt(value, 10);
     const yearOptions = this.analysisYearOptions();
-    const isAllowedYear = yearOptions.some((option) => Number.parseInt(option.value, 10) === nextYear);
+    const isAllowedYear = yearOptions.some(
+      (option) => Number.parseInt(option.value, 10) === nextYear,
+    );
 
     if (!Number.isInteger(nextYear) || !isAllowedYear || nextYear === this.analysisYear()) {
       return;
@@ -292,11 +297,13 @@ export class BudgetPage implements OnInit, OnDestroy {
   }
 
   private applyAnalysisYearOptions(yearsInput: readonly number[]): void {
-    const years = Array.from(new Set(
-      yearsInput
-        .map((year) => Number(year))
-        .filter((year) => Number.isInteger(year) && year >= MIN_YEAR && year <= MAX_YEAR),
-    )).sort((left, right) => right - left);
+    const years = Array.from(
+      new Set(
+        yearsInput
+          .map((year) => Number(year))
+          .filter((year) => Number.isInteger(year) && year >= MIN_YEAR && year <= MAX_YEAR),
+      ),
+    ).sort((left, right) => right - left);
 
     if (years.length === 0) {
       years.push(this.currentCalendarYear);
@@ -425,18 +432,20 @@ export class BudgetPage implements OnInit, OnDestroy {
             orderDirection: 'ASC',
           },
         }),
-        this.budgetsService.listAll({
-          where: {
-            archived: 0,
-          },
-          options: {
-            orderBy: 'created_at',
-            orderDirection: 'DESC',
-          },
-        }).catch((error) => {
-          console.warn('[budget-page] Failed to preload budget years:', error);
-          return [];
-        }),
+        this.budgetsService
+          .listAll({
+            where: {
+              archived: 0,
+            },
+            options: {
+              orderBy: 'created_at',
+              orderDirection: 'DESC',
+            },
+          })
+          .catch((error) => {
+            console.warn('[budget-page] Failed to preload budget years:', error);
+            return [];
+          }),
       ]);
 
       this.applyCategories(categories);
@@ -449,7 +458,9 @@ export class BudgetPage implements OnInit, OnDestroy {
       this.applyAnalysisYearOptions([this.currentCalendarYear]);
       this.categoryOptions.set([]);
       this.categoryLookupById.clear();
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading budgets.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading budgets.',
+      );
       console.error('[budget-page] Failed to load initial budget data:', error);
     } finally {
       this.isLoading.set(false);
@@ -478,7 +489,9 @@ export class BudgetPage implements OnInit, OnDestroy {
       this.budgets.set([]);
       this.total.set(0);
       this.page.set(1);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading budgets.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading budgets.',
+      );
       console.error('[budget-page] Failed to load budgets:', error);
     } finally {
       this.isLoading.set(false);
@@ -490,9 +503,14 @@ export class BudgetPage implements OnInit, OnDestroy {
 
     let isUpdatingBudget = false;
 
-    const dialogRef = this.dialogService.create<UpsertBudgetDialogComponent, UpsertBudgetDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertBudgetDialogComponent,
+      UpsertBudgetDialogData
+    >({
       zTitle: this.translateService.instant('budgets.dialog.edit.title'),
-      zDescription: this.translateService.instant('budgets.dialog.edit.description', { year: budget.budgetYear }),
+      zDescription: this.translateService.instant('budgets.dialog.edit.description', {
+        year: budget.budgetYear,
+      }),
       zContent: UpsertBudgetDialogComponent,
       zData: {
         categoryOptions: this.categoryOptions(),
@@ -518,11 +536,11 @@ export class BudgetPage implements OnInit, OnDestroy {
         }
 
         isUpdatingBudget = true;
-        void this
-          .updateBudgetFromDialog(budget.id, changes, dialogContent, dialogRef)
-          .finally(() => {
+        void this.updateBudgetFromDialog(budget.id, changes, dialogContent, dialogRef).finally(
+          () => {
             isUpdatingBudget = false;
-          });
+          },
+        );
         return false;
       },
     });
@@ -550,7 +568,10 @@ export class BudgetPage implements OnInit, OnDestroy {
   private openAddBudgetDialog(): void {
     let isCreatingBudget = false;
 
-    const dialogRef = this.dialogService.create<UpsertBudgetDialogComponent, UpsertBudgetDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertBudgetDialogComponent,
+      UpsertBudgetDialogData
+    >({
       zTitle: this.translateService.instant('budgets.dialog.add.title'),
       zDescription: this.translateService.instant('budgets.dialog.add.description', {
         year: this.currentCalendarYear,
@@ -575,11 +596,9 @@ export class BudgetPage implements OnInit, OnDestroy {
         }
 
         isCreatingBudget = true;
-        void this
-          .createBudget(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingBudget = false;
-          });
+        void this.createBudget(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingBudget = false;
+        });
         return false;
       },
     });
@@ -690,7 +709,9 @@ export class BudgetPage implements OnInit, OnDestroy {
         expenses_total_cents: 0,
         delta_cents: 0,
       });
-      this.analysisError.set(error instanceof Error ? error.message : 'Unexpected error while loading budget analysis.');
+      this.analysisError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading budget analysis.',
+      );
       console.error('[budget-page] Failed to load budget analysis:', error);
     } finally {
       if (requestId === this.analysisLoadRequestId) {
@@ -699,7 +720,9 @@ export class BudgetPage implements OnInit, OnDestroy {
     }
   }
 
-  private applyBudgetAnalysisResponse(response: AnalyticsBudgetVsExpensesByCategoryByYearResponse): void {
+  private applyBudgetAnalysisResponse(
+    response: AnalyticsBudgetVsExpensesByCategoryByYearResponse,
+  ): void {
     const normalizedRows = [...(response.rows ?? [])].sort((left, right) =>
       String(left.category_name).localeCompare(String(right.category_name)),
     );
@@ -757,5 +780,4 @@ export class BudgetPage implements OnInit, OnDestroy {
   private toAmount(amountCents: number): number {
     return Number(amountCents ?? 0) / AMOUNT_CENTS_DIVISOR;
   }
-
 }

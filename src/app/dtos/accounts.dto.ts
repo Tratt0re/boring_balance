@@ -41,12 +41,22 @@ export interface AccountCreateDto {
 export interface AccountGetDto extends IdDto<RowId> {}
 
 export interface AccountListDto
-  extends ListQueryDto<
-    Pick<
-      AccountDto,
-      'id' | 'name' | 'type' | 'description' | 'color_key' | 'icon' | 'locked' | 'archived' | 'created_at' | 'updated_at'
-    >
-  >,
+  extends
+    ListQueryDto<
+      Pick<
+        AccountDto,
+        | 'id'
+        | 'name'
+        | 'type'
+        | 'description'
+        | 'color_key'
+        | 'icon'
+        | 'locked'
+        | 'archived'
+        | 'created_at'
+        | 'updated_at'
+      >
+    >,
     PageRequestWithAllDto {}
 
 export interface AccountListResponseDto extends PaginatedResponseDto<AccountDto> {}

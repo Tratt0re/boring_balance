@@ -63,7 +63,13 @@ export class ZardDialogOptions<T, U> {
   selector: 'z-dialog',
   imports: [A11yModule, OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent],
   template: `
-    <div #dialogSurface cdkTrapFocus [cdkTrapFocusAutoCapture]="true" tabindex="-1" class="flex h-full min-h-0 flex-col">
+    <div
+      #dialogSurface
+      cdkTrapFocus
+      [cdkTrapFocusAutoCapture]="true"
+      tabindex="-1"
+      class="flex h-full min-h-0 flex-col"
+    >
       @if (config.zClosable || config.zClosable === undefined) {
         <button
           type="button"
@@ -113,9 +119,17 @@ export class ZardDialogOptions<T, U> {
       </main>
 
       @if (!config.zHideFooter) {
-        <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2">
+        <footer
+          class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2 pt-2"
+        >
           @if (config.zCancelText !== null) {
-            <button type="button" data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
+            <button
+              type="button"
+              data-testid="z-cancel-button"
+              z-button
+              zType="outline"
+              (click)="onCloseClick()"
+            >
               @if (config.zCancelIcon) {
                 <z-icon [zType]="config.zCancelIcon" />
               }
@@ -171,7 +185,7 @@ export class ZardDialogOptions<T, U> {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'classes()',
-    'role': 'dialog',
+    role: 'dialog',
     'aria-modal': 'true',
     '[attr.aria-labelledby]': 'titleId()',
     '[attr.aria-describedby]': 'descriptionId()',
@@ -187,13 +201,19 @@ export class ZardDialogComponent<T, U> extends BasePortalOutlet {
   private readonly instanceId = ++nextDialogInstanceId;
   private readonly previouslyFocusedElement = this.getActiveElement();
 
-  protected readonly classes = computed(() => mergeClasses(dialogVariants(), this.config.zCustomClasses));
+  protected readonly classes = computed(() =>
+    mergeClasses(dialogVariants(), this.config.zCustomClasses),
+  );
   dialogRef?: ZardDialogRef<T>;
 
   protected readonly isStringContent = typeof this.config.zContent === 'string';
-  protected readonly titleId = computed(() => (this.config.zTitle ? `z-dialog-title-${this.instanceId}` : null));
+  protected readonly titleId = computed(() =>
+    this.config.zTitle ? `z-dialog-title-${this.instanceId}` : null,
+  );
   protected readonly descriptionId = computed(() =>
-    this.config.zTitle && this.config.zDescription ? `z-dialog-description-${this.instanceId}` : null,
+    this.config.zTitle && this.config.zDescription
+      ? `z-dialog-description-${this.instanceId}`
+      : null,
   );
 
   readonly dialogSurface = viewChild.required<ElementRef<HTMLElement>>('dialogSurface');

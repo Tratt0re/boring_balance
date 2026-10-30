@@ -17,7 +17,12 @@ import type {
 } from '@/dtos';
 import { amountToCents } from '@/models';
 import { NumberFormatService } from '@/services/number-format.service';
-import { dateToUnixMs, editableOptionsToCombobox, normalizeRequiredString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
+import {
+  dateToUnixMs,
+  editableOptionsToCombobox,
+  normalizeRequiredString,
+  toPositiveInteger,
+} from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -99,18 +104,24 @@ export class UpsertPlanItemDialogComponent {
   protected readonly monthPolicyOptions = PLAN_ITEM_MONTH_POLICY_OPTIONS;
   protected readonly linkedItemsUpdateScopeOptions = PLAN_ITEM_LINKED_ITEMS_UPDATE_SCOPE_OPTIONS;
   protected readonly descriptionMaxLength = PLAN_ITEM_DESCRIPTION_MAX_LENGTH;
-  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.accountOptions,
+    this.translateService,
+  );
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.categoryOptions,
+    this.translateService,
+  );
 
   protected readonly form = new FormGroup({
     title: new FormControl(this.initialPlanItem?.title ?? '', { nonNullable: true }),
-    type: new FormControl<PlanItemType | ''>(this.initialPlanItem?.type ?? 'transaction', { nonNullable: true }),
-    startDate: new FormControl<Date | null>(
-      {
-        value: this.initialPlanItem ? new Date(this.initialPlanItem.startDate) : new Date(),
-        disabled: this.isEditMode,
-      },
-    ),
+    type: new FormControl<PlanItemType | ''>(this.initialPlanItem?.type ?? 'transaction', {
+      nonNullable: true,
+    }),
+    startDate: new FormControl<Date | null>({
+      value: this.initialPlanItem ? new Date(this.initialPlanItem.startDate) : new Date(),
+      disabled: this.isEditMode,
+    }),
     count: new FormControl(
       {
         value: this.initialPlanItem ? `${this.initialPlanItem.count}` : '12',
@@ -142,7 +153,9 @@ export class UpsertPlanItemDialogComponent {
       },
     ),
     settled: new FormControl(this.initialPlanItem?.settled ?? false, { nonNullable: true }),
-    accountId: new FormControl<string | null>(this.initialPlanItem?.accountId ? `${this.initialPlanItem.accountId}` : null),
+    accountId: new FormControl<string | null>(
+      this.initialPlanItem?.accountId ? `${this.initialPlanItem.accountId}` : null,
+    ),
     categoryId: new FormControl<string | null>(
       this.initialPlanItem?.categoryId ? `${this.initialPlanItem.categoryId}` : null,
     ),
@@ -152,9 +165,13 @@ export class UpsertPlanItemDialogComponent {
     toAccountId: new FormControl<string | null>(
       this.initialPlanItem?.toAccountId ? `${this.initialPlanItem.toAccountId}` : null,
     ),
-    amount: new FormControl(this.initialPlanItem ? `${this.initialPlanItem.amount}` : '', { nonNullable: true }),
+    amount: new FormControl(this.initialPlanItem ? `${this.initialPlanItem.amount}` : '', {
+      nonNullable: true,
+    }),
     description: new FormControl(this.initialPlanItem?.description ?? '', { nonNullable: true }),
-    linkedItemsUpdateScope: new FormControl<PlanItemLinkedItemsUpdateScope>('upcoming', { nonNullable: true }),
+    linkedItemsUpdateScope: new FormControl<PlanItemLinkedItemsUpdateScope>('upcoming', {
+      nonNullable: true,
+    }),
     linkedItemsFromDate: new FormControl<Date | null>(new Date(new Date().setHours(0, 0, 0, 0))),
   });
 
@@ -510,7 +527,9 @@ export class UpsertPlanItemDialogComponent {
 
     const baseTemplate = {
       amountCents: amountToCents(amount),
-      description: normalizeTemplateDescription(values.description) || title.slice(0, PLAN_ITEM_DESCRIPTION_MAX_LENGTH),
+      description:
+        normalizeTemplateDescription(values.description) ||
+        title.slice(0, PLAN_ITEM_DESCRIPTION_MAX_LENGTH),
       settled: values.settled,
     } as const;
 
@@ -594,7 +613,10 @@ export class UpsertPlanItemDialogComponent {
     if (this.isTransferTypeSelected()) {
       return (
         getFromAccountError(this.form.controls.fromAccountId.value) !== null ||
-        getToAccountError(this.form.controls.toAccountId.value, this.form.controls.fromAccountId.value) !== null
+        getToAccountError(
+          this.form.controls.toAccountId.value,
+          this.form.controls.fromAccountId.value,
+        ) !== null
       );
     }
 

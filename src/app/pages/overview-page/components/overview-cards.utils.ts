@@ -36,7 +36,10 @@ export function toPercent(part: number, total: number): number {
   return (part / total) * 100;
 }
 
-export function toMonthRangeTimestamps(year: number, monthIndex: number): { from: number; to: number } {
+export function toMonthRangeTimestamps(
+  year: number,
+  monthIndex: number,
+): { from: number; to: number } {
   const from = new Date(year, monthIndex, 1, 0, 0, 0, 0).getTime();
   const to = new Date(year, monthIndex + 1, 0, 23, 59, 59, 999).getTime();
   return { from, to };
@@ -49,7 +52,10 @@ export function toYearRangeTimestamps(year: number): { from: number; to: number 
 }
 
 export function resolveVisualColorHex(colorKey: string | null | undefined): string {
-  const fallbackColor = resolveChartCssColor(`--${DEFAULT_VISUAL_COLOR_KEY}`, resolveChartCssColor('--muted-foreground', '#9ca3af'));
+  const fallbackColor = resolveChartCssColor(
+    `--${DEFAULT_VISUAL_COLOR_KEY}`,
+    resolveChartCssColor('--muted-foreground', '#9ca3af'),
+  );
   if (typeof colorKey !== 'string' || colorKey.trim().length === 0) {
     return fallbackColor;
   }
@@ -71,7 +77,10 @@ export function allocateBucketsToTargetTotalCents<TBucket extends { readonly tot
     return [];
   }
 
-  const rawTotal = positiveBuckets.reduce((sum, bucket) => sum + Math.max(0, Number(bucket.totalCents)), 0);
+  const rawTotal = positiveBuckets.reduce(
+    (sum, bucket) => sum + Math.max(0, Number(bucket.totalCents)),
+    0,
+  );
   if (rawTotal <= 0) {
     return [];
   }
@@ -89,7 +98,8 @@ export function allocateBucketsToTargetTotalCents<TBucket extends { readonly tot
     };
   });
 
-  const remaining = normalizedTarget - allocations.reduce((sum, entry) => sum + entry.totalCents, 0);
+  const remaining =
+    normalizedTarget - allocations.reduce((sum, entry) => sum + entry.totalCents, 0);
   if (remaining > 0) {
     allocations
       .slice()
@@ -116,7 +126,11 @@ export function allocateBucketsToTargetTotalCents<TBucket extends { readonly tot
 }
 
 export function groupMoneyFlowExpenseCategoriesByThreshold(
-  categories: ReadonlyArray<{ categoryId: number | null; categoryName: string; totalCents: number }>,
+  categories: ReadonlyArray<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }>,
   expensesTotalCents: number,
   otherLabel: string,
 ): Array<{
@@ -130,8 +144,16 @@ export function groupMoneyFlowExpenseCategoriesByThreshold(
     return [];
   }
 
-  const majorCategories: Array<{ categoryId: number | null; categoryName: string; totalCents: number }> = [];
-  const minorCategories: Array<{ categoryId: number | null; categoryName: string; totalCents: number }> = [];
+  const majorCategories: Array<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }> = [];
+  const minorCategories: Array<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }> = [];
 
   for (const category of categories) {
     const totalCents = Math.max(0, Number(category.totalCents));
@@ -140,18 +162,29 @@ export function groupMoneyFlowExpenseCategoriesByThreshold(
     }
 
     if (totalCents / normalizedExpensesTotalCents >= MONEY_FLOW_EXPENSE_CATEGORY_GROUP_THRESHOLD) {
-      majorCategories.push({ categoryId: category.categoryId, categoryName: category.categoryName, totalCents });
+      majorCategories.push({
+        categoryId: category.categoryId,
+        categoryName: category.categoryName,
+        totalCents,
+      });
       continue;
     }
 
-    minorCategories.push({ categoryId: category.categoryId, categoryName: category.categoryName, totalCents });
+    minorCategories.push({
+      categoryId: category.categoryId,
+      categoryName: category.categoryName,
+      totalCents,
+    });
   }
 
   if (minorCategories.length === 0) {
     return majorCategories;
   }
 
-  const othersTotalCents = minorCategories.reduce((total, category) => total + category.totalCents, 0);
+  const othersTotalCents = minorCategories.reduce(
+    (total, category) => total + category.totalCents,
+    0,
+  );
   if (othersTotalCents <= 0) {
     return majorCategories;
   }
@@ -164,7 +197,11 @@ export function groupMoneyFlowExpenseCategoriesByThreshold(
       totalCents: othersTotalCents,
       tooltipDetails: minorCategories
         .slice()
-        .sort((left, right) => right.totalCents - left.totalCents || left.categoryName.localeCompare(right.categoryName)),
+        .sort(
+          (left, right) =>
+            right.totalCents - left.totalCents ||
+            left.categoryName.localeCompare(right.categoryName),
+        ),
     },
   ];
 }

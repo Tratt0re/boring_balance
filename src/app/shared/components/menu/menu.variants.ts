@@ -32,7 +32,6 @@ export const menuItemVariants = cva(
   },
 );
 
-
 export const menuLabelVariants = cva(
   'relative flex items-center px-2 py-1.5 text-sm font-medium text-muted-foreground',
   {

@@ -45,7 +45,8 @@ export interface PlanItemTransferTemplateJsonDto {
   readonly settled?: SqliteBoolean;
 }
 
-export type PlanItemTemplateJsonDto = PlanItemTransactionTemplateJsonDto | PlanItemTransferTemplateJsonDto;
+export type PlanItemTemplateJsonDto =
+  PlanItemTransactionTemplateJsonDto | PlanItemTransferTemplateJsonDto;
 
 export interface PlanItemTransactionTemplateJsonInputDto {
   readonly amount_cents: number;
@@ -64,8 +65,7 @@ export interface PlanItemTransferTemplateJsonInputDto {
 }
 
 export type PlanItemTemplateJsonInputDto =
-  | PlanItemTransactionTemplateJsonInputDto
-  | PlanItemTransferTemplateJsonInputDto;
+  PlanItemTransactionTemplateJsonInputDto | PlanItemTransferTemplateJsonInputDto;
 
 export interface PlanItemDto {
   readonly id: RowId;
@@ -130,8 +130,7 @@ export interface PlanItemRemoveDto extends IdDto<RowId> {
   readonly delete_planned_items?: BooleanFlagInput;
 }
 
-export interface PlanItemRunDto extends IdDto<RowId> {
-}
+export interface PlanItemRunDto extends IdDto<RowId> {}
 
 export interface PlanItemDeletePlannedItemsDto extends IdDto<RowId> {}
 
@@ -225,5 +224,3 @@ export type PlanItemRemoveResponse = PlanItemRemoveResponseDto;
 export type PlanItemRunResponse = PlanItemRunResponseDto;
 export type PlanItemDeletePlannedItemsResponse = PlanItemDeletePlannedItemsResponseDto;
 export type PlanItemListResponse = PlanItemListResponseDto;
-
-

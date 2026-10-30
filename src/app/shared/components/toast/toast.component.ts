@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 import { NgxSonnerToaster } from 'ngx-sonner';
@@ -33,9 +39,9 @@ export class ZardToastComponent {
   readonly class = input<ClassValue>('');
   readonly variant = input<ZardToastVariants['variant']>('default');
   readonly theme = input<'light' | 'dark' | 'system'>('system');
-  readonly position = input<'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'>(
-    'bottom-right',
-  );
+  readonly position = input<
+    'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+  >('bottom-right');
 
   readonly richColors = input<boolean>(false);
   readonly expand = input<boolean>(false);

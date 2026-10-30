@@ -19,7 +19,11 @@ import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
 
-import { segmentedItemVariants, segmentedVariants, type ZardSegmentedVariants } from './segmented.variants';
+import {
+  segmentedItemVariants,
+  segmentedVariants,
+  type ZardSegmentedVariants,
+} from './segmented.variants';
 
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
@@ -37,9 +41,7 @@ interface SegmentedActiveIndicatorState {
 @Component({
   selector: 'z-segmented-item',
   standalone: true,
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -159,10 +161,16 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   }
 
   protected readonly classes = computed(() =>
-    mergeClasses(segmentedVariants({ zSize: this.zSize() }), this.zFull() ? 'flex w-full' : '', this.class()),
+    mergeClasses(
+      segmentedVariants({ zSize: this.zSize() }),
+      this.zFull() ? 'flex w-full' : '',
+      this.class(),
+    ),
   );
 
-  protected readonly wrapperClasses = computed(() => (this.zFull() ? 'block w-full' : 'inline-block'));
+  protected readonly wrapperClasses = computed(() =>
+    this.zFull() ? 'block w-full' : 'inline-block',
+  );
 
   protected getItemClasses(value: string): string {
     return mergeClasses(
@@ -179,7 +187,9 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
   }
 
   protected tabIndexFor(value: string): number {
-    return this.activeIndex() >= 0 && this.resolvedOptions()[this.activeIndex()]?.value === value ? 0 : -1;
+    return this.activeIndex() >= 0 && this.resolvedOptions()[this.activeIndex()]?.value === value
+      ? 0
+      : -1;
   }
 
   protected selectOption(value: string) {

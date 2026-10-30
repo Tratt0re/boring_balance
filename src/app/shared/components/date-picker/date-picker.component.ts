@@ -20,10 +20,16 @@ import { map, startWith } from 'rxjs';
 import type { ClassValue } from 'clsx';
 
 import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import type { ZardButtonSizeVariants, ZardButtonTypeVariants } from '@/shared/components/button/button.variants';
+import type {
+  ZardButtonSizeVariants,
+  ZardButtonTypeVariants,
+} from '@/shared/components/button/button.variants';
 import { ZardCalendarComponent } from '@/shared/components/calendar/calendar.component';
 import { ZardIconComponent } from '@/shared/components/icon/icon.component';
-import { ZardPopoverComponent, ZardPopoverDirective } from '@/shared/components/popover/popover.component';
+import {
+  ZardPopoverComponent,
+  ZardPopoverDirective,
+} from '@/shared/components/popover/popover.component';
 import type { ZardPopoverPlacement } from '@/shared/components/popover/popover.component';
 import { ZardIdDirective } from '@/shared/core';
 
@@ -37,7 +43,14 @@ const HEIGHT_BY_SIZE: Record<NonNullable<ZardButtonSizeVariants>, string> = {
 
 @Component({
   selector: 'z-date-picker, [z-date-picker]',
-  imports: [ZardButtonComponent, ZardCalendarComponent, ZardPopoverComponent, ZardPopoverDirective, ZardIconComponent, ZardIdDirective],
+  imports: [
+    ZardButtonComponent,
+    ZardCalendarComponent,
+    ZardPopoverComponent,
+    ZardPopoverDirective,
+    ZardIconComponent,
+    ZardIdDirective,
+  ],
   standalone: true,
   template: `
     <button
@@ -110,9 +123,14 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
   private readonly currentLocale = toSignal(
     this.translateService.onLangChange.pipe(
       map((event) => event.lang),
-      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+      startWith(
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+      ),
     ),
-    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+    {
+      initialValue:
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+    },
   );
 
   readonly calendarTemplate = viewChild.required<TemplateRef<unknown>>('calendarTemplate');

@@ -47,7 +47,10 @@ function toYearRangeTimestamps(year: number): { from: number; to: number } {
 }
 
 function resolveVisualColorHex(colorKey: string | null | undefined): string {
-  const fallbackColor = resolveChartCssColor(`--${DEFAULT_VISUAL_COLOR_KEY}`, resolveChartCssColor('--muted-foreground', '#9ca3af'));
+  const fallbackColor = resolveChartCssColor(
+    `--${DEFAULT_VISUAL_COLOR_KEY}`,
+    resolveChartCssColor('--muted-foreground', '#9ca3af'),
+  );
   if (typeof colorKey !== 'string' || colorKey.trim().length === 0) {
     return fallbackColor;
   }
@@ -56,7 +59,11 @@ function resolveVisualColorHex(colorKey: string | null | undefined): string {
 }
 
 function groupMoneyFlowExpenseCategoriesByThreshold(
-  categories: ReadonlyArray<{ categoryId: number | null; categoryName: string; totalCents: number }>,
+  categories: ReadonlyArray<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }>,
   expensesTotalCents: number,
   otherLabel: string,
 ): Array<{
@@ -70,8 +77,16 @@ function groupMoneyFlowExpenseCategoriesByThreshold(
     return [];
   }
 
-  const majorCategories: Array<{ categoryId: number | null; categoryName: string; totalCents: number }> = [];
-  const minorCategories: Array<{ categoryId: number | null; categoryName: string; totalCents: number }> = [];
+  const majorCategories: Array<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }> = [];
+  const minorCategories: Array<{
+    categoryId: number | null;
+    categoryName: string;
+    totalCents: number;
+  }> = [];
 
   for (const category of categories) {
     const totalCents = Math.max(0, Number(category.totalCents));
@@ -80,18 +95,29 @@ function groupMoneyFlowExpenseCategoriesByThreshold(
     }
 
     if (totalCents / normalizedExpensesTotalCents >= MONEY_FLOW_EXPENSE_CATEGORY_GROUP_THRESHOLD) {
-      majorCategories.push({ categoryId: category.categoryId, categoryName: category.categoryName, totalCents });
+      majorCategories.push({
+        categoryId: category.categoryId,
+        categoryName: category.categoryName,
+        totalCents,
+      });
       continue;
     }
 
-    minorCategories.push({ categoryId: category.categoryId, categoryName: category.categoryName, totalCents });
+    minorCategories.push({
+      categoryId: category.categoryId,
+      categoryName: category.categoryName,
+      totalCents,
+    });
   }
 
   if (minorCategories.length === 0) {
     return majorCategories;
   }
 
-  const othersTotalCents = minorCategories.reduce((total, category) => total + category.totalCents, 0);
+  const othersTotalCents = minorCategories.reduce(
+    (total, category) => total + category.totalCents,
+    0,
+  );
   if (othersTotalCents <= 0) {
     return majorCategories;
   }
@@ -104,19 +130,18 @@ function groupMoneyFlowExpenseCategoriesByThreshold(
       totalCents: othersTotalCents,
       tooltipDetails: minorCategories
         .slice()
-        .sort((left, right) => right.totalCents - left.totalCents || left.categoryName.localeCompare(right.categoryName)),
+        .sort(
+          (left, right) =>
+            right.totalCents - left.totalCents ||
+            left.categoryName.localeCompare(right.categoryName),
+        ),
     },
   ];
 }
 
 @Component({
   selector: 'app-money-flow-breakdown-section',
-  imports: [
-    AppBaseCardComponent,
-    AppSankeyChartComponent,
-    TranslatePipe,
-    ZardLoaderComponent,
-  ],
+  imports: [AppBaseCardComponent, AppSankeyChartComponent, TranslatePipe, ZardLoaderComponent],
   templateUrl: './money-flow-breakdown-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -138,7 +163,9 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
   protected readonly sankeyLinks = signal<readonly AppSankeyChartLink[]>([]);
   protected readonly hasData = computed(() => this.sankeyLinks().length > 0);
   protected readonly sankeyChartHeight = computed(() =>
-    this.isSmallScreen() ? MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE : MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP,
+    this.isSmallScreen()
+      ? MONEY_FLOW_SANKEY_CHART_HEIGHT_MOBILE
+      : MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP,
   );
 
   constructor(
@@ -195,7 +222,9 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
       ]);
 
       this.categoryColorHexById = new Map(
-        categories.map((category) => [category.id, resolveVisualColorHex(category.colorKey)] as const),
+        categories.map(
+          (category) => [category.id, resolveVisualColorHex(category.colorKey)] as const,
+        ),
       );
       this.responseCache = response;
       this.rebuildLocalizedViewModel();
@@ -205,7 +234,11 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
       this.categoryColorHexById = new Map();
       this.sankeyNodes.set([]);
       this.sankeyLinks.set([]);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading money flow analytics.');
+      this.loadError.set(
+        error instanceof Error
+          ? error.message
+          : 'Unexpected error while loading money flow analytics.',
+      );
     } finally {
       this.isLoading.set(false);
     }
@@ -223,9 +256,10 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
     this.sankeyLinks.set(links);
   }
 
-  private buildMoneyFlowSankeyChart(
-    response: AnalyticsMoneyFlowSankeyByMonthResponse,
-  ): { nodes: readonly AppSankeyChartNode[]; links: readonly AppSankeyChartLink[] } {
+  private buildMoneyFlowSankeyChart(response: AnalyticsMoneyFlowSankeyByMonthResponse): {
+    nodes: readonly AppSankeyChartNode[];
+    links: readonly AppSankeyChartLink[];
+  } {
     const incomesLabel = this.translate('overview.cards.moneyFlowSankey.nodes.incomes');
     const expensesLabel = this.translate('overview.cards.moneyFlowSankey.nodes.expenses');
     const savingsLabel = this.translate('overview.cards.moneyFlowSankey.nodes.savings');
@@ -257,21 +291,45 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
     const savingsTotalCents = Math.max(0, Number(totals.savings_cents ?? 0));
     const investmentsTotalCents = Math.max(0, Number(totals.investments_cents ?? 0));
     const cryptoTotalCents = Math.max(0, Number(totals.crypto_cents ?? 0));
-    const rawNetCashflowTotalCents = Number(totals.net_cashflow_cents ?? (incomesTotalCents - expensesTotalCents));
+    const rawNetCashflowTotalCents = Number(
+      totals.net_cashflow_cents ?? incomesTotalCents - expensesTotalCents,
+    );
     const netCashflowTotalCents = Math.max(0, rawNetCashflowTotalCents);
     const incomesToExpensesCents = Math.min(incomesTotalCents, expensesTotalCents);
     const priorBalancesToExpensesCents = Math.max(0, expensesTotalCents - incomesTotalCents);
     const shouldRenderAllocationFlows = this.showAllocationTargets();
-    const allocationTargets = (shouldRenderAllocationFlows
-      ? [
-      { key: 'savings', label: savingsLabel, totalCents: savingsTotalCents, themeColor: 'chart-5' as const },
-      { key: 'investments', label: investmentsLabel, totalCents: investmentsTotalCents, themeColor: 'chart-4' as const },
-      { key: 'crypto', label: cryptoLabel, totalCents: cryptoTotalCents, themeColor: 'chart-7' as const },
-      ]
-      : []
+    const allocationTargets = (
+      shouldRenderAllocationFlows
+        ? [
+            {
+              key: 'savings',
+              label: savingsLabel,
+              totalCents: savingsTotalCents,
+              themeColor: 'chart-5' as const,
+            },
+            {
+              key: 'investments',
+              label: investmentsLabel,
+              totalCents: investmentsTotalCents,
+              themeColor: 'chart-4' as const,
+            },
+            {
+              key: 'crypto',
+              label: cryptoLabel,
+              totalCents: cryptoTotalCents,
+              themeColor: 'chart-7' as const,
+            },
+          ]
+        : []
     ).filter((target) => target.totalCents > 0);
-    const totalAllocationCents = allocationTargets.reduce((sum, target) => sum + target.totalCents, 0);
-    const netCashflowAllocatedToTargetsCents = Math.min(netCashflowTotalCents, totalAllocationCents);
+    const totalAllocationCents = allocationTargets.reduce(
+      (sum, target) => sum + target.totalCents,
+      0,
+    );
+    const netCashflowAllocatedToTargetsCents = Math.min(
+      netCashflowTotalCents,
+      totalAllocationCents,
+    );
     const netCashflowAllocationByTarget = new Map(
       allocateBucketsToTargetTotalCents(
         allocationTargets.map((target) => ({
@@ -289,23 +347,31 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
         })
         .filter((entry) => entry[1] > 0),
     );
-    const priorBalancesToAllocationsCents = Array.from(priorBalancesAllocationByTarget.values()).reduce(
-      (sum, value) => sum + value,
-      0,
-    );
+    const priorBalancesToAllocationsCents = Array.from(
+      priorBalancesAllocationByTarget.values(),
+    ).reduce((sum, value) => sum + value, 0);
     const priorBalancesTotalCents = priorBalancesToExpensesCents + priorBalancesToAllocationsCents;
     const unusedNetCashflowCents = shouldRenderAllocationFlows
       ? Math.max(0, netCashflowTotalCents - netCashflowAllocatedToTargetsCents)
       : 0;
-    const netCashflowTooltipDetails = rawNetCashflowTotalCents < 0
-      ? [
-          `${this.translate('overview.cards.moneyFlowSankey.tooltips.actualNetCashflow')}: ${this.formatCurrencyFromCents(rawNetCashflowTotalCents)}`,
-        ]
-      : undefined;
+    const netCashflowTooltipDetails =
+      rawNetCashflowTotalCents < 0
+        ? [
+            `${this.translate('overview.cards.moneyFlowSankey.tooltips.actualNetCashflow')}: ${this.formatCurrencyFromCents(rawNetCashflowTotalCents)}`,
+          ]
+        : undefined;
 
-    ensureNode({ name: incomesLabel, value: toAmount(incomesTotalCents), themeColor: 'chart-income' });
+    ensureNode({
+      name: incomesLabel,
+      value: toAmount(incomesTotalCents),
+      themeColor: 'chart-income',
+    });
     if (expensesTotalCents > 0) {
-      ensureNode({ name: expensesLabel, value: toAmount(expensesTotalCents), themeColor: 'chart-expense' });
+      ensureNode({
+        name: expensesLabel,
+        value: toAmount(expensesTotalCents),
+        themeColor: 'chart-expense',
+      });
       if (incomesToExpensesCents > 0) {
         addLink(incomesLabel, expensesLabel, toAmount(incomesToExpensesCents));
       }
@@ -322,9 +388,9 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
       });
     }
 
-    const shouldRenderNetCashflowNode = shouldRenderAllocationFlows && (
-      rawNetCashflowTotalCents !== 0 || totalAllocationCents > 0 || unusedNetCashflowCents > 0
-    );
+    const shouldRenderNetCashflowNode =
+      shouldRenderAllocationFlows &&
+      (rawNetCashflowTotalCents !== 0 || totalAllocationCents > 0 || unusedNetCashflowCents > 0);
     if (shouldRenderNetCashflowNode) {
       ensureNode({
         name: netCashflowLabel,
@@ -338,7 +404,11 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
     }
 
     for (const target of allocationTargets) {
-      ensureNode({ name: target.label, value: toAmount(target.totalCents), themeColor: target.themeColor });
+      ensureNode({
+        name: target.label,
+        value: toAmount(target.totalCents),
+        themeColor: target.themeColor,
+      });
 
       const netCashflowContributionCents = netCashflowAllocationByTarget.get(target.key) ?? 0;
       if (netCashflowContributionCents > 0) {
@@ -352,11 +422,19 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
     }
 
     if (unusedNetCashflowCents > 0) {
-      ensureNode({ name: unusedLabel, value: toAmount(unusedNetCashflowCents), themeColor: 'chart-6' });
+      ensureNode({
+        name: unusedLabel,
+        value: toAmount(unusedNetCashflowCents),
+        themeColor: 'chart-6',
+      });
       addLink(netCashflowLabel, unusedLabel, toAmount(unusedNetCashflowCents));
     }
 
-    const positiveExpenseCategories = (response.expense_by_category ?? response.expense_categories ?? [])
+    const positiveExpenseCategories = (
+      response.expense_by_category ??
+      response.expense_categories ??
+      []
+    )
       .map((row) => ({
         categoryId: row.category_id == null ? null : Number(row.category_id),
         categoryName:
@@ -378,12 +456,13 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
         const isOtherExpensesBucket = categoryRow.categoryName === otherExpensesLabel;
         const tooltipDetails = isOtherExpensesBucket
           ? (categoryRow.tooltipDetails ?? []).map(
-              (detail) => `• ${detail.categoryName}: ${this.formatCurrencyFromCents(detail.totalCents)}`,
+              (detail) =>
+                `• ${detail.categoryName}: ${this.formatCurrencyFromCents(detail.totalCents)}`,
             )
           : undefined;
         const categoryColor =
           !isOtherExpensesBucket && categoryRow.categoryId != null
-            ? this.categoryColorHexById.get(categoryRow.categoryId) ?? null
+            ? (this.categoryColorHexById.get(categoryRow.categoryId) ?? null)
             : null;
         ensureNode({
           name: categoryRow.categoryName,

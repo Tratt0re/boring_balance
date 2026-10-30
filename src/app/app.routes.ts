@@ -16,12 +16,15 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadComponent: () => import('./pages/overview-page/overview-page').then((module) => module.OverviewPage),
+        loadComponent: () =>
+          import('./pages/overview-page/overview-page').then((module) => module.OverviewPage),
       },
       {
         path: 'transactions',
         loadComponent: () =>
-          import('./pages/transaction-page/transaction-page').then((module) => module.TransactionPage),
+          import('./pages/transaction-page/transaction-page').then(
+            (module) => module.TransactionPage,
+          ),
       },
       {
         path: 'breakdown',

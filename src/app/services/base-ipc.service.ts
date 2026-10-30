@@ -9,7 +9,9 @@ export abstract class BaseIpcService<TChannel extends APIChannel> {
     const channelKey = this.channel as unknown as `${TChannel}`;
     const channelClient = window.electronAPI?.ipcClient?.[channelKey];
     if (!channelClient) {
-      throw new Error(`Electron IPC channel "${String(this.channel)}" is not available in this environment.`);
+      throw new Error(
+        `Electron IPC channel "${String(this.channel)}" is not available in this environment.`,
+      );
     }
 
     return channelClient;

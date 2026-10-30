@@ -6,7 +6,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateDto, TransactionUpdateDto } from '@/dtos';
 import { NumberFormatService } from '@/services/number-format.service';
-import { dateToUnixMs, editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
+import {
+  dateToUnixMs,
+  editableOptionsToCombobox,
+  normalizeNullableString,
+  toPositiveInteger,
+} from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -56,13 +61,22 @@ export interface UpsertTransactionDialogData {
 export class UpsertTransactionDialogComponent {
   protected readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
-  private readonly data = inject<UpsertTransactionDialogData | null>(Z_MODAL_DATA, { optional: true });
+  private readonly data = inject<UpsertTransactionDialogData | null>(Z_MODAL_DATA, {
+    optional: true,
+  });
   private readonly initialTransaction = this.data?.transaction;
 
-  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.accountOptions,
+    this.translateService,
+  );
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.categoryOptions,
+    this.translateService,
+  );
   protected readonly descriptionMaxLength = TRANSACTION_DESCRIPTION_MAX_LENGTH;
-  protected readonly isAccountFixed = !this.initialTransaction && this.data?.fixedAccountId !== undefined;
+  protected readonly isAccountFixed =
+    !this.initialTransaction && this.data?.fixedAccountId !== undefined;
 
   protected readonly form = new FormGroup({
     occurredAt: new FormControl<Date | null>(
@@ -76,7 +90,9 @@ export class UpsertTransactionDialogComponent {
           ? `${this.data.fixedAccountId}`
           : null,
     ),
-    amount: new FormControl(this.initialTransaction ? `${this.initialTransaction.amount}` : '', { nonNullable: true }),
+    amount: new FormControl(this.initialTransaction ? `${this.initialTransaction.amount}` : '', {
+      nonNullable: true,
+    }),
     categoryId: new FormControl<string | null>(
       this.initialTransaction ? `${this.initialTransaction.categoryId}` : null,
     ),
@@ -242,7 +258,9 @@ export class UpsertTransactionDialogComponent {
   }
 
   private getAccountIdError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.accountRequired' : null;
+    return toPositiveInteger(value) === null
+      ? 'transactions.dialog.add.errors.accountRequired'
+      : null;
   }
 
   private getAmountError(value: string): string | null {
@@ -254,7 +272,9 @@ export class UpsertTransactionDialogComponent {
   }
 
   private getCategoryIdError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'transactions.dialog.add.errors.categoryRequired' : null;
+    return toPositiveInteger(value) === null
+      ? 'transactions.dialog.add.errors.categoryRequired'
+      : null;
   }
 
   private getDescriptionError(value: string): string | null {

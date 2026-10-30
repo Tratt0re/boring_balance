@@ -1,4 +1,9 @@
-import type { PlanItemDto, PlanItemRuleJsonDto, PlanItemTemplateJsonDto, PlanItemType } from '@/dtos';
+import type {
+  PlanItemDto,
+  PlanItemRuleJsonDto,
+  PlanItemTemplateJsonDto,
+  PlanItemType,
+} from '@/dtos';
 
 import type { RowId, UnixTimestampMilliseconds } from './common.model';
 

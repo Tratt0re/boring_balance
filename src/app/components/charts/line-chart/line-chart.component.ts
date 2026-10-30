@@ -23,14 +23,7 @@ import {
 } from '../chart-theme';
 
 export type AppLineChartPointSymbol =
-  | 'circle'
-  | 'rect'
-  | 'roundRect'
-  | 'triangle'
-  | 'diamond'
-  | 'pin'
-  | 'arrow'
-  | 'none';
+  'circle' | 'rect' | 'roundRect' | 'triangle' | 'diamond' | 'pin' | 'arrow' | 'none';
 
 export interface AppLineChartSeries {
   readonly data: readonly number[];
@@ -87,7 +80,8 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
     this.numberFormatService.currencyFormatStyle();
-    const { background, foreground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
+    const { background, foreground, border, tooltipBackground, tooltipForeground } =
+      resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const tooltipFontFamily = resolveChartTooltipFontFamily();
     const shouldDimOthersOnFocus = this.dimOthersOnFocus();
@@ -112,11 +106,20 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
       const lineWidth = seriesItem.lineWidth ?? 3;
       const stack = seriesItem.stack ?? (isStacked ? this.stackGroup() : undefined);
       const showArea = seriesItem.showArea ?? this.showArea();
-      const lineOpacity = Math.min(Math.max(seriesItem.lineOpacity ?? normalizedDefaultLineOpacity, 0), 1);
-      const pointOpacity = Math.min(Math.max(seriesItem.pointOpacity ?? normalizedDefaultPointOpacity, 0), 1);
+      const lineOpacity = Math.min(
+        Math.max(seriesItem.lineOpacity ?? normalizedDefaultLineOpacity, 0),
+        1,
+      );
+      const pointOpacity = Math.min(
+        Math.max(seriesItem.pointOpacity ?? normalizedDefaultPointOpacity, 0),
+        1,
+      );
       const pointSize = Math.max(1, seriesItem.pointSize ?? normalizedPointSize);
       const pointSymbol = seriesItem.pointSymbol ?? this.pointSymbol();
-      const pointBorderWidth = Math.max(0, seriesItem.pointBorderWidth ?? normalizedPointBorderWidth);
+      const pointBorderWidth = Math.max(
+        0,
+        seriesItem.pointBorderWidth ?? normalizedPointBorderWidth,
+      );
       const shouldBlendPointBorder = seriesItem.blendPointBorder ?? shouldBlendPointBorderByDefault;
 
       const color = resolveChartSeriesColor({
@@ -175,7 +178,9 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
               borderColor: pointBorderWidth > 0 ? pointBorderColor : undefined,
             },
             areaStyle:
-              shouldDimAreaOnFocus && areaStyle ? { opacity: areaOpacity * normalizedBlurOpacity } : undefined,
+              shouldDimAreaOnFocus && areaStyle
+                ? { opacity: areaOpacity * normalizedBlurOpacity }
+                : undefined,
           }
         : undefined;
 
@@ -293,7 +298,9 @@ export class AppLineChartComponent implements OnInit, OnDestroy {
     }
 
     const normalizedValue = value.trim();
-    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
+    return normalizedValue.length > 0
+      ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue)
+      : null;
   }
 
   private formatCurrencyValue(value: unknown, currencyCode: string): string {

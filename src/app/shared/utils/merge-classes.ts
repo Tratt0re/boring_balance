@@ -12,4 +12,3 @@ export function transform(value: boolean | string): boolean {
 }
 
 export const noopFn = () => void 0;
-

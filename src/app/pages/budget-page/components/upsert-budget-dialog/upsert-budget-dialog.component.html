@@ -1,4 +1,9 @@
-<form class="grid gap-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+<form
+  class="grid gap-4 sm:grid-cols-2"
+  [formGroup]="form"
+  novalidate
+  (submit)="$event.preventDefault()"
+>
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="budget-category">
       {{ 'common.labels.category' | translate }}
@@ -52,7 +57,9 @@
       [attr.aria-invalid]="visibleDescriptionErrorKey() ? 'true' : null"
       [attr.placeholder]="'common.placeholders.optionalDescription' | translate"
     ></textarea>
-    <p class="mt-1 text-xs text-muted-foreground">{{ descriptionLength() }}/{{ descriptionMaxLength }}</p>
+    <p class="mt-1 text-xs text-muted-foreground">
+      {{ descriptionLength() }}/{{ descriptionMaxLength }}
+    </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }

@@ -12,10 +12,7 @@ export interface CompareYearMonthSelectOption {
 
 @Component({
   selector: 'app-compare-year-month-select',
-  imports: [
-    TranslatePipe,
-    ...ZardSelectImports,
-  ],
+  imports: [TranslatePipe, ...ZardSelectImports],
   templateUrl: './compare-year-month-select.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -49,7 +46,11 @@ export class CompareYearMonthSelectComponent {
     }
 
     const nextMonthIndex = Number.parseInt(value, 10);
-    if (!Number.isInteger(nextMonthIndex) || nextMonthIndex < 0 || nextMonthIndex >= MONTHS_IN_YEAR) {
+    if (
+      !Number.isInteger(nextMonthIndex) ||
+      nextMonthIndex < 0 ||
+      nextMonthIndex >= MONTHS_IN_YEAR
+    ) {
       return;
     }
 

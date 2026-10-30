@@ -75,7 +75,8 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
     // Recompute options when document theme classes/attributes change.
     this.themeVersion();
     this.numberFormatService.currencyFormatStyle();
-    const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } = resolveChartSurfaceColors();
+    const { foreground, mutedForeground, border, tooltipBackground, tooltipForeground } =
+      resolveChartSurfaceColors();
     const fontFamily = resolveChartFontFamily();
     const tooltipFontFamily = resolveChartTooltipFontFamily();
     const normalizedLineOpacity = Math.min(Math.max(this.lineOpacity(), 0), 1);
@@ -203,7 +204,9 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
           };
         }) => {
           const marker = params?.marker ?? '';
-          const details = Array.isArray(params?.data?.tooltipDetails) ? params.data.tooltipDetails : [];
+          const details = Array.isArray(params?.data?.tooltipDetails)
+            ? params.data.tooltipDetails
+            : [];
 
           if (params?.dataType === 'edge') {
             const source = params?.data?.source ?? '';
@@ -300,7 +303,9 @@ export class AppSankeyChartComponent implements OnInit, OnDestroy {
     }
 
     const normalizedValue = value.trim();
-    return normalizedValue.length > 0 ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue) : null;
+    return normalizedValue.length > 0
+      ? this.numberFormatService.normalizeCurrencySymbol(normalizedValue)
+      : null;
   }
 
   private formatCurrencyValue(value: number, currencyCode: string): string {

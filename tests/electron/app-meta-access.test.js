@@ -27,9 +27,9 @@ describe('the renderer has no way to reach app_meta', () => {
   it('registers no handler for it', () => {
     const { IPC_HANDLERS } = loadElectronModule('electron/ipc/handlers.js');
 
-    expect(Object.keys(IPC_HANDLERS).filter((channel) => /app-meta|app_meta/i.test(channel))).toEqual(
-      [],
-    );
+    expect(
+      Object.keys(IPC_HANDLERS).filter((channel) => /app-meta|app_meta/i.test(channel)),
+    ).toEqual([]);
   });
 
   it('has no controller for it', () => {

@@ -87,7 +87,11 @@ const SHEET_DEFINITIONS = Object.freeze({
 });
 
 function ensureDatabase(database) {
-  if (!database || typeof database.prepare !== 'function' || typeof database.transaction !== 'function') {
+  if (
+    !database ||
+    typeof database.prepare !== 'function' ||
+    typeof database.transaction !== 'function'
+  ) {
     throw new Error('database must be an initialized better-sqlite3 Database instance.');
   }
 
@@ -160,7 +164,9 @@ function resolveFieldColumns(headerMap, headerAliases) {
 
 function resolveWorksheetStructure(workbook, sheetName, sheetDefinition, errors) {
   const matchingWorksheets = workbook.worksheets.filter((worksheet) =>
-    sheetDefinition.aliases.some((alias) => normalizeLookupKey(alias) === normalizeLookupKey(worksheet.name)),
+    sheetDefinition.aliases.some(
+      (alias) => normalizeLookupKey(alias) === normalizeLookupKey(worksheet.name),
+    ),
   );
 
   if (matchingWorksheets.length === 0) {
@@ -279,7 +285,9 @@ function getCellText(cellInfo) {
 }
 
 function normalizeSafeTextValue(value, options = {}) {
-  const normalizedValue = options.collapseWhitespace ? normalizeWhitespace(value) : normalizeTrimmedString(value);
+  const normalizedValue = options.collapseWhitespace
+    ? normalizeWhitespace(value)
+    : normalizeTrimmedString(value);
 
   if (containsControlCharacters(normalizedValue)) {
     throw new Error('must not contain control characters.');
@@ -455,13 +463,7 @@ function parseDateField(rawRow, sheetName, fieldName, errors) {
     return parseDdMmYyyyToUnixMilliseconds(trimmedValue, `${sheetName}.${fieldName}`);
   } catch (error) {
     errors.push(
-      createImportError(
-        sheetName,
-        rawRow.rowNumber,
-        fieldName,
-        'INVALID_DATE',
-        error.message,
-      ),
+      createImportError(sheetName, rawRow.rowNumber, fieldName, 'INVALID_DATE', error.message),
     );
     return null;
   }
@@ -515,13 +517,7 @@ function parseAmountField(rawRow, sheetName, fieldName, errors, options = {}) {
     return parseDecimalToCents(trimmedValue, `${sheetName}.${fieldName}`, options);
   } catch (error) {
     errors.push(
-      createImportError(
-        sheetName,
-        rawRow.rowNumber,
-        fieldName,
-        'INVALID_AMOUNT',
-        error.message,
-      ),
+      createImportError(sheetName, rawRow.rowNumber, fieldName, 'INVALID_AMOUNT', error.message),
     );
     return null;
   }
@@ -746,7 +742,15 @@ function buildReferenceRegistry(existingIndex, upsertRows) {
   };
 }
 
-function resolveReference(registry, lookupKey, sheetName, rowNumber, columnName, entityLabel, errors) {
+function resolveReference(
+  registry,
+  lookupKey,
+  sheetName,
+  rowNumber,
+  columnName,
+  entityLabel,
+  errors,
+) {
   if (registry.ambiguousExistingKeys.has(lookupKey) && !registry.uniqueEntries.has(lookupKey)) {
     errors.push(
       createImportError(
@@ -844,7 +848,10 @@ function validateEntityUpserts(rawRows, sheetName, allowedTypes, existingIndex, 
     const existingMatches = existingIndex.byLookupKey.get(row.lookupKey) ?? [];
     const existingRow = existingMatches[0] ?? null;
 
-    if (existingRow && normalizeTrimmedString(String(existingRow.type ?? '')).toLocaleLowerCase() !== row.type) {
+    if (
+      existingRow &&
+      normalizeTrimmedString(String(existingRow.type ?? '')).toLocaleLowerCase() !== row.type
+    ) {
       errors.push(
         createImportError(
           sheetName,
@@ -894,9 +901,16 @@ function validateTransactions(rawRows, accountRegistry, categoryRegistry) {
       maxLength: DESCRIPTION_MAX_LENGTH,
     });
     const settled = parseStrictBooleanField(rawRow, 'transactions', 'settled', errors, false);
-    const categoryType = parseEnumField(rawRow, 'transactions', 'category_type', CATEGORY_TYPES, []);
+    const categoryType = parseEnumField(
+      rawRow,
+      'transactions',
+      'category_type',
+      CATEGORY_TYPES,
+      [],
+    );
 
-    const rowHasBlockingValues = date !== null && amountCents !== null && categoryName && accountName;
+    const rowHasBlockingValues =
+      date !== null && amountCents !== null && categoryName && accountName;
     if (!rowHasBlockingValues) {
       return;
     }
@@ -947,7 +961,9 @@ function validateTransactions(rawRows, accountRegistry, categoryRegistry) {
       );
     }
 
-    const rowErrors = errors.some((error) => error.sheet === 'transactions' && error.row === rawRow.rowNumber);
+    const rowErrors = errors.some(
+      (error) => error.sheet === 'transactions' && error.row === rawRow.rowNumber,
+    );
     if (rowErrors) {
       return;
     }
@@ -996,7 +1012,8 @@ function validateTransfers(rawRows, accountRegistry) {
     });
     const settled = parseStrictBooleanField(rawRow, 'transfers', 'settled', errors, false);
 
-    const rowHasBlockingValues = date !== null && amountCents !== null && senderAccountName && receiverAccountName;
+    const rowHasBlockingValues =
+      date !== null && amountCents !== null && senderAccountName && receiverAccountName;
     if (!rowHasBlockingValues) {
       return;
     }
@@ -1036,7 +1053,9 @@ function validateTransfers(rawRows, accountRegistry) {
       errors,
     );
 
-    const rowErrors = errors.some((error) => error.sheet === 'transfers' && error.row === rawRow.rowNumber);
+    const rowErrors = errors.some(
+      (error) => error.sheet === 'transfers' && error.row === rawRow.rowNumber,
+    );
     if (rowErrors) {
       return;
     }
@@ -1079,7 +1098,10 @@ function validateAndNormalize(rows, database = getDatabase()) {
     { allowArchived: true },
   );
   const accountRegistry = buildReferenceRegistry(existingAccounts, accountValidation.rowsToUpsert);
-  const categoryRegistry = buildReferenceRegistry(existingCategories, categoryValidation.rowsToUpsert);
+  const categoryRegistry = buildReferenceRegistry(
+    existingCategories,
+    categoryValidation.rowsToUpsert,
+  );
   const transactionValidation = validateTransactions(
     Array.isArray(rows?.transactions) ? rows.transactions : [],
     accountRegistry,
@@ -1260,15 +1282,21 @@ function executeImport(database, normalizedData, options = {}) {
       const category = categoryLookup.get(transactionDto.category_lookup_key);
 
       if (!account) {
-        throw new Error(`Account not found during transaction import at row ${transactionDto.rowNumber}.`);
+        throw new Error(
+          `Account not found during transaction import at row ${transactionDto.rowNumber}.`,
+        );
       }
 
       if (!category) {
-        throw new Error(`Category not found during transaction import at row ${transactionDto.rowNumber}.`);
+        throw new Error(
+          `Category not found during transaction import at row ${transactionDto.rowNumber}.`,
+        );
       }
 
       if (Number(category.id) === TRANSFER_CATEGORY_ID) {
-        throw new Error(`Transfer category is not allowed in transactions at row ${transactionDto.rowNumber}.`);
+        throw new Error(
+          `Transfer category is not allowed in transactions at row ${transactionDto.rowNumber}.`,
+        );
       }
 
       transactionsModel.create({
@@ -1289,7 +1317,9 @@ function executeImport(database, normalizedData, options = {}) {
       const receiverAccount = accountLookup.get(transferDto.receiver_account_lookup_key);
 
       if (!senderAccount || !receiverAccount) {
-        throw new Error(`Account not found during transfer import at row ${transferDto.rowNumber}.`);
+        throw new Error(
+          `Account not found during transfer import at row ${transferDto.rowNumber}.`,
+        );
       }
 
       if (Number(senderAccount.id) === Number(receiverAccount.id)) {

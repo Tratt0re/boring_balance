@@ -15,9 +15,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
   selector: 'z-menu-label, [z-menu-label]',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

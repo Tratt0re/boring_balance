@@ -32,7 +32,12 @@ interface SelectHost {
   template: `
     @if (isSelected()) {
       <span [class]="iconClasses()">
-        <z-icon zType="check" [zStrokeWidth]="strokeWidth()" aria-hidden="true" data-testid="check-icon" />
+        <z-icon
+          zType="check"
+          [zStrokeWidth]="strokeWidth()"
+          aria-hidden="true"
+          data-testid="check-icon"
+        />
       </span>
     }
     @if (zColorHex(); as colorHex) {
@@ -105,7 +110,9 @@ export class ZardSelectItemComponent {
 
   protected readonly strokeWidth = computed(() => (this.zMode() === 'compact' ? 3 : 2));
 
-  protected readonly isSelected = computed(() => this.select()?.selectedValue().includes(this.zValue()) ?? false);
+  protected readonly isSelected = computed(
+    () => this.select()?.selectedValue().includes(this.zValue()) ?? false,
+  );
 
   setSelectHost(selectHost: SelectHost) {
     this.select.set(selectHost);

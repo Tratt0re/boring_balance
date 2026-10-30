@@ -5,18 +5,22 @@
         {{ sectionLabelKey() | translate }}
       </h2>
       <p class="mt-1 text-sm text-muted-foreground">
-        {{ 'breakdown.sectionYear' | translate : { year: year() } }}
+        {{ 'breakdown.sectionYear' | translate: { year: year() } }}
       </p>
     </div>
 
     <div class="flex flex-col gap-2 lg:min-w-[20rem]">
       <div class="flex items-center justify-between gap-6 text-sm">
         <span class="text-muted-foreground">{{ 'breakdown.metrics.yearTotal' | translate }}</span>
-        <span class="font-semibold money tracking-tight">{{ formatCurrencyFromCents(yearTotalCents()) }}</span>
+        <span class="font-semibold money tracking-tight">{{
+          formatCurrencyFromCents(yearTotalCents())
+        }}</span>
       </div>
       <div class="flex items-center justify-between gap-6 text-sm">
         <span class="text-muted-foreground">{{ 'breakdown.metrics.avgPerMonth' | translate }}</span>
-        <span class="font-semibold money tracking-tight">{{ formatCurrencyFromCents(avgMonthlyCents()) }}</span>
+        <span class="font-semibold money tracking-tight">{{
+          formatCurrencyFromCents(avgMonthlyCents())
+        }}</span>
       </div>
     </div>
   </div>
@@ -30,8 +34,14 @@
         </div>
       </div>
     } @else if (loadError(); as loadErrorMessage) {
-      <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-        {{ 'overview.cards.monthlyTotals.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+      <div
+        role="alert"
+        class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+      >
+        {{
+          'overview.cards.monthlyTotals.loadFailedWithError'
+            | translate: { error: loadErrorMessage }
+        }}
       </div>
     } @else if (!hasData()) {
       <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
@@ -54,7 +64,10 @@
     }
   </app-base-card>
 
-  <app-base-card [zTitle]="monthlyByCategoryCardTitle()" [zDescription]="monthlyByCategoryCardDescription()">
+  <app-base-card
+    [zTitle]="monthlyByCategoryCardTitle()"
+    [zDescription]="monthlyByCategoryCardDescription()"
+  >
     @if (isLoading()) {
       <div class="flex h-96 items-center justify-center">
         <div class="flex flex-col items-center gap-3 text-muted-foreground">
@@ -63,8 +76,14 @@
         </div>
       </div>
     } @else if (loadError(); as loadErrorMessage) {
-      <div role="alert" class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
-        {{ 'overview.cards.monthlyTotals.loadFailedWithError' | translate : { error: loadErrorMessage } }}
+      <div
+        role="alert"
+        class="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+      >
+        {{
+          'overview.cards.monthlyTotals.loadFailedWithError'
+            | translate: { error: loadErrorMessage }
+        }}
       </div>
     } @else if (!hasData()) {
       <div class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground">
@@ -87,7 +106,9 @@
 
       <div class="mt-4 space-y-3">
         <div class="flex items-center justify-between">
-          <p class="text-sm font-medium">{{ 'breakdown.cards.monthlyByCategory.summaryTitle' | translate }}</p>
+          <p class="text-sm font-medium">
+            {{ 'breakdown.cards.monthlyByCategory.summaryTitle' | translate }}
+          </p>
           <p class="text-xs text-muted-foreground">
             {{ categorySummaries().length }}
           </p>

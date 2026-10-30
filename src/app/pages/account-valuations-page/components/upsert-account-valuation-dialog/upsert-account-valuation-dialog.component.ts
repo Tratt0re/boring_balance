@@ -29,7 +29,9 @@ export interface UpsertAccountValuationDialogData {
 })
 export class UpsertAccountValuationDialogComponent {
   protected readonly numberFormatService = inject(NumberFormatService);
-  private readonly data = inject<UpsertAccountValuationDialogData | null>(Z_MODAL_DATA, { optional: true });
+  private readonly data = inject<UpsertAccountValuationDialogData | null>(Z_MODAL_DATA, {
+    optional: true,
+  });
   private readonly initialValuation = this.data?.valuation;
 
   protected readonly form = new FormGroup({
@@ -52,7 +54,9 @@ export class UpsertAccountValuationDialogComponent {
   }
 
   public collectCreatePayload(): AccountValuationCreateDto | null {
-    const values = this.collectNormalizedValues('accountValuations.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues(
+      'accountValuations.dialog.add.errors.fixValidation',
+    );
     if (!values) {
       return null;
     }
@@ -72,7 +76,9 @@ export class UpsertAccountValuationDialogComponent {
   }
 
   public collectUpdateChanges(): AccountValuationUpdateDto['changes'] | null {
-    const values = this.collectNormalizedValues('accountValuations.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues(
+      'accountValuations.dialog.edit.errors.fixValidation',
+    );
     if (!values) {
       return null;
     }
@@ -147,7 +153,9 @@ export class UpsertAccountValuationDialogComponent {
       return 'accountValuations.dialog.add.errors.valueRequired';
     }
 
-    return this.toValueCents(value) === null ? 'accountValuations.dialog.add.errors.valueInvalid' : null;
+    return this.toValueCents(value) === null
+      ? 'accountValuations.dialog.add.errors.valueInvalid'
+      : null;
   }
 
   private getDateError(value: Date | null): string | null {

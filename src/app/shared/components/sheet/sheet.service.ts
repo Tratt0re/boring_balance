@@ -45,7 +45,12 @@ export class ZardSheetService {
 
     const sheetContainer = this.attachSheetContainer<T, U>(overlayRef, config);
 
-    const sheetRef = this.attachSheetContent<T, U>(componentOrTemplateRef, sheetContainer, overlayRef, config);
+    const sheetRef = this.attachSheetContent<T, U>(
+      componentOrTemplateRef,
+      sheetContainer,
+      overlayRef,
+      config,
+    );
     sheetContainer.sheetRef = sheetRef;
 
     return sheetRef;

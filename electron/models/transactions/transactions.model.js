@@ -82,7 +82,9 @@ function buildListWhere(filters = {}) {
 function list(filters = {}, pagination = {}) {
   const where = buildListWhere(filters);
   const total = transactionsBaseModel.count(where);
-  const paginationWindow = resolvePaginationWindow(total, pagination, { defaultPage: DEFAULT_PAGE });
+  const paginationWindow = resolvePaginationWindow(total, pagination, {
+    defaultPage: DEFAULT_PAGE,
+  });
 
   const rows = transactionsBaseModel.list(where, {
     orderBy: [

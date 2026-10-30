@@ -186,9 +186,12 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly snapshotsLoading = toSignal(this.syncService.snapshotsLoading$, {
     initialValue: false,
   });
-  protected readonly setDefaultSnapshotLoading = toSignal(this.syncService.setDefaultSnapshotLoading$, {
-    initialValue: false,
-  });
+  protected readonly setDefaultSnapshotLoading = toSignal(
+    this.syncService.setDefaultSnapshotLoading$,
+    {
+      initialValue: false,
+    },
+  );
   protected readonly removeSnapshotLoading = toSignal(this.syncService.removeSnapshotLoading$, {
     initialValue: false,
   });
@@ -216,7 +219,9 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   protected readonly snapshotRows = computed<readonly SyncSnapshotTableRow[]>(() =>
     this.snapshots().map((snapshot) => this.toSnapshotTableRow(snapshot)),
   );
-  protected readonly syncModeEnabled = computed(() => this.settings().enabled || this.setupModeEnabled());
+  protected readonly syncModeEnabled = computed(
+    () => this.settings().enabled || this.setupModeEnabled(),
+  );
 
   protected readonly autoPullIntervalValue = computed(() =>
     String(this.normalizeIntervalOption(this.settings().autoPullIntervalMin)),
@@ -226,32 +231,38 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   );
   protected readonly isBusy = computed(
     () =>
-      this.state().status === 'running'
-      || this.settingsLoading()
-      || this.repoStatusLoading()
-      || this.enableLoading()
-      || this.disableLoading()
-      || this.syncNowLoading()
-      || this.pullNowLoading()
-      || this.pushNowLoading()
-      || this.setDefaultSnapshotLoading()
-      || this.removeSnapshotLoading(),
+      this.state().status === 'running' ||
+      this.settingsLoading() ||
+      this.repoStatusLoading() ||
+      this.enableLoading() ||
+      this.disableLoading() ||
+      this.syncNowLoading() ||
+      this.pullNowLoading() ||
+      this.pushNowLoading() ||
+      this.setDefaultSnapshotLoading() ||
+      this.removeSnapshotLoading(),
   );
   protected readonly canChooseFolder = computed(
     () => this.syncModeEnabled() && !this.settings().enabled && !this.isBusy(),
   );
-  protected readonly showSetupSection = computed(() => !this.settings().enabled && this.syncModeEnabled());
-  protected readonly showDisabledInfo = computed(() => !this.settings().enabled && !this.syncModeEnabled());
+  protected readonly showSetupSection = computed(
+    () => !this.settings().enabled && this.syncModeEnabled(),
+  );
+  protected readonly showDisabledInfo = computed(
+    () => !this.settings().enabled && !this.syncModeEnabled(),
+  );
   protected readonly canEnableSelectedFolder = computed(
     () =>
-      this.showSetupSection()
-      && !this.isBusy()
-      && !this.repoStatusLoading()
-      && Boolean(this.selectedFolderPath())
-      && this.selectedRepoStatus() !== null
-      && typeof this.selectedRepoStatus()?.exists === 'boolean',
+      this.showSetupSection() &&
+      !this.isBusy() &&
+      !this.repoStatusLoading() &&
+      Boolean(this.selectedFolderPath()) &&
+      this.selectedRepoStatus() !== null &&
+      typeof this.selectedRepoStatus()?.exists === 'boolean',
   );
-  protected readonly canRunManualActions = computed(() => this.settings().enabled && !this.isBusy());
+  protected readonly canRunManualActions = computed(
+    () => this.settings().enabled && !this.isBusy(),
+  );
   protected readonly hasConflict = computed(
     () => this.state().status === 'conflict' && Boolean(this.state().conflictInfo),
   );
@@ -409,16 +420,25 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
 
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.title'),
-      zDescription: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.description', {
-        fileName: snapshot.fileName,
-      }),
-      zOkText: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.actions.setDefault'),
-      zCancelText: this.translateService.instant('dataBackups.sync.files.setDefaultAlert.actions.cancel'),
+      zDescription: this.translateService.instant(
+        'dataBackups.sync.files.setDefaultAlert.description',
+        {
+          fileName: snapshot.fileName,
+        },
+      ),
+      zOkText: this.translateService.instant(
+        'dataBackups.sync.files.setDefaultAlert.actions.setDefault',
+      ),
+      zCancelText: this.translateService.instant(
+        'dataBackups.sync.files.setDefaultAlert.actions.cancel',
+      ),
       zOkDestructive: true,
       zMaskClosable: true,
       zClosable: true,
       zOnOk: () => {
-        void firstValueFrom(this.syncService.setDefaultSnapshot(snapshot.fullPath)).catch(() => undefined);
+        void firstValueFrom(this.syncService.setDefaultSnapshot(snapshot.fullPath)).catch(
+          () => undefined,
+        );
       },
     });
   }
@@ -431,16 +451,23 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
 
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('dataBackups.sync.files.deleteAlert.title'),
-      zDescription: this.translateService.instant('dataBackups.sync.files.deleteAlert.description', {
-        fileName: snapshot.fileName,
-      }),
+      zDescription: this.translateService.instant(
+        'dataBackups.sync.files.deleteAlert.description',
+        {
+          fileName: snapshot.fileName,
+        },
+      ),
       zOkText: this.translateService.instant('dataBackups.sync.files.deleteAlert.actions.delete'),
-      zCancelText: this.translateService.instant('dataBackups.sync.files.deleteAlert.actions.cancel'),
+      zCancelText: this.translateService.instant(
+        'dataBackups.sync.files.deleteAlert.actions.cancel',
+      ),
       zOkDestructive: true,
       zMaskClosable: true,
       zClosable: true,
       zOnOk: () => {
-        void firstValueFrom(this.syncService.removeSnapshot(snapshot.fullPath)).catch(() => undefined);
+        void firstValueFrom(this.syncService.removeSnapshot(snapshot.fullPath)).catch(
+          () => undefined,
+        );
       },
     });
   }
@@ -488,7 +515,9 @@ export class SyncSectionComponent implements OnInit, OnDestroy {
   }
 
   private async loadRepoStatus(folderPath: string): Promise<void> {
-    const repoStatus = await firstValueFrom(this.syncService.repoStatus(folderPath)).catch(() => null);
+    const repoStatus = await firstValueFrom(this.syncService.repoStatus(folderPath)).catch(
+      () => null,
+    );
     if (!repoStatus || this.selectedFolderPath() !== folderPath) {
       return;
     }

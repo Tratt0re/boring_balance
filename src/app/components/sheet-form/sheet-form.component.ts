@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { NumberFormatService } from '@/services/number-format.service';
@@ -49,7 +57,13 @@ const GRID_SPAN_CLASS_BY_VALUE = {
 
 @Component({
   selector: 'app-sheet-form',
-  imports: [ZardDatePickerComponent, ZardComboboxComponent, ZardCheckboxComponent, ZardInputDirective, ...ZardSelectImports],
+  imports: [
+    ZardDatePickerComponent,
+    ZardComboboxComponent,
+    ZardCheckboxComponent,
+    ZardInputDirective,
+    ...ZardSelectImports,
+  ],
   templateUrl: './sheet-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -64,12 +78,16 @@ export class AppSheetFormComponent {
 
   private readonly fieldValueState = signal<AppSheetFieldValueMap>({});
 
-  protected readonly resolvedFields = computed<readonly AppSheetField[]>(() => this.fields() ?? this.sheetData?.fields ?? []);
+  protected readonly resolvedFields = computed<readonly AppSheetField[]>(
+    () => this.fields() ?? this.sheetData?.fields ?? [],
+  );
   protected readonly resolvedClass = computed(() => this.class().trim());
   protected readonly containerClasses = computed(() =>
     mergeClasses('grid grid-cols-12 gap-4 p-4', this.resolvedClass()),
   );
-  private readonly resolvedInitialValues = computed<AppSheetFieldValueMap>(() => this.values() ?? this.sheetData?.values ?? {});
+  private readonly resolvedInitialValues = computed<AppSheetFieldValueMap>(
+    () => this.values() ?? this.sheetData?.values ?? {},
+  );
 
   constructor() {
     effect(() => {
@@ -211,7 +229,9 @@ export class AppSheetFormComponent {
   protected comboboxGroups(field: AppSheetComboboxField): ZardComboboxGroup[] {
     const fieldTranslate = field.translate ?? false;
     return (field.groups ?? []).map((group) => ({
-      label: group.label ? this.translateMaybe(group.label, group.translate ?? fieldTranslate) : undefined,
+      label: group.label
+        ? this.translateMaybe(group.label, group.translate ?? fieldTranslate)
+        : undefined,
       options: group.options.map((option) => ({
         ...option,
         label: this.translateMaybe(option.label, option.translate ?? fieldTranslate),
@@ -241,7 +261,10 @@ export class AppSheetFormComponent {
   }
 
   protected displaySearchPlaceholder(field: AppSheetComboboxField): string {
-    return this.translateMaybe(field.searchPlaceholder ?? DEFAULT_SEARCH_PLACEHOLDER, field.translate ?? false);
+    return this.translateMaybe(
+      field.searchPlaceholder ?? DEFAULT_SEARCH_PLACEHOLDER,
+      field.translate ?? false,
+    );
   }
 
   protected displayEmptyText(field: AppSheetComboboxField): string {
@@ -320,7 +343,12 @@ export class AppSheetFormComponent {
     const numerator = Number.parseInt(match[1], 10);
     const denominator = Number.parseInt(match[2], 10);
 
-    if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || numerator <= 0 || denominator <= 0) {
+    if (
+      !Number.isFinite(numerator) ||
+      !Number.isFinite(denominator) ||
+      numerator <= 0 ||
+      denominator <= 0
+    ) {
       return DEFAULT_GRID_COLUMNS;
     }
 
@@ -401,9 +429,10 @@ export class AppSheetFormComponent {
           return null;
         }
 
-        const normalizedValue = field.inputType === 'number'
-          ? this.numberFormatService.normalizeInput(value)
-          : value.trim();
+        const normalizedValue =
+          field.inputType === 'number'
+            ? this.numberFormatService.normalizeInput(value)
+            : value.trim();
         return normalizedValue.length > 0 ? normalizedValue : null;
       }
       default:

@@ -28,15 +28,21 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
     return this.ipcClient.budgetVsExpensesByCategoryByYear(payload);
   }
 
-  compareMonths(payload: DTO.AnalyticsCompareMonthsPayload): Promise<DTO.AnalyticsCompareMonthsResponse> {
+  compareMonths(
+    payload: DTO.AnalyticsCompareMonthsPayload,
+  ): Promise<DTO.AnalyticsCompareMonthsResponse> {
     return this.ipcClient.compareMonths(payload);
   }
 
-  receivablesPayables(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsReceivablesPayablesResponse> {
+  receivablesPayables(
+    payload?: DTO.AnalyticsFilterPayload,
+  ): Promise<DTO.AnalyticsReceivablesPayablesResponse> {
     return this.ipcClient.receivablesPayables(payload);
   }
 
-  async netWorthByAccount(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsNetWorthByAccountResponse> {
+  async netWorthByAccount(
+    payload?: DTO.AnalyticsFilterPayload,
+  ): Promise<DTO.AnalyticsNetWorthByAccountResponse> {
     const response = await this.ipcClient.netWorthByAccount(payload);
     const rows = Array.isArray(response?.rows)
       ? response.rows.map((row) => ({
@@ -45,20 +51,47 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
           net_worth_valued_cents: this.normalizeNullableFiniteNumber(row?.net_worth_valued_cents),
         }))
       : [];
-    const fallbackLedgerCents = rows.reduce((total, row) => total + Number(row?.net_worth_cents ?? 0), 0);
-    const netWorthLedgerCents = this.normalizeFiniteNumber(response?.netWorthLedgerCents, fallbackLedgerCents);
+    const fallbackLedgerCents = rows.reduce(
+      (total, row) => total + Number(row?.net_worth_cents ?? 0),
+      0,
+    );
+    const netWorthLedgerCents = this.normalizeFiniteNumber(
+      response?.netWorthLedgerCents,
+      fallbackLedgerCents,
+    );
     const netWorthValuedCents = this.normalizeNullableFiniteNumber(response?.netWorthValuedCents);
-    const netWorthMode = response?.netWorthMode === 'valued' || response?.netWorthMode === 'ledger'
-      ? response.netWorthMode
-      : (netWorthValuedCents === null ? 'ledger' : 'valued');
-    const netWorthCentsFallback = netWorthMode === 'valued'
-      ? (netWorthValuedCents ?? netWorthLedgerCents)
-      : netWorthLedgerCents;
-    const netWorthCents = this.normalizeFiniteNumber(response?.netWorthCents, netWorthCentsFallback);
-    const liquidAssetsFallbackCents = this.sumNetWorthRowsByAccountTypes(rows, LIQUID_ACCOUNT_TYPES, netWorthMode);
-    const investmentsFallbackCents = this.sumNetWorthRowsByAccountTypes(rows, INVESTMENT_ACCOUNT_TYPES, netWorthMode);
-    const liquidAssetsCents = this.normalizeFiniteNumber(response?.liquidAssetsCents, liquidAssetsFallbackCents);
-    const investmentsCents = this.normalizeFiniteNumber(response?.investmentsCents, investmentsFallbackCents);
+    const netWorthMode =
+      response?.netWorthMode === 'valued' || response?.netWorthMode === 'ledger'
+        ? response.netWorthMode
+        : netWorthValuedCents === null
+          ? 'ledger'
+          : 'valued';
+    const netWorthCentsFallback =
+      netWorthMode === 'valued'
+        ? (netWorthValuedCents ?? netWorthLedgerCents)
+        : netWorthLedgerCents;
+    const netWorthCents = this.normalizeFiniteNumber(
+      response?.netWorthCents,
+      netWorthCentsFallback,
+    );
+    const liquidAssetsFallbackCents = this.sumNetWorthRowsByAccountTypes(
+      rows,
+      LIQUID_ACCOUNT_TYPES,
+      netWorthMode,
+    );
+    const investmentsFallbackCents = this.sumNetWorthRowsByAccountTypes(
+      rows,
+      INVESTMENT_ACCOUNT_TYPES,
+      netWorthMode,
+    );
+    const liquidAssetsCents = this.normalizeFiniteNumber(
+      response?.liquidAssetsCents,
+      liquidAssetsFallbackCents,
+    );
+    const investmentsCents = this.normalizeFiniteNumber(
+      response?.investmentsCents,
+      investmentsFallbackCents,
+    );
     const snapshots = response?.snapshots;
 
     return {
@@ -73,7 +106,9 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
       snapshots: {
         hasSnapshots: snapshots?.hasSnapshots === true,
         latestSnapshotAtMs: this.normalizeNullableFiniteNumber(snapshots?.latestSnapshotAtMs),
-        daysSinceLatestSnapshot: this.normalizeNullableFiniteNumber(snapshots?.daysSinceLatestSnapshot),
+        daysSinceLatestSnapshot: this.normalizeNullableFiniteNumber(
+          snapshots?.daysSinceLatestSnapshot,
+        ),
         isOutdated: snapshots?.isOutdated === true,
       },
     };
@@ -91,7 +126,9 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
     return this.ipcClient.incomesByCategoryByMonth(payload);
   }
 
-  moneyFlowSankeyByMonth(payload?: DTO.AnalyticsFilterPayload): Promise<DTO.AnalyticsMoneyFlowSankeyByMonthResponse> {
+  moneyFlowSankeyByMonth(
+    payload?: DTO.AnalyticsFilterPayload,
+  ): Promise<DTO.AnalyticsMoneyFlowSankeyByMonthResponse> {
     return this.ipcClient.moneyFlowSankeyByMonth(payload);
   }
 
@@ -135,9 +172,8 @@ export class AnalyticsService extends BaseIpcService<APIChannel.ANALYTICS> {
 
       const ledgerCents = this.normalizeFiniteNumber(row?.net_worth_cents);
       const valuedCents = this.normalizeNullableFiniteNumber(row?.net_worth_valued_cents);
-      const effectiveCents = netWorthMode === 'valued' && valuedCents !== null
-        ? valuedCents
-        : ledgerCents;
+      const effectiveCents =
+        netWorthMode === 'valued' && valuedCents !== null ? valuedCents : ledgerCents;
 
       return totalCents + effectiveCents;
     }, 0);

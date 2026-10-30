@@ -26,7 +26,11 @@ import { mergeClasses, transform } from '@/shared/utils/merge-classes';
   selector: 'z-sidebar',
   imports: [ZardStringTemplateOutletDirective, ZardIconComponent],
   template: `
-    <aside [class]="classes()" [style.width.px]="currentWidth()" [attr.data-collapsed]="zCollapsed()">
+    <aside
+      [class]="classes()"
+      [style.width.px]="currentWidth()"
+      [attr.data-collapsed]="zCollapsed()"
+    >
       <div class="flex-1 overflow-auto">
         <ng-content />
       </div>
@@ -135,5 +139,7 @@ export class SidebarGroupComponent {
 export class SidebarGroupLabelComponent {
   readonly class = input<ClassValue>('');
 
-  protected readonly classes = computed(() => mergeClasses(sidebarGroupLabelVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(sidebarGroupLabelVariants(), this.class()),
+  );
 }

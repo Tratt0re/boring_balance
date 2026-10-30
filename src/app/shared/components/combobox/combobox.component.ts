@@ -23,7 +23,10 @@ import type { ClassValue } from 'clsx';
 import { ZardBadgeComponent } from '@/shared/components/badge';
 import { ZardButtonComponent, type ZardButtonTypeVariants } from '@/shared/components/button';
 import { ZardIdDirective } from '@/shared/core';
-import { comboboxVariants, type ZardComboboxWidthVariants } from '@/shared/components/combobox/combobox.variants';
+import {
+  comboboxVariants,
+  type ZardComboboxWidthVariants,
+} from '@/shared/components/combobox/combobox.variants';
 import {
   ZardCommandComponent,
   ZardCommandEmptyComponent,
@@ -122,7 +125,11 @@ export interface ZardComboboxGroup {
             <z-command-input [placeholder]="searchPlaceholder()" #commandInputRef />
           }
 
-          <z-command-list id="combobox-listbox" role="listbox" [attr.aria-multiselectable]="multiple() ? 'true' : null">
+          <z-command-list
+            id="combobox-listbox"
+            role="listbox"
+            [attr.aria-multiselectable]="multiple() ? 'true' : null"
+          >
             @if (emptyText()) {
               <z-command-empty>
                 <z-empty [zDescription]="emptyText()" />
@@ -198,7 +205,8 @@ export interface ZardComboboxGroup {
     '[class]': 'classes()',
     '(document:keydown.escape)': 'onDocumentKeyDown($event)',
     '(keydown.escape.prevent-with-stop)': 'onKeyDownEscape()',
-    '(keydown.{arrowdown,arrowup,enter,home,end,pageup,pagedown,space}.prevent)': 'onKeyDown($event)',
+    '(keydown.{arrowdown,arrowup,enter,home,end,pageup,pagedown,space}.prevent)':
+      'onKeyDown($event)',
     '(keydown.tab)': 'onKeyDown($event)',
   },
   exportAs: 'zCombobox',
@@ -255,10 +263,13 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   protected readonly valueContainerClasses = computed(() =>
     mergeClasses('min-w-0 flex-1 text-left', this.multiple() ? '' : 'flex items-center gap-2'),
   );
-  protected readonly chevronClasses = computed(() => mergeClasses('ml-2 shrink-0', this.zChevronClass()));
+  protected readonly chevronClasses = computed(() =>
+    mergeClasses('ml-2 shrink-0', this.zChevronClass()),
+  );
 
   protected readonly popoverClasses = computed(() => {
-    const widthClass = this.zWidth() === 'full' ? 'w-full' : comboboxVariants({ zWidth: this.zWidth() });
+    const widthClass =
+      this.zWidth() === 'full' ? 'w-full' : comboboxVariants({ zWidth: this.zWidth() });
     return `${widthClass} p-0`;
   });
 
@@ -502,13 +513,13 @@ export class ZardComboboxComponent implements ControlValueAccessor {
   private getOptionByValue(value: string): ZardComboboxOption | null {
     if (this.groups().length > 0) {
       for (const group of this.groups()) {
-        const option = group.options.find(opt => opt.value === value);
+        const option = group.options.find((opt) => opt.value === value);
         if (option) {
           return option;
         }
       }
     }
 
-    return this.options().find(opt => opt.value === value) ?? null;
+    return this.options().find((opt) => opt.value === value) ?? null;
   }
 }

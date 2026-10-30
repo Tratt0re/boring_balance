@@ -40,7 +40,11 @@ export class ZardDropdownService {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
-  toggle(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef) {
+  toggle(
+    triggerElement: ElementRef,
+    template: TemplateRef<unknown>,
+    viewContainerRef: ViewContainerRef,
+  ) {
     if (this.isOpen()) {
       this.close();
     } else {
@@ -48,7 +52,11 @@ export class ZardDropdownService {
     }
   }
 
-  private open(triggerElement: ElementRef, template: TemplateRef<unknown>, viewContainerRef: ViewContainerRef) {
+  private open(
+    triggerElement: ElementRef,
+    template: TemplateRef<unknown>,
+    viewContainerRef: ViewContainerRef,
+  ) {
     if (this.isOpen()) {
       this.close();
     }
@@ -72,7 +80,7 @@ export class ZardDropdownService {
     // Close on outside click
     this.outsideClickSubscription = this.overlayRef
       .outsidePointerEvents()
-      .pipe(filter(event => !triggerElement.nativeElement.contains(event.target)))
+      .pipe(filter((event) => !triggerElement.nativeElement.contains(event.target)))
       .subscribe(() => {
         this.close();
       });
@@ -134,7 +142,9 @@ export class ZardDropdownService {
       return;
     }
 
-    const dropdownElement = this.overlayRef.overlayElement.querySelector('[role="menu"]') as HTMLElement;
+    const dropdownElement = this.overlayRef.overlayElement.querySelector(
+      '[role="menu"]',
+    ) as HTMLElement;
     if (!dropdownElement) {
       return;
     }
@@ -181,7 +191,7 @@ export class ZardDropdownService {
     const dropdownElement = this.overlayRef.overlayElement;
     return Array.from(
       dropdownElement.querySelectorAll<HTMLElement>('z-dropdown-menu-item, [z-dropdown-menu-item]'),
-    ).filter(item => item.dataset['disabled'] === undefined);
+    ).filter((item) => item.dataset['disabled'] === undefined);
   }
 
   private navigateItems(direction: number, items: HTMLElement[]) {

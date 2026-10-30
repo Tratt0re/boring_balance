@@ -29,7 +29,9 @@ const CURRENCY_SYMBOL_ALIAS_BY_CODE = new Map<string, CurrencySymbol>([
   ['CNY', '¥'],
 ]);
 
-export const NUMBER_FORMAT_SEPARATORS: Readonly<Record<CurrencyFormatStyle, NumberFormatSeparators>> = Object.freeze({
+export const NUMBER_FORMAT_SEPARATORS: Readonly<
+  Record<CurrencyFormatStyle, NumberFormatSeparators>
+> = Object.freeze({
   US: {
     decimal: '.',
     thousands: ',',
@@ -73,12 +75,19 @@ export function resolveNumberFormatSeparators(style: CurrencyFormatStyle): Numbe
   return NUMBER_FORMAT_SEPARATORS[style];
 }
 
-export function formatNumber(value: number, style: CurrencyFormatStyle, options: AppNumberFormatOptions = {}): string {
+export function formatNumber(
+  value: number,
+  style: CurrencyFormatStyle,
+  options: AppNumberFormatOptions = {},
+): string {
   if (!Number.isFinite(value)) {
     return `${value}`;
   }
 
-  const normalizedMinimumFractionDigits = Math.max(0, Math.trunc(options.minimumFractionDigits ?? 0));
+  const normalizedMinimumFractionDigits = Math.max(
+    0,
+    Math.trunc(options.minimumFractionDigits ?? 0),
+  );
   const normalizedMaximumFractionDigits = Math.max(
     normalizedMinimumFractionDigits,
     Math.trunc(options.maximumFractionDigits ?? DEFAULT_MAX_FRACTION_DIGITS),
@@ -98,7 +107,9 @@ export function formatNumber(value: number, style: CurrencyFormatStyle, options:
 
   const separators = resolveNumberFormatSeparators(style);
   const groupedIntegerPart =
-    options.useGrouping === false ? integerPart : integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, separators.thousands);
+    options.useGrouping === false
+      ? integerPart
+      : integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, separators.thousands);
   const signedIntegerPart = value < 0 ? `-${groupedIntegerPart}` : groupedIntegerPart;
 
   if (fractionPart.length === 0) {
@@ -187,9 +198,10 @@ export function normalizeLocalizedNumericInput(
   const unsignedValue = hadDecimalSeparator
     ? `${normalizedIntegerPart}.${fractionDigits}`
     : normalizedIntegerPart;
-  const normalizedValue = isNegative && unsignedValue !== '0' && unsignedValue !== '0.'
-    ? `-${unsignedValue}`
-    : unsignedValue;
+  const normalizedValue =
+    isNegative && unsignedValue !== '0' && unsignedValue !== '0.'
+      ? `-${unsignedValue}`
+      : unsignedValue;
 
   return normalizedValue;
 }

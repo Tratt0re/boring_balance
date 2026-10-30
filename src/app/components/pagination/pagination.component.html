@@ -49,7 +49,10 @@
   </div>
 
   <p class="text-xs text-muted-foreground md:justify-self-start">
-    {{ 'common.pagination.counter' | translate: { current: normalizedCurrentPage(), total: normalizedTotalPages() } }}
+    {{
+      'common.pagination.counter'
+        | translate: { current: normalizedCurrentPage(), total: normalizedTotalPages() }
+    }}
   </p>
 
   <div class="md:justify-self-end">

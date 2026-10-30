@@ -1,6 +1,13 @@
-export const SETTINGS_SECTION_KEYS = ['general', 'backups', 'sync', 'export', 'data', 'about'] as const;
+export const SETTINGS_SECTION_KEYS = [
+  'general',
+  'backups',
+  'sync',
+  'export',
+  'data',
+  'about',
+] as const;
 
-export type SettingsSectionKey = typeof SETTINGS_SECTION_KEYS[number];
+export type SettingsSectionKey = (typeof SETTINGS_SECTION_KEYS)[number];
 
 export interface SettingsNavItem {
   readonly key: SettingsSectionKey;
@@ -43,6 +50,8 @@ export const SETTINGS_NAV_ITEMS: readonly SettingsNavItem[] = [
   },
 ] as const;
 
-export function isSettingsSectionKey(value: string | null | undefined): value is SettingsSectionKey {
+export function isSettingsSectionKey(
+  value: string | null | undefined,
+): value is SettingsSectionKey {
   return typeof value === 'string' && SETTINGS_SECTION_KEYS.includes(value as SettingsSectionKey);
 }

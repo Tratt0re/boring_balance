@@ -69,7 +69,10 @@ export class AppBaseCardComponent {
     mergeClasses(baseCardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
   );
   protected readonly headerClasses = computed(() =>
-    mergeClasses(baseCardHeaderVariants({ variant: this.zHeaderVariant() }), this.zHeaderBorder() ? 'border-b' : ''),
+    mergeClasses(
+      baseCardHeaderVariants({ variant: this.zHeaderVariant() }),
+      this.zHeaderBorder() ? 'border-b' : '',
+    ),
   );
   protected readonly titleClasses = computed(() =>
     mergeClasses(baseCardTitleVariants({ variant: this.zHeaderVariant() })),

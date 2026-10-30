@@ -1,4 +1,9 @@
-<form class="grid gap-4 pb-4 sm:grid-cols-2" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+<form
+  class="grid gap-4 pb-4 sm:grid-cols-2"
+  [formGroup]="form"
+  novalidate
+  (submit)="$event.preventDefault()"
+>
   <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="valuation-value">
       {{ 'accountValuations.dialog.fields.value' | translate }}

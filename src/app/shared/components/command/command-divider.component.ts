@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 
@@ -22,7 +29,9 @@ export class ZardCommandDividerComponent {
 
   readonly class = input<ClassValue>('');
 
-  protected readonly classes = computed(() => mergeClasses(commandSeparatorVariants(), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(commandSeparatorVariants(), this.class()),
+  );
 
   protected readonly shouldShow = computed(() => {
     if (!this.commandComponent) {

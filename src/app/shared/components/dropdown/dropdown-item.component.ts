@@ -17,9 +17,7 @@ import { dropdownItemVariants, type ZardDropdownItemVariants } from './dropdown.
 
 @Component({
   selector: 'z-dropdown-menu-item, [z-dropdown-menu-item]',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {

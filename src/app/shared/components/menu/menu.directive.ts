@@ -87,7 +87,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cancelScheduledClose();
     this.menuManager.unregisterHoverMenu(this);
-    this.cleanupFunctions.forEach(cleanup => cleanup());
+    this.cleanupFunctions.forEach((cleanup) => cleanup());
     this.cleanupFunctions.length = 0;
   }
 
@@ -114,7 +114,9 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
       this.cdkTrigger.open();
     });
 
-    this.addEventListenerWithCleanup(element, 'mouseleave', event => this.scheduleCloseIfNeeded(event as MouseEvent));
+    this.addEventListenerWithCleanup(element, 'mouseleave', (event) =>
+      this.scheduleCloseIfNeeded(event as MouseEvent),
+    );
   }
 
   private setupMenuOpenListener(): void {
@@ -139,7 +141,7 @@ export class ZardMenuDirective implements OnInit, OnDestroy {
     }
 
     this.addEventListenerWithCleanup(menuContent, 'mouseenter', () => this.cancelScheduledClose());
-    this.addEventListenerWithCleanup(menuContent, 'mouseleave', event =>
+    this.addEventListenerWithCleanup(menuContent, 'mouseleave', (event) =>
       this.scheduleCloseIfNeeded(event as MouseEvent),
     );
   }

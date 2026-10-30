@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, input, signal, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  ViewChild,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
-import {
-  ZardSegmentedComponent,
-  ZardSegmentedItemComponent,
-} from '@/shared/components/segmented';
+import { ZardSegmentedComponent, ZardSegmentedItemComponent } from '@/shared/components/segmented';
 import { OverviewMoneyFlowSankeyCardComponent } from '../overview-money-flow-sankey-card/overview-money-flow-sankey-card.component';
 import { OverviewMonthlyTotalsCardComponent } from '../overview-monthly-totals-card/overview-monthly-totals-card.component';
 
@@ -34,7 +39,8 @@ export class OverviewCashflowCardComponent {
   private overviewMonthlyTotalsCardComponent?: OverviewMonthlyTotalsCardComponent;
   @ViewChild(OverviewMoneyFlowSankeyCardComponent)
   private overviewMoneyFlowSankeyCardComponent?: OverviewMoneyFlowSankeyCardComponent;
-  protected readonly cardSegmentedTitle = viewChild.required<TemplateRef<void>>('cardSegmentedTitleTpl');
+  protected readonly cardSegmentedTitle =
+    viewChild.required<TemplateRef<void>>('cardSegmentedTitleTpl');
 
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());

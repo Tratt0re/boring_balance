@@ -38,7 +38,9 @@ export class BudgetsService extends BaseIpcService<APIChannel.BUDGETS> {
     return mapPaginatedResult(response, (row) => BudgetModel.fromDTO(row));
   }
 
-  async listAll(payload?: Omit<DTO.BudgetListDto, 'page' | 'page_size' | 'all'>): Promise<readonly BudgetModel[]> {
+  async listAll(
+    payload?: Omit<DTO.BudgetListDto, 'page' | 'page_size' | 'all'>,
+  ): Promise<readonly BudgetModel[]> {
     const response = await this.list({
       ...payload,
       all: true,

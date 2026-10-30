@@ -6,7 +6,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { EditableOptionItem } from '@/components/data-table';
 import type { TransactionCreateTransferDto, TransactionUpdateTransferDto } from '@/dtos';
 import { NumberFormatService } from '@/services/number-format.service';
-import { dateToUnixMs, editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
+import {
+  dateToUnixMs,
+  editableOptionsToCombobox,
+  normalizeNullableString,
+  toPositiveInteger,
+} from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -50,9 +55,13 @@ export class UpsertTransferDialogComponent {
   private readonly data = inject<UpsertTransferDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialTransfer = this.data?.transfer;
 
-  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.accountOptions, this.translateService);
+  protected readonly accountOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.accountOptions,
+    this.translateService,
+  );
   protected readonly descriptionMaxLength = TRANSFER_DESCRIPTION_MAX_LENGTH;
-  protected readonly isFromAccountFixed = !this.initialTransfer && this.data?.fixedFromAccountId !== undefined;
+  protected readonly isFromAccountFixed =
+    !this.initialTransfer && this.data?.fixedFromAccountId !== undefined;
 
   protected readonly form = new FormGroup({
     occurredAt: new FormControl<Date | null>(
@@ -69,7 +78,9 @@ export class UpsertTransferDialogComponent {
     toAccountId: new FormControl<string | null>(
       this.initialTransfer ? `${this.initialTransfer.toAccountId}` : null,
     ),
-    amount: new FormControl(this.initialTransfer ? `${this.initialTransfer.amount}` : '', { nonNullable: true }),
+    amount: new FormControl(this.initialTransfer ? `${this.initialTransfer.amount}` : '', {
+      nonNullable: true,
+    }),
     description: new FormControl(this.initialTransfer?.description ?? '', { nonNullable: true }),
   });
 
@@ -83,7 +94,9 @@ export class UpsertTransferDialogComponent {
   }
 
   public collectCreatePayload(): TransactionCreateTransferDto | null {
-    const values = this.collectNormalizedValues('transactions.transfers.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues(
+      'transactions.transfers.dialog.add.errors.fixValidation',
+    );
     if (!values) {
       return null;
     }
@@ -104,7 +117,9 @@ export class UpsertTransferDialogComponent {
       return null;
     }
 
-    const values = this.collectNormalizedValues('transactions.transfers.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues(
+      'transactions.transfers.dialog.edit.errors.fixValidation',
+    );
     if (!values) {
       return null;
     }
@@ -263,18 +278,25 @@ export class UpsertTransferDialogComponent {
     return (
       this.getOccurredAtError(this.form.controls.occurredAt.value) !== null ||
       this.getFromAccountError(this.form.controls.fromAccountId.value) !== null ||
-      this.getToAccountError(this.form.controls.toAccountId.value, this.form.controls.fromAccountId.value) !== null ||
+      this.getToAccountError(
+        this.form.controls.toAccountId.value,
+        this.form.controls.fromAccountId.value,
+      ) !== null ||
       this.getAmountError(this.form.controls.amount.value) !== null ||
       this.getDescriptionError(this.form.controls.description.value) !== null
     );
   }
 
   private getOccurredAtError(value: Date | null): string | null {
-    return dateToUnixMs(value) === null ? 'transactions.transfers.dialog.add.errors.dateRequired' : null;
+    return dateToUnixMs(value) === null
+      ? 'transactions.transfers.dialog.add.errors.dateRequired'
+      : null;
   }
 
   private getFromAccountError(value: unknown): string | null {
-    return toPositiveInteger(value) === null ? 'transactions.transfers.dialog.add.errors.fromAccountRequired' : null;
+    return toPositiveInteger(value) === null
+      ? 'transactions.transfers.dialog.add.errors.fromAccountRequired'
+      : null;
   }
 
   private getToAccountError(value: unknown, fromAccountValue: unknown): string | null {
@@ -296,7 +318,9 @@ export class UpsertTransferDialogComponent {
       return 'transactions.transfers.dialog.add.errors.amountRequired';
     }
 
-    return this.toAmount(value) === null ? 'transactions.transfers.dialog.add.errors.amountInvalid' : null;
+    return this.toAmount(value) === null
+      ? 'transactions.transfers.dialog.add.errors.amountInvalid'
+      : null;
   }
 
   private getDescriptionError(value: string): string | null {

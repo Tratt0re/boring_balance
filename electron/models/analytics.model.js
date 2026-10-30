@@ -1,5 +1,12 @@
-const { getDatabase, selectDistinctYearsFromUnixTimestampColumn, selectRows } = require('../database');
-const { elapsedDaysBetweenUnixTimestampMilliseconds, formatUnixTimestampMillisecondsToDate } = require('../utils/date-utils');
+const {
+  getDatabase,
+  selectDistinctYearsFromUnixTimestampColumn,
+  selectRows,
+} = require('../database');
+const {
+  elapsedDaysBetweenUnixTimestampMilliseconds,
+  formatUnixTimestampMillisecondsToDate,
+} = require('../utils/date-utils');
 const { buildDateRangeFilter } = require('./query-utils');
 const { TRANSFER_CATEGORY_ID } = require('./transactions/constants');
 const { normalizeRowsTags } = require('./transactions/tags');
@@ -81,12 +88,25 @@ function appendNotEqualFilter(existingFilter, value) {
 
 function resolveFilterContext(database, filters = {}) {
   const accounts = selectRows(database, 'accounts', {}, { orderBy: 'id', orderDirection: 'ASC' });
-  const categories = selectRows(database, 'categories', {}, { orderBy: 'id', orderDirection: 'ASC' });
+  const categories = selectRows(
+    database,
+    'categories',
+    {},
+    { orderBy: 'id', orderDirection: 'ASC' },
+  );
 
-  const accountIdsFilter = Array.isArray(filters.account_ids) ? new Set(filters.account_ids.map(Number)) : null;
-  const accountTypesFilter = Array.isArray(filters.account_types) ? new Set(filters.account_types) : null;
-  const categoryIdsFilter = Array.isArray(filters.category_ids) ? new Set(filters.category_ids.map(Number)) : null;
-  const categoryTypesFilter = Array.isArray(filters.category_types) ? new Set(filters.category_types) : null;
+  const accountIdsFilter = Array.isArray(filters.account_ids)
+    ? new Set(filters.account_ids.map(Number))
+    : null;
+  const accountTypesFilter = Array.isArray(filters.account_types)
+    ? new Set(filters.account_types)
+    : null;
+  const categoryIdsFilter = Array.isArray(filters.category_ids)
+    ? new Set(filters.category_ids.map(Number))
+    : null;
+  const categoryTypesFilter = Array.isArray(filters.category_types)
+    ? new Set(filters.category_types)
+    : null;
 
   const filteredAccounts = accounts.filter((account) => {
     if (accountIdsFilter && !accountIdsFilter.has(Number(account.id))) {
@@ -181,11 +201,13 @@ function selectTransfers(database, where, orderBy = TRANSFER_ORDER) {
 }
 
 function normalizeAccountIds(accountIds = []) {
-  return Array.from(new Set(
-    accountIds
-      .map((accountId) => Number(accountId))
-      .filter((accountId) => Number.isInteger(accountId) && accountId > 0),
-  ));
+  return Array.from(
+    new Set(
+      accountIds
+        .map((accountId) => Number(accountId))
+        .filter((accountId) => Number.isInteger(accountId) && accountId > 0),
+    ),
+  );
 }
 
 function selectLatestValuationByAccountIds(database, accountIds = []) {
@@ -220,12 +242,16 @@ function selectLatestValuationByAccountIds(database, accountIds = []) {
 function selectLatestSnapshotTimestampMs(database, accountIds) {
   let row;
   if (accountIds === undefined) {
-    row = database.prepare(`
+    row = database
+      .prepare(
+        `
       SELECT
         MAX(valued_at) AS latest_snapshot_at_ms
       FROM account_valuations
       WHERE valued_at > 0
-    `).get();
+    `,
+      )
+      .get();
   } else {
     const normalizedAccountIds = normalizeAccountIds(accountIds);
     if (normalizedAccountIds.length === 0) {
@@ -233,13 +259,17 @@ function selectLatestSnapshotTimestampMs(database, accountIds) {
     }
 
     const placeholdersSql = normalizedAccountIds.map(() => '?').join(', ');
-    row = database.prepare(`
+    row = database
+      .prepare(
+        `
       SELECT
         MAX(valued_at) AS latest_snapshot_at_ms
       FROM account_valuations
       WHERE account_id IN (${placeholdersSql})
         AND valued_at > 0
-    `).get(normalizedAccountIds);
+    `,
+      )
+      .get(normalizedAccountIds);
   }
 
   const latestSnapshotAtMs = Number(row?.latest_snapshot_at_ms);
@@ -274,7 +304,10 @@ function normalizeBucketsToTargetTotalCents(buckets, targetTotalCents) {
     return [];
   }
 
-  const rawTotalCents = positiveBuckets.reduce((total, bucket) => total + Number(bucket.total_cents ?? 0), 0);
+  const rawTotalCents = positiveBuckets.reduce(
+    (total, bucket) => total + Number(bucket.total_cents ?? 0),
+    0,
+  );
   if (rawTotalCents <= 0) {
     return [];
   }
@@ -331,15 +364,17 @@ function buildMoneyFlowExpenseByCategory(expenseTotalsByCategoryId, expensesTota
     }))
     .filter((entry) => entry.total_cents > 0);
 
-  const normalizedExpenseBuckets = normalizeBucketsToTargetTotalCents(rawExpenseBuckets, normalizedExpenseTotalCents)
-    .sort((left, right) => {
-      const totalComparison = Number(right.total_cents ?? 0) - Number(left.total_cents ?? 0);
-      if (totalComparison !== 0) {
-        return totalComparison;
-      }
+  const normalizedExpenseBuckets = normalizeBucketsToTargetTotalCents(
+    rawExpenseBuckets,
+    normalizedExpenseTotalCents,
+  ).sort((left, right) => {
+    const totalComparison = Number(right.total_cents ?? 0) - Number(left.total_cents ?? 0);
+    if (totalComparison !== 0) {
+      return totalComparison;
+    }
 
-      return String(left.category_name).localeCompare(String(right.category_name));
-    });
+    return String(left.category_name).localeCompare(String(right.category_name));
+  });
   return normalizedExpenseBuckets;
 }
 
@@ -395,7 +430,12 @@ function availableYears(filters = {}) {
   const database = getDatabase();
   const filterContext = resolveFilterContext(database, filters);
   const where = buildTransactionsWhere(filters, filterContext, { excludeTransfers: true });
-  const years = selectDistinctYearsFromUnixTimestampColumn(database, 'transactions', 'occurred_at', where);
+  const years = selectDistinctYearsFromUnixTimestampColumn(
+    database,
+    'transactions',
+    'occurred_at',
+    where,
+  );
 
   return { years };
 }
@@ -448,7 +488,11 @@ function netWorthByAccount(filters = {}) {
   const useValuation = resolveUseValuationFlag(effectiveFilters);
   const database = getDatabase();
   const filterContext = resolveFilterContext(database, effectiveFilters);
-  const rows = selectTransactions(database, buildTransactionsWhere(effectiveFilters, filterContext), TRANSACTION_ASC_ORDER);
+  const rows = selectTransactions(
+    database,
+    buildTransactionsWhere(effectiveFilters, filterContext),
+    TRANSACTION_ASC_ORDER,
+  );
   const netWorthByAccountId = new Map();
   let currentTotalCents = 0;
 
@@ -459,19 +503,27 @@ function netWorthByAccount(filters = {}) {
     currentTotalCents += amountCents;
   }
 
-  const accountsToReport = filterContext.hasAccountFilter ? filterContext.filteredAccounts : filterContext.accounts;
-  const sortedAccounts = [...accountsToReport].sort((left, right) => Number(left.id) - Number(right.id));
+  const accountsToReport = filterContext.hasAccountFilter
+    ? filterContext.filteredAccounts
+    : filterContext.accounts;
+  const sortedAccounts = [...accountsToReport].sort(
+    (left, right) => Number(left.id) - Number(right.id),
+  );
   const sortedAccountIds = sortedAccounts.map((account) => Number(account.id));
-  const latestSnapshotAtMs = useValuation ? selectLatestSnapshotTimestampMs(database, sortedAccountIds) : null;
+  const latestSnapshotAtMs = useValuation
+    ? selectLatestSnapshotTimestampMs(database, sortedAccountIds)
+    : null;
   const hasSnapshots = useValuation && latestSnapshotAtMs !== null;
   const daysSinceLatestSnapshot = hasSnapshots
     ? elapsedDaysBetweenUnixTimestampMilliseconds(latestSnapshotAtMs, Date.now())
     : null;
   const latestValuationValueByAccountId = hasSnapshots
-    ? new Map(selectLatestValuationByAccountIds(
-      database,
-      sortedAccountIds,
-    ).map((row) => [Number(row.account_id), Number(row.value_cents)]))
+    ? new Map(
+        selectLatestValuationByAccountIds(database, sortedAccountIds).map((row) => [
+          Number(row.account_id),
+          Number(row.value_cents),
+        ]),
+      )
     : new Map();
   const valuedBalanceByAccountId = new Map();
   let netWorthValuedCents = null;
@@ -483,16 +535,17 @@ function netWorthByAccount(filters = {}) {
     const accountId = Number(account.id);
     const accountLedgerBalanceCents = Number(netWorthByAccountId.get(accountId) ?? 0);
     const latestSnapshotValueCents = latestValuationValueByAccountId.get(accountId);
-    const accountValuedBalanceCents = latestSnapshotValueCents === undefined
-      ? accountLedgerBalanceCents
-      : latestSnapshotValueCents;
+    const accountValuedBalanceCents =
+      latestSnapshotValueCents === undefined ? accountLedgerBalanceCents : latestSnapshotValueCents;
     valuedBalanceByAccountId.set(accountId, accountValuedBalanceCents);
 
     if (hasSnapshots) {
       valuedTotalCents += accountValuedBalanceCents;
     }
 
-    const accountNetWorthCents = hasSnapshots ? accountValuedBalanceCents : accountLedgerBalanceCents;
+    const accountNetWorthCents = hasSnapshots
+      ? accountValuedBalanceCents
+      : accountLedgerBalanceCents;
     if (LIQUID_ACCOUNT_TYPES.has(account.type)) {
       liquidAssetsCents += accountNetWorthCents;
     }
@@ -517,7 +570,7 @@ function netWorthByAccount(filters = {}) {
         account_type: account.type,
         net_worth_cents: netWorthByAccountId.get(accountId) ?? 0,
         net_worth_valued_cents: hasSnapshots
-          ? (valuedBalanceByAccountId.get(accountId) ?? (netWorthByAccountId.get(accountId) ?? 0))
+          ? (valuedBalanceByAccountId.get(accountId) ?? netWorthByAccountId.get(accountId) ?? 0)
           : null,
       };
     }),
@@ -531,9 +584,10 @@ function netWorthByAccount(filters = {}) {
       hasSnapshots,
       latestSnapshotAtMs,
       daysSinceLatestSnapshot,
-      isOutdated: hasSnapshots
-        && daysSinceLatestSnapshot !== null
-        && daysSinceLatestSnapshot > SNAPSHOT_OUTDATED_DAYS_THRESHOLD,
+      isOutdated:
+        hasSnapshots &&
+        daysSinceLatestSnapshot !== null &&
+        daysSinceLatestSnapshot > SNAPSHOT_OUTDATED_DAYS_THRESHOLD,
     },
   };
 }
@@ -646,7 +700,9 @@ function dailyTotalsByDate(filters = {}) {
     totalsByDate.set(date, currentDate);
   }
 
-  return Array.from(totalsByDate.values()).sort((left, right) => left.date.localeCompare(right.date));
+  return Array.from(totalsByDate.values()).sort((left, right) =>
+    left.date.localeCompare(right.date),
+  );
 }
 
 function transactionsByCategoryAndMonth(filters, categoryType) {
@@ -726,10 +782,11 @@ function moneyFlowSankeyByMonth(filters = {}) {
   let transferRows = selectTransfers(database, buildTransfersWhere(filters), TRANSFER_ORDER);
   if (filterContext.hasAccountFilter) {
     const allowedAccountIds = new Set(filterContext.filteredAccountIds.map(Number));
-    transferRows = transferRows.filter((row) => (
-      allowedAccountIds.has(Number(row.from_account_id)) ||
-      allowedAccountIds.has(Number(row.to_account_id))
-    ));
+    transferRows = transferRows.filter(
+      (row) =>
+        allowedAccountIds.has(Number(row.from_account_id)) ||
+        allowedAccountIds.has(Number(row.to_account_id)),
+    );
   }
 
   for (const row of transferRows) {
@@ -762,7 +819,10 @@ function moneyFlowSankeyByMonth(filters = {}) {
   }
 
   const expensesTotalCents = Math.abs(expensesNetTotalCents);
-  const expenseByCategory = buildMoneyFlowExpenseByCategory(expenseTotalsByCategoryId, expensesTotalCents);
+  const expenseByCategory = buildMoneyFlowExpenseByCategory(
+    expenseTotalsByCategoryId,
+    expensesTotalCents,
+  );
   // Net cashflow is the monthly net result and must match the bar chart definition.
   const netCashflowTotalCents = incomesTotalCents - expensesTotalCents;
 
@@ -808,7 +868,9 @@ function buildCompareMonthSnapshot(selection) {
     period,
     totals: moneyFlowTotals,
     net_worth: netWorth,
-    expenses_by_category: toCompareCategoryRows(expensesByCategory.rows, period.month_key, { absoluteAmount: true }),
+    expenses_by_category: toCompareCategoryRows(expensesByCategory.rows, period.month_key, {
+      absoluteAmount: true,
+    }),
     incomes_by_category: toCompareCategoryRows(incomesByCategory.rows, period.month_key),
     daily_totals: dailyTotals,
   };
@@ -854,11 +916,13 @@ function budgetVsExpensesByCategoryByYear(year) {
     };
   }
 
-  const categoryIds = Array.from(new Set(
-    budgetRows
-      .map((row) => Number(row.category_id))
-      .filter((categoryId) => Number.isInteger(categoryId) && categoryId > 0),
-  ));
+  const categoryIds = Array.from(
+    new Set(
+      budgetRows
+        .map((row) => Number(row.category_id))
+        .filter((categoryId) => Number.isInteger(categoryId) && categoryId > 0),
+    ),
+  );
   if (categoryIds.length === 0) {
     return {
       year: period.year,
@@ -875,7 +939,9 @@ function budgetVsExpensesByCategoryByYear(year) {
     id: { in: categoryIds },
   });
   const categoryById = new Map(categories.map((category) => [Number(category.id), category]));
-  const expenseCategoryIds = categoryIds.filter((categoryId) => categoryById.get(categoryId)?.type === 'expense');
+  const expenseCategoryIds = categoryIds.filter(
+    (categoryId) => categoryById.get(categoryId)?.type === 'expense',
+  );
   const expenseCategoryIdsSet = new Set(expenseCategoryIds);
 
   if (expenseCategoryIds.length === 0) {
@@ -916,7 +982,10 @@ function budgetVsExpensesByCategoryByYear(year) {
       continue;
     }
 
-    netExpensesByCategoryId.set(categoryId, (netExpensesByCategoryId.get(categoryId) ?? 0) + amountCents);
+    netExpensesByCategoryId.set(
+      categoryId,
+      (netExpensesByCategoryId.get(categoryId) ?? 0) + amountCents,
+    );
   }
 
   const rows = budgetRows
@@ -928,7 +997,10 @@ function budgetVsExpensesByCategoryByYear(year) {
       }
 
       const budgetAmountCents = Math.max(0, Number(budgetRow.amount_cents ?? 0));
-      const expensesTotalCents = Math.max(0, Math.abs(Number(netExpensesByCategoryId.get(categoryId) ?? 0)));
+      const expensesTotalCents = Math.max(
+        0,
+        Math.abs(Number(netExpensesByCategoryId.get(categoryId) ?? 0)),
+      );
 
       return {
         budget_id: Number(budgetRow.id),
@@ -942,8 +1014,14 @@ function budgetVsExpensesByCategoryByYear(year) {
     })
     .filter((row) => row !== null);
 
-  const budgetAmountTotalCents = rows.reduce((total, row) => total + Number(row.budget_amount_cents), 0);
-  const expensesTotalCents = rows.reduce((total, row) => total + Number(row.expenses_total_cents), 0);
+  const budgetAmountTotalCents = rows.reduce(
+    (total, row) => total + Number(row.budget_amount_cents),
+    0,
+  );
+  const expensesTotalCents = rows.reduce(
+    (total, row) => total + Number(row.expenses_total_cents),
+    0,
+  );
 
   return {
     year: period.year,

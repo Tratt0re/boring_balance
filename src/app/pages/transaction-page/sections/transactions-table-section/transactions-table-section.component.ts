@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, computed, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -17,7 +26,12 @@ import {
   type AppSheetFieldValueMap,
   type AppSheetFormComponent,
 } from '@/components/sheet-form';
-import type { CategoryType, TransactionCreateDto, TransactionListTransactionsDto, TransactionUpdateDto } from '@/dtos';
+import type {
+  CategoryType,
+  TransactionCreateDto,
+  TransactionListTransactionsDto,
+  TransactionUpdateDto,
+} from '@/dtos';
 import { type TransactionModel } from '@/models';
 import {
   UpsertTransactionDialogComponent,
@@ -28,7 +42,11 @@ import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { TransactionsService } from '@/services/transactions.service';
-import { ToolbarContextService, type ToolbarAction, type ToolbarItemNavigation } from '@/services/toolbar-context.service';
+import {
+  ToolbarContextService,
+  type ToolbarAction,
+  type ToolbarItemNavigation,
+} from '@/services/toolbar-context.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardDialogService, type ZardDialogRef } from '@/shared/components/dialog';
 import type { ZardIcon } from '@/shared/components/icon';
@@ -281,14 +299,18 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       return 'accountDetails.table.transactionsEmptyMessage';
     }
 
-    return this.accountCount() === 0 ? 'transactions.table.emptyNoAccountsMessage' : 'transactions.table.emptyMessage';
+    return this.accountCount() === 0
+      ? 'transactions.table.emptyNoAccountsMessage'
+      : 'transactions.table.emptyMessage';
   });
   protected readonly emptyActionLabelKey = computed(() => {
     if (this.isPlanItemContext()) {
       return '';
     }
 
-    return this.accountCount() === 0 ? 'accounts.table.actions.add' : 'transactions.table.actions.add';
+    return this.accountCount() === 0
+      ? 'accounts.table.actions.add'
+      : 'transactions.table.actions.add';
   });
 
   private readonly accountOptions = signal<readonly EditableOptionItem[]>([]);
@@ -573,7 +595,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         ...currentFilters,
         dateTo: null,
       };
-    } else if (fieldId === TRANSACTION_FILTER_FIELD.amountFrom && currentFilters.amountFrom !== null) {
+    } else if (
+      fieldId === TRANSACTION_FILTER_FIELD.amountFrom &&
+      currentFilters.amountFrom !== null
+    ) {
       nextFilters = {
         ...currentFilters,
         amountFrom: null,
@@ -588,7 +613,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         ...currentFilters,
         settled: null,
       };
-    } else if (fieldId === TRANSACTION_FILTER_FIELD.categoryType && currentFilters.categoryType !== null) {
+    } else if (
+      fieldId === TRANSACTION_FILTER_FIELD.categoryType &&
+      currentFilters.categoryType !== null
+    ) {
       nextFilters = {
         ...currentFilters,
         categoryType: null,
@@ -831,10 +859,8 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       [TRANSACTION_FILTER_FIELD.dateTo]: filters.dateTo,
       [TRANSACTION_FILTER_FIELD.amountFrom]:
         filters.amountFrom === null ? null : `${filters.amountFrom}`,
-      [TRANSACTION_FILTER_FIELD.amountTo]:
-        filters.amountTo === null ? null : `${filters.amountTo}`,
-      [TRANSACTION_FILTER_FIELD.settled]:
-        filters.settled === null ? null : `${filters.settled}`,
+      [TRANSACTION_FILTER_FIELD.amountTo]: filters.amountTo === null ? null : `${filters.amountTo}`,
+      [TRANSACTION_FILTER_FIELD.settled]: filters.settled === null ? null : `${filters.settled}`,
       [TRANSACTION_FILTER_FIELD.categoryType]: filters.categoryType,
       [TRANSACTION_FILTER_FIELD.categoryId]: filters.categoryIds.map((id) => `${id}`),
       [TRANSACTION_FILTER_FIELD.accountId]: filters.accountIds.map((id) => `${id}`),
@@ -873,9 +899,12 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const amountTo = filters.amountTo ?? undefined;
     const categoryTypes = filters.categoryType ? [filters.categoryType] : undefined;
     const categories = filters.categoryIds.length > 0 ? [...filters.categoryIds] : undefined;
-    const accounts = accountId === undefined
-      ? (filters.accountIds.length > 0 ? [...filters.accountIds] : undefined)
-      : [accountId];
+    const accounts =
+      accountId === undefined
+        ? filters.accountIds.length > 0
+          ? [...filters.accountIds]
+          : undefined
+        : [accountId];
     const settled = filters.settled === null ? undefined : filters.settled;
     const hasFilters =
       planItemId !== undefined ||
@@ -924,7 +953,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     const transaction = row as TransactionTableRow;
     let isUpdatingTransaction = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransactionDialogComponent, UpsertTransactionDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransactionDialogComponent,
+      UpsertTransactionDialogData
+    >({
       zTitle: this.translateService.instant('transactions.dialog.edit.title'),
       zDescription: this.translateService.instant('transactions.dialog.edit.description'),
       zContent: UpsertTransactionDialogComponent,
@@ -960,11 +992,14 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         }
 
         isUpdatingTransaction = true;
-        void this
-          .updateTransactionFromDialog(transaction.id, changes, dialogContent, dialogRef)
-          .finally(() => {
-            isUpdatingTransaction = false;
-          });
+        void this.updateTransactionFromDialog(
+          transaction.id,
+          changes,
+          dialogContent,
+          dialogRef,
+        ).finally(() => {
+          isUpdatingTransaction = false;
+        });
         return false;
       },
     });
@@ -1006,7 +1041,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private openAddTransactionDialog(): void {
     let isCreatingTransaction = false;
 
-    const dialogRef = this.dialogService.create<UpsertTransactionDialogComponent, UpsertTransactionDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertTransactionDialogComponent,
+      UpsertTransactionDialogData
+    >({
       zTitle: this.translateService.instant('transactions.dialog.add.title'),
       zDescription: this.translateService.instant('transactions.dialog.add.description'),
       zContent: UpsertTransactionDialogComponent,
@@ -1031,11 +1069,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
         }
 
         isCreatingTransaction = true;
-        void this
-          .createTransaction(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingTransaction = false;
-          });
+        void this.createTransaction(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingTransaction = false;
+        });
         return false;
       },
     });
@@ -1063,24 +1099,36 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       ]);
 
       const activeAccounts = accounts.filter((account) => !account.archived);
-      const visibleCategories = categories.filter((category) => category.id !== TRANSFER_CATEGORY_ID);
+      const visibleCategories = categories.filter(
+        (category) => category.id !== TRANSFER_CATEGORY_ID,
+      );
       const activeCategories = visibleCategories.filter((category) => !category.archived);
       const archivedLabel = this.translateService.instant('common.labels.archived');
 
-      const accountNameById = new Map(accounts.map((account) => [account.id, account.name] as const));
-      const categoryNameById = new Map(visibleCategories.map((category) => [category.id, category.name] as const));
-      const categoryTypeById = new Map(visibleCategories.map((category) => [category.id, category.type] as const));
+      const accountNameById = new Map(
+        accounts.map((account) => [account.id, account.name] as const),
+      );
+      const categoryNameById = new Map(
+        visibleCategories.map((category) => [category.id, category.name] as const),
+      );
+      const categoryTypeById = new Map(
+        visibleCategories.map((category) => [category.id, category.type] as const),
+      );
       const accountIconById = new Map(
         accounts.map((account) => [account.id, resolveIconByValue(account.icon)] as const),
       );
       const categoryIconById = new Map(
-        visibleCategories.map((category) => [category.id, resolveIconByValue(category.icon)] as const),
+        visibleCategories.map(
+          (category) => [category.id, resolveIconByValue(category.icon)] as const,
+        ),
       );
       const accountColorHexById = new Map(
         accounts.map((account) => [account.id, resolveColorHexByValue(account.colorKey)] as const),
       );
       const categoryColorHexById = new Map(
-        visibleCategories.map((category) => [category.id, resolveColorHexByValue(category.colorKey)] as const),
+        visibleCategories.map(
+          (category) => [category.id, resolveColorHexByValue(category.colorKey)] as const,
+        ),
       );
 
       this.accountNameById.set(accountNameById);
@@ -1144,7 +1192,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.categoryIconById.set(new Map());
       this.accountColorHexById.set(new Map());
       this.categoryColorHexById.set(new Map());
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transactions.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading transactions.',
+      );
       console.error('[transactions-table-section] Failed to load transactions:', error);
     } finally {
       this.isLoading.set(false);
@@ -1154,19 +1204,26 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private async reloadTransactionsPage(): Promise<void> {
     try {
       this.loadError.set(null);
-      const transactions = await this.transactionsService.listTransactions(this.buildListTransactionsPayload());
+      const transactions = await this.transactionsService.listTransactions(
+        this.buildListTransactionsPayload(),
+      );
 
       this.page.set(transactions.page);
       this.total.set(transactions.total);
       this.rows.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
       this.persistTableState();
     } catch (error) {
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading transactions.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading transactions.',
+      );
       console.error('[transactions-table-section] Failed to reload transactions:', error);
     }
   }
 
-  private async updateTransaction(id: number, changes: TransactionUpdateDto['changes']): Promise<void> {
+  private async updateTransaction(
+    id: number,
+    changes: TransactionUpdateDto['changes'],
+  ): Promise<void> {
     try {
       const result = await this.transactionsService.update({ id, changes });
 
@@ -1221,7 +1278,10 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       dialogRef.close({ id, changes });
       toast.error(this.translateService.instant('transactions.toasts.updateError'));
     } catch (error) {
-      console.error('[transactions-table-section] Failed to update transaction from dialog:', error);
+      console.error(
+        '[transactions-table-section] Failed to update transaction from dialog:',
+        error,
+      );
       dialogContent.setSubmitError('transactions.dialog.edit.errors.updateFailed');
       toast.error(this.translateService.instant('transactions.toasts.updateError'));
     }
@@ -1310,7 +1370,9 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     const persistedState =
-      this.localPreferencesService.getTransactionsTableState<Partial<PersistedTransactionsTableState>>();
+      this.localPreferencesService.getTransactionsTableState<
+        Partial<PersistedTransactionsTableState>
+      >();
     if (!persistedState) {
       return;
     }

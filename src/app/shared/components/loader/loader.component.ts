@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, input, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 
@@ -53,5 +59,7 @@ export class ZardLoaderComponent {
   protected readonly animationDelay = (index: number) => `-${1.3 - index * 0.1}s`;
   protected readonly transform = (index: number) => `rotate(${30 * index}deg) translate(146%)`;
 
-  protected readonly classes = computed(() => mergeClasses(loaderVariants({ zSize: this.zSize() }), this.class()));
+  protected readonly classes = computed(() =>
+    mergeClasses(loaderVariants({ zSize: this.zSize() }), this.class()),
+  );
 }

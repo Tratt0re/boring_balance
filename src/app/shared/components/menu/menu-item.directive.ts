@@ -1,6 +1,15 @@
 import type { BooleanInput } from '@angular/cdk/coercion';
 import { CdkMenuItem } from '@angular/cdk/menu';
-import { booleanAttribute, computed, Directive, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  booleanAttribute,
+  computed,
+  Directive,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked,
+} from '@angular/core';
 
 import type { ClassValue } from 'clsx';
 

@@ -7,7 +7,11 @@ import type { EditableOptionItem } from '@/components/data-table';
 import type { BudgetCreateDto, BudgetUpdateDto } from '@/dtos';
 import { amountToCents } from '@/models/common.model';
 import { NumberFormatService } from '@/services/number-format.service';
-import { editableOptionsToCombobox, normalizeNullableString, toPositiveInteger } from '@/shared/utils/dialog-form-utils';
+import {
+  editableOptionsToCombobox,
+  normalizeNullableString,
+  toPositiveInteger,
+} from '@/shared/utils/dialog-form-utils';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -27,12 +31,7 @@ export interface UpsertBudgetDialogData {
 
 @Component({
   selector: 'app-upsert-budget-dialog',
-  imports: [
-    ReactiveFormsModule,
-    TranslatePipe,
-    ZardComboboxComponent,
-    ZardInputDirective,
-  ],
+  imports: [ReactiveFormsModule, TranslatePipe, ZardComboboxComponent, ZardInputDirective],
   templateUrl: './upsert-budget-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -42,14 +41,19 @@ export class UpsertBudgetDialogComponent {
   private readonly data = inject<UpsertBudgetDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialBudget = this.data?.budget;
 
-  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(this.data?.categoryOptions, this.translateService);
+  protected readonly categoryOptions: readonly ZardComboboxOption[] = editableOptionsToCombobox(
+    this.data?.categoryOptions,
+    this.translateService,
+  );
   protected readonly descriptionMaxLength = BUDGET_DESCRIPTION_MAX_LENGTH;
 
   protected readonly form = new FormGroup({
     categoryId: new FormControl<string | null>(
       this.initialBudget ? `${this.initialBudget.categoryId}` : null,
     ),
-    amount: new FormControl(this.initialBudget ? `${this.initialBudget.amount}` : '', { nonNullable: true }),
+    amount: new FormControl(this.initialBudget ? `${this.initialBudget.amount}` : '', {
+      nonNullable: true,
+    }),
     description: new FormControl(this.initialBudget?.description ?? '', { nonNullable: true }),
   });
 
@@ -179,7 +183,9 @@ export class UpsertBudgetDialogComponent {
   }
 
   private getDescriptionError(value: string): string | null {
-    return value.length > BUDGET_DESCRIPTION_MAX_LENGTH ? 'budgets.dialog.add.errors.descriptionMaxLength' : null;
+    return value.length > BUDGET_DESCRIPTION_MAX_LENGTH
+      ? 'budgets.dialog.add.errors.descriptionMaxLength'
+      : null;
   }
 
   private toAmountCents(value: unknown): number | null {

@@ -38,7 +38,9 @@ export class AccountsService extends BaseIpcService<APIChannel.ACCOUNTS> {
     return mapPaginatedResult(response, (row) => AccountModel.fromDTO(row));
   }
 
-  async listAll(payload?: Omit<DTO.AccountListDto, 'page' | 'page_size' | 'all'>): Promise<readonly AccountModel[]> {
+  async listAll(
+    payload?: Omit<DTO.AccountListDto, 'page' | 'page_size' | 'all'>,
+  ): Promise<readonly AccountModel[]> {
     const response = await this.list({
       ...payload,
       all: true,

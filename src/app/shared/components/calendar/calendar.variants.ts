@@ -2,13 +2,11 @@ import { cva } from 'class-variance-authority';
 
 export const calendarVariants = cva('bg-background p-3 w-fit rounded-lg border');
 
-
 export const calendarNavVariants = cva('flex items-center justify-between gap-2 w-fit mb-4');
 
-
-
-export const calendarWeekdayVariants = cva('text-muted-foreground font-normal text-center text-[0.8rem] w-8');
-
+export const calendarWeekdayVariants = cva(
+  'text-muted-foreground font-normal text-center text-[0.8rem] w-8',
+);
 
 export const calendarDayVariants = cva(
   'p-0 relative focus-within:relative focus-within:z-20 flex mt-1 h-8 w-8 text-sm',

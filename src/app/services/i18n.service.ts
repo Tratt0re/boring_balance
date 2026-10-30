@@ -94,7 +94,9 @@ export class I18nService {
       return DEFAULT_LANGUAGE;
     }
 
-    return this.normalizeLanguage(this.translate.getBrowserCultureLang() ?? this.translate.getBrowserLang());
+    return this.normalizeLanguage(
+      this.translate.getBrowserCultureLang() ?? this.translate.getBrowserLang(),
+    );
   }
 
   private ensureAngularLocaleDataRegistered(language: AppLanguage): void {

@@ -1,4 +1,14 @@
-import { computed, Directive, effect, ElementRef, forwardRef, inject, input, linkedSignal, model } from '@angular/core';
+import {
+  computed,
+  Directive,
+  effect,
+  ElementRef,
+  forwardRef,
+  inject,
+  input,
+  linkedSignal,
+  model,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from '@angular/forms';
 
 import type { ClassValue } from 'clsx';
@@ -159,7 +169,9 @@ export class ZardInputDirective implements ControlValueAccessor {
 
   private syncNativeValue(value: string, useGrouping = !this.isFocused): void {
     const element = this.elementRef.nativeElement as HTMLInputElement | HTMLTextAreaElement;
-    const nextValue = this.isNumericInput() ? this.toLocalizedNumericValue(value, useGrouping) : value;
+    const nextValue = this.isNumericInput()
+      ? this.toLocalizedNumericValue(value, useGrouping)
+      : value;
 
     if (element.value !== nextValue) {
       element.value = nextValue;
@@ -172,8 +184,8 @@ export class ZardInputDirective implements ControlValueAccessor {
 
   private isNativeNumericInput(): boolean {
     return (
-      this.elementRef.nativeElement.tagName.toLowerCase() === 'input'
-      && this.elementRef.nativeElement.getAttribute('type') === 'number'
+      this.elementRef.nativeElement.tagName.toLowerCase() === 'input' &&
+      this.elementRef.nativeElement.getAttribute('type') === 'number'
     );
   }
 
@@ -207,7 +219,9 @@ export class ZardInputDirective implements ControlValueAccessor {
       return normalizedValue;
     }
 
-    const separators = resolveNumberFormatSeparators(this.numberFormatService.currencyFormatStyle());
+    const separators = resolveNumberFormatSeparators(
+      this.numberFormatService.currencyFormatStyle(),
+    );
     const isNegative = normalizedValue.startsWith('-');
     const unsignedValue = isNegative ? normalizedValue.slice(1) : normalizedValue;
     const [integerPart, fractionPart] = unsignedValue.split('.');

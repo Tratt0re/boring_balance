@@ -10,10 +10,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
-import {
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
+import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type { CategoryCreateDto } from '@/dtos';
 import type { CategoryModel } from '@/models';
 import { CategoriesService } from '@/services/categories.service';
@@ -252,7 +249,10 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
     let isUpdatingCategory = false;
 
-    const dialogRef = this.dialogService.create<UpsertCategoryDialogComponent, UpsertCategoryDialogData>({
+    const dialogRef = this.dialogService.create<
+      UpsertCategoryDialogComponent,
+      UpsertCategoryDialogData
+    >({
       zTitle: this.translateService.instant('categories.dialog.edit.title'),
       zDescription: this.translateService.instant('categories.dialog.edit.description'),
       zContent: UpsertCategoryDialogComponent,
@@ -281,11 +281,11 @@ export class CategoriesPage implements OnInit, OnDestroy {
         }
 
         isUpdatingCategory = true;
-        void this
-          .updateCategoryFromDialog(category.id, changes, dialogContent, dialogRef)
-          .finally(() => {
+        void this.updateCategoryFromDialog(category.id, changes, dialogContent, dialogRef).finally(
+          () => {
             isUpdatingCategory = false;
-          });
+          },
+        );
         return false;
       },
     });
@@ -315,7 +315,10 @@ export class CategoriesPage implements OnInit, OnDestroy {
   }
 
   private openManageArchivedCategoriesDialog(): void {
-    this.dialogService.create<ManageArchivedCategoriesDialogComponent, ManageArchivedCategoriesDialogData>({
+    this.dialogService.create<
+      ManageArchivedCategoriesDialogComponent,
+      ManageArchivedCategoriesDialogData
+    >({
       zTitle: this.translateService.instant('categories.archivedDialog.title'),
       zDescription: this.translateService.instant('categories.archivedDialog.description'),
       zContent: ManageArchivedCategoriesDialogComponent,
@@ -351,11 +354,9 @@ export class CategoriesPage implements OnInit, OnDestroy {
         }
 
         isCreatingCategory = true;
-        void this
-          .createCategory(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreatingCategory = false;
-          });
+        void this.createCategory(payload, dialogContent, dialogRef).finally(() => {
+          isCreatingCategory = false;
+        });
         return false;
       },
     });
@@ -384,7 +385,9 @@ export class CategoriesPage implements OnInit, OnDestroy {
       this.categories.set([]);
       this.total.set(0);
       this.page.set(1);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading categories.');
+      this.loadError.set(
+        error instanceof Error ? error.message : 'Unexpected error while loading categories.',
+      );
       console.error('[categories-page] Failed to list categories:', error);
     } finally {
       this.isLoading.set(false);

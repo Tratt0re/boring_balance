@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, OnInit, output, signal, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  input,
+  OnInit,
+  output,
+  signal,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ZardButtonComponent } from '@/shared/components/button';
@@ -35,8 +46,12 @@ export interface StartData {
             <div class="flex items-start gap-3">
               <z-icon zType="pencil-line" class="mt-0.5 shrink-0 text-foreground" />
               <div>
-                <p class="text-sm font-medium">{{ 'onboarding.start.scratch.title' | translate }}</p>
-                <p class="mt-0.5 text-sm text-muted-foreground">{{ 'onboarding.start.scratch.description' | translate }}</p>
+                <p class="text-sm font-medium">
+                  {{ 'onboarding.start.scratch.title' | translate }}
+                </p>
+                <p class="mt-0.5 text-sm text-muted-foreground">
+                  {{ 'onboarding.start.scratch.description' | translate }}
+                </p>
               </div>
             </div>
           </button>
@@ -56,7 +71,9 @@ export interface StartData {
               <z-icon zType="file-up" class="mt-0.5 shrink-0 text-foreground" />
               <div>
                 <p class="text-sm font-medium">{{ 'onboarding.start.import.title' | translate }}</p>
-                <p class="mt-0.5 text-sm text-muted-foreground">{{ 'onboarding.start.import.description' | translate }}</p>
+                <p class="mt-0.5 text-sm text-muted-foreground">
+                  {{ 'onboarding.start.import.description' | translate }}
+                </p>
               </div>
             </div>
           </button>

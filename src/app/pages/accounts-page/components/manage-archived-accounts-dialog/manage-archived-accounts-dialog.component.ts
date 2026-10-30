@@ -3,10 +3,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
 import { AppDataTableComponent, type TableDataItem } from '@/components/data-table';
-import {
-  DEFAULT_VISUAL_COLOR_KEY,
-  DEFAULT_VISUAL_ICON_KEY,
-} from '@/config/visual-options.config';
+import { DEFAULT_VISUAL_COLOR_KEY, DEFAULT_VISUAL_ICON_KEY } from '@/config/visual-options.config';
 import type { AccountModel } from '@/models';
 import { AccountsService } from '@/services/accounts.service';
 import { Z_MODAL_DATA } from '@/shared/components/dialog';
@@ -151,7 +148,9 @@ export class ManageArchivedAccountsDialogComponent implements OnInit {
     } catch (error) {
       this.accounts.set([]);
       this.loadError.set(
-        error instanceof Error ? error.message : 'Unexpected error while loading archived accounts.',
+        error instanceof Error
+          ? error.message
+          : 'Unexpected error while loading archived accounts.',
       );
       console.error('[manage-archived-accounts-dialog] Failed to load archived accounts:', error);
     } finally {

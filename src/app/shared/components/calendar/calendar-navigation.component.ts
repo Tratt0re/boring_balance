@@ -1,9 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { map, startWith } from 'rxjs';
 
-import { getCalendarMonthLabels, resolveCalendarLocale } from '@/shared/components/calendar/calendar.utils';
+import {
+  getCalendarMonthLabels,
+  resolveCalendarLocale,
+} from '@/shared/components/calendar/calendar.utils';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 import { calendarNavVariants } from './calendar.variants';
@@ -33,14 +44,22 @@ import { ZardSelectComponent } from '@/shared/components/select/select.component
       <!-- Month and Year Selectors -->
       <div class="flex items-center space-x-2">
         <!-- Month Select -->
-        <z-select [zValue]="currentMonth()" [zLabel]="currentMonthName()" (zSelectionChange)="onMonthChange($event)">
+        <z-select
+          [zValue]="currentMonth()"
+          [zLabel]="currentMonthName()"
+          (zSelectionChange)="onMonthChange($event)"
+        >
           @for (month of months(); track $index) {
             <z-select-item [zValue]="$index.toString()">{{ month }}</z-select-item>
           }
         </z-select>
 
         <!-- Year Select -->
-        <z-select [zValue]="currentYear()" [zLabel]="currentYear()" (zSelectionChange)="onYearChange($event)">
+        <z-select
+          [zValue]="currentYear()"
+          [zLabel]="currentYear()"
+          (zSelectionChange)="onYearChange($event)"
+        >
           @for (year of availableYears(); track year) {
             <z-select-item [zValue]="year.toString()">{{ year }}</z-select-item>
           }
@@ -70,9 +89,14 @@ export class ZardCalendarNavigationComponent {
   private readonly currentLocale = toSignal(
     this.translateService.onLangChange.pipe(
       map((event) => event.lang),
-      startWith(this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en'),
+      startWith(
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+      ),
     ),
-    { initialValue: this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en' },
+    {
+      initialValue:
+        this.translateService.currentLang ?? this.translateService.getCurrentLang() ?? 'en',
+    },
   );
 
   // Inputs
@@ -89,7 +113,9 @@ export class ZardCalendarNavigationComponent {
   readonly nextMonth = output<void>();
 
   protected readonly navClasses = computed(() => mergeClasses(calendarNavVariants()));
-  protected readonly months = computed(() => getCalendarMonthLabels(resolveCalendarLocale(this.currentLocale())));
+  protected readonly months = computed(() =>
+    getCalendarMonthLabels(resolveCalendarLocale(this.currentLocale())),
+  );
   protected readonly previousMonthAriaLabel = computed(() =>
     this.translateService.instant('common.calendar.actions.previousMonth'),
   );
@@ -161,7 +187,10 @@ export class ZardCalendarNavigationComponent {
 
   protected onMonthChange(month: string | string[]): void {
     if (Array.isArray(month)) {
-      console.warn('Calendar navigation received array for month selection, expected single value. Ignoring:', month);
+      console.warn(
+        'Calendar navigation received array for month selection, expected single value. Ignoring:',
+        month,
+      );
       return;
     }
     this.monthChange.emit(month);
@@ -169,7 +198,10 @@ export class ZardCalendarNavigationComponent {
 
   protected onYearChange(year: string | string[]): void {
     if (Array.isArray(year)) {
-      console.warn('Calendar navigation received array for year selection, expected single value. Ignoring:', year);
+      console.warn(
+        'Calendar navigation received array for year selection, expected single value. Ignoring:',
+        year,
+      );
       return;
     }
     this.yearChange.emit(year);

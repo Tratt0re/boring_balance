@@ -1,5 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation, computed, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation,
+  computed,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -136,10 +144,16 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
   protected readonly deltaCents = signal<number | null>(null);
   protected readonly deltaPct = signal<number | null>(null);
 
-  protected readonly currencyCode = computed(() => this.localPreferencesService.currencyPreference());
+  protected readonly currencyCode = computed(() =>
+    this.localPreferencesService.currencyPreference(),
+  );
 
-  protected readonly chartRows = computed<readonly ValuationTableRow[]>(() => [...this.valuations()].reverse());
-  protected readonly chartLabels = computed<readonly string[]>(() => this.chartRows().map((v) => v.dateFormatted));
+  protected readonly chartRows = computed<readonly ValuationTableRow[]>(() =>
+    [...this.valuations()].reverse(),
+  );
+  protected readonly chartLabels = computed<readonly string[]>(() =>
+    this.chartRows().map((v) => v.dateFormatted),
+  );
 
   protected readonly chartSeries = computed<readonly AppLineChartSeries[]>(() => {
     const rows = this.chartRows();
@@ -409,11 +423,14 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
         }
 
         isUpdating = true;
-        void this
-          .updateValuationFromDialog(valuation.id, changes, dialogContent, dialogRef)
-          .finally(() => {
-            isUpdating = false;
-          });
+        void this.updateValuationFromDialog(
+          valuation.id,
+          changes,
+          dialogContent,
+          dialogRef,
+        ).finally(() => {
+          isUpdating = false;
+        });
         return false;
       },
     });
@@ -470,11 +487,9 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
         }
 
         isCreating = true;
-        void this
-          .createValuationFromDialog(payload, dialogContent, dialogRef)
-          .finally(() => {
-            isCreating = false;
-          });
+        void this.createValuationFromDialog(payload, dialogContent, dialogRef).finally(() => {
+          isCreating = false;
+        });
         return false;
       },
     });

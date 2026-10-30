@@ -26,7 +26,10 @@ import { CategoriesService } from '@/services/categories.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
-import { resolveVisualColorHex, toAmount } from '@/pages/overview-page/components/overview-cards.utils';
+import {
+  resolveVisualColorHex,
+  toAmount,
+} from '@/pages/overview-page/components/overview-cards.utils';
 import {
   CompareYearMonthSelectComponent,
   type CompareYearMonthSelectOption,
@@ -84,16 +87,20 @@ export class ComparePage implements OnInit, OnDestroy {
   protected readonly availableYears = signal<readonly number[]>([]);
   protected readonly leftYear = signal(this.currentDateReference.getFullYear());
   protected readonly leftMonthIndex = signal(this.currentDateReference.getMonth());
-  protected readonly rightYear = signal(new Date(
-    this.currentDateReference.getFullYear(),
-    this.currentDateReference.getMonth() - 1,
-    1,
-  ).getFullYear());
-  protected readonly rightMonthIndex = signal(new Date(
-    this.currentDateReference.getFullYear(),
-    this.currentDateReference.getMonth() - 1,
-    1,
-  ).getMonth());
+  protected readonly rightYear = signal(
+    new Date(
+      this.currentDateReference.getFullYear(),
+      this.currentDateReference.getMonth() - 1,
+      1,
+    ).getFullYear(),
+  );
+  protected readonly rightMonthIndex = signal(
+    new Date(
+      this.currentDateReference.getFullYear(),
+      this.currentDateReference.getMonth() - 1,
+      1,
+    ).getMonth(),
+  );
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly compareResponse = signal<AnalyticsCompareMonthsResponse | null>(null);
@@ -120,44 +127,64 @@ export class ComparePage implements OnInit, OnDestroy {
     this.languageVersion();
     const snapshot = this.leftSnapshot();
     if (snapshot) {
-      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, { month: 'long', year: 'numeric' });
+      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, {
+        month: 'long',
+        year: 'numeric',
+      });
     }
 
-    return this.formatPeriodLabel(this.leftYear(), this.leftMonthIndex(), { month: 'long', year: 'numeric' });
+    return this.formatPeriodLabel(this.leftYear(), this.leftMonthIndex(), {
+      month: 'long',
+      year: 'numeric',
+    });
   });
 
   protected readonly rightPeriodLongLabel = computed(() => {
     this.languageVersion();
     const snapshot = this.rightSnapshot();
     if (snapshot) {
-      return this.formatPeriodLabel(
-        snapshot.period.year,
-        snapshot.period.month_index,
-        { month: 'long', year: 'numeric' },
-      );
+      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, {
+        month: 'long',
+        year: 'numeric',
+      });
     }
 
-    return this.formatPeriodLabel(this.rightYear(), this.rightMonthIndex(), { month: 'long', year: 'numeric' });
+    return this.formatPeriodLabel(this.rightYear(), this.rightMonthIndex(), {
+      month: 'long',
+      year: 'numeric',
+    });
   });
 
   protected readonly leftPeriodShortLabel = computed(() => {
     this.languageVersion();
     const snapshot = this.leftSnapshot();
     if (snapshot) {
-      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, { month: 'short', year: 'numeric' });
+      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, {
+        month: 'short',
+        year: 'numeric',
+      });
     }
 
-    return this.formatPeriodLabel(this.leftYear(), this.leftMonthIndex(), { month: 'short', year: 'numeric' });
+    return this.formatPeriodLabel(this.leftYear(), this.leftMonthIndex(), {
+      month: 'short',
+      year: 'numeric',
+    });
   });
 
   protected readonly rightPeriodShortLabel = computed(() => {
     this.languageVersion();
     const snapshot = this.rightSnapshot();
     if (snapshot) {
-      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, { month: 'short', year: 'numeric' });
+      return this.formatPeriodLabel(snapshot.period.year, snapshot.period.month_index, {
+        month: 'short',
+        year: 'numeric',
+      });
     }
 
-    return this.formatPeriodLabel(this.rightYear(), this.rightMonthIndex(), { month: 'short', year: 'numeric' });
+    return this.formatPeriodLabel(this.rightYear(), this.rightMonthIndex(), {
+      month: 'short',
+      year: 'numeric',
+    });
   });
 
   protected readonly summaryMetrics = computed<readonly CompareSummaryMetricItem[]>(() => {
@@ -220,7 +247,9 @@ export class ComparePage implements OnInit, OnDestroy {
     ] as const;
   });
 
-  protected readonly summaryChartCurrencyCode = computed(() => this.localPreferencesService.currencyPreference());
+  protected readonly summaryChartCurrencyCode = computed(() =>
+    this.localPreferencesService.currencyPreference(),
+  );
 
   protected readonly expenseRadarRows = computed<readonly CompareExpenseCategoryTableRow[]>(() =>
     this.expenseCategoryTableRows().slice(0, RADAR_EXPENSE_CATEGORY_LIMIT),
@@ -266,65 +295,80 @@ export class ComparePage implements OnInit, OnDestroy {
     ] as const;
   });
 
-  protected readonly expenseCategoryTableRows = computed<readonly CompareExpenseCategoryTableRow[]>(() => {
-    this.languageVersion();
-    this.categoryVisualVersion();
-    const leftSnapshot = this.leftSnapshot();
-    const rightSnapshot = this.rightSnapshot();
-    const leftRows = leftSnapshot?.expenses_by_category ?? [];
-    const rightRows = rightSnapshot?.expenses_by_category ?? [];
+  protected readonly expenseCategoryTableRows = computed<readonly CompareExpenseCategoryTableRow[]>(
+    () => {
+      this.languageVersion();
+      this.categoryVisualVersion();
+      const leftSnapshot = this.leftSnapshot();
+      const rightSnapshot = this.rightSnapshot();
+      const leftRows = leftSnapshot?.expenses_by_category ?? [];
+      const rightRows = rightSnapshot?.expenses_by_category ?? [];
 
-    const rowByCategoryId = new Map<number, CompareExpenseCategoryTableRow>();
-    const upsertRow = (
-      categoryId: number,
-      categoryName: string,
-      amountCents: number,
-      targetColumn: 'leftAmount' | 'rightAmount',
-    ): void => {
-      const existing = rowByCategoryId.get(categoryId);
-      if (existing) {
-        const nextLeftAmount = targetColumn === 'leftAmount' ? toAmount(amountCents) : existing.leftAmount;
-        const nextRightAmount = targetColumn === 'rightAmount' ? toAmount(amountCents) : existing.rightAmount;
+      const rowByCategoryId = new Map<number, CompareExpenseCategoryTableRow>();
+      const upsertRow = (
+        categoryId: number,
+        categoryName: string,
+        amountCents: number,
+        targetColumn: 'leftAmount' | 'rightAmount',
+      ): void => {
+        const existing = rowByCategoryId.get(categoryId);
+        if (existing) {
+          const nextLeftAmount =
+            targetColumn === 'leftAmount' ? toAmount(amountCents) : existing.leftAmount;
+          const nextRightAmount =
+            targetColumn === 'rightAmount' ? toAmount(amountCents) : existing.rightAmount;
+          rowByCategoryId.set(categoryId, {
+            ...existing,
+            [targetColumn]: targetColumn === 'leftAmount' ? nextLeftAmount : nextRightAmount,
+            deltaAmount: nextLeftAmount - nextRightAmount,
+            categoryName: existing.categoryName || this.resolveCategoryLabel(categoryName),
+          });
+          return;
+        }
+
+        const leftAmount = targetColumn === 'leftAmount' ? toAmount(amountCents) : 0;
+        const rightAmount = targetColumn === 'rightAmount' ? toAmount(amountCents) : 0;
         rowByCategoryId.set(categoryId, {
-          ...existing,
-          [targetColumn]: targetColumn === 'leftAmount' ? nextLeftAmount : nextRightAmount,
-          deltaAmount: nextLeftAmount - nextRightAmount,
-          categoryName: existing.categoryName || this.resolveCategoryLabel(categoryName),
+          categoryId,
+          categoryName: this.resolveCategoryLabel(categoryName),
+          categoryIcon: this.categoryIconById.get(categoryId) ?? null,
+          categoryColorHex: this.categoryColorHexById.get(categoryId) ?? null,
+          leftAmount,
+          rightAmount,
+          deltaAmount: leftAmount - rightAmount,
         });
-        return;
+      };
+
+      for (const row of leftRows) {
+        upsertRow(
+          Number(row.category_id),
+          String(row.category_name ?? ''),
+          Number(row.amount_cents ?? 0),
+          'leftAmount',
+        );
       }
 
-      const leftAmount = targetColumn === 'leftAmount' ? toAmount(amountCents) : 0;
-      const rightAmount = targetColumn === 'rightAmount' ? toAmount(amountCents) : 0;
-      rowByCategoryId.set(categoryId, {
-        categoryId,
-        categoryName: this.resolveCategoryLabel(categoryName),
-        categoryIcon: this.categoryIconById.get(categoryId) ?? null,
-        categoryColorHex: this.categoryColorHexById.get(categoryId) ?? null,
-        leftAmount,
-        rightAmount,
-        deltaAmount: leftAmount - rightAmount,
+      for (const row of rightRows) {
+        upsertRow(
+          Number(row.category_id),
+          String(row.category_name ?? ''),
+          Number(row.amount_cents ?? 0),
+          'rightAmount',
+        );
+      }
+
+      return Array.from(rowByCategoryId.values()).sort((left, right) => {
+        const maxAmountComparison =
+          Math.max(right.leftAmount, right.rightAmount) -
+          Math.max(left.leftAmount, left.rightAmount);
+        if (maxAmountComparison !== 0) {
+          return maxAmountComparison;
+        }
+
+        return left.categoryName.localeCompare(right.categoryName);
       });
-    };
-
-    for (const row of leftRows) {
-      upsertRow(Number(row.category_id), String(row.category_name ?? ''), Number(row.amount_cents ?? 0), 'leftAmount');
-    }
-
-    for (const row of rightRows) {
-      upsertRow(Number(row.category_id), String(row.category_name ?? ''), Number(row.amount_cents ?? 0), 'rightAmount');
-    }
-
-    return Array.from(rowByCategoryId.values()).sort((left, right) => {
-      const maxAmountComparison =
-        Math.max(right.leftAmount, right.rightAmount) - Math.max(left.leftAmount, left.rightAmount);
-      if (maxAmountComparison !== 0) {
-        return maxAmountComparison;
-      }
-
-      return left.categoryName.localeCompare(right.categoryName);
-    });
-  });
+    },
+  );
 
   protected readonly expenseCategoryTableStructure = computed<readonly TableDataItem[]>(() => {
     this.languageVersion();
@@ -415,7 +459,11 @@ export class ComparePage implements OnInit, OnDestroy {
   }
 
   protected onMonthSelectionChange(side: CompareSide, nextMonthIndex: number): void {
-    if (!Number.isInteger(nextMonthIndex) || nextMonthIndex < 0 || nextMonthIndex >= MONTHS_IN_YEAR) {
+    if (
+      !Number.isInteger(nextMonthIndex) ||
+      nextMonthIndex < 0 ||
+      nextMonthIndex >= MONTHS_IN_YEAR
+    ) {
       return;
     }
 
@@ -432,10 +480,7 @@ export class ComparePage implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.loadError.set(null);
 
-    await Promise.all([
-      this.loadAvailableYears(),
-      this.loadCategoryVisuals(),
-    ]);
+    await Promise.all([this.loadAvailableYears(), this.loadCategoryVisuals()]);
 
     this.initializeDefaultSelections();
     await this.loadComparison();
@@ -463,9 +508,13 @@ export class ComparePage implements OnInit, OnDestroy {
   private async loadCategoryVisuals(): Promise<void> {
     try {
       const categories = await this.categoriesService.listAll();
-      this.categoryIconById = new Map(categories.map((category) => [category.id, category.icon] as const));
+      this.categoryIconById = new Map(
+        categories.map((category) => [category.id, category.icon] as const),
+      );
       this.categoryColorHexById = new Map(
-        categories.map((category) => [category.id, resolveVisualColorHex(category.colorKey)] as const),
+        categories.map(
+          (category) => [category.id, resolveVisualColorHex(category.colorKey)] as const,
+        ),
       );
       this.categoryVisualVersion.update((currentValue) => currentValue + 1);
     } catch (error) {
@@ -520,7 +569,11 @@ export class ComparePage implements OnInit, OnDestroy {
 
       console.error('[compare-page] Failed to load compare analytics:', error);
       this.compareResponse.set(null);
-      this.loadError.set(error instanceof Error ? error.message : 'Unexpected error while loading compare analytics.');
+      this.loadError.set(
+        error instanceof Error
+          ? error.message
+          : 'Unexpected error while loading compare analytics.',
+      );
     } finally {
       if (requestId === this.compareLoadRequestId) {
         this.isLoading.set(false);
@@ -546,7 +599,9 @@ export class ComparePage implements OnInit, OnDestroy {
     options: Intl.DateTimeFormatOptions,
   ): string {
     try {
-      return new Intl.DateTimeFormat(this.resolveLocale(), options).format(new Date(year, monthIndex, 1));
+      return new Intl.DateTimeFormat(this.resolveLocale(), options).format(
+        new Date(year, monthIndex, 1),
+      );
     } catch {
       return new Intl.DateTimeFormat(undefined, options).format(new Date(year, monthIndex, 1));
     }
@@ -554,7 +609,9 @@ export class ComparePage implements OnInit, OnDestroy {
 
   private resolveLocale(): string | undefined {
     const currentLanguage = this.translateService.getCurrentLang();
-    return typeof currentLanguage === 'string' && currentLanguage.trim().length > 0 ? currentLanguage : undefined;
+    return typeof currentLanguage === 'string' && currentLanguage.trim().length > 0
+      ? currentLanguage
+      : undefined;
   }
 
   private resolveCategoryLabel(categoryName: string): string {

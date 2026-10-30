@@ -87,7 +87,10 @@ export class ZardCheckboxComponent implements ControlValueAccessor {
   private onTouched: OnTouchedType = noopFn;
 
   protected readonly classes = computed(() =>
-    mergeClasses(checkboxVariants({ zType: this.zType(), zSize: this.zSize(), zShape: this.zShape() }), this.class()),
+    mergeClasses(
+      checkboxVariants({ zType: this.zType(), zSize: this.zSize(), zShape: this.zShape() }),
+      this.class(),
+    ),
   );
 
   protected readonly hostClasses = computed(() =>
@@ -99,7 +102,9 @@ export class ZardCheckboxComponent implements ControlValueAccessor {
   );
 
   readonly disabledByForm = signal(false);
-  protected readonly labelClasses = computed(() => mergeClasses(checkboxLabelVariants({ zSize: this.zSize() })));
+  protected readonly labelClasses = computed(() =>
+    mergeClasses(checkboxLabelVariants({ zSize: this.zSize() })),
+  );
   protected readonly disabled = computed(() => this.zDisabled() || this.disabledByForm());
 
   writeValue(val: boolean): void {
@@ -127,7 +132,7 @@ export class ZardCheckboxComponent implements ControlValueAccessor {
       return;
     }
 
-    this.zChecked.update(v => !v);
+    this.zChecked.update((v) => !v);
     this.onChange(this.zChecked());
     this.checkChange.emit(this.zChecked());
   }

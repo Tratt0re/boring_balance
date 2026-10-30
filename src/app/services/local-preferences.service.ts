@@ -58,7 +58,9 @@ export class LocalPreferencesService {
 
   setTheme(theme: ThemePreference): void {
     const normalizedTheme: ThemePreference =
-      theme === 'light' || theme === 'dark' || theme === 'system' ? theme : LOCAL_PREFERENCE_DEFAULTS.theme;
+      theme === 'light' || theme === 'dark' || theme === 'system'
+        ? theme
+        : LOCAL_PREFERENCE_DEFAULTS.theme;
 
     this.themePreferenceSignal.set(normalizedTheme);
     this.setText(LocalPreferenceKey.THEME, normalizedTheme);
@@ -69,7 +71,10 @@ export class LocalPreferencesService {
   }
 
   setThemeColor(themeColor: string): void {
-    this.setText(LocalPreferenceKey.THEME_COLOR, themeColor.trim() || LOCAL_PREFERENCE_DEFAULTS.themeColor);
+    this.setText(
+      LocalPreferenceKey.THEME_COLOR,
+      themeColor.trim() || LOCAL_PREFERENCE_DEFAULTS.themeColor,
+    );
   }
 
   getLanguage(): string {
