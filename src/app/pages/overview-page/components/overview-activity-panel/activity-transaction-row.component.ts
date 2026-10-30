@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MessageSquareText } from 'lucide-angular';
 
@@ -25,16 +25,14 @@ import type { ActivityTransactionRow } from './activity-row.types';
   },
 })
 export class ActivityTransactionRowComponent {
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly translateService = inject(TranslateService);
+
   readonly row = input.required<ActivityTransactionRow>();
   readonly isPending = input(false);
   readonly settledChange = output<boolean>();
 
   protected readonly descriptionIndicatorIcon = MessageSquareText;
-
-  constructor(
-    private readonly numberFormatService: NumberFormatService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   protected settledStatusTooltip(settled: boolean): string {
     return this.translate(

@@ -149,6 +149,12 @@ function groupMoneyFlowExpenseCategoriesByThreshold(
   },
 })
 export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyRef = inject(DestroyRef);
   private categoryColorHexById = new Map<number, string>();
   private responseCache: AnalyticsMoneyFlowSankeyByMonthResponse | null = null;
@@ -168,13 +174,7 @@ export class MoneyFlowBreakdownSectionComponent implements OnInit, OnChanges {
       : MONEY_FLOW_SANKEY_CHART_HEIGHT_DESKTOP,
   );
 
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly translateService: TranslateService,
-  ) {
+  constructor() {
     effect(() => {
       this.numberFormatService.currencySymbol();
       this.numberFormatService.currencyFormatStyle();

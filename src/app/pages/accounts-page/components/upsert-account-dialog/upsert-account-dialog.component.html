@@ -47,11 +47,15 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">
+    <label for="account-type" class="mb-1.5 block text-sm font-medium">
       {{ 'common.labels.type' | translate }}
       <span class="text-destructive">*</span>
     </label>
-    <z-select formControlName="type" [zPlaceholder]="'common.placeholders.selectType' | translate">
+    <z-select
+      id="account-type"
+      formControlName="type"
+      [zPlaceholder]="'common.placeholders.selectType' | translate"
+    >
       @for (option of typeOptions; track option.value) {
         <z-select-item [zValue]="option.value" [zLabel]="option.label | translate" />
       }
@@ -62,8 +66,11 @@
   </div>
 
   <div>
-    <label class="mb-1.5 block text-sm font-medium">{{ 'common.labels.color' | translate }}</label>
+    <label for="account-color" class="mb-1.5 block text-sm font-medium">{{
+      'common.labels.color' | translate
+    }}</label>
     <z-select
+      id="account-color"
       formControlName="colorKey"
       [zPlaceholder]="'common.placeholders.selectColor' | translate"
     >

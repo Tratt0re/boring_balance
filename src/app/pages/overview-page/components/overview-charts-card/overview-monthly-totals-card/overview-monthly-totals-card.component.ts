@@ -45,6 +45,10 @@ const MONTHLY_TOTALS_BAR_CHART_HEIGHT_MOBILE = '18rem';
   },
 })
 export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyRef = inject(DestroyRef);
   private rowsCache: ReadonlyArray<{
     month: string;
@@ -66,12 +70,6 @@ export class OverviewMonthlyTotalsCardComponent implements OnInit, OnChanges {
   protected readonly currencyCode = computed(() =>
     this.localPreferencesService.currencyPreference(),
   );
-
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.series.set(this.buildMonthlyTotalsBarSeries([]));

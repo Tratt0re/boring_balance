@@ -66,7 +66,7 @@ module.exports = defineConfig([
         { allowInterfaces: 'with-single-extends' },
       ],
       // Known gaps that are reported but do not fail the build yet (see PLAN.md 7.4).
-      '@angular-eslint/prefer-inject': 'warn',
+      '@angular-eslint/prefer-inject': 'error',
       // `app-` for the app's own components, `z-` for the vendored Zard UI set under shared/components.
       '@angular-eslint/directive-selector': [
         'error',
@@ -95,7 +95,7 @@ module.exports = defineConfig([
     extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {
       // Labels in front of custom form controls are not linked to them yet (see PLAN.md 7.4).
-      '@angular-eslint/template/label-has-associated-control': 'warn',
+      '@angular-eslint/template/label-has-associated-control': 'error',
     },
   },
 

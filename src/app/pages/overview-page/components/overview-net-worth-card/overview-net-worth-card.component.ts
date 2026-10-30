@@ -8,6 +8,7 @@ import {
   input,
   output,
   signal,
+  inject,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -43,6 +44,10 @@ const INVESTMENT_ACCOUNT_TYPES = new Set(['brokerage', 'crypto']);
   },
 })
 export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
   readonly snapshotsChange = output<AnalyticsNetWorthSnapshotsDto>();
@@ -67,12 +72,6 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   protected readonly totalAfterReceivablesPayablesCents = computed(
     () => this.totalNetWorthCents() + this.totalReceivablesCents() - this.totalPayablesCents(),
   );
-
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-  ) {}
 
   ngOnInit(): void {
     void this.loadData();

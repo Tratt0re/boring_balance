@@ -57,6 +57,9 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OverviewPage implements OnInit, OnDestroy {
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly translateService = inject(TranslateService);
+
   @ViewChild(OverviewNetWorthCardComponent)
   private overviewNetWorthCardComponent?: OverviewNetWorthCardComponent;
   @ViewChild(OverviewAllocationCardComponent)
@@ -90,11 +93,6 @@ export class OverviewPage implements OnInit, OnDestroy {
   protected readonly currentCalendarYear = this.currentDateReference.getFullYear();
   protected readonly currentCalendarMonthIndex = this.currentDateReference.getMonth();
   protected readonly recentActivityLimit = RECENT_ACTIVITY_DEFAULT_LIMIT;
-
-  constructor(
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.updateResponsiveState();

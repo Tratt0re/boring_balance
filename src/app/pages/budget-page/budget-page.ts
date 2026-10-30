@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  inject,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -76,6 +77,16 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetPage implements OnInit, OnDestroy {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly budgetsService = inject(BudgetsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly currentCalendarYear = new Date().getFullYear();
   protected readonly activeSectionView = signal<BudgetSectionView>('setup');
 
@@ -213,18 +224,6 @@ export class BudgetPage implements OnInit, OnDestroy {
   });
 
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly budgetsService: BudgetsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly alertDialogService: ZardAlertDialogService,
-    private readonly dialogService: ZardDialogService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.activateToolbar();

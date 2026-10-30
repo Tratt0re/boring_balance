@@ -4,7 +4,7 @@
       @if (isDatePickerField(field)) {
         <div>
           @if (field.label) {
-            <label class="mb-1.5 block text-sm font-medium">
+            <label class="mb-1.5 block text-sm font-medium" [attr.for]="fieldControlId(field)">
               {{ displayLabel(field) }}
               @if (field.required) {
                 <span class="text-destructive">*</span>
@@ -13,6 +13,7 @@
           }
 
           <z-date-picker
+            [zId]="fieldControlId(field)"
             [value]="dateValue(field)"
             [placeholder]="displayPlaceholder(field)"
             [zIconPosition]="field.zIconPosition ?? 'right'"
@@ -34,7 +35,7 @@
       } @else if (isComboboxField(field)) {
         <div>
           @if (field.label) {
-            <label class="mb-1.5 block text-sm font-medium">
+            <label class="mb-1.5 block text-sm font-medium" [attr.for]="fieldControlId(field)">
               {{ displayLabel(field) }}
               @if (field.required) {
                 <span class="text-destructive">*</span>
@@ -43,6 +44,7 @@
           }
 
           <z-combobox
+            [zId]="fieldControlId(field)"
             zWidth="full"
             [value]="comboboxValue(field)"
             [multiple]="field.multiple ?? false"
@@ -65,7 +67,7 @@
       } @else if (isSelectField(field)) {
         <div>
           @if (field.label) {
-            <label class="mb-1.5 block text-sm font-medium">
+            <label class="mb-1.5 block text-sm font-medium" [attr.for]="fieldControlId(field)">
               {{ displayLabel(field) }}
               @if (field.required) {
                 <span class="text-destructive">*</span>
@@ -74,6 +76,7 @@
           }
 
           <z-select
+            [id]="fieldControlId(field)"
             [zValue]="selectValue(field)"
             [zMultiple]="field.multiple ?? false"
             [zMaxLabelCount]="field.maxLabelCount ?? 1"
@@ -118,7 +121,7 @@
       } @else if (isInputField(field)) {
         <div>
           @if (field.label) {
-            <label class="mb-1.5 block text-sm font-medium">
+            <label class="mb-1.5 block text-sm font-medium" [attr.for]="fieldControlId(field)">
               {{ displayLabel(field) }}
               @if (field.required) {
                 <span class="text-destructive">*</span>
@@ -128,6 +131,7 @@
 
           <input
             z-input
+            [id]="fieldControlId(field)"
             [type]="field.inputType ?? 'text'"
             [value]="inputValue(field)"
             [placeholder]="displayPlaceholder(field)"

@@ -17,6 +17,10 @@ export interface CompareYearMonthSelectOption {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CompareYearMonthSelectComponent {
+  // Two of these sit side by side on the Compare page, so each needs its own ids for its labels.
+  private static nextInstance = 0;
+  protected readonly idPrefix = `compare-select-${CompareYearMonthSelectComponent.nextInstance++}`;
+
   readonly titleKey = input('compare.selectors.left.title');
   readonly periodLabel = input('');
   readonly yearValue = input(new Date().getFullYear());

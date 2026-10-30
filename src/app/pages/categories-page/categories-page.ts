@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  inject,
 } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
@@ -150,6 +151,12 @@ const createCategoryTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesPage implements OnInit, OnDestroy {
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly translateService = inject(TranslateService);
+
   protected readonly categories = signal<readonly CategoryTableRow[]>([]);
   protected readonly total = signal(0);
   protected readonly page = signal(1);
@@ -181,14 +188,6 @@ export class CategoriesPage implements OnInit, OnDestroy {
     },
   ];
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly categoriesService: CategoriesService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly alertDialogService: ZardAlertDialogService,
-    private readonly dialogService: ZardDialogService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

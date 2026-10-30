@@ -65,6 +65,13 @@ interface NetWorthDistributionEntry {
   },
 })
 export class OverviewAllocationCardComponent implements OnInit, OnChanges {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly accountsService = inject(AccountsService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly router = inject(Router);
+  private readonly translateService = inject(TranslateService);
+
   private readonly destroyRef = inject(DestroyRef);
   private accountColorHexById = new Map<number, string>();
   private netWorthResponseCache: AnalyticsNetWorthByAccountResponse | null = null;
@@ -89,14 +96,7 @@ export class OverviewAllocationCardComponent implements OnInit, OnChanges {
     this.isSmallScreen() ? ALLOCATION_PIE_CHART_HEIGHT_MOBILE : ALLOCATION_PIE_CHART_HEIGHT_DESKTOP,
   );
 
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly accountsService: AccountsService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly router: Router,
-    private readonly translateService: TranslateService,
-  ) {
+  constructor() {
     effect(() => {
       this.numberFormatService.currencySymbol();
       this.numberFormatService.currencyFormatStyle();

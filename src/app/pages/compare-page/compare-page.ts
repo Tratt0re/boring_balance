@@ -75,6 +75,12 @@ interface CompareExpenseCategoryTableRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComparePage implements OnInit, OnDestroy {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly translateService = inject(TranslateService);
+
   private releaseToolbarActions: (() => void) | null = null;
   private readonly destroyRef = inject(DestroyRef);
   private compareLoadRequestId = 0;
@@ -418,14 +424,6 @@ export class ComparePage implements OnInit, OnDestroy {
   });
 
   protected readonly hasComparisonData = computed(() => this.compareResponse() !== null);
-
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

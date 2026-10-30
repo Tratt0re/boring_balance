@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  inject,
 } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -32,6 +33,9 @@ const BREAKDOWN_YEAR_SELECTOR_MIN_YEAR = 2000;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreakdownPage implements OnInit, OnDestroy {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+
   private releaseToolbarActions: (() => void) | null = null;
   private readonly currentYearReference = new Date().getFullYear();
   protected readonly isSmallScreen = signal(false);
@@ -54,11 +58,6 @@ export class BreakdownPage implements OnInit, OnDestroy {
       label: String(this.currentYearReference),
     },
   ];
-
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly toolbarContextService: ToolbarContextService,
-  ) {}
 
   ngOnInit(): void {
     this.updateResponsiveState();

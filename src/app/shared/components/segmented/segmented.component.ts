@@ -142,9 +142,7 @@ export class ZardSegmentedComponent implements ControlValueAccessor, OnInit {
     };
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched = () => {};
 
   constructor() {

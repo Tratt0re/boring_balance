@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
+  inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -162,6 +163,13 @@ const createAccountTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountsPage implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly accountsService = inject(AccountsService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly translateService = inject(TranslateService);
+
   protected readonly accounts = signal<readonly AccountTableRow[]>([]);
   protected readonly total = signal(0);
   protected readonly page = signal(1);
@@ -197,15 +205,6 @@ export class AccountsPage implements OnInit, OnDestroy {
   ];
 
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly router: Router,
-    private readonly accountsService: AccountsService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly alertDialogService: ZardAlertDialogService,
-    private readonly dialogService: ZardDialogService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

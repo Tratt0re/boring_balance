@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import {
   type SheetOnClickCallback,
@@ -23,7 +23,7 @@ export interface AppSheetFormOpenOptions extends Omit<
   providedIn: 'root',
 })
 export class AppSheetFormService {
-  constructor(private readonly zardSheetService: ZardSheetService) {}
+  private readonly zardSheetService = inject(ZardSheetService);
 
   open(options: AppSheetFormOpenOptions): ZardSheetRef<AppSheetFormComponent> {
     const { fields, values, validateBeforeSubmit = true, onSubmit, ...sheetOptions } = options;

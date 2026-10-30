@@ -10,6 +10,7 @@ import {
   output,
   signal,
   viewChild,
+  inject,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -83,6 +84,13 @@ const DEFAULT_COLOR_HEX =
   },
 })
 export class OverviewActivityPanelComponent implements OnInit, OnChanges {
+  private readonly accountsService = inject(AccountsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly router = inject(Router);
+  private readonly transactionsService = inject(TransactionsService);
+  private readonly translateService = inject(TranslateService);
+
   readonly year = input(new Date().getFullYear());
   readonly monthIndex = input(new Date().getMonth());
   readonly limit = input(DEFAULT_LIMIT);
@@ -137,15 +145,6 @@ export class OverviewActivityPanelComponent implements OnInit, OnChanges {
         ? 'transactions.table.actions.add'
         : 'transactions.transfers.table.actions.add',
   );
-
-  constructor(
-    private readonly accountsService: AccountsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly dialogService: ZardDialogService,
-    private readonly router: Router,
-    private readonly transactionsService: TransactionsService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     void this.loadActivity();

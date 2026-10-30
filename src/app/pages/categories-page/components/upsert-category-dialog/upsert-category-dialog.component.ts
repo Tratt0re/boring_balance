@@ -51,6 +51,8 @@ export interface UpsertCategoryDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertCategoryDialogComponent {
+  private readonly translateService = inject(TranslateService);
+
   private readonly data = inject<UpsertCategoryDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialCategory = this.data?.category;
 
@@ -72,7 +74,7 @@ export class UpsertCategoryDialogComponent {
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  constructor(private readonly translateService: TranslateService) {
+  constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       this.clearSubmitError();
     });

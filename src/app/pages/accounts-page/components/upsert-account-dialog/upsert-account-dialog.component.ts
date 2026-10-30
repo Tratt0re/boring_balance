@@ -54,6 +54,8 @@ export interface UpsertAccountDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpsertAccountDialogComponent {
+  private readonly translateService = inject(TranslateService);
+
   private readonly data = inject<UpsertAccountDialogData | null>(Z_MODAL_DATA, { optional: true });
   private readonly initialAccount = this.data?.account;
 
@@ -73,7 +75,7 @@ export class UpsertAccountDialogComponent {
   protected readonly submitAttempted = signal(false);
   protected readonly errorKey = signal<string | null>(null);
 
-  constructor(private readonly translateService: TranslateService) {
+  constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
       this.clearSubmitError();
     });

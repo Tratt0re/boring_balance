@@ -26,11 +26,12 @@
   </div>
 
   <div class="sm:col-span-2">
-    <label class="mb-1.5 block text-sm font-medium">
+    <label for="account-valuation-date" class="mb-1.5 block text-sm font-medium">
       {{ 'accountValuations.dialog.fields.date' | translate }}
       <span class="text-destructive">*</span>
     </label>
     <z-date-picker
+      zId="account-valuation-date"
       zIconPosition="right"
       formControlName="date"
       [placeholder]="'common.placeholders.pickDate' | translate"

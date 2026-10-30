@@ -68,6 +68,9 @@ const GRID_SPAN_CLASS_BY_VALUE = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppSheetFormComponent {
+  private static nextInstance = 0;
+  private readonly idPrefix = `sheet-form-${AppSheetFormComponent.nextInstance++}`;
+
   private readonly numberFormatService = inject(NumberFormatService);
   private readonly translateService = inject(TranslateService);
   private readonly sheetData = inject<AppSheetFormData | null>(Z_SHEET_DATA, { optional: true });
@@ -245,6 +248,11 @@ export class AppSheetFormComponent {
       ...option,
       label: this.translateMaybe(option.label, option.translate ?? fieldTranslate),
     }));
+  }
+
+  // Ties each label to its control. The instance number keeps ids unique when two forms are open.
+  protected fieldControlId(field: AppSheetField): string {
+    return `${this.idPrefix}-${field.id}`;
   }
 
   protected displayLabel(field: AppSheetField): string {

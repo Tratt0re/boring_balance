@@ -6,6 +6,7 @@ import {
   OnInit,
   computed,
   signal,
+  inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -37,6 +38,14 @@ import { translateMaybe } from '@/shared/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecurringEventItemsPage implements OnInit, OnDestroy {
+  private readonly route = inject(ActivatedRoute);
+  private readonly planItemsService = inject(PlanItemsService);
+  private readonly accountsService = inject(AccountsService);
+  private readonly categoriesService = inject(CategoriesService);
+  protected readonly numberFormatService = inject(NumberFormatService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly translateService = inject(TranslateService);
+
   protected readonly planItem = signal<PlanItemModel | null>(null);
   protected readonly primaryAccountName = signal<string | null>(null);
   protected readonly primaryAccountIcon = signal<ZardIcon>(DEFAULT_VISUAL_ICON_KEY as ZardIcon);
@@ -78,16 +87,6 @@ export class RecurringEventItemsPage implements OnInit, OnDestroy {
   });
 
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly planItemsService: PlanItemsService,
-    private readonly accountsService: AccountsService,
-    private readonly categoriesService: CategoriesService,
-    protected readonly numberFormatService: NumberFormatService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

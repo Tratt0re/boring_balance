@@ -158,9 +158,7 @@ export class ZardDatePickerComponent implements ControlValueAccessor {
 
   readonly dateChange = output<Date | null>();
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: Date | null) => void = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched: () => void = () => {};
 
   protected readonly buttonClasses = computed(() => {

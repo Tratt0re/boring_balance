@@ -7,6 +7,7 @@ import {
   input,
   output,
   signal,
+  inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -253,6 +254,18 @@ const createTransactionTableStructure = (
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly transactionsService = inject(TransactionsService);
+  private readonly accountsService = inject(AccountsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly sheetFormService = inject(AppSheetFormService);
+  private readonly translateService = inject(TranslateService);
+
   readonly toolbarItemNavigation = input<ToolbarItemNavigation | null>(null);
   readonly planItemId = input<number | null>(null);
   readonly accountId = input<number | null>(null);
@@ -513,20 +526,6 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   };
 
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly router: Router,
-    private readonly transactionsService: TransactionsService,
-    private readonly accountsService: AccountsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly alertDialogService: ZardAlertDialogService,
-    private readonly dialogService: ZardDialogService,
-    private readonly sheetFormService: AppSheetFormService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     if (!this.isEmbeddedContext()) {

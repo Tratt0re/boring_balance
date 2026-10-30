@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
   computed,
   signal,
+  inject,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -125,6 +126,18 @@ const createValuationTableStructure = (
   encapsulation: ViewEncapsulation.None,
 })
 export class AccountValuationsPage implements OnInit, OnDestroy {
+  private readonly route = inject(ActivatedRoute);
+  private readonly accountsService = inject(AccountsService);
+  private readonly accountValuationsService = inject(AccountValuationsService);
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly alertDialogService = inject(ZardAlertDialogService);
+  private readonly dialogService = inject(ZardDialogService);
+  private readonly translateService = inject(TranslateService);
+  private readonly datePipe = inject(DatePipe);
+
   protected readonly accountName = signal<string | null>(null);
   protected readonly accountIcon = signal<ZardIcon>(DEFAULT_VISUAL_ICON_KEY as ZardIcon);
   protected readonly accountColorKey = signal<string>(DEFAULT_VISUAL_COLOR_KEY);
@@ -192,20 +205,6 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
       action: () => this.openAddValuationDialog(),
     },
   ];
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly accountsService: AccountsService,
-    private readonly accountValuationsService: AccountValuationsService,
-    private readonly analyticsService: AnalyticsService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly alertDialogService: ZardAlertDialogService,
-    private readonly dialogService: ZardDialogService,
-    private readonly translateService: TranslateService,
-    private readonly datePipe: DatePipe,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

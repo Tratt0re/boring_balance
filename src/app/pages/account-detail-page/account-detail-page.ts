@@ -41,6 +41,12 @@ type AccountDetailView = 'transactions' | 'transfers';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountDetailPage implements OnInit, OnDestroy {
+  private readonly accountsService = inject(AccountsService);
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly toolbarContextService = inject(ToolbarContextService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly routeView = toSignal(
@@ -64,14 +70,6 @@ export class AccountDetailPage implements OnInit, OnDestroy {
 
   private accountId: number | null = null;
   private releaseToolbarActions: (() => void) | null = null;
-
-  constructor(
-    private readonly accountsService: AccountsService,
-    private readonly analyticsService: AnalyticsService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly toolbarContextService: ToolbarContextService,
-    private readonly translateService: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.releaseToolbarActions = this.toolbarContextService.activate({

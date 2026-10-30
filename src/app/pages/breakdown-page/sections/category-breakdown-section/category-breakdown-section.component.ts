@@ -173,6 +173,12 @@ function parseMonthIndexFromMonthKey(monthKey: string, targetYear: number): numb
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
+  private readonly analyticsService = inject(AnalyticsService);
+  private readonly categoriesService = inject(CategoriesService);
+  private readonly localPreferencesService = inject(LocalPreferencesService);
+  private readonly numberFormatService = inject(NumberFormatService);
+  private readonly translateService = inject(TranslateService);
+
   private readonly currentDateReference = new Date();
   private readonly destroyRef = inject(DestroyRef);
   private categoryColorHexById = new Map<number, string>();
@@ -228,13 +234,7 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
       : 'overview.cards.monthlyTotals.series.incomes',
   );
 
-  constructor(
-    private readonly analyticsService: AnalyticsService,
-    private readonly categoriesService: CategoriesService,
-    private readonly localPreferencesService: LocalPreferencesService,
-    private readonly numberFormatService: NumberFormatService,
-    private readonly translateService: TranslateService,
-  ) {
+  constructor() {
     effect(() => {
       this.numberFormatService.currencySymbol();
       this.numberFormatService.currencyFormatStyle();
