@@ -24,7 +24,7 @@ import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardCheckboxComponent } from '@/shared/components/checkbox';
 import { ZardComboboxComponent, type ZardComboboxOption } from '@/shared/components/combobox';
 import { ZardDatePickerComponent } from '@/shared/components/date-picker';
-import { ZardIconComponent, ZARD_ICONS, type ZardIcon } from '@/shared/components/icon';
+import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
 import { ZardInputDirective } from '@/shared/components/input';
 import { ZardSelectImports } from '@/shared/components/select';
 import { ZardSwitchComponent } from '@/shared/components/switch';
@@ -43,7 +43,6 @@ import type {
   TableActiveFilterItem,
   TableHeaderActionItem,
   TableActionColumnPosition,
-  TableCellAlign,
   TableCellType,
   TableDataItem,
   TableCurrencyIconMode,
@@ -51,9 +50,27 @@ import type {
   TableSortState,
   TableWidthValue,
 } from './data-table.types';
+import {
+  type TableRow,
+  type TableRowRecord,
+  isRegisteredIcon,
+  isColumnDataItem,
+  normalizeColumnAlignment,
+  toCurrencyIconMode,
+  isActionDataItem,
+  resolveSelectValue,
+  resolveComboboxValue,
+  getRawValue,
+  toComparableString,
+  toNumberValue,
+  toDateValue,
+  toBooleanValue,
+  resolveTailwindFractionSize,
+  isEmptyValue,
+  hasSelectionChanged,
+  isPromiseLike,
+} from './data-table.utils';
 
-type TableRow = object;
-type TableRowRecord = Record<string, unknown>;
 type TableColumn = ColumnDataItem;
 type EditableValueMap = Map<TableRow, Map<string, unknown>>;
 type EditableErrorMap = Map<TableRow, Map<string, string>>;
@@ -149,7 +166,7 @@ export class AppDataTableComponent {
     const columns: TableColumn[] = [];
 
     for (const item of this.structure()) {
-      if (this.isColumnDataItem(item)) {
+      if (isColumnDataItem(item)) {
         columns.push(item);
       }
     }
@@ -161,7 +178,7 @@ export class AppDataTableComponent {
     const items: ActionItem[] = [];
 
     for (const item of this.structure()) {
-      if (!this.isActionDataItem(item)) {
+      if (!isActionDataItem(item)) {
         continue;
       }
 
@@ -173,7 +190,7 @@ export class AppDataTableComponent {
 
   protected readonly actionColumn = computed<ActionDataItem | null>(() => {
     for (const item of this.structure()) {
-      if (this.isActionDataItem(item)) {
+      if (isActionDataItem(item)) {
         return item;
       }
     }
@@ -282,6 +299,7 @@ export class AppDataTableComponent {
         : 'hover:text-foreground',
     );
   }
+
   protected readonly stickyHeaderCellClasses = computed(() =>
     mergeClasses(
       this.stickyHeader()
@@ -351,7 +369,7 @@ export class AppDataTableComponent {
         }
       }
 
-      if (this.hasSelectionChanged(selectedRows, nextSelection)) {
+      if (hasSelectionChanged(selectedRows, nextSelection)) {
         this.updateSelection(nextSelection);
       }
     });
@@ -532,7 +550,7 @@ export class AppDataTableComponent {
 
     try {
       const result = actionItem.action();
-      if (this.isPromiseLike(result)) {
+      if (isPromiseLike(result)) {
         void result.catch((error) => {
           console.error('[app-data-table] Table action failed:', error);
         });
@@ -549,7 +567,7 @@ export class AppDataTableComponent {
 
     try {
       const result = actionItem.action(row);
-      if (this.isPromiseLike(result)) {
+      if (isPromiseLike(result)) {
         void result.catch((error) => {
           console.error('[app-data-table] Action failed:', error);
         });
@@ -589,7 +607,7 @@ export class AppDataTableComponent {
   }
 
   protected getEditableChecked(row: TableRow, column: EditableColumnDataItem): boolean {
-    return this.toBooleanValue(this.getEditableValue(row, column)) ?? false;
+    return toBooleanValue(this.getEditableValue(row, column)) ?? false;
   }
 
   protected getEditableSelectValue(row: TableRow, column: EditableColumnDataItem): string {
@@ -608,7 +626,7 @@ export class AppDataTableComponent {
   }
 
   protected getEditableDateValue(row: TableRow, column: EditableColumnDataItem): Date | null {
-    return this.toDateValue(this.getEditableValue(row, column));
+    return toDateValue(this.getEditableValue(row, column));
   }
 
   protected stringifyOptionValue(value: string | number | boolean): string {
@@ -709,7 +727,7 @@ export class AppDataTableComponent {
       return;
     }
 
-    const normalizedValue = this.resolveSelectValue(value, column);
+    const normalizedValue = resolveSelectValue(value, column);
     this.applyEditableChange(row, column, normalizedValue);
   }
 
@@ -723,7 +741,7 @@ export class AppDataTableComponent {
       return;
     }
 
-    const normalizedValue = this.resolveComboboxValue(value, column);
+    const normalizedValue = resolveComboboxValue(value, column);
     this.applyEditableChange(row, column, normalizedValue);
   }
 
@@ -740,7 +758,7 @@ export class AppDataTableComponent {
   }
 
   protected formatCellValue(row: TableRow, column: ColumnDataItem): string {
-    return this.formatColumnValue(this.getRawValue(row, column.columnKey), column);
+    return this.formatColumnValue(getRawValue(row, column.columnKey), column);
   }
 
   protected currencyCellIcon(row: TableRow, column: ColumnDataItem): CurrencyCellIcon | null {
@@ -757,7 +775,7 @@ export class AppDataTableComponent {
       return { icon: 'arrow-right-left', color: 'var(--positive-transaction-color)' };
     }
 
-    const numericValue = this.toNumberValue(this.getRawValue(row, column.columnKey));
+    const numericValue = toNumberValue(getRawValue(row, column.columnKey));
     if (numericValue === null || numericValue === 0) {
       return null;
     }
@@ -771,7 +789,7 @@ export class AppDataTableComponent {
     const fallbackIcon = this.resolveTableIcon(column.cellIcon?.icon);
     const iconColumnKey = column.cellIcon?.iconColumnKey;
     if (iconColumnKey) {
-      const icon = this.resolveTableIcon(this.getRawValue(row, iconColumnKey));
+      const icon = this.resolveTableIcon(getRawValue(row, iconColumnKey));
       if (icon) {
         return icon;
       }
@@ -783,7 +801,7 @@ export class AppDataTableComponent {
   protected cellIconColor(row: TableRow, column: ColumnDataItem): string | null {
     const colorColumnKey = column.cellIcon?.colorHexColumnKey;
     if (colorColumnKey) {
-      const colorValue = this.getRawValue(row, colorColumnKey);
+      const colorValue = getRawValue(row, colorColumnKey);
       if (typeof colorValue === 'string' && colorValue.trim().length > 0) {
         return colorValue;
       }
@@ -837,7 +855,7 @@ export class AppDataTableComponent {
   }
 
   private columnAlignmentClasses(column: TableColumn): string {
-    switch (this.normalizeColumnAlignment(column.align)) {
+    switch (normalizeColumnAlignment(column.align)) {
       case 'right':
         return 'text-right';
       case 'center':
@@ -849,7 +867,7 @@ export class AppDataTableComponent {
   }
 
   private columnHeaderButtonAlignmentClasses(column: TableColumn): string {
-    switch (this.normalizeColumnAlignment(column.align)) {
+    switch (normalizeColumnAlignment(column.align)) {
       case 'right':
         return 'justify-end text-right';
       case 'center':
@@ -889,7 +907,7 @@ export class AppDataTableComponent {
     const fallbackIcon = this.resolveTableIcon(column.badge?.icon);
     const iconColumnKey = column.badge?.iconColumnKey;
     if (iconColumnKey) {
-      const icon = this.resolveTableIcon(this.getRawValue(row, iconColumnKey));
+      const icon = this.resolveTableIcon(getRawValue(row, iconColumnKey));
       if (icon) {
         return icon;
       }
@@ -955,12 +973,12 @@ export class AppDataTableComponent {
       return this.getEditableValue(row, column);
     }
 
-    return this.getRawValue(row, column.columnKey);
+    return getRawValue(row, column.columnKey);
   }
 
   private compareValues(leftValue: unknown, rightValue: unknown, type: TableCellType): number {
-    const leftEmpty = this.isEmptyValue(leftValue);
-    const rightEmpty = this.isEmptyValue(rightValue);
+    const leftEmpty = isEmptyValue(leftValue);
+    const rightEmpty = isEmptyValue(rightValue);
 
     if (leftEmpty && rightEmpty) {
       return 0;
@@ -992,7 +1010,7 @@ export class AppDataTableComponent {
       case 'string':
       default: {
         const locale = this.resolveLocale();
-        return this.toComparableString(leftValue).localeCompare(this.toComparableString(rightValue), locale, {
+        return toComparableString(leftValue).localeCompare(toComparableString(rightValue), locale, {
           numeric: true,
           sensitivity: 'base',
         });
@@ -1019,7 +1037,7 @@ export class AppDataTableComponent {
       return mappedIcon;
     }
 
-    return this.isRegisteredIcon(normalizedValue) ? (normalizedValue as ZardIcon) : null;
+    return isRegisteredIcon(normalizedValue) ? (normalizedValue as ZardIcon) : null;
   }
 
   private badgeColorHex(row: TableRow, column: ColumnDataItem): string | null {
@@ -1028,12 +1046,8 @@ export class AppDataTableComponent {
       return null;
     }
 
-    const colorValue = this.getRawValue(row, colorColumnKey);
+    const colorValue = getRawValue(row, colorColumnKey);
     return typeof colorValue === 'string' && colorValue.trim().length > 0 ? colorValue : null;
-  }
-
-  private isRegisteredIcon(value: string): value is keyof typeof ZARD_ICONS {
-    return Object.prototype.hasOwnProperty.call(ZARD_ICONS, value);
   }
 
   private shouldRenderAction(actionItem: ActionItem, row: TableRow): boolean {
@@ -1049,8 +1063,8 @@ export class AppDataTableComponent {
   }
 
   private compareNumberValues(leftValue: unknown, rightValue: unknown): number {
-    const leftNumber = this.toNumberValue(leftValue);
-    const rightNumber = this.toNumberValue(rightValue);
+    const leftNumber = toNumberValue(leftValue);
+    const rightNumber = toNumberValue(rightValue);
 
     if (leftNumber === null && rightNumber === null) {
       return 0;
@@ -1068,8 +1082,8 @@ export class AppDataTableComponent {
   }
 
   private compareDateValues(leftValue: unknown, rightValue: unknown): number {
-    const leftDate = this.toDateValue(leftValue);
-    const rightDate = this.toDateValue(rightValue);
+    const leftDate = toDateValue(leftValue);
+    const rightDate = toDateValue(rightValue);
 
     if (leftDate === null && rightDate === null) {
       return 0;
@@ -1087,8 +1101,8 @@ export class AppDataTableComponent {
   }
 
   private compareBooleanValues(leftValue: unknown, rightValue: unknown): number {
-    const leftBoolean = this.toBooleanValue(leftValue);
-    const rightBoolean = this.toBooleanValue(rightValue);
+    const leftBoolean = toBooleanValue(leftValue);
+    const rightBoolean = toBooleanValue(rightValue);
 
     if (leftBoolean === null && rightBoolean === null) {
       return 0;
@@ -1106,7 +1120,7 @@ export class AppDataTableComponent {
   }
 
   private formatValueByType(value: unknown, column: ColumnDataItem): string {
-    if (this.isEmptyValue(value)) {
+    if (isEmptyValue(value)) {
       return '-';
     }
 
@@ -1114,7 +1128,7 @@ export class AppDataTableComponent {
 
     switch (type) {
       case 'number': {
-        const numericValue = this.toNumberValue(value);
+        const numericValue = toNumberValue(value);
         if (numericValue === null) {
           return '-';
         }
@@ -1123,7 +1137,7 @@ export class AppDataTableComponent {
       }
 
       case 'currency': {
-        const numericValue = this.toNumberValue(value);
+        const numericValue = toNumberValue(value);
         if (numericValue === null) {
           return '-';
         }
@@ -1133,7 +1147,7 @@ export class AppDataTableComponent {
       }
 
       case 'date': {
-        const dateValue = this.toDateValue(value);
+        const dateValue = toDateValue(value);
         if (!dateValue) {
           return '-';
         }
@@ -1146,7 +1160,7 @@ export class AppDataTableComponent {
       }
 
       case 'datetime': {
-        const dateValue = this.toDateValue(value);
+        const dateValue = toDateValue(value);
         if (!dateValue) {
           return '-';
         }
@@ -1161,7 +1175,7 @@ export class AppDataTableComponent {
       }
 
       case 'boolean': {
-        const booleanValue = this.toBooleanValue(value);
+        const booleanValue = toBooleanValue(value);
         if (booleanValue === null) {
           return '-';
         }
@@ -1171,16 +1185,8 @@ export class AppDataTableComponent {
 
       case 'string':
       default:
-        return this.toComparableString(value);
+        return toComparableString(value);
     }
-  }
-
-  private isColumnDataItem(item: TableDataItem): item is ColumnDataItem {
-    return 'columnName' in item && 'columnKey' in item;
-  }
-
-  private normalizeColumnAlignment(value: unknown): TableCellAlign | null {
-    return value === 'left' || value === 'center' || value === 'right' ? value : null;
   }
 
   private currencyIconMode(row: TableRow, column: ColumnDataItem): TableCurrencyIconMode {
@@ -1190,26 +1196,18 @@ export class AppDataTableComponent {
 
     const iconModeColumnKey = column.currency?.iconModeColumnKey;
     if (iconModeColumnKey) {
-      const rowIconMode = this.toCurrencyIconMode(this.getRawValue(row, iconModeColumnKey));
+      const rowIconMode = toCurrencyIconMode(getRawValue(row, iconModeColumnKey));
       if (rowIconMode) {
         return rowIconMode;
       }
     }
 
-    return this.toCurrencyIconMode(column.currency?.modality ?? column.currency?.iconMode) ?? 'none';
-  }
-
-  private toCurrencyIconMode(value: unknown): TableCurrencyIconMode | null {
-    return value === 'currency-trend' || value === 'transfer' || value === 'none' ? value : null;
+    return toCurrencyIconMode(column.currency?.modality ?? column.currency?.iconMode) ?? 'none';
   }
 
   private formatColumnValue(value: unknown, column: ColumnDataItem): string {
     const translatedValue = this.translateIfString(value);
     return this.formatValueByType(translatedValue, column);
-  }
-
-  private isActionDataItem(item: TableDataItem): item is ActionDataItem {
-    return 'actionItems' in item && Array.isArray(item.actionItems);
   }
 
   private commitEditableTextValue(
@@ -1268,8 +1266,8 @@ export class AppDataTableComponent {
       return false;
     }
 
-    const leftDate = this.toDateValue(leftValue);
-    const rightDate = this.toDateValue(rightValue);
+    const leftDate = toDateValue(leftValue);
+    const rightDate = toDateValue(rightValue);
 
     return leftDate !== null && rightDate !== null && leftDate.getTime() === rightDate.getTime();
   }
@@ -1282,16 +1280,16 @@ export class AppDataTableComponent {
 
     if (rules.required) {
       if (column.editableType === 'checkbox' || column.editableType === 'switch') {
-        if (this.toBooleanValue(value) !== true) {
+        if (toBooleanValue(value) !== true) {
           return 'This field is required.';
         }
-      } else if (this.isEmptyValue(value)) {
+      } else if (isEmptyValue(value)) {
         return 'This field is required.';
       }
     }
 
-    if (!this.isEmptyValue(value) && (rules.min !== undefined || rules.max !== undefined)) {
-      const numericValue = this.toNumberValue(value);
+    if (!isEmptyValue(value) && (rules.min !== undefined || rules.max !== undefined)) {
+      const numericValue = toNumberValue(value);
       if (numericValue === null) {
         return 'Invalid numeric value.';
       }
@@ -1305,8 +1303,8 @@ export class AppDataTableComponent {
       }
     }
 
-    if (!this.isEmptyValue(value) && (rules.minLength !== undefined || rules.maxLength !== undefined)) {
-      const textValue = this.toComparableString(value);
+    if (!isEmptyValue(value) && (rules.minLength !== undefined || rules.maxLength !== undefined)) {
+      const textValue = toComparableString(value);
 
       if (rules.minLength !== undefined && textValue.length < rules.minLength) {
         return `Value must be at least ${rules.minLength} characters.`;
@@ -1317,10 +1315,10 @@ export class AppDataTableComponent {
       }
     }
 
-    if (rules.pattern && !this.isEmptyValue(value)) {
+    if (rules.pattern && !isEmptyValue(value)) {
       try {
         const regex = new RegExp(rules.pattern);
-        if (!regex.test(this.toComparableString(value))) {
+        if (!regex.test(toComparableString(value))) {
           return 'Invalid format.';
         }
       } catch {
@@ -1348,20 +1346,6 @@ export class AppDataTableComponent {
     return parsedValue ?? inputValue;
   }
 
-  private resolveSelectValue(selectedValue: string, column: EditableColumnDataItem): unknown {
-    const option = column.options?.find((item) => `${item.value}` === selectedValue);
-    return option ? option.value : selectedValue;
-  }
-
-  private resolveComboboxValue(selectedValue: string | null, column: EditableColumnDataItem): unknown {
-    if (selectedValue === null) {
-      return null;
-    }
-
-    const option = column.options?.find((item) => `${item.value}` === selectedValue);
-    return option ? option.value : selectedValue;
-  }
-
   private getEditableValue(row: TableRow, column: EditableColumnDataItem): unknown {
     const valueByColumn = this.editableValuesState().get(row);
 
@@ -1369,7 +1353,7 @@ export class AppDataTableComponent {
       return valueByColumn.get(column.columnKey);
     }
 
-    return this.getRawValue(row, column.columnKey);
+    return getRawValue(row, column.columnKey);
   }
 
   private setEditableValue(row: TableRow, columnKey: string, value: unknown): void {
@@ -1400,10 +1384,6 @@ export class AppDataTableComponent {
     this.editableErrorsState.set(nextErrors);
   }
 
-  private getRawValue(row: TableRow, columnKey: string): unknown {
-    return (row as TableRowRecord)[columnKey];
-  }
-
   private resolveCurrencyCode(): string {
     const explicitCurrencyCode = this.currencyCode().trim();
     if (explicitCurrencyCode.length > 0) {
@@ -1416,14 +1396,6 @@ export class AppDataTableComponent {
   private resolveLocale(): string | undefined {
     const currentLanguage = this.translateService.currentLang?.trim();
     return currentLanguage && currentLanguage.length > 0 ? currentLanguage : undefined;
-  }
-
-  private toComparableString(value: unknown): string {
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    return String(value);
   }
 
   private translateIfString(value: unknown): unknown {
@@ -1442,58 +1414,6 @@ export class AppDataTableComponent {
     return this.translateService.instant(value);
   }
 
-  private toNumberValue(value: unknown): number | null {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      return value;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedValue = Number(value);
-      return Number.isFinite(parsedValue) ? parsedValue : null;
-    }
-
-    return null;
-  }
-
-  private toDateValue(value: unknown): Date | null {
-    if (value instanceof Date && !Number.isNaN(value.getTime())) {
-      return value;
-    }
-
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      const normalizedMilliseconds = Math.abs(value) < 10_000_000_000 ? value * 1000 : value;
-      const date = new Date(normalizedMilliseconds);
-      return Number.isNaN(date.getTime()) ? null : date;
-    }
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      const parsedMilliseconds = Date.parse(value);
-      if (Number.isNaN(parsedMilliseconds)) {
-        return null;
-      }
-
-      return new Date(parsedMilliseconds);
-    }
-
-    return null;
-  }
-
-  private toBooleanValue(value: unknown): boolean | null {
-    if (typeof value === 'boolean') {
-      return value;
-    }
-
-    if (value === 1 || value === '1' || value === 'true') {
-      return true;
-    }
-
-    if (value === 0 || value === '0' || value === 'false') {
-      return false;
-    }
-
-    return null;
-  }
-
   private normalizeSizeValue(value: TableWidthValue | null | undefined): string | null {
     if (typeof value === 'number') {
       if (!Number.isFinite(value) || value <= 0) {
@@ -1509,7 +1429,7 @@ export class AppDataTableComponent {
         return null;
       }
 
-      const fractionSizeValue = this.resolveTailwindFractionSize(normalizedValue);
+      const fractionSizeValue = resolveTailwindFractionSize(normalizedValue);
       if (fractionSizeValue !== null) {
         return fractionSizeValue;
       }
@@ -1520,55 +1440,9 @@ export class AppDataTableComponent {
     return null;
   }
 
-  private resolveTailwindFractionSize(value: string): string | null {
-    if (value === 'w-full' || value === 'full') {
-      return '100%';
-    }
-
-    const fractionMatch = /^(?:(?:w|min-w|max-w)-)?(\d+)\/(\d+)$/.exec(value);
-    if (!fractionMatch) {
-      return null;
-    }
-
-    const numerator = Number(fractionMatch[1]);
-    const denominator = Number(fractionMatch[2]);
-    if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || numerator <= 0 || denominator <= 0) {
-      return null;
-    }
-
-    const percent = (numerator / denominator) * 100;
-    if (!Number.isFinite(percent) || percent <= 0) {
-      return null;
-    }
-
-    const normalizedPercent = Number(percent.toFixed(6));
-    return `${normalizedPercent}%`;
-  }
-
-  private isEmptyValue(value: unknown): boolean {
-    return value === null || value === undefined || value === '';
-  }
-
-  private hasSelectionChanged(previous: ReadonlySet<TableRow>, next: ReadonlySet<TableRow>): boolean {
-    if (previous.size !== next.size) {
-      return true;
-    }
-
-    for (const row of previous) {
-      if (!next.has(row)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   private updateSelection(nextSelection: ReadonlySet<TableRow>): void {
     this.selectedRowsState.set(nextSelection);
     this.selectedRowsChange.emit(Array.from(nextSelection));
   }
 
-  private isPromiseLike(value: unknown): value is Promise<unknown> {
-    return typeof value === 'object' && value !== null && 'then' in value;
-  }
 }
