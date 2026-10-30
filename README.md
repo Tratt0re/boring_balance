@@ -161,7 +161,7 @@ npm run format:check   # report files that differ from the Prettier style
 npm run format         # rewrite them
 ```
 
-`lint` runs in CI. `format:check` does not yet: much of the existing code predates the Prettier setup, so running `format` once will touch many files and is best done as a commit of its own.
+`lint` and `format:check` both run in CI, so run `npm run format` before pushing.
 
 ### Run the Tests
 
