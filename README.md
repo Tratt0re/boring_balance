@@ -153,6 +153,16 @@ npm run dist:linux    # Linux
 
 Build artifacts are written to the `release/` directory. Output is platform-specific — macOS produces a `.dmg` or `.app` bundle, Windows produces an installer and portable `.exe`, and Linux produces an AppImage or `.deb` depending on configuration.
 
+### Lint and Format
+
+```bash
+npm run lint           # ESLint (TypeScript, Angular templates, the Electron JavaScript); fails on errors only
+npm run format:check   # report files that differ from the Prettier style
+npm run format         # rewrite them
+```
+
+`lint` runs in CI. `format:check` does not yet: much of the existing code predates the Prettier setup, so running `format` once will touch many files and is best done as a commit of its own.
+
 ### Run the Tests
 
 ```bash
@@ -160,7 +170,7 @@ npm test -- --watch=false   # renderer (Angular) tests
 npm run test:electron       # main-process tests, run under Electron's Node against a real SQLite database
 ```
 
-The same two commands, followed by `npm run build` and `npm run build:preload:prod`, run on every push and pull request (see `.github/workflows/ci.yml`).
+The same two commands, together with `npm run lint`, `npm run build` and `npm run build:preload:prod`, run on every push and pull request (see `.github/workflows/ci.yml`).
 
 ### Try the Renderer in a Browser
 

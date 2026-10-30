@@ -36,11 +36,8 @@ Boring Balance: local-first personal finance desktop app. Angular renderer + Ele
 - Build renderer: `npm run build`
 - Build preload: `npm run build:preload` (esbuild, outputs `electron/preload.bundle.cjs`)
 - Production build + package: `npm run build:prod`, then `npm run dist:mac` / `dist:win` / `dist:linux`
-- Lint: none configured. Format with Prettier.
+- Lint: `npm run lint` (ESLint with angular-eslint). Format: `npm run format` / `npm run format:check` (Prettier).
 - DB environment override: `BORINGBALANCE_DB_ENV=dev|prod`
-
-## Known Gaps
-- `scripts/build-preload.js` requires `esbuild`, which is not in `package.json`. It only resolves transitively via the lockfile. Add it to devDependencies.
 
 ## Project Structure
 - `src/app/pages/`: route-level pages, each with optional feature-local `services/`
