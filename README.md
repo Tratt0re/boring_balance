@@ -62,11 +62,11 @@ Nothing here is forced. Use as much or as little of it as you want.
 
 **Angular 21** is the UI framework. All components are standalone, use `ChangeDetectionStrategy.OnPush`, and `ViewEncapsulation.None`. This keeps the application fast and the styling surface predictable.
 
-**Electron 40** provides the desktop runtime. It wraps the Angular application in a native window and gives it access to the file system, native OS dialogs, and system-level lifecycle events.
+**Electron 45** provides the desktop runtime. It wraps the Angular application in a native window and gives it access to the file system, native OS dialogs, and system-level lifecycle events.
 
 **SQLite via better-sqlite3** is the local database. All data is persisted in a single `.db` file managed by the Electron main process. `better-sqlite3` is a synchronous SQLite binding for Node.js, chosen for its simplicity and reliability in a desktop context.
 
-**Tailwind CSS 4.1** handles all styling. The design uses OKLCH color tokens defined in `src/styles.css` for perceptually uniform colors across light and dark themes. Color is used sparingly and with semantic intent — grayscale forms the foundation, and color appears only where meaning requires it.
+**Tailwind CSS 4** handles all styling. The design uses OKLCH color tokens defined in `src/styles.css` for perceptually uniform colors across light and dark themes. Color is used sparingly and with semantic intent — grayscale forms the foundation, and color appears only where meaning requires it.
 
 **Class Variance Authority (CVA)** manages component variants in a type-safe way. It keeps UI component APIs consistent and prevents style drift across the application.
 
@@ -78,7 +78,7 @@ Nothing here is forced. Use as much or as little of it as you want.
 
 **ngx-Sonner** provides toast notifications for user feedback — confirmations, errors, and status messages.
 
-**TypeScript** is used throughout, in both the Angular renderer and the Electron main process.
+**TypeScript** is used in the Angular renderer. The Electron main process is plain JavaScript (CommonJS).
 
 ---
 
@@ -90,11 +90,11 @@ Boring Balance is structured around the standard Electron model: a main process 
 
 **Angular renderer application** is the UI layer. It runs in a Chromium-based renderer process and is built as a standard Angular SPA. All UI logic, state management, and component rendering happens here. The renderer has no direct access to the file system or database.
 
-**IPC communication layer** connects the two processes. The renderer sends typed messages to the main process via Electron's `ipcRenderer`, which handles them and returns results. This boundary is explicit and deliberate — it keeps the UI layer decoupled from native concerns.
+**IPC communication layer** connects the two processes. The renderer calls a small typed client exposed by the preload script; the main process answers only requests that come from the app's own page, validates every payload, and returns results. This boundary is explicit and deliberate — it keeps the UI layer decoupled from native concerns. The window runs sandboxed with context isolation, a strict Content-Security-Policy, and a link allow-list, and the packaged app has the Electron fuses that disable Node-as-a-runtime switched off.
 
-**SQLite database** is managed entirely in the main process using `better-sqlite3`. The schema is defined in SQL migration files applied in order on startup. All database reads and writes go through the main process, which exposes them to the renderer via IPC handlers.
+**SQLite database** is managed entirely in the main process using `better-sqlite3`. The schema is defined in numbered SQL files under `electron/database/schemas/`, with later changes applied as migrations on startup. All database reads and writes go through the main process, which exposes them to the renderer via IPC handlers.
 
-**Services and controllers pattern** organizes IPC handlers in the main process by domain — accounts, transactions, transfers, budgets, and so on. In the renderer, Angular services wrap the IPC calls and expose typed results to components.
+**Services, controllers and models** organize the main process by domain — accounts, transactions, transfers, budgets, and so on. Controllers validate payloads; models are the only place with SQL. In the renderer, Angular services wrap the IPC calls and expose typed results to components. See [docs/architecture.md](docs/architecture.md) for the full pattern guide.
 
 ---
 

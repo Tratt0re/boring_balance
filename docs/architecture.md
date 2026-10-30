@@ -82,6 +82,7 @@ module.exports = {
   transactionsController,
   transfersController,
   resetController,
+  settingsController,
   updateController,
   windowController,
 };
@@ -116,6 +117,7 @@ Database access is centralized through `electron/database/index.js`, which expor
 - `selectRows`
 - `updateRows`
 - `deleteRows`
+- `buildWhereClause`
 - `runMigrations`
 - `createDatabase`
 - `getDatabase`
@@ -377,7 +379,7 @@ The database layer exists to:
 
 Database infrastructure:
 - `electron/database/index.js`
-- likely supporting files under `electron/database/`
+- supporting files under `electron/database/`: `db.js` (connection), `core_op.js` (CRUD helpers), `schema.js` and `schemas/NNN_name.sql` (schema), `migrations.js` and `migrations/` (upgrades), `system.js` (first start, app metadata)
 
 Electron persistence/domain models:
 - `electron/models/*.model.js`
@@ -396,6 +398,7 @@ From `electron/database/index.js`:
 
 ```js
 module.exports = {
+  buildWhereClause,
   closeDatabase,
   countRows,
   createDatabase,
@@ -589,7 +592,10 @@ These routes exist to expose backend-like capabilities from the main process to 
 
 ## File/location conventions
 
-- Channel definitions: `src/app/config/api.ts`
+- Typed contract: `src/app/config/api.ts`
+- Channel names: `electron/ipc/channels.js`
+- Channel-to-controller map: `electron/ipc/handlers.js` (registered, with sender checks, by `electron/ipc/index.js`)
+- Renderer-side client: built by `electron/ipc/client.js` and exposed by `electron/preload.js`
 - Angular IPC base class: `src/app/services/base-ipc.service.ts`
 - Electron controllers: `electron/controllers/*.controller.js`
 
@@ -643,7 +649,7 @@ readonly accounts: {
 1. Decide whether the feature belongs to an existing channel or a new one.
 2. Add method signatures to `ElectronIpcClient`.
 3. Implement controller functions in Electron.
-4. Expose them through the preload/main IPC wiring.
+4. Declare the channel name in `electron/ipc/channels.js` and map it in `electron/ipc/handlers.js`.
 5. Wrap them in an Angular service.
 
 ## Best practices and rules
@@ -1197,7 +1203,7 @@ External integrations are limited and privacy-conscious. The project avoids host
 - SQLite,
 - optional sync folders,
 - Excel import/export,
-- update checks,
+- update checks (one read of the public GitHub releases API, see the README),
 - UI libraries.
 
 ## File/location conventions
@@ -1252,16 +1258,16 @@ Folder selection in `sync.controller.js`:
 ```js
 async function selectFolder() {
   const result = await dialog.showOpenDialog({
+    defaultPath: resolveDefaultPickerPath(),
     properties: ['openDirectory', 'createDirectory'],
   });
 
-  if (result.canceled || result.filePaths.length === 0) {
+  const folderPath = result.canceled ? null : (result.filePaths[0] ?? null);
+  if (!pickedSyncFolder.authorize(folderPath)) {
     return null;
   }
 
-  return {
-    folderPath: result.filePaths[0],
-  };
+  return { folderPath };
 }
 ```
 
@@ -1474,6 +1480,7 @@ This project follows a clear and disciplined desktop application architecture:
 - **DTO contracts** as the renderer/main boundary
 - **local preferences and feature services** for client-side state
 - **event-driven IPC** for long-running/background features like sync
+- **a security and reliability layer** in the main process (section 18)
 
 The most important architectural rule is:
 
@@ -1490,3 +1497,34 @@ That rule is consistently reflected in:
 - `electron/controllers/sync.controller.js`
 - `electron/controllers/utils.js`
 - `electron/database/index.js`
+
+---
+
+## 18. Security and Reliability Layer
+
+The renderer is treated as untrusted: anything that can run script in it must not be able to reach the user's files or all of their financial data through the IPC channels. These pieces implement that, all in the main process.
+
+### Window and page hardening
+- `electron/window.js` creates windows with `nodeIntegration: false`, `contextIsolation: true` and `sandbox: true`. `setWindowOpenHandler` and `will-navigate` keep the window on the app's own page and send other links through the external-URL allow-list.
+- `src/index.html` carries a Content-Security-Policy meta tag (`default-src 'none'`, scripts and connections only from `'self'`). `tests/electron/content-security-policy.test.js` checks it.
+- `scripts/electron-fuses.js` (an electron-builder `afterPack` hook, using `@electron/fuses`) turns off `RunAsNode`, the Node inspector CLI arguments and `NODE_OPTIONS` in the packaged app, and loads the app only from the asar.
+
+### IPC trust
+- `electron/utils/trusted-sender.js` makes every `ipcMain.handle` answer only the app's own page in its top-level frame. Permission prompts are never granted.
+- `electron/utils/external-url.js` is the allow-list for `shell.openExternal` (https links inside this repository on GitHub, and `boringbalance.com` with its subdomains; no credentials, no custom port).
+- `electron/utils/authorized-path.js` remembers the one file or folder the user picked in a native dialog. Restore, import and the backup and sync folders only act on a path the user picked; the renderer cannot name arbitrary files.
+
+### Operation safety
+- `electron/utils/operation-lock.js` is a single lock (`runExclusive`) around every operation that copies, replaces or deletes the database file: backup, restore, sync and reset. A second one is refused with an error naming the first.
+- `electron/utils/quit-outcome.js` turns the results of the quit-time backup and sync into the dialog `electron/main.js` shows. Only a failure asks the user anything.
+- Restore puts the previous database back if replacing it fails, and reports a failure event.
+
+### Settings file
+- `electron/utils/settings-store.js` owns `settings.json` (backup and sync configuration). A damaged file is moved aside as `settings.json.corrupt-<timestamp>`, never overwritten, and the problem is remembered in the main process.
+- `electron/controllers/settings.controller.js` exposes that problem (`settings:get-problem`, `settings:acknowledge-problem`) to `SettingsProblemService`, which `DataSectionComponent` uses to show a dismissible notice in Settings → Data & Storage. Only the kept file's name is sent, never its path.
+
+### Tests and checks
+- `npm run test:electron` runs `tests/electron/` with Vitest under Electron's Node against a real better-sqlite3 database (`tests/electron/helpers/electron-db.js` provides a fresh one and fakes `electron`).
+- `npm test -- --watch=false` runs the renderer specs (`*.spec.ts`, Vitest and jsdom).
+- `npm run lint` runs ESLint over the renderer, templates and Electron JavaScript. CI (`.github/workflows/ci.yml`) runs lint, both test suites, the renderer build and the production preload build on every push and pull request.
+- `npm run dev:bridge` serves the built renderer on `http://127.0.0.1:4300` with the real handlers behind it and a throwaway database, for checking the UI in a normal browser.
