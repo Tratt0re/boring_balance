@@ -146,9 +146,10 @@ To create distributable installers and archives:
 
 ```bash
 npm run dist          # current platform
-npm run dist:mac      # macOS
+npm run dist:mac      # macOS (the architecture of the build machine)
+npm run dist:mac-intel # macOS on Intel (x64)
 npm run dist:win      # Windows (requires Wine/NSIS on non-Windows hosts)
-npm run dist:linux    # Linux
+npm run dist:linux    # Linux (x64)
 ```
 
 Build artifacts are written to the `release/` directory. Output is platform-specific — macOS produces a `.dmg` or `.app` bundle, Windows produces an installer and portable `.exe`, and Linux produces an AppImage or `.deb` depending on configuration.

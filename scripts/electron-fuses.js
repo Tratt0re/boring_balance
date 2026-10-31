@@ -30,7 +30,8 @@ async function afterPack(context) {
   const binaryPath = {
     darwin: path.join(appOutDir, `${productName}.app`, 'Contents', 'MacOS', productName),
     win32: path.join(appOutDir, `${productName}.exe`),
-    linux: path.join(appOutDir, productName),
+    // On Linux the executable is named after the package (`executableName`), not the product name.
+    linux: path.join(appOutDir, packager.executableName ?? productName),
   }[electronPlatformName];
 
   if (!binaryPath) {
