@@ -111,7 +111,10 @@
         "disabled": "Deshabilitado"
       }
     },
-    "skipToContent": "Saltar al contenido principal"
+    "skipToContent": "Saltar al contenido principal",
+    "errors": {
+      "fixHighlightedFields": "Corrige los campos resaltados para continuar."
+    }
   },
   "nav": {
     "sections": {
@@ -162,7 +165,8 @@
           "body": "Esto eliminará definitivamente todas las cuentas, transacciones, transferencias, presupuestos y categorías creadas. Esta acción no se puede deshacer.",
           "cta": "Sí, borrar datos"
         },
-        "success": "Todos los datos financieros han sido borrados."
+        "success": "Todos los datos financieros han sido borrados.",
+        "error": "No se pudieron borrar los datos. No se borró nada. Inténtalo de nuevo."
       },
       "factory_reset": {
         "label": "Restablecer de fábrica",
@@ -173,9 +177,9 @@
           "body": "Esto eliminará toda la base de datos y devolverá la app a su estado inicial. Los archivos de copia de seguridad no se verán afectados. Esta acción no se puede deshacer.",
           "input_placeholder": "Escribe RESET para confirmar",
           "cta": "Restablecer app"
-        }
-      },
-      "reset_error": "Algo salió mal. Por favor, inténtalo de nuevo."
+        },
+        "error": "No se pudo restablecer la app. Reiníciala, comprueba que tus datos siguen ahí e inténtalo de nuevo."
+      }
     },
     "general": {
       "intro": "Estas preferencias se aplican al instante para que la app se adapte a como revisas tus finanzas.",
@@ -492,7 +496,7 @@
           "description": "Descarga la plantilla de Excel, rellénala con calma y vuelve aquí para importarla.",
           "messages": {
             "success": "Plantilla guardada: {{fileName}}",
-            "error": "No se pudo guardar la plantilla de importación."
+            "error": "No se pudo guardar la plantilla de importación. Inténtalo de nuevo."
           }
         },
         "actions": {
@@ -542,10 +546,10 @@
         },
         "messages": {
           "fileRequired": "Selecciona primero un archivo de Excel.",
-          "selectError": "No se pudo seleccionar un archivo de Excel.",
-          "validateError": "No se pudo validar el archivo de Excel seleccionado.",
+          "selectError": "No se pudo seleccionar un archivo de Excel. Inténtalo de nuevo.",
+          "validateError": "No se pudo validar el archivo de Excel seleccionado. Inténtalo de nuevo.",
           "importSuccess": "Importación completada. Recargando los datos de la aplicación...",
-          "importError": "La importación ha fallado."
+          "importError": "La importación ha fallado. Inténtalo de nuevo."
         }
       },
       "controls": {
@@ -558,46 +562,46 @@
       },
       "messages": {
         "success": "Exportacion completada: {{fileName}}",
-        "error": "No se pudieron exportar los datos."
+        "error": "No se pudieron exportar los datos. Inténtalo de nuevo."
       }
     },
     "toasts": {
       "backup": {
-        "loadSettingsFailed": "No se pudo cargar la configuración del respaldo.",
-        "updateSettingsFailed": "No se pudo actualizar la configuración del respaldo.",
-        "loadStateFailed": "No se pudo cargar el estado del respaldo.",
-        "selectFolderFailed": "No se pudo seleccionar una carpeta de respaldo.",
-        "loadListFailed": "No se pudo cargar la lista de respaldos.",
-        "selectFileFailed": "No se pudo seleccionar un archivo de respaldo.",
-        "backupFailed": "Falló el respaldo.",
-        "restoreFailed": "Falló la restauración.",
+        "loadSettingsFailed": "No se pudo cargar la configuración del respaldo. Inténtalo de nuevo.",
+        "updateSettingsFailed": "No se pudo actualizar la configuración del respaldo. Inténtalo de nuevo.",
+        "loadStateFailed": "No se pudo cargar el estado del respaldo. Inténtalo de nuevo.",
+        "selectFolderFailed": "No se pudo seleccionar una carpeta de respaldo. Inténtalo de nuevo.",
+        "loadListFailed": "No se pudo cargar la lista de respaldos. Inténtalo de nuevo.",
+        "selectFileFailed": "No se pudo seleccionar un archivo de respaldo. Inténtalo de nuevo.",
+        "backupFailed": "Falló el respaldo. Inténtalo de nuevo.",
+        "restoreFailed": "Falló la restauración. Inténtalo de nuevo.",
         "deleted": "Respaldo eliminado.",
-        "deleteFailed": "No se pudo eliminar el respaldo.",
+        "deleteFailed": "No se pudo eliminar el respaldo. Inténtalo de nuevo.",
         "completed": "Respaldo completado: {{fileName}}",
         "restoreCompleted": "Restauración completada. Recargando los datos de la aplicación..."
       },
       "sync": {
-        "loadSettingsFailed": "No se pudo cargar la configuración de sincronización.",
-        "updateSettingsFailed": "No se pudo actualizar la configuración de sincronización.",
-        "loadStateFailed": "No se pudo cargar el estado de la sincronización.",
-        "checkNewerFailed": "No se pudo buscar datos de sincronización más recientes.",
-        "selectFolderFailed": "No se pudo seleccionar una carpeta de sincronización.",
-        "inspectFolderFailed": "No se pudo inspeccionar la carpeta de sincronización seleccionada.",
+        "loadSettingsFailed": "No se pudo cargar la configuración de sincronización. Inténtalo de nuevo.",
+        "updateSettingsFailed": "No se pudo actualizar la configuración de sincronización. Inténtalo de nuevo.",
+        "loadStateFailed": "No se pudo cargar el estado de la sincronización. Inténtalo de nuevo.",
+        "checkNewerFailed": "No se pudo buscar datos de sincronización más recientes. Inténtalo de nuevo.",
+        "selectFolderFailed": "No se pudo seleccionar una carpeta de sincronización. Inténtalo de nuevo.",
+        "inspectFolderFailed": "No se pudo inspeccionar la carpeta de sincronización seleccionada. Inténtalo de nuevo.",
         "enabled": "Sincronización activada.",
-        "enableFailed": "No se pudo activar la sincronización.",
+        "enableFailed": "No se pudo activar la sincronización. Inténtalo de nuevo.",
         "disabled": "Sincronización desactivada.",
-        "disableFailed": "No se pudo desactivar la sincronización.",
+        "disableFailed": "No se pudo desactivar la sincronización. Inténtalo de nuevo.",
         "syncNothingChanged": "Comprobación completada. No ha cambiado nada.",
-        "syncFailed": "Falló la sincronización.",
+        "syncFailed": "Falló la sincronización. Inténtalo de nuevo.",
         "pullNothingNewer": "No se encontró ninguna instantánea remota más reciente.",
-        "pullFailed": "Falló la descarga.",
+        "pullFailed": "Falló la descarga. Inténtalo de nuevo.",
         "pushNothingToPublish": "No había cambios locales que publicar.",
-        "pushFailed": "Falló el envío.",
-        "loadSnapshotsFailed": "No se pudieron cargar las instantáneas de sincronización.",
+        "pushFailed": "Falló el envío. Inténtalo de nuevo.",
+        "loadSnapshotsFailed": "No se pudieron cargar las instantáneas de sincronización. Inténtalo de nuevo.",
         "defaultFileUpdated": "Archivo de sincronización predeterminado actualizado. Recargando los datos de la aplicación...",
-        "selectDefaultFileFailed": "No se pudo seleccionar el archivo de sincronización predeterminado.",
+        "selectDefaultFileFailed": "No se pudo seleccionar el archivo de sincronización predeterminado. Inténtalo de nuevo.",
         "fileDeleted": "Archivo de sincronización eliminado.",
-        "deleteFileFailed": "No se pudo eliminar el archivo de sincronización.",
+        "deleteFileFailed": "No se pudo eliminar el archivo de sincronización. Inténtalo de nuevo.",
         "pullCompleted": "Descarga completada.",
         "pullCompletedWithId": "Descarga completada ({{snapshotId}})",
         "pushCompleted": "Envío completado.",
@@ -618,7 +622,7 @@
       }
     },
     "errors": {
-      "summaryLoad": "No se pudieron cargar los datos de resumen."
+      "summaryLoad": "No se pudieron cargar los datos de resumen. Reinicia la app e inténtalo de nuevo."
     },
     "pie": {
       "others": "Otros"
@@ -649,7 +653,7 @@
         "segmentTitle": "Ingresos y gastos",
         "descriptionCurrentYear": "Compara ingresos, gastos y flujo neto de caja mes a mes durante {{year}}.",
         "loading": "Cargando analitica...",
-        "loadFailedWithError": "Error al cargar la analitica: {{error}}",
+        "loadFailedWithError": "Error al cargar la analitica. Reinicia la app e inténtalo de nuevo.",
         "empty": "No hay datos de analitica disponibles para los filtros seleccionados.",
         "series": {
           "incomes": "Ingresos",
@@ -661,7 +665,7 @@
         "title": "Actividad",
         "latestTransactions": "Ultimos {{count}} movimientos de este mes para revisar rapido ingresos y gastos recientes.",
         "latestTransfers": "Ultimas {{count}} transferencias de este mes para verificar dinero movido entre cuentas.",
-        "loadFailed": "No se pudo cargar la actividad."
+        "loadFailed": "No se pudo cargar la actividad. Reinicia la app e inténtalo de nuevo."
       },
       "recentTransactions": {
         "empty": "Aun no hay movimientos este mes. Agrega uno para empezar a llenar tu actividad.",
@@ -681,7 +685,7 @@
         "title": "Flujo de dinero",
         "description": "{{month}} de un vistazo: mira de donde vino el dinero, a donde fue y que quedo.",
         "loading": "Cargando flujo de dinero...",
-        "loadFailedWithError": "Error al cargar el flujo de dinero: {{error}}",
+        "loadFailedWithError": "Error al cargar el flujo de dinero. Reinicia la app e inténtalo de nuevo.",
         "empty": "Aun no hay flujo de dinero para este mes. Agrega movimientos para ver como se movio el dinero.",
         "tooltips": {
           "actualNetCashflow": "Flujo neto de caja real"
@@ -738,7 +742,7 @@
   "compare": {
     "loadingTitle": "Preparando comparacion",
     "loadingDescription": "Reuniendo ambos meses para compararlos lado a lado.",
-    "loadFailedWithError": "Error al cargar la comparacion: {{error}}",
+    "loadFailedWithError": "Error al cargar la comparacion. Reinicia la app e inténtalo de nuevo.",
     "empty": "Aun no hay datos para comparar estos meses. Registra actividad en ambos meses y vuelve aqui.",
     "selectors": {
       "left": {
@@ -829,13 +833,12 @@
           "create": "Crear cuenta"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear la cuenta.",
           "nameRequired": "El nombre es obligatorio.",
           "nameMinLength": "El nombre debe tener al menos 2 caracteres.",
           "nameMaxLength": "El nombre debe tener como maximo 64 caracteres.",
           "typeRequired": "El tipo de cuenta es obligatorio.",
           "descriptionMaxLength": "La descripcion debe tener como maximo 50 caracteres.",
-          "createFailed": "No se pudo crear la cuenta."
+          "createFailed": "No se pudo crear la cuenta. Inténtalo de nuevo."
         }
       },
       "edit": {
@@ -846,8 +849,7 @@
           "save": "Guardar cambios"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar la cuenta.",
-          "updateFailed": "No se pudo actualizar la cuenta."
+          "updateFailed": "No se pudo actualizar la cuenta. Inténtalo de nuevo."
         }
       }
     },
@@ -859,7 +861,7 @@
         "unarchive": "Desarchivar cuenta"
       },
       "errors": {
-        "loadFailed": "No se pudieron cargar las cuentas archivadas: {{error}}"
+        "loadFailed": "No se pudieron cargar las cuentas archivadas. Reinicia la app e inténtalo de nuevo."
       }
     },
     "archiveAlert": {
@@ -871,17 +873,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Cuenta creada correctamente.",
-      "createError": "No se pudo crear la cuenta.",
-      "updateSuccess": "Cuenta actualizada correctamente.",
-      "updateError": "No se pudo actualizar la cuenta.",
-      "archiveSuccess": "Cuenta archivada correctamente.",
-      "archiveError": "No se pudo archivar la cuenta.",
-      "unarchiveSuccess": "Cuenta desarchivada correctamente.",
-      "unarchiveError": "No se pudo desarchivar la cuenta."
+      "createSuccess": "Cuenta creada.",
+      "createError": "No se pudo crear la cuenta. Inténtalo de nuevo.",
+      "updateSuccess": "Cuenta actualizada.",
+      "updateError": "No se pudo actualizar la cuenta. Inténtalo de nuevo.",
+      "archiveSuccess": "Cuenta archivada.",
+      "archiveError": "No se pudo archivar la cuenta. Inténtalo de nuevo.",
+      "unarchiveSuccess": "Cuenta desarchivada.",
+      "unarchiveError": "No se pudo desarchivar la cuenta. Inténtalo de nuevo."
     },
     "errors": {
-      "loadFailed": "No se pudieron cargar las cuentas: {{error}}"
+      "loadFailed": "No se pudieron cargar las cuentas. Reinicia la app e inténtalo de nuevo."
     }
   },
   "categories": {
@@ -909,13 +911,12 @@
           "create": "Crear categoria"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear la categoria.",
           "nameRequired": "El nombre es obligatorio.",
           "nameMinLength": "El nombre debe tener al menos 2 caracteres.",
           "nameMaxLength": "El nombre debe tener como maximo 64 caracteres.",
           "descriptionMaxLength": "La descripcion debe tener como maximo 50 caracteres.",
           "typeRequired": "El tipo de categoria es obligatorio.",
-          "createFailed": "No se pudo crear la categoria."
+          "createFailed": "No se pudo crear la categoria. Inténtalo de nuevo."
         }
       },
       "edit": {
@@ -926,8 +927,7 @@
           "save": "Guardar cambios"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar la categoria.",
-          "updateFailed": "No se pudo actualizar la categoria."
+          "updateFailed": "No se pudo actualizar la categoria. Inténtalo de nuevo."
         }
       }
     },
@@ -939,7 +939,7 @@
         "unarchive": "Desarchivar categoria"
       },
       "errors": {
-        "loadFailed": "No se pudieron cargar las categorias archivadas: {{error}}"
+        "loadFailed": "No se pudieron cargar las categorias archivadas. Reinicia la app e inténtalo de nuevo."
       }
     },
     "archiveAlert": {
@@ -951,17 +951,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Categoria creada correctamente.",
-      "createError": "No se pudo crear la categoria.",
-      "updateSuccess": "Categoria actualizada correctamente.",
-      "updateError": "No se pudo actualizar la categoria.",
-      "archiveSuccess": "Categoria archivada correctamente.",
-      "archiveError": "No se pudo archivar la categoria.",
-      "unarchiveSuccess": "Categoria desarchivada correctamente.",
-      "unarchiveError": "No se pudo desarchivar la categoria."
+      "createSuccess": "Categoria creada.",
+      "createError": "No se pudo crear la categoria. Inténtalo de nuevo.",
+      "updateSuccess": "Categoria actualizada.",
+      "updateError": "No se pudo actualizar la categoria. Inténtalo de nuevo.",
+      "archiveSuccess": "Categoria archivada.",
+      "archiveError": "No se pudo archivar la categoria. Inténtalo de nuevo.",
+      "unarchiveSuccess": "Categoria desarchivada.",
+      "unarchiveError": "No se pudo desarchivar la categoria. Inténtalo de nuevo."
     },
     "errors": {
-      "loadFailed": "No se pudieron cargar las categorías: {{error}}"
+      "loadFailed": "No se pudieron cargar las categorías. Reinicia la app e inténtalo de nuevo."
     }
   },
   "budgets": {
@@ -988,12 +988,11 @@
           "create": "Crear presupuesto"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear el presupuesto.",
           "categoryRequired": "La categoria es obligatoria.",
           "amountRequired": "El importe es obligatorio.",
           "amountInvalid": "El importe debe ser un numero positivo.",
           "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
-          "createFailed": "No se pudo crear el presupuesto."
+          "createFailed": "No se pudo crear el presupuesto. Inténtalo de nuevo."
         }
       },
       "edit": {
@@ -1004,8 +1003,7 @@
           "save": "Guardar cambios"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar el presupuesto.",
-          "updateFailed": "No se pudo actualizar el presupuesto."
+          "updateFailed": "No se pudo actualizar el presupuesto. Inténtalo de nuevo."
         }
       }
     },
@@ -1018,12 +1016,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Presupuesto creado correctamente.",
-      "createError": "No se pudo crear el presupuesto.",
-      "updateSuccess": "Presupuesto actualizado correctamente.",
-      "updateError": "No se pudo actualizar el presupuesto.",
-      "deleteSuccess": "Presupuesto eliminado correctamente.",
-      "deleteError": "No se pudo eliminar el presupuesto."
+      "createSuccess": "Presupuesto creado.",
+      "createError": "No se pudo crear el presupuesto. Inténtalo de nuevo.",
+      "updateSuccess": "Presupuesto actualizado.",
+      "updateError": "No se pudo actualizar el presupuesto. Inténtalo de nuevo.",
+      "deleteSuccess": "Presupuesto eliminado.",
+      "deleteError": "No se pudo eliminar el presupuesto. Inténtalo de nuevo."
     },
     "analysis": {
       "title": "Analisis de presupuesto",
@@ -1044,11 +1042,11 @@
         "description": "Mira que categorias van bien, cuales estan cerca del limite y cuales ya se pasaron."
       },
       "errors": {
-        "loadFailedWithError": "No se pudo cargar el analisis de presupuesto: {{error}}"
+        "loadFailedWithError": "No se pudo cargar el analisis de presupuesto. Reinicia la app e inténtalo de nuevo."
       }
     },
     "errors": {
-      "loadFailed": "No se pudieron cargar los presupuestos: {{error}}"
+      "loadFailed": "No se pudieron cargar los presupuestos. Reinicia la app e inténtalo de nuevo."
     }
   },
   "transactions": {
@@ -1078,7 +1076,6 @@
             "create": "Crear transferencia"
           },
           "errors": {
-            "fixValidation": "Corrige los campos resaltados antes de crear la transferencia.",
             "dateRequired": "La fecha es obligatoria.",
             "fromAccountRequired": "La cuenta de origen es obligatoria.",
             "toAccountRequired": "La cuenta de destino es obligatoria.",
@@ -1086,7 +1083,7 @@
             "amountRequired": "El importe es obligatorio.",
             "amountInvalid": "El importe debe ser un numero positivo.",
             "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
-            "createFailed": "No se pudo crear la transferencia."
+            "createFailed": "No se pudo crear la transferencia. Inténtalo de nuevo."
           }
         },
         "edit": {
@@ -1097,8 +1094,7 @@
             "save": "Guardar cambios"
           },
           "errors": {
-            "fixValidation": "Corrige los campos resaltados antes de guardar la transferencia.",
-            "updateFailed": "No se pudo actualizar la transferencia."
+            "updateFailed": "No se pudo actualizar la transferencia. Inténtalo de nuevo."
           }
         }
       },
@@ -1118,15 +1114,15 @@
         }
       },
       "toasts": {
-        "createSuccess": "Transferencia creada correctamente.",
-        "createError": "No se pudo crear la transferencia.",
-        "updateSuccess": "Transferencia actualizada correctamente.",
-        "updateError": "No se pudo actualizar la transferencia.",
-        "deleteSuccess": "Transferencia eliminada correctamente.",
-        "deleteError": "No se pudo eliminar la transferencia."
+        "createSuccess": "Transferencia creada.",
+        "createError": "No se pudo crear la transferencia. Inténtalo de nuevo.",
+        "updateSuccess": "Transferencia actualizada.",
+        "updateError": "No se pudo actualizar la transferencia. Inténtalo de nuevo.",
+        "deleteSuccess": "Transferencia eliminada.",
+        "deleteError": "No se pudo eliminar la transferencia. Inténtalo de nuevo."
       },
       "errors": {
-        "loadFailed": "No se pudieron cargar las transferencias: {{error}}"
+        "loadFailed": "No se pudieron cargar las transferencias. Reinicia la app e inténtalo de nuevo."
       }
     },
     "table": {
@@ -1158,14 +1154,13 @@
           "create": "Crear movimiento"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear el movimiento.",
           "dateRequired": "La fecha es obligatoria.",
           "accountRequired": "La cuenta es obligatoria.",
           "amountRequired": "El importe es obligatorio.",
           "amountInvalid": "El importe debe ser un numero valido.",
           "categoryRequired": "La categoria es obligatoria.",
           "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
-          "createFailed": "No se pudo crear el movimiento."
+          "createFailed": "No se pudo crear el movimiento. Inténtalo de nuevo."
         }
       },
       "edit": {
@@ -1176,8 +1171,7 @@
           "save": "Guardar cambios"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar el movimiento.",
-          "updateFailed": "No se pudo actualizar el movimiento."
+          "updateFailed": "No se pudo actualizar el movimiento. Inténtalo de nuevo."
         }
       }
     },
@@ -1198,17 +1192,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Movimiento creado correctamente.",
-      "createError": "No se pudo crear el movimiento.",
-      "updateSuccess": "Movimiento actualizado correctamente.",
-      "updateError": "No se pudo actualizar el movimiento.",
-      "deleteSuccess": "Movimiento eliminado correctamente.",
-      "deleteError": "No se pudo eliminar el movimiento.",
-      "duplicateSuccess": "Movimiento duplicado correctamente.",
-      "duplicateError": "No se pudo duplicar el movimiento."
+      "createSuccess": "Movimiento creado.",
+      "createError": "No se pudo crear el movimiento. Inténtalo de nuevo.",
+      "updateSuccess": "Movimiento actualizado.",
+      "updateError": "No se pudo actualizar el movimiento. Inténtalo de nuevo.",
+      "deleteSuccess": "Movimiento eliminado.",
+      "deleteError": "No se pudo eliminar el movimiento. Inténtalo de nuevo.",
+      "duplicateSuccess": "Movimiento duplicado.",
+      "duplicateError": "No se pudo duplicar el movimiento. Inténtalo de nuevo."
     },
     "errors": {
-      "loadFailed": "No se pudieron cargar los movimientos: {{error}}"
+      "loadFailed": "No se pudieron cargar los movimientos. Reinicia la app e inténtalo de nuevo."
     }
   },
   "options": {
@@ -1422,7 +1416,6 @@
           "create": "Crear evento recurrente"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de crear el evento recurrente.",
           "titleRequired": "El titulo es obligatorio.",
           "titleMinLength": "El titulo debe tener al menos 2 caracteres.",
           "titleMaxLength": "El titulo debe tener como maximo 80 caracteres.",
@@ -1441,7 +1434,7 @@
           "amountRequired": "El importe es obligatorio.",
           "amountInvalid": "El importe debe ser un numero positivo.",
           "descriptionMaxLength": "La descripcion debe tener como maximo 75 caracteres.",
-          "createFailed": "No se pudo crear el evento recurrente."
+          "createFailed": "No se pudo crear el evento recurrente. Inténtalo de nuevo."
         }
       },
       "edit": {
@@ -1466,9 +1459,8 @@
           "save": "Guardar cambios"
         },
         "errors": {
-          "fixValidation": "Corrige los campos resaltados antes de guardar el evento recurrente.",
           "fromDateRequired": "Selecciona la fecha desde la que se actualizarán los elementos vinculados.",
-          "updateFailed": "No se pudo actualizar el evento recurrente."
+          "updateFailed": "No se pudo actualizar el evento recurrente. Inténtalo de nuevo."
         }
       },
       "form": {
@@ -1502,7 +1494,7 @@
     },
     "updateResult": {
       "title": "Evento recurrente actualizado",
-      "description": "\"{{title}}\" se actualizo correctamente. Los elementos vinculados generados se actualizaron cuando correspondia.",
+      "description": "\"{{title}}\" se actualizo. Los elementos vinculados generados se actualizaron cuando correspondia.",
       "actions": {
         "ok": "Aceptar"
       }
@@ -1523,16 +1515,16 @@
       }
     },
     "toasts": {
-      "createSuccess": "Evento recurrente creado correctamente.",
-      "createError": "No se pudo crear el evento recurrente.",
-      "updateSuccess": "Evento recurrente actualizado correctamente.",
-      "updateError": "No se pudo actualizar el evento recurrente.",
-      "deleteSuccess": "Evento recurrente eliminado correctamente.",
-      "deleteError": "No se pudo eliminar el evento recurrente."
+      "createSuccess": "Evento recurrente creado.",
+      "createError": "No se pudo crear el evento recurrente. Inténtalo de nuevo.",
+      "updateSuccess": "Evento recurrente actualizado.",
+      "updateError": "No se pudo actualizar el evento recurrente. Inténtalo de nuevo.",
+      "deleteSuccess": "Evento recurrente eliminado.",
+      "deleteError": "No se pudo eliminar el evento recurrente. Inténtalo de nuevo."
     },
     "errors": {
-      "loadFailedWithError": "No se pudieron cargar los eventos recurrentes: {{error}}",
-      "loadUnexpected": "Error inesperado al cargar los eventos recurrentes."
+      "loadFailedWithError": "No se pudieron cargar los eventos recurrentes. Reinicia la app e inténtalo de nuevo.",
+      "loadUnexpected": "Error inesperado al cargar los eventos recurrentes. Reinicia la app e inténtalo de nuevo."
     }
   },
   "recurringEventItems": {
@@ -1549,11 +1541,13 @@
     "errors": {
       "invalidId": "El ID del evento recurrente no es válido.",
       "notFound": "No se encontró el evento recurrente.",
-      "loadUnexpected": "Error inesperado al cargar los elementos del evento recurrente."
+      "loadUnexpected": "Error inesperado al cargar los elementos del evento recurrente. Reinicia la app e inténtalo de nuevo."
     }
   },
   "accountDetails": {
-    "page": { "title": "Detalles de la cuenta" },
+    "page": {
+      "title": "Detalles de la cuenta"
+    },
     "header": {
       "totalValue": "Valor total de la cuenta",
       "noDescription": "No se ha proporcionado una descripción."
@@ -1569,7 +1563,7 @@
     "errors": {
       "invalidId": "ID de cuenta no válido.",
       "notFound": "Cuenta no encontrada.",
-      "loadUnexpected": "Error inesperado al cargar los detalles de la cuenta."
+      "loadUnexpected": "Error inesperado al cargar los detalles de la cuenta. Reinicia la app e inténtalo de nuevo."
     }
   },
   "accountValuations": {
@@ -1616,7 +1610,6 @@
           "cancel": "Cancelar"
         },
         "errors": {
-          "fixValidation": "Corrige los errores anteriores antes de guardar.",
           "createFailed": "No se pudo crear la instantánea. Inténtalo de nuevo.",
           "valueRequired": "El valor es obligatorio.",
           "valueInvalid": "El valor debe ser un número positivo válido.",
@@ -1631,7 +1624,6 @@
           "cancel": "Cancelar"
         },
         "errors": {
-          "fixValidation": "Corrige los errores anteriores antes de guardar.",
           "updateFailed": "No se pudo actualizar la instantánea. Inténtalo de nuevo."
         }
       }
@@ -1645,12 +1637,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Instantánea añadida correctamente.",
-      "createError": "No se pudo añadir la instantánea.",
-      "updateSuccess": "Instantánea actualizada correctamente.",
-      "updateError": "No se pudo actualizar la instantánea.",
-      "deleteSuccess": "Instantánea eliminada correctamente.",
-      "deleteError": "No se pudo eliminar la instantánea."
+      "createSuccess": "Instantánea añadida.",
+      "createError": "No se pudo añadir la instantánea. Inténtalo de nuevo.",
+      "updateSuccess": "Instantánea actualizada.",
+      "updateError": "No se pudo actualizar la instantánea. Inténtalo de nuevo.",
+      "deleteSuccess": "Instantánea eliminada.",
+      "deleteError": "No se pudo eliminar la instantánea. Inténtalo de nuevo."
     }
   },
   "onboarding": {

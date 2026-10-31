@@ -111,7 +111,10 @@
         "disabled": "Deaktiviert"
       }
     },
-    "skipToContent": "Zum Hauptinhalt springen"
+    "skipToContent": "Zum Hauptinhalt springen",
+    "errors": {
+      "fixHighlightedFields": "Bitte die markierten Felder korrigieren."
+    }
   },
   "nav": {
     "sections": {
@@ -162,7 +165,8 @@
           "body": "Dadurch werden alle erstellten Konten, Transaktionen, Überträge, Budgets und Kategorien dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.",
           "cta": "Ja, Daten löschen"
         },
-        "success": "Alle Finanzdaten wurden gelöscht."
+        "success": "Alle Finanzdaten wurden gelöscht.",
+        "error": "Daten konnten nicht gelöscht werden. Es wurde nichts gelöscht. Bitte erneut versuchen."
       },
       "factory_reset": {
         "label": "Werkseinstellungen",
@@ -173,9 +177,9 @@
           "body": "Dadurch wird die gesamte Datenbank gelöscht und die App auf den Ausgangszustand zurückgesetzt. Sicherungsdateien sind nicht betroffen. Dieser Vorgang kann nicht rückgängig gemacht werden.",
           "input_placeholder": "RESET eingeben zur Bestätigung",
           "cta": "App zurücksetzen"
-        }
-      },
-      "reset_error": "Es ist ein Fehler aufgetreten. Bitte erneut versuchen."
+        },
+        "error": "App konnte nicht zurückgesetzt werden. App neu starten, prüfen ob die Daten noch vorhanden sind, und erneut versuchen."
+      }
     },
     "general": {
       "intro": "Diese Einstellungen werden sofort übernommen, damit die App zur Ansicht und Überprüfung der Finanzen passt.",
@@ -492,7 +496,7 @@
           "description": "Die Excel-Vorlage herunterladen, in aller Ruhe ausfüllen und dann hier importieren.",
           "messages": {
             "success": "Vorlage gespeichert: {{fileName}}",
-            "error": "Importvorlage konnte nicht gespeichert werden."
+            "error": "Importvorlage konnte nicht gespeichert werden. Bitte erneut versuchen."
           }
         },
         "actions": {
@@ -542,10 +546,10 @@
         },
         "messages": {
           "fileRequired": "Zuerst eine Excel-Datei auswählen.",
-          "selectError": "Eine Excel-Datei konnte nicht ausgewählt werden.",
-          "validateError": "Die ausgewählte Excel-Datei konnte nicht validiert werden.",
+          "selectError": "Eine Excel-Datei konnte nicht ausgewählt werden. Bitte erneut versuchen.",
+          "validateError": "Die ausgewählte Excel-Datei konnte nicht validiert werden. Bitte erneut versuchen.",
           "importSuccess": "Import abgeschlossen. App-Daten werden neu geladen...",
-          "importError": "Import fehlgeschlagen."
+          "importError": "Import fehlgeschlagen. Bitte erneut versuchen."
         }
       },
       "controls": {
@@ -558,46 +562,46 @@
       },
       "messages": {
         "success": "Export abgeschlossen: {{fileName}}",
-        "error": "Daten konnten nicht exportiert werden."
+        "error": "Daten konnten nicht exportiert werden. Bitte erneut versuchen."
       }
     },
     "toasts": {
       "backup": {
-        "loadSettingsFailed": "Backup-Einstellungen konnten nicht geladen werden.",
-        "updateSettingsFailed": "Backup-Einstellungen konnten nicht aktualisiert werden.",
-        "loadStateFailed": "Backup-Status konnte nicht geladen werden.",
-        "selectFolderFailed": "Backup-Ordner konnte nicht ausgewählt werden.",
-        "loadListFailed": "Backup-Liste konnte nicht geladen werden.",
-        "selectFileFailed": "Backup-Datei konnte nicht ausgewählt werden.",
-        "backupFailed": "Backup fehlgeschlagen.",
-        "restoreFailed": "Wiederherstellung fehlgeschlagen.",
+        "loadSettingsFailed": "Backup-Einstellungen konnten nicht geladen werden. Bitte erneut versuchen.",
+        "updateSettingsFailed": "Backup-Einstellungen konnten nicht aktualisiert werden. Bitte erneut versuchen.",
+        "loadStateFailed": "Backup-Status konnte nicht geladen werden. Bitte erneut versuchen.",
+        "selectFolderFailed": "Backup-Ordner konnte nicht ausgewählt werden. Bitte erneut versuchen.",
+        "loadListFailed": "Backup-Liste konnte nicht geladen werden. Bitte erneut versuchen.",
+        "selectFileFailed": "Backup-Datei konnte nicht ausgewählt werden. Bitte erneut versuchen.",
+        "backupFailed": "Backup fehlgeschlagen. Bitte erneut versuchen.",
+        "restoreFailed": "Wiederherstellung fehlgeschlagen. Bitte erneut versuchen.",
         "deleted": "Backup gelöscht.",
-        "deleteFailed": "Backup konnte nicht gelöscht werden.",
+        "deleteFailed": "Backup konnte nicht gelöscht werden. Bitte erneut versuchen.",
         "completed": "Backup abgeschlossen: {{fileName}}",
         "restoreCompleted": "Wiederherstellung abgeschlossen. App-Daten werden neu geladen..."
       },
       "sync": {
-        "loadSettingsFailed": "Sync-Einstellungen konnten nicht geladen werden.",
-        "updateSettingsFailed": "Sync-Einstellungen konnten nicht aktualisiert werden.",
-        "loadStateFailed": "Sync-Status konnte nicht geladen werden.",
-        "checkNewerFailed": "Die Suche nach neueren Sync-Daten ist fehlgeschlagen.",
-        "selectFolderFailed": "Sync-Ordner konnte nicht ausgewählt werden.",
-        "inspectFolderFailed": "Der ausgewählte Sync-Ordner konnte nicht geprüft werden.",
+        "loadSettingsFailed": "Sync-Einstellungen konnten nicht geladen werden. Bitte erneut versuchen.",
+        "updateSettingsFailed": "Sync-Einstellungen konnten nicht aktualisiert werden. Bitte erneut versuchen.",
+        "loadStateFailed": "Sync-Status konnte nicht geladen werden. Bitte erneut versuchen.",
+        "checkNewerFailed": "Die Suche nach neueren Sync-Daten ist fehlgeschlagen. Bitte erneut versuchen.",
+        "selectFolderFailed": "Sync-Ordner konnte nicht ausgewählt werden. Bitte erneut versuchen.",
+        "inspectFolderFailed": "Der ausgewählte Sync-Ordner konnte nicht geprüft werden. Bitte erneut versuchen.",
         "enabled": "Sync aktiviert.",
-        "enableFailed": "Sync konnte nicht aktiviert werden.",
+        "enableFailed": "Sync konnte nicht aktiviert werden. Bitte erneut versuchen.",
         "disabled": "Sync deaktiviert.",
-        "disableFailed": "Sync konnte nicht deaktiviert werden.",
+        "disableFailed": "Sync konnte nicht deaktiviert werden. Bitte erneut versuchen.",
         "syncNothingChanged": "Sync-Prüfung abgeschlossen. Nichts hat sich geändert.",
-        "syncFailed": "Sync fehlgeschlagen.",
+        "syncFailed": "Sync fehlgeschlagen. Bitte erneut versuchen.",
         "pullNothingNewer": "Es wurde kein neuerer Remote-Snapshot gefunden.",
-        "pullFailed": "Abruf fehlgeschlagen.",
+        "pullFailed": "Abruf fehlgeschlagen. Bitte erneut versuchen.",
         "pushNothingToPublish": "Es mussten keine lokalen Änderungen veröffentlicht werden.",
-        "pushFailed": "Senden fehlgeschlagen.",
-        "loadSnapshotsFailed": "Sync-Snapshots konnten nicht geladen werden.",
+        "pushFailed": "Senden fehlgeschlagen. Bitte erneut versuchen.",
+        "loadSnapshotsFailed": "Sync-Snapshots konnten nicht geladen werden. Bitte erneut versuchen.",
         "defaultFileUpdated": "Standard-Sync-Datei aktualisiert. App-Daten werden neu geladen...",
-        "selectDefaultFileFailed": "Standard-Sync-Datei konnte nicht ausgewählt werden.",
+        "selectDefaultFileFailed": "Standard-Sync-Datei konnte nicht ausgewählt werden. Bitte erneut versuchen.",
         "fileDeleted": "Sync-Datei gelöscht.",
-        "deleteFileFailed": "Sync-Datei konnte nicht gelöscht werden.",
+        "deleteFileFailed": "Sync-Datei konnte nicht gelöscht werden. Bitte erneut versuchen.",
         "pullCompleted": "Abruf abgeschlossen.",
         "pullCompletedWithId": "Abruf abgeschlossen ({{snapshotId}})",
         "pushCompleted": "Senden abgeschlossen.",
@@ -618,7 +622,7 @@
       }
     },
     "errors": {
-      "summaryLoad": "Zusammenfassungsdaten konnten nicht geladen werden."
+      "summaryLoad": "Zusammenfassungsdaten konnten nicht geladen werden. App neu starten und erneut versuchen."
     },
     "pie": {
       "others": "Sonstige"
@@ -649,7 +653,7 @@
         "segmentTitle": "Einnahmen & Ausgaben",
         "descriptionCurrentYear": "Einnahmen, Ausgaben und Nettocashflow Monat für Monat in {{year}} vergleichen.",
         "loading": "Auswertungen werden geladen...",
-        "loadFailedWithError": "Auswertungen konnten nicht geladen werden: {{error}}",
+        "loadFailedWithError": "Auswertungen konnten nicht geladen werden. App neu starten und erneut versuchen.",
         "empty": "Keine Auswertungsdaten für die ausgewählten Filter verfügbar.",
         "series": {
           "incomes": "Einnahmen",
@@ -661,7 +665,7 @@
         "title": "Aktivität",
         "latestTransactions": "Neueste {{count}} Transaktionen diesen Monat zur schnellen Überprüfung neuer Ausgaben und Einnahmen.",
         "latestTransfers": "Neueste {{count}} Überträge diesen Monat zur Überprüfung von Kontobewegungen.",
-        "loadFailed": "Aktivität konnte nicht geladen werden."
+        "loadFailed": "Aktivität konnte nicht geladen werden. App neu starten und erneut versuchen."
       },
       "recentTransactions": {
         "empty": "Noch keine Transaktionen diesen Monat. Eine hinzufügen, um den Aktivitätsverlauf zu beginnen.",
@@ -681,7 +685,7 @@
         "title": "Geldfluss",
         "description": "{{month}} auf einen Blick: sehen, woher Geld kam, wohin es ging und was verblieb.",
         "loading": "Geldfluss wird geladen...",
-        "loadFailedWithError": "Geldfluss konnte nicht geladen werden: {{error}}",
+        "loadFailedWithError": "Geldfluss konnte nicht geladen werden. App neu starten und erneut versuchen.",
         "empty": "Noch kein Geldfluss für diesen Monat. Transaktionen hinzufügen, um Geldbewegungen zu sehen.",
         "tooltips": {
           "actualNetCashflow": "Tatsächlicher Nettocashflow"
@@ -738,7 +742,7 @@
   "compare": {
     "loadingTitle": "Vergleich wird vorbereitet",
     "loadingDescription": "Beide Monate werden zusammengestellt, damit sie nebeneinander verglichen werden können.",
-    "loadFailedWithError": "Vergleichsauswertungen konnten nicht geladen werden: {{error}}",
+    "loadFailedWithError": "Vergleichsauswertungen konnten nicht geladen werden. App neu starten und erneut versuchen.",
     "empty": "Noch keine Vergleichsdaten für diese Monate. Aktivitäten in beiden Monaten erfassen, um sie hier zu vergleichen.",
     "selectors": {
       "left": {
@@ -829,13 +833,12 @@
           "create": "Konto erstellen"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das Konto erstellt wird.",
           "nameRequired": "Name ist erforderlich.",
           "nameMinLength": "Name muss mindestens 2 Zeichen haben.",
           "nameMaxLength": "Name darf höchstens 64 Zeichen haben.",
           "typeRequired": "Kontotyp ist erforderlich.",
           "descriptionMaxLength": "Beschreibung darf höchstens 50 Zeichen haben.",
-          "createFailed": "Konto konnte nicht erstellt werden."
+          "createFailed": "Konto konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
@@ -846,8 +849,7 @@
           "save": "Änderungen speichern"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das Konto gespeichert wird.",
-          "updateFailed": "Konto konnte nicht aktualisiert werden."
+          "updateFailed": "Konto konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       }
     },
@@ -859,7 +861,7 @@
         "unarchive": "Konto wiederherstellen"
       },
       "errors": {
-        "loadFailed": "Archivierte Konten konnten nicht geladen werden: {{error}}"
+        "loadFailed": "Archivierte Konten konnten nicht geladen werden. App neu starten und erneut versuchen."
       }
     },
     "archiveAlert": {
@@ -871,17 +873,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Konto erfolgreich erstellt.",
-      "createError": "Konto konnte nicht erstellt werden.",
-      "updateSuccess": "Konto erfolgreich aktualisiert.",
-      "updateError": "Konto konnte nicht aktualisiert werden.",
-      "archiveSuccess": "Konto erfolgreich archiviert.",
-      "archiveError": "Konto konnte nicht archiviert werden.",
-      "unarchiveSuccess": "Konto erfolgreich wiederhergestellt.",
-      "unarchiveError": "Konto konnte nicht wiederhergestellt werden."
+      "createSuccess": "Konto erstellt.",
+      "createError": "Konto konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Konto aktualisiert.",
+      "updateError": "Konto konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "archiveSuccess": "Konto archiviert.",
+      "archiveError": "Konto konnte nicht archiviert werden. Bitte erneut versuchen.",
+      "unarchiveSuccess": "Konto wiederhergestellt.",
+      "unarchiveError": "Konto konnte nicht wiederhergestellt werden. Bitte erneut versuchen."
     },
     "errors": {
-      "loadFailed": "Konten konnten nicht geladen werden: {{error}}"
+      "loadFailed": "Konten konnten nicht geladen werden. App neu starten und erneut versuchen."
     }
   },
   "categories": {
@@ -909,13 +911,12 @@
           "create": "Kategorie erstellen"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor die Kategorie erstellt wird.",
           "nameRequired": "Name ist erforderlich.",
           "nameMinLength": "Name muss mindestens 2 Zeichen haben.",
           "nameMaxLength": "Name darf höchstens 64 Zeichen haben.",
           "descriptionMaxLength": "Beschreibung darf höchstens 50 Zeichen haben.",
           "typeRequired": "Kategorietyp ist erforderlich.",
-          "createFailed": "Kategorie konnte nicht erstellt werden."
+          "createFailed": "Kategorie konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
@@ -926,8 +927,7 @@
           "save": "Änderungen speichern"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor die Kategorie gespeichert wird.",
-          "updateFailed": "Kategorie konnte nicht aktualisiert werden."
+          "updateFailed": "Kategorie konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       }
     },
@@ -939,7 +939,7 @@
         "unarchive": "Kategorie wiederherstellen"
       },
       "errors": {
-        "loadFailed": "Archivierte Kategorien konnten nicht geladen werden: {{error}}"
+        "loadFailed": "Archivierte Kategorien konnten nicht geladen werden. App neu starten und erneut versuchen."
       }
     },
     "archiveAlert": {
@@ -951,17 +951,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Kategorie erfolgreich erstellt.",
-      "createError": "Kategorie konnte nicht erstellt werden.",
-      "updateSuccess": "Kategorie erfolgreich aktualisiert.",
-      "updateError": "Kategorie konnte nicht aktualisiert werden.",
-      "archiveSuccess": "Kategorie erfolgreich archiviert.",
-      "archiveError": "Kategorie konnte nicht archiviert werden.",
-      "unarchiveSuccess": "Kategorie erfolgreich wiederhergestellt.",
-      "unarchiveError": "Kategorie konnte nicht wiederhergestellt werden."
+      "createSuccess": "Kategorie erstellt.",
+      "createError": "Kategorie konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Kategorie aktualisiert.",
+      "updateError": "Kategorie konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "archiveSuccess": "Kategorie archiviert.",
+      "archiveError": "Kategorie konnte nicht archiviert werden. Bitte erneut versuchen.",
+      "unarchiveSuccess": "Kategorie wiederhergestellt.",
+      "unarchiveError": "Kategorie konnte nicht wiederhergestellt werden. Bitte erneut versuchen."
     },
     "errors": {
-      "loadFailed": "Kategorien konnten nicht geladen werden: {{error}}"
+      "loadFailed": "Kategorien konnten nicht geladen werden. App neu starten und erneut versuchen."
     }
   },
   "budgets": {
@@ -988,12 +988,11 @@
           "create": "Budget erstellen"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das Budget erstellt wird.",
           "categoryRequired": "Kategorie ist erforderlich.",
           "amountRequired": "Betrag ist erforderlich.",
           "amountInvalid": "Betrag muss eine positive Zahl sein.",
           "descriptionMaxLength": "Beschreibung darf höchstens 75 Zeichen haben.",
-          "createFailed": "Budget konnte nicht erstellt werden."
+          "createFailed": "Budget konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
@@ -1004,8 +1003,7 @@
           "save": "Änderungen speichern"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das Budget gespeichert wird.",
-          "updateFailed": "Budget konnte nicht aktualisiert werden."
+          "updateFailed": "Budget konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       }
     },
@@ -1018,12 +1016,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Budget erfolgreich erstellt.",
-      "createError": "Budget konnte nicht erstellt werden.",
-      "updateSuccess": "Budget erfolgreich aktualisiert.",
-      "updateError": "Budget konnte nicht aktualisiert werden.",
-      "deleteSuccess": "Budget erfolgreich gelöscht.",
-      "deleteError": "Budget konnte nicht gelöscht werden."
+      "createSuccess": "Budget erstellt.",
+      "createError": "Budget konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Budget aktualisiert.",
+      "updateError": "Budget konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "deleteSuccess": "Budget gelöscht.",
+      "deleteError": "Budget konnte nicht gelöscht werden. Bitte erneut versuchen."
     },
     "analysis": {
       "title": "Budgetanalyse",
@@ -1044,11 +1042,11 @@
         "description": "Sehen, welche Kategorien im Plan liegen, die Grenze erreichen oder bereits überschritten haben."
       },
       "errors": {
-        "loadFailedWithError": "Budgetanalyse konnte nicht geladen werden: {{error}}"
+        "loadFailedWithError": "Budgetanalyse konnte nicht geladen werden. App neu starten und erneut versuchen."
       }
     },
     "errors": {
-      "loadFailed": "Budgets konnten nicht geladen werden: {{error}}"
+      "loadFailed": "Budgets konnten nicht geladen werden. App neu starten und erneut versuchen."
     }
   },
   "transactions": {
@@ -1078,7 +1076,6 @@
             "create": "Übertrag erstellen"
           },
           "errors": {
-            "fixValidation": "Bitte die markierten Felder korrigieren, bevor der Übertrag erstellt wird.",
             "dateRequired": "Datum ist erforderlich.",
             "fromAccountRequired": "Quellkonto ist erforderlich.",
             "toAccountRequired": "Zielkonto ist erforderlich.",
@@ -1086,7 +1083,7 @@
             "amountRequired": "Betrag ist erforderlich.",
             "amountInvalid": "Betrag muss eine positive Zahl sein.",
             "descriptionMaxLength": "Beschreibung darf höchstens 75 Zeichen haben.",
-            "createFailed": "Übertrag konnte nicht erstellt werden."
+            "createFailed": "Übertrag konnte nicht erstellt werden. Bitte erneut versuchen."
           }
         },
         "edit": {
@@ -1097,8 +1094,7 @@
             "save": "Änderungen speichern"
           },
           "errors": {
-            "fixValidation": "Bitte die markierten Felder korrigieren, bevor der Übertrag gespeichert wird.",
-            "updateFailed": "Übertrag konnte nicht aktualisiert werden."
+            "updateFailed": "Übertrag konnte nicht aktualisiert werden. Bitte erneut versuchen."
           }
         }
       },
@@ -1118,15 +1114,15 @@
         }
       },
       "toasts": {
-        "createSuccess": "Übertrag erfolgreich erstellt.",
-        "createError": "Übertrag konnte nicht erstellt werden.",
-        "updateSuccess": "Übertrag erfolgreich aktualisiert.",
-        "updateError": "Übertrag konnte nicht aktualisiert werden.",
-        "deleteSuccess": "Übertrag erfolgreich gelöscht.",
-        "deleteError": "Übertrag konnte nicht gelöscht werden."
+        "createSuccess": "Übertrag erstellt.",
+        "createError": "Übertrag konnte nicht erstellt werden. Bitte erneut versuchen.",
+        "updateSuccess": "Übertrag aktualisiert.",
+        "updateError": "Übertrag konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+        "deleteSuccess": "Übertrag gelöscht.",
+        "deleteError": "Übertrag konnte nicht gelöscht werden. Bitte erneut versuchen."
       },
       "errors": {
-        "loadFailed": "Überträge konnten nicht geladen werden: {{error}}"
+        "loadFailed": "Überträge konnten nicht geladen werden. App neu starten und erneut versuchen."
       }
     },
     "table": {
@@ -1158,14 +1154,13 @@
           "create": "Transaktion erstellen"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor die Transaktion erstellt wird.",
           "dateRequired": "Datum ist erforderlich.",
           "accountRequired": "Konto ist erforderlich.",
           "amountRequired": "Betrag ist erforderlich.",
           "amountInvalid": "Betrag muss eine gültige Zahl sein.",
           "categoryRequired": "Kategorie ist erforderlich.",
           "descriptionMaxLength": "Beschreibung darf höchstens 75 Zeichen haben.",
-          "createFailed": "Transaktion konnte nicht erstellt werden."
+          "createFailed": "Transaktion konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
@@ -1176,8 +1171,7 @@
           "save": "Änderungen speichern"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor die Transaktion gespeichert wird.",
-          "updateFailed": "Transaktion konnte nicht aktualisiert werden."
+          "updateFailed": "Transaktion konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       }
     },
@@ -1198,17 +1192,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Transaktion erfolgreich erstellt.",
-      "createError": "Transaktion konnte nicht erstellt werden.",
-      "updateSuccess": "Transaktion erfolgreich aktualisiert.",
-      "updateError": "Transaktion konnte nicht aktualisiert werden.",
-      "deleteSuccess": "Transaktion erfolgreich gelöscht.",
-      "deleteError": "Transaktion konnte nicht gelöscht werden.",
-      "duplicateSuccess": "Transaktion erfolgreich dupliziert.",
-      "duplicateError": "Transaktion konnte nicht dupliziert werden."
+      "createSuccess": "Transaktion erstellt.",
+      "createError": "Transaktion konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Transaktion aktualisiert.",
+      "updateError": "Transaktion konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "deleteSuccess": "Transaktion gelöscht.",
+      "deleteError": "Transaktion konnte nicht gelöscht werden. Bitte erneut versuchen.",
+      "duplicateSuccess": "Transaktion dupliziert.",
+      "duplicateError": "Transaktion konnte nicht dupliziert werden. Bitte erneut versuchen."
     },
     "errors": {
-      "loadFailed": "Transaktionen konnten nicht geladen werden: {{error}}"
+      "loadFailed": "Transaktionen konnten nicht geladen werden. App neu starten und erneut versuchen."
     }
   },
   "options": {
@@ -1422,7 +1416,6 @@
           "create": "Wiederkehrendes Ereignis erstellen"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das wiederkehrende Ereignis erstellt wird.",
           "titleRequired": "Titel ist erforderlich.",
           "titleMinLength": "Titel muss mindestens 2 Zeichen haben.",
           "titleMaxLength": "Titel darf höchstens 80 Zeichen haben.",
@@ -1441,7 +1434,7 @@
           "amountRequired": "Betrag ist erforderlich.",
           "amountInvalid": "Betrag muss eine positive Zahl sein.",
           "descriptionMaxLength": "Beschreibung darf höchstens 75 Zeichen haben.",
-          "createFailed": "Wiederkehrendes Ereignis konnte nicht erstellt werden."
+          "createFailed": "Wiederkehrendes Ereignis konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
@@ -1466,9 +1459,8 @@
           "save": "Änderungen speichern"
         },
         "errors": {
-          "fixValidation": "Bitte die markierten Felder korrigieren, bevor das wiederkehrende Ereignis gespeichert wird.",
           "fromDateRequired": "Wählen Sie das Datum aus, ab dem verknüpfte Einträge aktualisiert werden sollen.",
-          "updateFailed": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden."
+          "updateFailed": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       },
       "form": {
@@ -1502,7 +1494,7 @@
     },
     "updateResult": {
       "title": "Wiederkehrendes Ereignis aktualisiert",
-      "description": "\"{{title}}\" wurde erfolgreich aktualisiert. Verknüpfte generierte Einträge wurden entsprechend aktualisiert.",
+      "description": "\"{{title}}\" wurde aktualisiert. Verknüpfte generierte Einträge wurden entsprechend aktualisiert.",
       "actions": {
         "ok": "OK"
       }
@@ -1523,16 +1515,16 @@
       }
     },
     "toasts": {
-      "createSuccess": "Wiederkehrendes Ereignis erfolgreich erstellt.",
-      "createError": "Wiederkehrendes Ereignis konnte nicht erstellt werden.",
-      "updateSuccess": "Wiederkehrendes Ereignis erfolgreich aktualisiert.",
-      "updateError": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden.",
-      "deleteSuccess": "Wiederkehrendes Ereignis erfolgreich gelöscht.",
-      "deleteError": "Wiederkehrendes Ereignis konnte nicht gelöscht werden."
+      "createSuccess": "Wiederkehrendes Ereignis erstellt.",
+      "createError": "Wiederkehrendes Ereignis konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Wiederkehrendes Ereignis aktualisiert.",
+      "updateError": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "deleteSuccess": "Wiederkehrendes Ereignis gelöscht.",
+      "deleteError": "Wiederkehrendes Ereignis konnte nicht gelöscht werden. Bitte erneut versuchen."
     },
     "errors": {
-      "loadFailedWithError": "Wiederkehrende Ereignisse konnten nicht geladen werden: {{error}}",
-      "loadUnexpected": "Unerwarteter Fehler beim Laden wiederkehrender Ereignisse."
+      "loadFailedWithError": "Wiederkehrende Ereignisse konnten nicht geladen werden. App neu starten und erneut versuchen.",
+      "loadUnexpected": "Unerwarteter Fehler beim Laden wiederkehrender Ereignisse. App neu starten und erneut versuchen."
     }
   },
   "recurringEventItems": {
@@ -1549,11 +1541,13 @@
     "errors": {
       "invalidId": "Ungültige ID des wiederkehrenden Ereignisses.",
       "notFound": "Wiederkehrendes Ereignis nicht gefunden.",
-      "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge des wiederkehrenden Ereignisses."
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge des wiederkehrenden Ereignisses. App neu starten und erneut versuchen."
     }
   },
   "accountDetails": {
-    "page": { "title": "Kontodetails" },
+    "page": {
+      "title": "Kontodetails"
+    },
     "header": {
       "totalValue": "Gesamtkontowert",
       "noDescription": "Keine Beschreibung vorhanden."
@@ -1569,7 +1563,7 @@
     "errors": {
       "invalidId": "Ungültige Konto-ID.",
       "notFound": "Konto nicht gefunden.",
-      "loadUnexpected": "Unerwarteter Fehler beim Laden der Kontodetails."
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der Kontodetails. App neu starten und erneut versuchen."
     }
   },
   "accountValuations": {
@@ -1616,7 +1610,6 @@
           "cancel": "Abbrechen"
         },
         "errors": {
-          "fixValidation": "Bitte die obigen Fehler korrigieren, bevor gespeichert wird.",
           "createFailed": "Momentaufnahme konnte nicht erstellt werden. Bitte erneut versuchen.",
           "valueRequired": "Wert ist erforderlich.",
           "valueInvalid": "Wert muss eine gültige positive Zahl sein.",
@@ -1631,7 +1624,6 @@
           "cancel": "Abbrechen"
         },
         "errors": {
-          "fixValidation": "Bitte die obigen Fehler korrigieren, bevor gespeichert wird.",
           "updateFailed": "Momentaufnahme konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       }
@@ -1645,12 +1637,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Momentaufnahme erfolgreich hinzugefügt.",
-      "createError": "Momentaufnahme konnte nicht hinzugefügt werden.",
-      "updateSuccess": "Momentaufnahme erfolgreich aktualisiert.",
-      "updateError": "Momentaufnahme konnte nicht aktualisiert werden.",
-      "deleteSuccess": "Momentaufnahme erfolgreich gelöscht.",
-      "deleteError": "Momentaufnahme konnte nicht gelöscht werden."
+      "createSuccess": "Momentaufnahme hinzugefügt.",
+      "createError": "Momentaufnahme konnte nicht hinzugefügt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Momentaufnahme aktualisiert.",
+      "updateError": "Momentaufnahme konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "deleteSuccess": "Momentaufnahme gelöscht.",
+      "deleteError": "Momentaufnahme konnte nicht gelöscht werden. Bitte erneut versuchen."
     }
   },
   "onboarding": {

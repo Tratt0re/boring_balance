@@ -54,9 +54,7 @@ export class UpsertAccountValuationDialogComponent {
   }
 
   public collectCreatePayload(): AccountValuationCreateDto | null {
-    const values = this.collectNormalizedValues(
-      'accountValuations.dialog.add.errors.fixValidation',
-    );
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }
@@ -76,9 +74,7 @@ export class UpsertAccountValuationDialogComponent {
   }
 
   public collectUpdateChanges(): AccountValuationUpdateDto['changes'] | null {
-    const values = this.collectNormalizedValues(
-      'accountValuations.dialog.edit.errors.fixValidation',
-    );
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }

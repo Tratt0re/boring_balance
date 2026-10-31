@@ -81,7 +81,7 @@ export class UpsertCategoryDialogComponent {
   }
 
   public collectCreatePayload(): CategoryCreateDto | null {
-    const changes = this.collectNormalizedChanges('categories.dialog.add.errors.fixValidation');
+    const changes = this.collectNormalizedChanges('common.errors.fixHighlightedFields');
     if (!changes) {
       return null;
     }
@@ -94,7 +94,7 @@ export class UpsertCategoryDialogComponent {
   }
 
   public collectUpdateChanges(): CategoryUpdateDto['changes'] | null {
-    return this.collectNormalizedChanges('categories.dialog.edit.errors.fixValidation');
+    return this.collectNormalizedChanges('common.errors.fixHighlightedFields');
   }
 
   public setSubmitError(errorKey: string | null): void {

@@ -185,7 +185,7 @@ export class UpsertPlanItemDialogComponent {
   }
 
   public collectCreatePayload(): PlanItemCreateDto | null {
-    const values = this.collectNormalizedValues('recurringEvents.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }
@@ -224,7 +224,7 @@ export class UpsertPlanItemDialogComponent {
   }
 
   public collectUpdatePayload(): Omit<PlanItemUpdateDto, 'id'> | null {
-    const values = this.collectNormalizedValues('recurringEvents.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }

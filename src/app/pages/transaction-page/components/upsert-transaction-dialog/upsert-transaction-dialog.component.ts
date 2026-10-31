@@ -109,7 +109,7 @@ export class UpsertTransactionDialogComponent {
   }
 
   public collectCreatePayload(): TransactionCreateDto | null {
-    const values = this.collectNormalizedValues('transactions.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }
@@ -125,7 +125,7 @@ export class UpsertTransactionDialogComponent {
   }
 
   public collectUpdateChanges(): TransactionUpdateDto['changes'] | null {
-    const values = this.collectNormalizedValues('transactions.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }

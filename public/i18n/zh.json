@@ -111,7 +111,10 @@
         "disabled": "已禁用"
       }
     },
-    "skipToContent": "跳至主要内容"
+    "skipToContent": "跳至主要内容",
+    "errors": {
+      "fixHighlightedFields": "请修正标红字段后继续。"
+    }
   },
   "nav": {
     "sections": {
@@ -162,7 +165,8 @@
           "body": "此操作将永久删除所有已创建的账户、交易、转账、预算和分类，且无法撤销。",
           "cta": "确认清除数据"
         },
-        "success": "所有财务数据已清除。"
+        "success": "所有财务数据已清除。",
+        "error": "无法清除数据。未删除任何内容。请重试。"
       },
       "factory_reset": {
         "label": "恢复出厂设置",
@@ -173,9 +177,9 @@
           "body": "此操作将删除整个数据库并将应用恢复至初始状态。备份文件不受影响，且无法撤销。",
           "input_placeholder": "输入 RESET 以确认",
           "cta": "重置应用"
-        }
-      },
-      "reset_error": "出现错误，请重试。"
+        },
+        "error": "无法重置应用。请重启应用，确认数据仍在，然后重试。"
+      }
     },
     "general": {
       "intro": "这些偏好设置立即生效，使应用与你查看和管理财务的方式保持一致。",
@@ -492,7 +496,7 @@
           "description": "下载 Excel 模板，按自己的节奏填写，然后回到此处导入。",
           "messages": {
             "success": "模板已保存：{{fileName}}",
-            "error": "导入模板保存失败。"
+            "error": "导入模板保存失败。请重试。"
           }
         },
         "actions": {
@@ -542,10 +546,10 @@
         },
         "messages": {
           "fileRequired": "请先选择 Excel 文件。",
-          "selectError": "选择 Excel 文件失败。",
-          "validateError": "所选 Excel 文件验证失败。",
+          "selectError": "选择 Excel 文件失败。请重试。",
+          "validateError": "所选 Excel 文件验证失败。请重试。",
           "importSuccess": "导入完成，正在重新加载应用数据...",
-          "importError": "导入失败。"
+          "importError": "导入失败。请重试。"
         }
       },
       "controls": {
@@ -558,46 +562,46 @@
       },
       "messages": {
         "success": "导出完成：{{fileName}}",
-        "error": "数据导出失败。"
+        "error": "数据导出失败。请重试。"
       }
     },
     "toasts": {
       "backup": {
-        "loadSettingsFailed": "无法加载备份设置。",
-        "updateSettingsFailed": "无法更新备份设置。",
-        "loadStateFailed": "无法加载备份状态。",
-        "selectFolderFailed": "无法选择备份文件夹。",
-        "loadListFailed": "无法加载备份列表。",
-        "selectFileFailed": "无法选择备份文件。",
-        "backupFailed": "备份失败。",
-        "restoreFailed": "恢复失败。",
+        "loadSettingsFailed": "无法加载备份设置。请重试。",
+        "updateSettingsFailed": "无法更新备份设置。请重试。",
+        "loadStateFailed": "无法加载备份状态。请重试。",
+        "selectFolderFailed": "无法选择备份文件夹。请重试。",
+        "loadListFailed": "无法加载备份列表。请重试。",
+        "selectFileFailed": "无法选择备份文件。请重试。",
+        "backupFailed": "备份失败。请重试。",
+        "restoreFailed": "恢复失败。请重试。",
         "deleted": "备份已删除。",
-        "deleteFailed": "无法删除备份。",
+        "deleteFailed": "无法删除备份。请重试。",
         "completed": "备份已完成：{{fileName}}",
         "restoreCompleted": "恢复已完成。正在重新加载应用数据……"
       },
       "sync": {
-        "loadSettingsFailed": "无法加载同步设置。",
-        "updateSettingsFailed": "无法更新同步设置。",
-        "loadStateFailed": "无法加载同步状态。",
-        "checkNewerFailed": "无法检查是否有更新的同步数据。",
-        "selectFolderFailed": "无法选择同步文件夹。",
-        "inspectFolderFailed": "无法检查所选的同步文件夹。",
+        "loadSettingsFailed": "无法加载同步设置。请重试。",
+        "updateSettingsFailed": "无法更新同步设置。请重试。",
+        "loadStateFailed": "无法加载同步状态。请重试。",
+        "checkNewerFailed": "无法检查是否有更新的同步数据。请重试。",
+        "selectFolderFailed": "无法选择同步文件夹。请重试。",
+        "inspectFolderFailed": "无法检查所选的同步文件夹。请重试。",
         "enabled": "同步已启用。",
-        "enableFailed": "无法启用同步。",
+        "enableFailed": "无法启用同步。请重试。",
         "disabled": "同步已停用。",
-        "disableFailed": "无法停用同步。",
+        "disableFailed": "无法停用同步。请重试。",
         "syncNothingChanged": "同步检查已完成，没有任何变化。",
-        "syncFailed": "同步失败。",
+        "syncFailed": "同步失败。请重试。",
         "pullNothingNewer": "未找到更新的远程快照。",
-        "pullFailed": "拉取失败。",
+        "pullFailed": "拉取失败。请重试。",
         "pushNothingToPublish": "没有需要发布的本地更改。",
-        "pushFailed": "推送失败。",
-        "loadSnapshotsFailed": "无法加载同步快照。",
+        "pushFailed": "推送失败。请重试。",
+        "loadSnapshotsFailed": "无法加载同步快照。请重试。",
         "defaultFileUpdated": "默认同步文件已更新。正在重新加载应用数据……",
-        "selectDefaultFileFailed": "无法选择默认同步文件。",
+        "selectDefaultFileFailed": "无法选择默认同步文件。请重试。",
         "fileDeleted": "同步文件已删除。",
-        "deleteFileFailed": "无法删除同步文件。",
+        "deleteFileFailed": "无法删除同步文件。请重试。",
         "pullCompleted": "拉取已完成。",
         "pullCompletedWithId": "拉取已完成（{{snapshotId}}）",
         "pushCompleted": "推送已完成。",
@@ -618,7 +622,7 @@
       }
     },
     "errors": {
-      "summaryLoad": "无法加载汇总数据。"
+      "summaryLoad": "无法加载汇总数据。请重启应用后重试。"
     },
     "pie": {
       "others": "其他"
@@ -649,7 +653,7 @@
         "segmentTitle": "收入与支出",
         "descriptionCurrentYear": "逐月对比 {{year}} 年的收入、支出和净现金流。",
         "loading": "正在加载分析数据...",
-        "loadFailedWithError": "分析数据加载失败：{{error}}",
+        "loadFailedWithError": "分析数据加载失败。请重启应用后重试。",
         "empty": "所选筛选条件下无分析数据。",
         "series": {
           "incomes": "收入",
@@ -661,7 +665,7 @@
         "title": "活动",
         "latestTransactions": "本月最新 {{count}} 笔交易，快速查看新增支出和收入。",
         "latestTransfers": "本月最新 {{count}} 笔转账，核实账户间资金流动。",
-        "loadFailed": "无法加载活动数据。"
+        "loadFailed": "无法加载活动数据。请重启应用后重试。"
       },
       "recentTransactions": {
         "empty": "本月暂无交易。添加一笔以开始记录活动。",
@@ -681,7 +685,7 @@
         "title": "资金流向",
         "description": "{{month}} 概览：资金从哪里来、流向哪里、留存多少。",
         "loading": "正在加载资金流向...",
-        "loadFailedWithError": "资金流向加载失败：{{error}}",
+        "loadFailedWithError": "资金流向加载失败。请重启应用后重试。",
         "empty": "本月暂无资金流向数据。添加交易以查看资金动向。",
         "tooltips": {
           "actualNetCashflow": "实际净现金流"
@@ -738,7 +742,7 @@
   "compare": {
     "loadingTitle": "正在准备对比",
     "loadingDescription": "正在获取两个月的数据以进行并排对比。",
-    "loadFailedWithError": "对比分析数据加载失败：{{error}}",
+    "loadFailedWithError": "对比分析数据加载失败。请重启应用后重试。",
     "empty": "这两个月暂无对比数据。在两个月内都记录活动后即可在此对比。",
     "selectors": {
       "left": {
@@ -829,13 +833,12 @@
           "create": "创建账户"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再创建账户。",
           "nameRequired": "名称为必填项。",
           "nameMinLength": "名称至少需要 2 个字符。",
           "nameMaxLength": "名称最多 64 个字符。",
           "typeRequired": "账户类型为必填项。",
           "descriptionMaxLength": "描述最多 50 个字符。",
-          "createFailed": "账户创建失败。"
+          "createFailed": "账户创建失败。请重试。"
         }
       },
       "edit": {
@@ -846,8 +849,7 @@
           "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再保存账户。",
-          "updateFailed": "账户更新失败。"
+          "updateFailed": "账户更新失败。请重试。"
         }
       }
     },
@@ -859,7 +861,7 @@
         "unarchive": "取消归档账户"
       },
       "errors": {
-        "loadFailed": "加载已归档账户失败：{{error}}"
+        "loadFailed": "加载已归档账户失败。请重启应用后重试。"
       }
     },
     "archiveAlert": {
@@ -871,17 +873,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "账户创建成功。",
-      "createError": "账户创建失败。",
-      "updateSuccess": "账户更新成功。",
-      "updateError": "账户更新失败。",
-      "archiveSuccess": "账户归档成功。",
-      "archiveError": "账户归档失败。",
-      "unarchiveSuccess": "账户取消归档成功。",
-      "unarchiveError": "账户取消归档失败。"
+      "createSuccess": "账户已创建。",
+      "createError": "账户创建失败。请重试。",
+      "updateSuccess": "账户已更新。",
+      "updateError": "账户更新失败。请重试。",
+      "archiveSuccess": "账户已归档。",
+      "archiveError": "账户归档失败。请重试。",
+      "unarchiveSuccess": "账户已取消归档。",
+      "unarchiveError": "账户取消归档失败。请重试。"
     },
     "errors": {
-      "loadFailed": "账户加载失败：{{error}}"
+      "loadFailed": "账户加载失败。请重启应用后重试。"
     }
   },
   "categories": {
@@ -909,13 +911,12 @@
           "create": "创建分类"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再创建分类。",
           "nameRequired": "名称为必填项。",
           "nameMinLength": "名称至少需要 2 个字符。",
           "nameMaxLength": "名称最多 64 个字符。",
           "descriptionMaxLength": "描述最多 50 个字符。",
           "typeRequired": "分类类型为必填项。",
-          "createFailed": "分类创建失败。"
+          "createFailed": "分类创建失败。请重试。"
         }
       },
       "edit": {
@@ -926,8 +927,7 @@
           "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再保存分类。",
-          "updateFailed": "分类更新失败。"
+          "updateFailed": "分类更新失败。请重试。"
         }
       }
     },
@@ -939,7 +939,7 @@
         "unarchive": "取消归档分类"
       },
       "errors": {
-        "loadFailed": "加载已归档分类失败：{{error}}"
+        "loadFailed": "加载已归档分类失败。请重启应用后重试。"
       }
     },
     "archiveAlert": {
@@ -951,17 +951,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "分类创建成功。",
-      "createError": "分类创建失败。",
-      "updateSuccess": "分类更新成功。",
-      "updateError": "分类更新失败。",
-      "archiveSuccess": "分类归档成功。",
-      "archiveError": "分类归档失败。",
-      "unarchiveSuccess": "分类取消归档成功。",
-      "unarchiveError": "分类取消归档失败。"
+      "createSuccess": "分类已创建。",
+      "createError": "分类创建失败。请重试。",
+      "updateSuccess": "分类已更新。",
+      "updateError": "分类更新失败。请重试。",
+      "archiveSuccess": "分类已归档。",
+      "archiveError": "分类归档失败。请重试。",
+      "unarchiveSuccess": "分类已取消归档。",
+      "unarchiveError": "分类取消归档失败。请重试。"
     },
     "errors": {
-      "loadFailed": "分类加载失败：{{error}}"
+      "loadFailed": "分类加载失败。请重启应用后重试。"
     }
   },
   "budgets": {
@@ -988,12 +988,11 @@
           "create": "创建预算"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再创建预算。",
           "categoryRequired": "分类为必填项。",
           "amountRequired": "金额为必填项。",
           "amountInvalid": "金额必须为正数。",
           "descriptionMaxLength": "描述最多 75 个字符。",
-          "createFailed": "预算创建失败。"
+          "createFailed": "预算创建失败。请重试。"
         }
       },
       "edit": {
@@ -1004,8 +1003,7 @@
           "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再保存预算。",
-          "updateFailed": "预算更新失败。"
+          "updateFailed": "预算更新失败。请重试。"
         }
       }
     },
@@ -1018,12 +1016,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "预算创建成功。",
-      "createError": "预算创建失败。",
-      "updateSuccess": "预算更新成功。",
-      "updateError": "预算更新失败。",
-      "deleteSuccess": "预算删除成功。",
-      "deleteError": "预算删除失败。"
+      "createSuccess": "预算已创建。",
+      "createError": "预算创建失败。请重试。",
+      "updateSuccess": "预算已更新。",
+      "updateError": "预算更新失败。请重试。",
+      "deleteSuccess": "预算已删除。",
+      "deleteError": "预算删除失败。请重试。"
     },
     "analysis": {
       "title": "预算分析",
@@ -1044,11 +1042,11 @@
         "description": "查看哪些分类在预算内、接近上限或已超支。"
       },
       "errors": {
-        "loadFailedWithError": "预算分析加载失败：{{error}}"
+        "loadFailedWithError": "预算分析加载失败。请重启应用后重试。"
       }
     },
     "errors": {
-      "loadFailed": "预算加载失败：{{error}}"
+      "loadFailed": "预算加载失败。请重启应用后重试。"
     }
   },
   "transactions": {
@@ -1078,7 +1076,6 @@
             "create": "创建转账"
           },
           "errors": {
-            "fixValidation": "请修正标红字段后再创建转账。",
             "dateRequired": "日期为必填项。",
             "fromAccountRequired": "来源账户为必填项。",
             "toAccountRequired": "目标账户为必填项。",
@@ -1086,7 +1083,7 @@
             "amountRequired": "金额为必填项。",
             "amountInvalid": "金额必须为正数。",
             "descriptionMaxLength": "描述最多 75 个字符。",
-            "createFailed": "转账创建失败。"
+            "createFailed": "转账创建失败。请重试。"
           }
         },
         "edit": {
@@ -1097,8 +1094,7 @@
             "save": "保存更改"
           },
           "errors": {
-            "fixValidation": "请修正标红字段后再保存转账。",
-            "updateFailed": "转账更新失败。"
+            "updateFailed": "转账更新失败。请重试。"
           }
         }
       },
@@ -1118,15 +1114,15 @@
         }
       },
       "toasts": {
-        "createSuccess": "转账创建成功。",
-        "createError": "转账创建失败。",
-        "updateSuccess": "转账更新成功。",
-        "updateError": "转账更新失败。",
-        "deleteSuccess": "转账删除成功。",
-        "deleteError": "转账删除失败。"
+        "createSuccess": "转账已创建。",
+        "createError": "转账创建失败。请重试。",
+        "updateSuccess": "转账已更新。",
+        "updateError": "转账更新失败。请重试。",
+        "deleteSuccess": "转账已删除。",
+        "deleteError": "转账删除失败。请重试。"
       },
       "errors": {
-        "loadFailed": "转账加载失败：{{error}}"
+        "loadFailed": "转账加载失败。请重启应用后重试。"
       }
     },
     "table": {
@@ -1158,14 +1154,13 @@
           "create": "创建交易"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再创建交易。",
           "dateRequired": "日期为必填项。",
           "accountRequired": "账户为必填项。",
           "amountRequired": "金额为必填项。",
           "amountInvalid": "金额必须为有效数字。",
           "categoryRequired": "分类为必填项。",
           "descriptionMaxLength": "描述最多 75 个字符。",
-          "createFailed": "交易创建失败。"
+          "createFailed": "交易创建失败。请重试。"
         }
       },
       "edit": {
@@ -1176,8 +1171,7 @@
           "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再保存交易。",
-          "updateFailed": "交易更新失败。"
+          "updateFailed": "交易更新失败。请重试。"
         }
       }
     },
@@ -1198,17 +1192,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "交易创建成功。",
-      "createError": "交易创建失败。",
-      "updateSuccess": "交易更新成功。",
-      "updateError": "交易更新失败。",
-      "deleteSuccess": "交易删除成功。",
-      "deleteError": "交易删除失败。",
-      "duplicateSuccess": "交易复制成功。",
-      "duplicateError": "交易复制失败。"
+      "createSuccess": "交易已创建。",
+      "createError": "交易创建失败。请重试。",
+      "updateSuccess": "交易已更新。",
+      "updateError": "交易更新失败。请重试。",
+      "deleteSuccess": "交易已删除。",
+      "deleteError": "交易删除失败。请重试。",
+      "duplicateSuccess": "交易已复制。",
+      "duplicateError": "交易复制失败。请重试。"
     },
     "errors": {
-      "loadFailed": "交易加载失败：{{error}}"
+      "loadFailed": "交易加载失败。请重启应用后重试。"
     }
   },
   "options": {
@@ -1422,7 +1416,6 @@
           "create": "创建定期事件"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再创建定期事件。",
           "titleRequired": "标题为必填项。",
           "titleMinLength": "标题至少需要 2 个字符。",
           "titleMaxLength": "标题最多 80 个字符。",
@@ -1441,7 +1434,7 @@
           "amountRequired": "金额为必填项。",
           "amountInvalid": "金额必须为正数。",
           "descriptionMaxLength": "描述最多 75 个字符。",
-          "createFailed": "定期事件创建失败。"
+          "createFailed": "定期事件创建失败。请重试。"
         }
       },
       "edit": {
@@ -1466,9 +1459,8 @@
           "save": "保存更改"
         },
         "errors": {
-          "fixValidation": "请修正标红字段后再保存定期事件。",
           "fromDateRequired": "请选择开始更新关联项目的日期。",
-          "updateFailed": "定期事件更新失败。"
+          "updateFailed": "定期事件更新失败。请重试。"
         }
       },
       "form": {
@@ -1502,7 +1494,7 @@
     },
     "updateResult": {
       "title": "定期事件已更新",
-      "description": "「{{title}}」已成功更新。关联的生成项目已在适用处同步更新。",
+      "description": "「{{title}}」已更新。关联的生成项目已在适用处同步更新。",
       "actions": {
         "ok": "确定"
       }
@@ -1523,16 +1515,16 @@
       }
     },
     "toasts": {
-      "createSuccess": "定期事件创建成功。",
-      "createError": "定期事件创建失败。",
-      "updateSuccess": "定期事件更新成功。",
-      "updateError": "定期事件更新失败。",
-      "deleteSuccess": "定期事件删除成功。",
-      "deleteError": "定期事件删除失败。"
+      "createSuccess": "定期事件已创建。",
+      "createError": "定期事件创建失败。请重试。",
+      "updateSuccess": "定期事件已更新。",
+      "updateError": "定期事件更新失败。请重试。",
+      "deleteSuccess": "定期事件已删除。",
+      "deleteError": "定期事件删除失败。请重试。"
     },
     "errors": {
-      "loadFailedWithError": "定期事件加载失败：{{error}}",
-      "loadUnexpected": "加载定期事件时发生意外错误。"
+      "loadFailedWithError": "定期事件加载失败。请重启应用后重试。",
+      "loadUnexpected": "加载定期事件时发生意外错误。请重启应用后重试。"
     }
   },
   "recurringEventItems": {
@@ -1549,11 +1541,13 @@
     "errors": {
       "invalidId": "定期事件 ID 无效。",
       "notFound": "未找到定期事件。",
-      "loadUnexpected": "加载定期事件项目时发生意外错误。"
+      "loadUnexpected": "加载定期事件项目时发生意外错误。请重启应用后重试。"
     }
   },
   "accountDetails": {
-    "page": { "title": "账户详情" },
+    "page": {
+      "title": "账户详情"
+    },
     "header": {
       "totalValue": "账户总值",
       "noDescription": "未提供描述。"
@@ -1569,7 +1563,7 @@
     "errors": {
       "invalidId": "账户 ID 无效。",
       "notFound": "未找到账户。",
-      "loadUnexpected": "加载账户详情时发生意外错误。"
+      "loadUnexpected": "加载账户详情时发生意外错误。请重启应用后重试。"
     }
   },
   "accountValuations": {
@@ -1616,7 +1610,6 @@
           "cancel": "取消"
         },
         "errors": {
-          "fixValidation": "请修正上方错误后再保存。",
           "createFailed": "快照创建失败，请重试。",
           "valueRequired": "价值为必填项。",
           "valueInvalid": "价值必须为有效正数。",
@@ -1631,7 +1624,6 @@
           "cancel": "取消"
         },
         "errors": {
-          "fixValidation": "请修正上方错误后再保存。",
           "updateFailed": "快照更新失败，请重试。"
         }
       }
@@ -1645,12 +1637,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "快照添加成功。",
-      "createError": "快照添加失败。",
-      "updateSuccess": "快照更新成功。",
-      "updateError": "快照更新失败。",
-      "deleteSuccess": "快照删除成功。",
-      "deleteError": "快照删除失败。"
+      "createSuccess": "快照已添加。",
+      "createError": "快照添加失败。请重试。",
+      "updateSuccess": "快照已更新。",
+      "updateError": "快照更新失败。请重试。",
+      "deleteSuccess": "快照已删除。",
+      "deleteError": "快照删除失败。请重试。"
     }
   },
   "onboarding": {

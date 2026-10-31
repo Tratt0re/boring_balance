@@ -111,7 +111,10 @@
         "disabled": "Désactivé"
       }
     },
-    "skipToContent": "Aller au contenu principal"
+    "skipToContent": "Aller au contenu principal",
+    "errors": {
+      "fixHighlightedFields": "Veuillez corriger les champs indiqués pour continuer."
+    }
   },
   "nav": {
     "sections": {
@@ -162,7 +165,8 @@
           "body": "Cette action supprimera définitivement tous les comptes, transactions, virements, budgets et catégories créés. Cette opération est irréversible.",
           "cta": "Oui, effacer les données"
         },
-        "success": "Toutes les données financières ont été effacées."
+        "success": "Toutes les données financières ont été effacées.",
+        "error": "Impossible d'effacer les données. Rien n'a été supprimé. Veuillez réessayer."
       },
       "factory_reset": {
         "label": "Réinitialisation usine",
@@ -173,9 +177,9 @@
           "body": "Cette action supprimera la base de données entière et remettra l'application dans son état initial. Les fichiers de sauvegarde ne seront pas affectés. Cette opération est irréversible.",
           "input_placeholder": "Saisir RESET pour confirmer",
           "cta": "Réinitialiser l'application"
-        }
-      },
-      "reset_error": "Une erreur s'est produite. Veuillez réessayer."
+        },
+        "error": "Impossible de réinitialiser l'application. Redémarrez-la, vérifiez que vos données sont toujours là, puis réessayez."
+      }
     },
     "general": {
       "intro": "Ces préférences prennent effet immédiatement pour que l'application corresponde à votre façon de consulter vos finances.",
@@ -492,7 +496,7 @@
           "description": "Télécharger le modèle Excel, le remplir à votre rythme, puis revenir ici pour l'importer.",
           "messages": {
             "success": "Modèle enregistré : {{fileName}}",
-            "error": "Échec de l'enregistrement du modèle d'import."
+            "error": "Échec de l'enregistrement du modèle d'import. Veuillez réessayer."
           }
         },
         "actions": {
@@ -542,10 +546,10 @@
         },
         "messages": {
           "fileRequired": "Sélectionner d'abord un fichier Excel.",
-          "selectError": "Échec de la sélection d'un fichier Excel.",
-          "validateError": "Échec de la validation du fichier Excel sélectionné.",
+          "selectError": "Échec de la sélection d'un fichier Excel. Veuillez réessayer.",
+          "validateError": "Échec de la validation du fichier Excel sélectionné. Veuillez réessayer.",
           "importSuccess": "Import terminé. Rechargement des données de l'application...",
-          "importError": "Échec de l'import."
+          "importError": "Échec de l'import. Veuillez réessayer."
         }
       },
       "controls": {
@@ -558,46 +562,46 @@
       },
       "messages": {
         "success": "Export terminé : {{fileName}}",
-        "error": "Échec de l'export des données."
+        "error": "Échec de l'export des données. Veuillez réessayer."
       }
     },
     "toasts": {
       "backup": {
-        "loadSettingsFailed": "Impossible de charger les paramètres de sauvegarde.",
-        "updateSettingsFailed": "Impossible de mettre à jour les paramètres de sauvegarde.",
-        "loadStateFailed": "Impossible de charger l'état de la sauvegarde.",
-        "selectFolderFailed": "Impossible de sélectionner un dossier de sauvegarde.",
-        "loadListFailed": "Impossible de charger la liste des sauvegardes.",
-        "selectFileFailed": "Impossible de sélectionner un fichier de sauvegarde.",
-        "backupFailed": "Échec de la sauvegarde.",
-        "restoreFailed": "Échec de la restauration.",
+        "loadSettingsFailed": "Impossible de charger les paramètres de sauvegarde. Veuillez réessayer.",
+        "updateSettingsFailed": "Impossible de mettre à jour les paramètres de sauvegarde. Veuillez réessayer.",
+        "loadStateFailed": "Impossible de charger l'état de la sauvegarde. Veuillez réessayer.",
+        "selectFolderFailed": "Impossible de sélectionner un dossier de sauvegarde. Veuillez réessayer.",
+        "loadListFailed": "Impossible de charger la liste des sauvegardes. Veuillez réessayer.",
+        "selectFileFailed": "Impossible de sélectionner un fichier de sauvegarde. Veuillez réessayer.",
+        "backupFailed": "Échec de la sauvegarde. Veuillez réessayer.",
+        "restoreFailed": "Échec de la restauration. Veuillez réessayer.",
         "deleted": "Sauvegarde supprimée.",
-        "deleteFailed": "Impossible de supprimer la sauvegarde.",
+        "deleteFailed": "Impossible de supprimer la sauvegarde. Veuillez réessayer.",
         "completed": "Sauvegarde terminée : {{fileName}}",
         "restoreCompleted": "Restauration terminée. Rechargement des données de l'application..."
       },
       "sync": {
-        "loadSettingsFailed": "Impossible de charger les paramètres de synchronisation.",
-        "updateSettingsFailed": "Impossible de mettre à jour les paramètres de synchronisation.",
-        "loadStateFailed": "Impossible de charger l'état de la synchronisation.",
-        "checkNewerFailed": "Impossible de rechercher des données de synchronisation plus récentes.",
-        "selectFolderFailed": "Impossible de sélectionner un dossier de synchronisation.",
-        "inspectFolderFailed": "Impossible d'inspecter le dossier de synchronisation sélectionné.",
+        "loadSettingsFailed": "Impossible de charger les paramètres de synchronisation. Veuillez réessayer.",
+        "updateSettingsFailed": "Impossible de mettre à jour les paramètres de synchronisation. Veuillez réessayer.",
+        "loadStateFailed": "Impossible de charger l'état de la synchronisation. Veuillez réessayer.",
+        "checkNewerFailed": "Impossible de rechercher des données de synchronisation plus récentes. Veuillez réessayer.",
+        "selectFolderFailed": "Impossible de sélectionner un dossier de synchronisation. Veuillez réessayer.",
+        "inspectFolderFailed": "Impossible d'inspecter le dossier de synchronisation sélectionné. Veuillez réessayer.",
         "enabled": "Synchronisation activée.",
-        "enableFailed": "Impossible d'activer la synchronisation.",
+        "enableFailed": "Impossible d'activer la synchronisation. Veuillez réessayer.",
         "disabled": "Synchronisation désactivée.",
-        "disableFailed": "Impossible de désactiver la synchronisation.",
+        "disableFailed": "Impossible de désactiver la synchronisation. Veuillez réessayer.",
         "syncNothingChanged": "Vérification terminée. Rien n'a changé.",
-        "syncFailed": "Échec de la synchronisation.",
+        "syncFailed": "Échec de la synchronisation. Veuillez réessayer.",
         "pullNothingNewer": "Aucun instantané distant plus récent n'a été trouvé.",
-        "pullFailed": "Échec de la récupération.",
+        "pullFailed": "Échec de la récupération. Veuillez réessayer.",
         "pushNothingToPublish": "Aucune modification locale n'avait besoin d'être publiée.",
-        "pushFailed": "Échec de l'envoi.",
-        "loadSnapshotsFailed": "Impossible de charger les instantanés de synchronisation.",
+        "pushFailed": "Échec de l'envoi. Veuillez réessayer.",
+        "loadSnapshotsFailed": "Impossible de charger les instantanés de synchronisation. Veuillez réessayer.",
         "defaultFileUpdated": "Fichier de synchronisation par défaut mis à jour. Rechargement des données de l'application...",
-        "selectDefaultFileFailed": "Impossible de sélectionner le fichier de synchronisation par défaut.",
+        "selectDefaultFileFailed": "Impossible de sélectionner le fichier de synchronisation par défaut. Veuillez réessayer.",
         "fileDeleted": "Fichier de synchronisation supprimé.",
-        "deleteFileFailed": "Impossible de supprimer le fichier de synchronisation.",
+        "deleteFileFailed": "Impossible de supprimer le fichier de synchronisation. Veuillez réessayer.",
         "pullCompleted": "Récupération terminée.",
         "pullCompletedWithId": "Récupération terminée ({{snapshotId}})",
         "pushCompleted": "Envoi terminé.",
@@ -618,7 +622,7 @@
       }
     },
     "errors": {
-      "summaryLoad": "Impossible de charger les données récapitulatives."
+      "summaryLoad": "Impossible de charger les données récapitulatives. Redémarrez l'application et réessayez."
     },
     "pie": {
       "others": "Autres"
@@ -649,7 +653,7 @@
         "segmentTitle": "Revenus et dépenses",
         "descriptionCurrentYear": "Comparer les revenus, dépenses et flux de trésorerie net mois par mois pour {{year}}.",
         "loading": "Chargement des analyses...",
-        "loadFailedWithError": "Échec du chargement des analyses : {{error}}",
+        "loadFailedWithError": "Échec du chargement des analyses. Redémarrez l'application et réessayez.",
         "empty": "Aucune donnée analytique disponible pour les filtres sélectionnés.",
         "series": {
           "incomes": "Revenus",
@@ -661,7 +665,7 @@
         "title": "Activité",
         "latestTransactions": "Les {{count}} dernières transactions du mois pour examiner rapidement les nouvelles dépenses et revenus.",
         "latestTransfers": "Les {{count}} derniers virements du mois pour vérifier les mouvements entre comptes.",
-        "loadFailed": "Impossible de charger l'activité."
+        "loadFailed": "Impossible de charger l'activité. Redémarrez l'application et réessayez."
       },
       "recentTransactions": {
         "empty": "Aucune transaction ce mois-ci. Ajoutez-en une pour commencer à alimenter le journal d'activité.",
@@ -681,7 +685,7 @@
         "title": "Flux d'argent",
         "description": "{{month}} en un coup d'œil : voir d'où vient l'argent, où il va et ce qui reste.",
         "loading": "Chargement du flux d'argent...",
-        "loadFailedWithError": "Échec du chargement du flux d'argent : {{error}}",
+        "loadFailedWithError": "Échec du chargement du flux d'argent. Redémarrez l'application et réessayez.",
         "empty": "Aucun flux d'argent ce mois-ci. Ajoutez des transactions pour voir les mouvements.",
         "tooltips": {
           "actualNetCashflow": "Flux de trésorerie net réel"
@@ -738,7 +742,7 @@
   "compare": {
     "loadingTitle": "Préparation de la comparaison",
     "loadingDescription": "Chargement des deux mois pour une comparaison côte à côte.",
-    "loadFailedWithError": "Échec du chargement des analyses de comparaison : {{error}}",
+    "loadFailedWithError": "Échec du chargement des analyses de comparaison. Redémarrez l'application et réessayez.",
     "empty": "Aucune donnée de comparaison pour ces mois. Enregistrez de l'activité dans les deux mois pour les comparer ici.",
     "selectors": {
       "left": {
@@ -829,13 +833,12 @@
           "create": "Créer le compte"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant de créer le compte.",
           "nameRequired": "Le nom est obligatoire.",
           "nameMinLength": "Le nom doit comporter au moins 2 caractères.",
           "nameMaxLength": "Le nom ne doit pas dépasser 64 caractères.",
           "typeRequired": "Le type de compte est obligatoire.",
           "descriptionMaxLength": "La description ne doit pas dépasser 50 caractères.",
-          "createFailed": "Échec de la création du compte."
+          "createFailed": "Échec de la création du compte. Veuillez réessayer."
         }
       },
       "edit": {
@@ -846,8 +849,7 @@
           "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le compte.",
-          "updateFailed": "Échec de la mise à jour du compte."
+          "updateFailed": "Échec de la mise à jour du compte. Veuillez réessayer."
         }
       }
     },
@@ -859,7 +861,7 @@
         "unarchive": "Désarchiver le compte"
       },
       "errors": {
-        "loadFailed": "Échec du chargement des comptes archivés : {{error}}"
+        "loadFailed": "Échec du chargement des comptes archivés. Redémarrez l'application et réessayez."
       }
     },
     "archiveAlert": {
@@ -871,17 +873,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Compte créé avec succès.",
-      "createError": "Échec de la création du compte.",
-      "updateSuccess": "Compte mis à jour avec succès.",
-      "updateError": "Échec de la mise à jour du compte.",
-      "archiveSuccess": "Compte archivé avec succès.",
-      "archiveError": "Échec de l'archivage du compte.",
-      "unarchiveSuccess": "Compte désarchivé avec succès.",
-      "unarchiveError": "Échec de la désarchivation du compte."
+      "createSuccess": "Compte créé.",
+      "createError": "Échec de la création du compte. Veuillez réessayer.",
+      "updateSuccess": "Compte mis à jour.",
+      "updateError": "Échec de la mise à jour du compte. Veuillez réessayer.",
+      "archiveSuccess": "Compte archivé.",
+      "archiveError": "Échec de l'archivage du compte. Veuillez réessayer.",
+      "unarchiveSuccess": "Compte désarchivé.",
+      "unarchiveError": "Échec de la désarchivation du compte. Veuillez réessayer."
     },
     "errors": {
-      "loadFailed": "Échec du chargement des comptes : {{error}}"
+      "loadFailed": "Échec du chargement des comptes. Redémarrez l'application et réessayez."
     }
   },
   "categories": {
@@ -909,13 +911,12 @@
           "create": "Créer la catégorie"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant de créer la catégorie.",
           "nameRequired": "Le nom est obligatoire.",
           "nameMinLength": "Le nom doit comporter au moins 2 caractères.",
           "nameMaxLength": "Le nom ne doit pas dépasser 64 caractères.",
           "descriptionMaxLength": "La description ne doit pas dépasser 50 caractères.",
           "typeRequired": "Le type de catégorie est obligatoire.",
-          "createFailed": "Échec de la création de la catégorie."
+          "createFailed": "Échec de la création de la catégorie. Veuillez réessayer."
         }
       },
       "edit": {
@@ -926,8 +927,7 @@
           "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer la catégorie.",
-          "updateFailed": "Échec de la mise à jour de la catégorie."
+          "updateFailed": "Échec de la mise à jour de la catégorie. Veuillez réessayer."
         }
       }
     },
@@ -939,7 +939,7 @@
         "unarchive": "Désarchiver la catégorie"
       },
       "errors": {
-        "loadFailed": "Échec du chargement des catégories archivées : {{error}}"
+        "loadFailed": "Échec du chargement des catégories archivées. Redémarrez l'application et réessayez."
       }
     },
     "archiveAlert": {
@@ -951,17 +951,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Catégorie créée avec succès.",
-      "createError": "Échec de la création de la catégorie.",
-      "updateSuccess": "Catégorie mise à jour avec succès.",
-      "updateError": "Échec de la mise à jour de la catégorie.",
-      "archiveSuccess": "Catégorie archivée avec succès.",
-      "archiveError": "Échec de l'archivage de la catégorie.",
-      "unarchiveSuccess": "Catégorie désarchivée avec succès.",
-      "unarchiveError": "Échec de la désarchivation de la catégorie."
+      "createSuccess": "Catégorie créée.",
+      "createError": "Échec de la création de la catégorie. Veuillez réessayer.",
+      "updateSuccess": "Catégorie mise à jour.",
+      "updateError": "Échec de la mise à jour de la catégorie. Veuillez réessayer.",
+      "archiveSuccess": "Catégorie archivée.",
+      "archiveError": "Échec de l'archivage de la catégorie. Veuillez réessayer.",
+      "unarchiveSuccess": "Catégorie désarchivée.",
+      "unarchiveError": "Échec de la désarchivation de la catégorie. Veuillez réessayer."
     },
     "errors": {
-      "loadFailed": "Échec du chargement des catégories : {{error}}"
+      "loadFailed": "Échec du chargement des catégories. Redémarrez l'application et réessayez."
     }
   },
   "budgets": {
@@ -988,12 +988,11 @@
           "create": "Créer le budget"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant de créer le budget.",
           "categoryRequired": "La catégorie est obligatoire.",
           "amountRequired": "Le montant est obligatoire.",
           "amountInvalid": "Le montant doit être un nombre positif.",
           "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
-          "createFailed": "Échec de la création du budget."
+          "createFailed": "Échec de la création du budget. Veuillez réessayer."
         }
       },
       "edit": {
@@ -1004,8 +1003,7 @@
           "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le budget.",
-          "updateFailed": "Échec de la mise à jour du budget."
+          "updateFailed": "Échec de la mise à jour du budget. Veuillez réessayer."
         }
       }
     },
@@ -1018,12 +1016,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Budget créé avec succès.",
-      "createError": "Échec de la création du budget.",
-      "updateSuccess": "Budget mis à jour avec succès.",
-      "updateError": "Échec de la mise à jour du budget.",
-      "deleteSuccess": "Budget supprimé avec succès.",
-      "deleteError": "Échec de la suppression du budget."
+      "createSuccess": "Budget créé.",
+      "createError": "Échec de la création du budget. Veuillez réessayer.",
+      "updateSuccess": "Budget mis à jour.",
+      "updateError": "Échec de la mise à jour du budget. Veuillez réessayer.",
+      "deleteSuccess": "Budget supprimé.",
+      "deleteError": "Échec de la suppression du budget. Veuillez réessayer."
     },
     "analysis": {
       "title": "Analyse budgétaire",
@@ -1044,11 +1042,11 @@
         "description": "Voir quelles catégories sont dans les limites, proches du plafond ou déjà dépassées."
       },
       "errors": {
-        "loadFailedWithError": "Échec du chargement de l'analyse budgétaire : {{error}}"
+        "loadFailedWithError": "Échec du chargement de l'analyse budgétaire. Redémarrez l'application et réessayez."
       }
     },
     "errors": {
-      "loadFailed": "Échec du chargement des budgets : {{error}}"
+      "loadFailed": "Échec du chargement des budgets. Redémarrez l'application et réessayez."
     }
   },
   "transactions": {
@@ -1078,7 +1076,6 @@
             "create": "Créer le virement"
           },
           "errors": {
-            "fixValidation": "Veuillez corriger les champs indiqués avant de créer le virement.",
             "dateRequired": "La date est obligatoire.",
             "fromAccountRequired": "Le compte source est obligatoire.",
             "toAccountRequired": "Le compte destinataire est obligatoire.",
@@ -1086,7 +1083,7 @@
             "amountRequired": "Le montant est obligatoire.",
             "amountInvalid": "Le montant doit être un nombre positif.",
             "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
-            "createFailed": "Échec de la création du virement."
+            "createFailed": "Échec de la création du virement. Veuillez réessayer."
           }
         },
         "edit": {
@@ -1097,8 +1094,7 @@
             "save": "Enregistrer les modifications"
           },
           "errors": {
-            "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer le virement.",
-            "updateFailed": "Échec de la mise à jour du virement."
+            "updateFailed": "Échec de la mise à jour du virement. Veuillez réessayer."
           }
         }
       },
@@ -1118,15 +1114,15 @@
         }
       },
       "toasts": {
-        "createSuccess": "Virement créé avec succès.",
-        "createError": "Échec de la création du virement.",
-        "updateSuccess": "Virement mis à jour avec succès.",
-        "updateError": "Échec de la mise à jour du virement.",
-        "deleteSuccess": "Virement supprimé avec succès.",
-        "deleteError": "Échec de la suppression du virement."
+        "createSuccess": "Virement créé.",
+        "createError": "Échec de la création du virement. Veuillez réessayer.",
+        "updateSuccess": "Virement mis à jour.",
+        "updateError": "Échec de la mise à jour du virement. Veuillez réessayer.",
+        "deleteSuccess": "Virement supprimé.",
+        "deleteError": "Échec de la suppression du virement. Veuillez réessayer."
       },
       "errors": {
-        "loadFailed": "Échec du chargement des virements : {{error}}"
+        "loadFailed": "Échec du chargement des virements. Redémarrez l'application et réessayez."
       }
     },
     "table": {
@@ -1158,14 +1154,13 @@
           "create": "Créer la transaction"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant de créer la transaction.",
           "dateRequired": "La date est obligatoire.",
           "accountRequired": "Le compte est obligatoire.",
           "amountRequired": "Le montant est obligatoire.",
           "amountInvalid": "Le montant doit être un nombre valide.",
           "categoryRequired": "La catégorie est obligatoire.",
           "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
-          "createFailed": "Échec de la création de la transaction."
+          "createFailed": "Échec de la création de la transaction. Veuillez réessayer."
         }
       },
       "edit": {
@@ -1176,8 +1171,7 @@
           "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer la transaction.",
-          "updateFailed": "Échec de la mise à jour de la transaction."
+          "updateFailed": "Échec de la mise à jour de la transaction. Veuillez réessayer."
         }
       }
     },
@@ -1198,17 +1192,17 @@
       }
     },
     "toasts": {
-      "createSuccess": "Transaction créée avec succès.",
-      "createError": "Échec de la création de la transaction.",
-      "updateSuccess": "Transaction mise à jour avec succès.",
-      "updateError": "Échec de la mise à jour de la transaction.",
-      "deleteSuccess": "Transaction supprimée avec succès.",
-      "deleteError": "Échec de la suppression de la transaction.",
-      "duplicateSuccess": "Transaction dupliquée avec succès.",
-      "duplicateError": "Échec de la duplication de la transaction."
+      "createSuccess": "Transaction créée.",
+      "createError": "Échec de la création de la transaction. Veuillez réessayer.",
+      "updateSuccess": "Transaction mise à jour.",
+      "updateError": "Échec de la mise à jour de la transaction. Veuillez réessayer.",
+      "deleteSuccess": "Transaction supprimée.",
+      "deleteError": "Échec de la suppression de la transaction. Veuillez réessayer.",
+      "duplicateSuccess": "Transaction dupliquée.",
+      "duplicateError": "Échec de la duplication de la transaction. Veuillez réessayer."
     },
     "errors": {
-      "loadFailed": "Échec du chargement des transactions : {{error}}"
+      "loadFailed": "Échec du chargement des transactions. Redémarrez l'application et réessayez."
     }
   },
   "options": {
@@ -1422,7 +1416,6 @@
           "create": "Créer l'événement récurrent"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant de créer l'événement récurrent.",
           "titleRequired": "Le titre est obligatoire.",
           "titleMinLength": "Le titre doit comporter au moins 2 caractères.",
           "titleMaxLength": "Le titre ne doit pas dépasser 80 caractères.",
@@ -1441,7 +1434,7 @@
           "amountRequired": "Le montant est obligatoire.",
           "amountInvalid": "Le montant doit être un nombre positif.",
           "descriptionMaxLength": "La description ne doit pas dépasser 75 caractères.",
-          "createFailed": "Échec de la création de l'événement récurrent."
+          "createFailed": "Échec de la création de l'événement récurrent. Veuillez réessayer."
         }
       },
       "edit": {
@@ -1466,9 +1459,8 @@
           "save": "Enregistrer les modifications"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les champs indiqués avant d'enregistrer l'événement récurrent.",
           "fromDateRequired": "Sélectionnez la date à partir de laquelle les éléments liés doivent être mis à jour.",
-          "updateFailed": "Échec de la mise à jour de l'événement récurrent."
+          "updateFailed": "Échec de la mise à jour de l'événement récurrent. Veuillez réessayer."
         }
       },
       "form": {
@@ -1502,7 +1494,7 @@
     },
     "updateResult": {
       "title": "Événement récurrent mis à jour",
-      "description": "\"{{title}}\" a été mis à jour avec succès. Les éléments liés générés ont été mis à jour le cas échéant.",
+      "description": "\"{{title}}\" a été mis à jour. Les éléments liés générés ont été mis à jour le cas échéant.",
       "actions": {
         "ok": "OK"
       }
@@ -1523,16 +1515,16 @@
       }
     },
     "toasts": {
-      "createSuccess": "Événement récurrent créé avec succès.",
-      "createError": "Échec de la création de l'événement récurrent.",
-      "updateSuccess": "Événement récurrent mis à jour avec succès.",
-      "updateError": "Échec de la mise à jour de l'événement récurrent.",
-      "deleteSuccess": "Événement récurrent supprimé avec succès.",
-      "deleteError": "Échec de la suppression de l'événement récurrent."
+      "createSuccess": "Événement récurrent créé.",
+      "createError": "Échec de la création de l'événement récurrent. Veuillez réessayer.",
+      "updateSuccess": "Événement récurrent mis à jour.",
+      "updateError": "Échec de la mise à jour de l'événement récurrent. Veuillez réessayer.",
+      "deleteSuccess": "Événement récurrent supprimé.",
+      "deleteError": "Échec de la suppression de l'événement récurrent. Veuillez réessayer."
     },
     "errors": {
-      "loadFailedWithError": "Échec du chargement des événements récurrents : {{error}}",
-      "loadUnexpected": "Erreur inattendue lors du chargement des événements récurrents."
+      "loadFailedWithError": "Échec du chargement des événements récurrents. Redémarrez l'application et réessayez.",
+      "loadUnexpected": "Erreur inattendue lors du chargement des événements récurrents. Redémarrez l'application et réessayez."
     }
   },
   "recurringEventItems": {
@@ -1549,11 +1541,13 @@
     "errors": {
       "invalidId": "L'identifiant de l'événement récurrent n'est pas valide.",
       "notFound": "Événement récurrent introuvable.",
-      "loadUnexpected": "Erreur inattendue lors du chargement des éléments de l'événement récurrent."
+      "loadUnexpected": "Erreur inattendue lors du chargement des éléments de l'événement récurrent. Redémarrez l'application et réessayez."
     }
   },
   "accountDetails": {
-    "page": { "title": "Détails du compte" },
+    "page": {
+      "title": "Détails du compte"
+    },
     "header": {
       "totalValue": "Valeur totale du compte",
       "noDescription": "Aucune description fournie."
@@ -1569,7 +1563,7 @@
     "errors": {
       "invalidId": "Identifiant de compte non valide.",
       "notFound": "Compte introuvable.",
-      "loadUnexpected": "Erreur inattendue lors du chargement des détails du compte."
+      "loadUnexpected": "Erreur inattendue lors du chargement des détails du compte. Redémarrez l'application et réessayez."
     }
   },
   "accountValuations": {
@@ -1616,7 +1610,6 @@
           "cancel": "Annuler"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les erreurs ci-dessus avant d'enregistrer.",
           "createFailed": "Échec de la création de l'instantané. Veuillez réessayer.",
           "valueRequired": "La valeur est obligatoire.",
           "valueInvalid": "La valeur doit être un nombre positif valide.",
@@ -1631,7 +1624,6 @@
           "cancel": "Annuler"
         },
         "errors": {
-          "fixValidation": "Veuillez corriger les erreurs ci-dessus avant d'enregistrer.",
           "updateFailed": "Échec de la mise à jour de l'instantané. Veuillez réessayer."
         }
       }
@@ -1645,12 +1637,12 @@
       }
     },
     "toasts": {
-      "createSuccess": "Instantané ajouté avec succès.",
-      "createError": "Échec de l'ajout de l'instantané.",
-      "updateSuccess": "Instantané mis à jour avec succès.",
-      "updateError": "Échec de la mise à jour de l'instantané.",
-      "deleteSuccess": "Instantané supprimé avec succès.",
-      "deleteError": "Échec de la suppression de l'instantané."
+      "createSuccess": "Instantané ajouté.",
+      "createError": "Échec de l'ajout de l'instantané. Veuillez réessayer.",
+      "updateSuccess": "Instantané mis à jour.",
+      "updateError": "Échec de la mise à jour de l'instantané. Veuillez réessayer.",
+      "deleteSuccess": "Instantané supprimé.",
+      "deleteError": "Échec de la suppression de l'instantané. Veuillez réessayer."
     }
   },
   "onboarding": {

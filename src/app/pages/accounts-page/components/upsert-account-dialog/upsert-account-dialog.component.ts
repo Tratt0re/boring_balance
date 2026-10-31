@@ -82,7 +82,7 @@ export class UpsertAccountDialogComponent {
   }
 
   public collectCreatePayload(): AccountCreateDto | null {
-    const changes = this.collectNormalizedChanges('accounts.dialog.add.errors.fixValidation');
+    const changes = this.collectNormalizedChanges('common.errors.fixHighlightedFields');
     if (!changes) {
       return null;
     }
@@ -107,7 +107,7 @@ export class UpsertAccountDialogComponent {
   }
 
   public collectUpdateChanges(): AccountUpdateDto['changes'] | null {
-    return this.collectNormalizedChanges('accounts.dialog.edit.errors.fixValidation');
+    return this.collectNormalizedChanges('common.errors.fixHighlightedFields');
   }
 
   public setSubmitError(errorKey: string | null): void {

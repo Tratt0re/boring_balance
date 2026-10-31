@@ -50,10 +50,7 @@ export interface ResetConfirmDialogData {
 
       @if (hasError()) {
         <p class="text-sm text-destructive">
-          {{ 'settings.data.reset_error' | translate }}
-          @if (errorDetail()) {
-            <span class="block break-words opacity-80">{{ errorDetail() }}</span>
-          }
+          {{ errorKey | translate }}
         </p>
       }
 
@@ -84,6 +81,9 @@ export class ResetConfirmDialogComponent {
   private readonly translateService = inject(TranslateService);
 
   readonly isFactory = this.data.mode === 'factory';
+  readonly errorKey = this.isFactory
+    ? 'settings.data.factory_reset.error'
+    : 'settings.data.clear_financial.error';
 
   readonly titleKey = this.isFactory
     ? 'settings.data.factory_reset.confirm.title'
@@ -98,7 +98,6 @@ export class ResetConfirmDialogComponent {
   readonly confirmInput = signal('');
   readonly loading = signal(false);
   readonly hasError = signal(false);
-  readonly errorDetail = signal('');
 
   readonly inputMatchesReset = computed(() => this.confirmInput() === 'RESET');
 
@@ -134,7 +133,6 @@ export class ResetConfirmDialogComponent {
   private async runReset(): Promise<void> {
     this.loading.set(true);
     this.hasError.set(false);
-    this.errorDetail.set('');
 
     try {
       const result = this.isFactory
@@ -143,7 +141,6 @@ export class ResetConfirmDialogComponent {
 
       if (!result.ok) {
         this.loading.set(false);
-        this.errorDetail.set(result.error ?? '');
         this.hasError.set(true);
         return;
       }

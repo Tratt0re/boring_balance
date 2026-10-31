@@ -67,7 +67,7 @@ export class UpsertBudgetDialogComponent {
   }
 
   public collectCreatePayload(): BudgetCreateDto | null {
-    const values = this.collectNormalizedValues('budgets.dialog.add.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }
@@ -80,7 +80,7 @@ export class UpsertBudgetDialogComponent {
   }
 
   public collectUpdateChanges(): BudgetUpdateDto['changes'] | null {
-    const values = this.collectNormalizedValues('budgets.dialog.edit.errors.fixValidation');
+    const values = this.collectNormalizedValues('common.errors.fixHighlightedFields');
     if (!values) {
       return null;
     }
