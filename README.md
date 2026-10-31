@@ -200,12 +200,11 @@ To update, download the new installer from the release page and install it over 
 
 ## Roadmap
 
-Boring Balance is functional and usable today. Future versions may expand in areas such as:
+Boring Balance is functional and usable today. The next planned steps are:
 
-- Asset and investment tracking with more detailed account valuation history
-- Improvements to recurring plan item management and forecasting
-- Enhanced analytics and custom reporting
-- Import formats to bring in data from banks or other tools
+- **MCP integration**: expose Boring Balance through the Model Context Protocol (MCP)
+- **Asset and investment tracking**: with a more detailed account valuation history
+- **Linking real bank accounts**: connect personal bank accounts instead of entering everything by hand
 
 The core philosophy will not change. Boring Balance will remain simple, local-first, and free of tracking or subscriptions. Any new feature will be held to the same standard: it must earn its place, and it must not compromise the clarity or privacy of the existing experience.
 
