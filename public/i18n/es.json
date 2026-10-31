@@ -158,25 +158,25 @@
       },
       "clear_financial": {
         "label": "Borrar todos los datos financieros",
-        "description": "Elimina definitivamente todas las cuentas, transacciones, transferencias y presupuestos. Tus preferencias se conservan.",
+        "description": "Elimina definitivamente todas las cuentas, transacciones, transferencias, presupuestos, instantáneas de valoración, eventos recurrentes y las categorías que creaste. Tus preferencias se conservan.",
         "button": "Borrar datos",
         "confirm": {
           "title": "¿Borrar todos los datos financieros?",
-          "body": "Esto eliminará definitivamente todas las cuentas, transacciones, transferencias, presupuestos y categorías creadas. Esta acción no se puede deshacer.",
-          "cta": "Sí, borrar datos"
+          "body": "Esto eliminará definitivamente todas las cuentas, transacciones, transferencias, presupuestos, instantáneas de valoración, eventos recurrentes y las categorías que creaste. Tus preferencias y tus copias de seguridad se conservan. Esta acción no se puede deshacer.",
+          "cta": "Borrar todos los datos financieros"
         },
-        "success": "Todos los datos financieros han sido borrados.",
+        "success": "Se borraron todos los datos financieros.",
         "error": "No se pudieron borrar los datos. No se borró nada. Inténtalo de nuevo."
       },
       "factory_reset": {
-        "label": "Restablecer de fábrica",
+        "label": "Restablecer la app",
         "description": "Elimina la base de datos completa y restablece la app a su estado inicial. Tus copias de seguridad no se ven afectadas.",
         "button": "Restablecer app",
         "confirm": {
-          "title": "¿Restablecer de fábrica?",
+          "title": "¿Borrar todo y restablecer Boring Balance?",
           "body": "Esto eliminará toda la base de datos y devolverá la app a su estado inicial. Los archivos de copia de seguridad no se verán afectados. Esta acción no se puede deshacer.",
           "input_placeholder": "Escribe RESET para confirmar",
-          "cta": "Restablecer app"
+          "cta": "Borrar todo y restablecer"
         },
         "error": "No se pudo restablecer la app. Reiníciala, comprueba que tus datos siguen ahí e inténtalo de nuevo."
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "Restaurar respaldo",
-        "description": "Restaurar \"{{fileName}}\" reemplazara tus datos actuales por esa copia guardada. Continuar?",
+        "title": "¿Restaurar este respaldo?",
+        "description": "¿Reemplazar tus datos actuales por el respaldo \"{{fileName}}\"? Se perderá todo lo añadido desde ese respaldo.",
         "actions": {
-          "restore": "Restaurar",
+          "restore": "Reemplazar con este respaldo",
           "cancel": "Cancelar"
         }
       },
       "deleteAlert": {
-        "title": "Eliminar respaldo",
-        "description": "Eliminaras \"{{fileName}}\" de tu carpeta de respaldos y ya no podras restaurarlo despues.",
+        "title": "¿Eliminar este respaldo?",
+        "description": "¿Eliminar \"{{fileName}}\" de tu carpeta de respaldos? Ya no podrás restaurarlo después.",
         "actions": {
-          "delete": "Eliminar",
+          "delete": "Eliminar respaldo",
           "cancel": "Cancelar"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "Eliminar"
         },
         "setDefaultAlert": {
-          "title": "Usar archivo sync como predeterminado",
-          "description": "Usar \"{{fileName}}\" como archivo sync predeterminado y reemplazar los datos actuales de este dispositivo?",
+          "title": "¿Usar este archivo sync como predeterminado?",
+          "description": "¿Usar \"{{fileName}}\" como archivo sync predeterminado? Los datos de este dispositivo se reemplazarán por su contenido.",
           "actions": {
-            "setDefault": "Usar como predeterminado",
+            "setDefault": "Reemplazar datos y usar",
             "cancel": "Cancelar"
           }
         },
         "deleteAlert": {
-          "title": "Eliminar archivo sync",
+          "title": "¿Eliminar este archivo sync?",
           "description": "Eliminar \"{{fileName}}\" de la carpeta sync? Esta accion no se puede deshacer.",
           "actions": {
-            "delete": "Eliminar",
+            "delete": "Eliminar archivo sync",
             "cancel": "Cancelar"
           }
         }
       },
       "attachAlert": {
-        "title": "Conectar espacio de sync existente",
-        "description": "Conectarte puede reemplazar los datos actuales de este dispositivo si la carpeta compartida es mas reciente. Deseas continuar?",
+        "title": "¿Conectar al espacio de sync existente?",
+        "description": "Si la carpeta compartida tiene datos más recientes, al conectar se reemplazarán los datos de este dispositivo.",
         "actions": {
           "attach": "Conectar",
           "cancel": "Cancelar"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "¿Importar datos desde Excel?",
-          "description": "Esto importará datos en tu base de datos.",
+          "description": "Cuentas: {{accounts}}, categorías: {{categories}}, transacciones: {{transactions}}, transferencias: {{transfers}}. Las cuentas y categorías con el mismo nombre se actualizan. No se elimina nada.",
           "actions": {
-            "import": "Importar",
+            "import": "Importar datos",
             "cancel": "Cancelar"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "Archivar cuenta?",
-      "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la cuenta.",
+      "description": "¿Archivar \"{{name}}\"? Dejará de aparecer en nuevas transacciones y transferencias. Las transacciones anteriores la conservan y puedes desarchivarla cuando quieras.",
       "actions": {
         "cancel": "Cancelar",
-        "archive": "Archivar"
+        "archive": "Archivar cuenta"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "Archivar categoria?",
-      "description": "Archiva \"{{name}}\" para que deje de aparecer en entradas nuevas. El historial existente mantendra el nombre de la categoria.",
+      "description": "¿Archivar \"{{name}}\"? Dejará de aparecer en nuevas transacciones. Las transacciones anteriores la conservan y puedes desarchivarla cuando quieras.",
       "actions": {
         "cancel": "Cancelar",
-        "archive": "Archivar"
+        "archive": "Archivar categoría"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "Elimina el presupuesto de \"{{category}}\". Podras volver a crearlo mas adelante si lo necesitas.",
       "actions": {
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar presupuesto"
       }
     },
     "toasts": {
@@ -1099,11 +1099,11 @@
         }
       },
       "deleteAlert": {
-        "title": "Eliminar transferencia?",
-        "description": "Elimina esta transferencia de tu historial. Esta accion no se puede deshacer.",
+        "title": "¿Eliminar esta transferencia?",
+        "description": "Se eliminará: {{summary}}. Esta acción no se puede deshacer.",
         "actions": {
           "cancel": "Cancelar",
-          "delete": "Eliminar"
+          "delete": "Eliminar transferencia"
         }
       },
       "filters": {
@@ -1176,11 +1176,11 @@
       }
     },
     "deleteAlert": {
-      "title": "Eliminar movimiento?",
-      "description": "Elimina este movimiento de tu historial. Esta accion no se puede deshacer.",
+      "title": "¿Eliminar este movimiento?",
+      "description": "Se eliminará: {{summary}}. Esta acción no se puede deshacer.",
       "actions": {
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar movimiento"
       }
     },
     "duplicateAlert": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "Eliminar evento recurrente?",
+      "title": "¿Eliminar este evento recurrente?",
       "description": "Elimina \"{{title}}\" y deja de crear elementos futuros desde esta regla.",
       "options": {
-        "deleteLinkedItems": "Eliminar tambien los elementos vinculados ya creados por este plan",
+        "deleteLinkedItems": "Eliminar también los movimientos y transferencias que ya creó",
         "deleteLinkedItemsHint": "Esto tambien elimina los movimientos o transferencias que ya se crearon desde esta regla."
       },
       "actions": {
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar evento recurrente"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "Eliminar instantánea",
-      "description": "¿Estás seguro de que quieres eliminar esta instantánea de valoración? Esta acción no se puede deshacer.",
+      "title": "¿Eliminar esta instantánea?",
+      "description": "Se eliminará: {{summary}}. Esta acción no se puede deshacer.",
       "actions": {
-        "delete": "Eliminar",
+        "delete": "Eliminar instantánea",
         "cancel": "Cancelar"
       }
     },

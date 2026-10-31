@@ -157,26 +157,26 @@
         "dismiss": "Chiudi"
       },
       "clear_financial": {
-        "label": "Cancella tutti i dati finanziari",
-        "description": "Elimina definitivamente tutti i conti, transazioni, trasferimenti e budget. Le preferenze vengono mantenute.",
-        "button": "Cancella dati",
+        "label": "Elimina tutti i dati finanziari",
+        "description": "Elimina definitivamente tutti i conti, transazioni, trasferimenti, budget, istantanee di valutazione, eventi ricorrenti e le categorie create da te. Le preferenze vengono mantenute.",
+        "button": "Elimina dati",
         "confirm": {
-          "title": "Cancellare tutti i dati finanziari?",
-          "body": "Verranno eliminati definitivamente tutti i conti, le transazioni, i trasferimenti, i budget e le categorie create. Questa azione non può essere annullata.",
-          "cta": "Sì, cancella i dati"
+          "title": "Eliminare tutti i dati finanziari?",
+          "body": "Verranno eliminati definitivamente tutti i conti, le transazioni, i trasferimenti, i budget, le istantanee di valutazione, gli eventi ricorrenti e le categorie create da te. Preferenze e file di backup vengono mantenuti. Questa azione non può essere annullata.",
+          "cta": "Elimina tutti i dati finanziari"
         },
-        "success": "Tutti i dati finanziari sono stati cancellati.",
+        "success": "Tutti i dati finanziari sono stati eliminati.",
         "error": "Impossibile cancellare i dati. Non è stato eliminato nulla. Riprova."
       },
       "factory_reset": {
-        "label": "Ripristino alle impostazioni di fabbrica",
+        "label": "Ripristina l'app",
         "description": "Elimina l'intero database e ripristina l'app allo stato iniziale. I backup non vengono modificati.",
         "button": "Ripristina app",
         "confirm": {
-          "title": "Ripristino alle impostazioni di fabbrica?",
+          "title": "Eliminare tutto e ripristinare Boring Balance?",
           "body": "Verrà eliminato l'intero database e l'app tornerà allo stato iniziale. I file di backup non saranno interessati. Questa azione non può essere annullata.",
           "input_placeholder": "Digita RESET per confermare",
-          "cta": "Ripristina app"
+          "cta": "Elimina tutto e ripristina"
         },
         "error": "Impossibile ripristinare l'app. Riavviala, verifica che i dati ci siano ancora e riprova."
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "Ripristina backup",
-        "description": "Ripristinare \"{{fileName}}\" sostituirà i dati attuali con questa copia salvata. Vuoi continuare?",
+        "title": "Ripristinare questo backup?",
+        "description": "Sostituire i dati attuali con il backup \"{{fileName}}\"? Tutto ciò che è stato aggiunto dopo quel backup andrà perso.",
         "actions": {
-          "restore": "Ripristina",
+          "restore": "Sostituisci con questo backup",
           "cancel": "Annulla"
         }
       },
       "deleteAlert": {
-        "title": "Elimina backup",
-        "description": "Eliminerai \"{{fileName}}\" dalla cartella dei backup e non potrai più ripristinarlo dopo.",
+        "title": "Eliminare questo backup?",
+        "description": "Eliminare \"{{fileName}}\" dalla cartella dei backup? Non potrai più ripristinarlo dopo.",
         "actions": {
-          "delete": "Elimina",
+          "delete": "Elimina backup",
           "cancel": "Annulla"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "Elimina"
         },
         "setDefaultAlert": {
-          "title": "Usa il file sync come predefinito",
-          "description": "Usare \"{{fileName}}\" come file sync predefinito e sostituire i dati attuali di questo dispositivo?",
+          "title": "Usare questo file sync come predefinito?",
+          "description": "Usare \"{{fileName}}\" come file sync predefinito? I dati di questo dispositivo verranno sostituiti con il suo contenuto.",
           "actions": {
-            "setDefault": "Usa come predefinito",
+            "setDefault": "Sostituisci i dati e usa",
             "cancel": "Annulla"
           }
         },
         "deleteAlert": {
-          "title": "Elimina file sync",
+          "title": "Eliminare questo file sync?",
           "description": "Eliminare \"{{fileName}}\" dalla cartella sync? L'operazione non può essere annullata.",
           "actions": {
-            "delete": "Elimina",
+            "delete": "Elimina file sync",
             "cancel": "Annulla"
           }
         }
       },
       "attachAlert": {
-        "title": "Collega spazio sync esistente",
-        "description": "Il collegamento può sostituire i dati attuali di questo dispositivo se la cartella condivisa è più recente. Vuoi continuare?",
+        "title": "Collegarsi allo spazio sync esistente?",
+        "description": "Se la cartella condivisa contiene dati più recenti, il collegamento sostituirà i dati di questo dispositivo.",
         "actions": {
           "attach": "Collega",
           "cancel": "Annulla"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "Importare i dati da Excel?",
-          "description": "Questa operazione importera dati nel tuo database.",
+          "description": "Conti: {{accounts}}, categorie: {{categories}}, transazioni: {{transactions}}, trasferimenti: {{transfers}}. I conti e le categorie con lo stesso nome vengono aggiornati. Non viene eliminato nulla.",
           "actions": {
-            "import": "Importa",
+            "import": "Importa dati",
             "cancel": "Annulla"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "Archivia conto?",
-      "description": "Archivia \"{{name}}\" per non mostrarlo più nelle nuove voci. Lo storico esistente manterrà il nome del conto.",
+      "description": "Archiviare \"{{name}}\"? Non comparirà più nelle nuove transazioni e nei nuovi trasferimenti. Le transazioni passate lo mantengono e puoi disarchiviarlo in qualsiasi momento.",
       "actions": {
         "cancel": "Annulla",
-        "archive": "Archivia"
+        "archive": "Archivia conto"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "Archivia categoria?",
-      "description": "Archivia \"{{name}}\" per non mostrarla più nelle nuove voci. Lo storico esistente manterrà il nome della categoria.",
+      "description": "Archiviare \"{{name}}\"? Non comparirà più nelle nuove transazioni. Le transazioni passate la mantengono e puoi disarchiviarla in qualsiasi momento.",
       "actions": {
         "cancel": "Annulla",
-        "archive": "Archivia"
+        "archive": "Archivia categoria"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "Elimina il budget per \"{{category}}\". Potrai sempre ricrearlo più avanti se serve.",
       "actions": {
         "cancel": "Annulla",
-        "delete": "Elimina"
+        "delete": "Elimina budget"
       }
     },
     "toasts": {
@@ -1105,11 +1105,11 @@
       }
     },
     "deleteAlert": {
-      "title": "Eliminare il movimento?",
-      "description": "Elimina questo movimento dallo storico. Questa azione non può essere annullata.",
+      "title": "Eliminare questo movimento?",
+      "description": "Stai per eliminare: {{summary}}. Questa azione non può essere annullata.",
       "actions": {
         "cancel": "Annulla",
-        "delete": "Elimina"
+        "delete": "Elimina movimento"
       }
     },
     "duplicateAlert": {
@@ -1165,11 +1165,11 @@
         }
       },
       "deleteAlert": {
-        "title": "Eliminare il trasferimento?",
-        "description": "Elimina questo trasferimento dallo storico. Questa azione non può essere annullata.",
+        "title": "Eliminare questo trasferimento?",
+        "description": "Stai per eliminare: {{summary}}. Questa azione non può essere annullata.",
         "actions": {
           "cancel": "Annulla",
-          "delete": "Elimina"
+          "delete": "Elimina trasferimento"
         }
       },
       "filters": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "Eliminare evento ricorrente?",
+      "title": "Eliminare questo evento ricorrente?",
       "description": "Elimina \"{{title}}\" e smetti di creare elementi futuri da questa regola.",
       "options": {
-        "deleteLinkedItems": "Elimina anche gli elementi collegati già creati da questo piano",
+        "deleteLinkedItems": "Elimina anche le transazioni e i trasferimenti già creati",
         "deleteLinkedItemsHint": "Questo rimuove anche le transazioni o i trasferimenti già creati da questa regola."
       },
       "actions": {
         "cancel": "Annulla",
-        "delete": "Elimina"
+        "delete": "Elimina evento ricorrente"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "Elimina istantanea",
-      "description": "Sei sicuro di voler eliminare questa istantanea di valutazione? Questa azione non può essere annullata.",
+      "title": "Eliminare questa istantanea?",
+      "description": "Stai per eliminare: {{summary}}. Questa azione non può essere annullata.",
       "actions": {
-        "delete": "Elimina",
+        "delete": "Elimina istantanea",
         "cancel": "Annulla"
       }
     },

@@ -440,7 +440,9 @@ export class AccountValuationsPage implements OnInit, OnDestroy {
 
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('accountValuations.deleteAlert.title'),
-      zDescription: this.translateService.instant('accountValuations.deleteAlert.description'),
+      zDescription: this.translateService.instant('accountValuations.deleteAlert.description', {
+        summary: `${valuation.dateFormatted} · ${valuation.valueFormatted}`,
+      }),
       zOkText: this.translateService.instant('accountValuations.deleteAlert.actions.delete'),
       zCancelText: this.translateService.instant('accountValuations.deleteAlert.actions.cancel'),
       zOkDestructive: true,

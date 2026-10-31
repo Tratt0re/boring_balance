@@ -158,25 +158,25 @@
       },
       "clear_financial": {
         "label": "Alle Finanzdaten löschen",
-        "description": "Löscht dauerhaft alle Konten, Transaktionen, Überträge und Budgets. Einstellungen bleiben erhalten.",
+        "description": "Löscht dauerhaft alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Ereignisse und selbst erstellten Kategorien. Einstellungen bleiben erhalten.",
         "button": "Daten löschen",
         "confirm": {
           "title": "Alle Finanzdaten löschen?",
-          "body": "Dadurch werden alle erstellten Konten, Transaktionen, Überträge, Budgets und Kategorien dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.",
-          "cta": "Ja, Daten löschen"
+          "body": "Dadurch werden alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Ereignisse und selbst erstellten Kategorien dauerhaft gelöscht. Einstellungen und Sicherungsdateien bleiben erhalten. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+          "cta": "Alle Finanzdaten löschen"
         },
         "success": "Alle Finanzdaten wurden gelöscht.",
         "error": "Daten konnten nicht gelöscht werden. Es wurde nichts gelöscht. Bitte erneut versuchen."
       },
       "factory_reset": {
-        "label": "Werkseinstellungen",
+        "label": "App zurücksetzen",
         "description": "Löscht die gesamte Datenbank und setzt die App auf den Ausgangszustand zurück. Sicherungen sind nicht betroffen.",
         "button": "App zurücksetzen",
         "confirm": {
-          "title": "Auf Werkseinstellungen zurücksetzen?",
+          "title": "Alles löschen und Boring Balance zurücksetzen?",
           "body": "Dadurch wird die gesamte Datenbank gelöscht und die App auf den Ausgangszustand zurückgesetzt. Sicherungsdateien sind nicht betroffen. Dieser Vorgang kann nicht rückgängig gemacht werden.",
           "input_placeholder": "RESET eingeben zur Bestätigung",
-          "cta": "App zurücksetzen"
+          "cta": "Alles löschen und zurücksetzen"
         },
         "error": "App konnte nicht zurückgesetzt werden. App neu starten, prüfen ob die Daten noch vorhanden sind, und erneut versuchen."
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "Sicherung wiederherstellen",
-        "description": "\"{{fileName}}\" wiederherstellen und aktuelle Daten durch die gespeicherte Kopie ersetzen. Fortfahren?",
+        "title": "Diese Sicherung wiederherstellen?",
+        "description": "Aktuelle Daten durch die Sicherung \"{{fileName}}\" ersetzen? Alles, was seit dieser Sicherung hinzugekommen ist, geht verloren.",
         "actions": {
-          "restore": "Wiederherstellen",
+          "restore": "Durch Sicherung ersetzen",
           "cancel": "Abbrechen"
         }
       },
       "deleteAlert": {
-        "title": "Sicherung löschen",
-        "description": "\"{{fileName}}\" aus dem Sicherungsordner löschen. Eine Wiederherstellung daraus ist danach nicht mehr möglich.",
+        "title": "Diese Sicherung löschen?",
+        "description": "\"{{fileName}}\" aus dem Sicherungsordner löschen? Eine Wiederherstellung daraus ist danach nicht mehr möglich.",
         "actions": {
-          "delete": "Löschen",
+          "delete": "Sicherung löschen",
           "cancel": "Abbrechen"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "Löschen"
         },
         "setDefaultAlert": {
-          "title": "Synchronisierungsdatei als Standard verwenden",
-          "description": "\"{{fileName}}\" als Standard verwenden und die aktuellen Daten dieses Geräts damit ersetzen. Fortfahren?",
+          "title": "Diese Synchronisierungsdatei als Standard verwenden?",
+          "description": "\"{{fileName}}\" als Standard-Synchronisierungsdatei verwenden? Die Daten dieses Geräts werden durch ihren Inhalt ersetzt.",
           "actions": {
-            "setDefault": "Als Standard verwenden",
+            "setDefault": "Daten ersetzen und verwenden",
             "cancel": "Abbrechen"
           }
         },
         "deleteAlert": {
-          "title": "Synchronisierungsdatei löschen",
+          "title": "Diese Synchronisierungsdatei löschen?",
           "description": "\"{{fileName}}\" aus dem Synchronisierungsordner löschen? Dies kann nicht rückgängig gemacht werden.",
           "actions": {
-            "delete": "Löschen",
+            "delete": "Synchronisierungsdatei löschen",
             "cancel": "Abbrechen"
           }
         }
       },
       "attachAlert": {
-        "title": "Vorhandenen Synchronisierungsbereich verbinden",
-        "description": "Das Verbinden kann die aktuellen Daten dieses Geräts ersetzen, wenn der gemeinsame Ordner neuer ist. Fortfahren?",
+        "title": "Mit vorhandenem Synchronisierungsbereich verbinden?",
+        "description": "Wenn der gemeinsame Ordner neuere Daten enthält, werden die Daten dieses Geräts dadurch ersetzt.",
         "actions": {
           "attach": "Verbinden",
           "cancel": "Abbrechen"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "Daten aus Excel importieren?",
-          "description": "Dadurch werden Daten in die Datenbank importiert.",
+          "description": "Konten: {{accounts}}, Kategorien: {{categories}}, Transaktionen: {{transactions}}, Überträge: {{transfers}}. Konten und Kategorien mit gleichem Namen werden aktualisiert. Es wird nichts gelöscht.",
           "actions": {
-            "import": "Importieren",
+            "import": "Daten importieren",
             "cancel": "Abbrechen"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "Konto archivieren?",
-      "description": "\"{{name}}\" archivieren, damit es in neuen Einträgen nicht mehr erscheint. Der vorhandene Verlauf behält den Kontonamen.",
+      "description": "\"{{name}}\" archivieren? Das Konto wird in neuen Transaktionen und Überträgen nicht mehr angeboten. Bisherige Transaktionen behalten es. Die Archivierung kann jederzeit rückgängig gemacht werden.",
       "actions": {
         "cancel": "Abbrechen",
-        "archive": "Archivieren"
+        "archive": "Konto archivieren"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "Kategorie archivieren?",
-      "description": "\"{{name}}\" archivieren, damit sie in neuen Einträgen nicht mehr erscheint. Der vorhandene Verlauf behält den Kategorienamen.",
+      "description": "\"{{name}}\" archivieren? Die Kategorie wird in neuen Transaktionen nicht mehr angeboten. Bisherige Transaktionen behalten sie. Die Archivierung kann jederzeit rückgängig gemacht werden.",
       "actions": {
         "cancel": "Abbrechen",
-        "archive": "Archivieren"
+        "archive": "Kategorie archivieren"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "Das Budget für \"{{category}}\" löschen. Es kann bei Bedarf später wieder hinzugefügt werden.",
       "actions": {
         "cancel": "Abbrechen",
-        "delete": "Löschen"
+        "delete": "Budget löschen"
       }
     },
     "toasts": {
@@ -1099,11 +1099,11 @@
         }
       },
       "deleteAlert": {
-        "title": "Übertrag löschen?",
-        "description": "Diesen Übertrag aus dem Verlauf löschen. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+        "title": "Diesen Übertrag löschen?",
+        "description": "Wird gelöscht: {{summary}}. Dieser Vorgang kann nicht rückgängig gemacht werden.",
         "actions": {
           "cancel": "Abbrechen",
-          "delete": "Löschen"
+          "delete": "Übertrag löschen"
         }
       },
       "filters": {
@@ -1176,11 +1176,11 @@
       }
     },
     "deleteAlert": {
-      "title": "Transaktion löschen?",
-      "description": "Diese Transaktion aus dem Verlauf löschen. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "title": "Diese Transaktion löschen?",
+      "description": "Wird gelöscht: {{summary}}. Dieser Vorgang kann nicht rückgängig gemacht werden.",
       "actions": {
         "cancel": "Abbrechen",
-        "delete": "Löschen"
+        "delete": "Transaktion löschen"
       }
     },
     "duplicateAlert": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "Wiederkehrendes Ereignis löschen?",
+      "title": "Dieses wiederkehrende Ereignis löschen?",
       "description": "\"{{title}}\" löschen und keine weiteren zukünftigen Einträge aus dieser Regel erstellen.",
       "options": {
-        "deleteLinkedItems": "Auch verknüpfte Einträge löschen, die bereits durch diesen Plan erstellt wurden",
+        "deleteLinkedItems": "Auch die bereits erstellten Transaktionen und Überträge löschen",
         "deleteLinkedItemsHint": "Dadurch werden auch die Transaktionen oder Überträge entfernt, die bereits aus dieser Regel erstellt wurden."
       },
       "actions": {
         "cancel": "Abbrechen",
-        "delete": "Löschen"
+        "delete": "Wiederkehrendes Ereignis löschen"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "Momentaufnahme löschen",
-      "description": "Diese Bewertungsmomentaufnahme wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "title": "Diese Momentaufnahme löschen?",
+      "description": "Wird gelöscht: {{summary}}. Dieser Vorgang kann nicht rückgängig gemacht werden.",
       "actions": {
-        "delete": "Löschen",
+        "delete": "Momentaufnahme löschen",
         "cancel": "Abbrechen"
       }
     },

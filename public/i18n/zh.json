@@ -157,26 +157,26 @@
         "dismiss": "关闭"
       },
       "clear_financial": {
-        "label": "清除所有财务数据",
-        "description": "永久删除所有账户、交易、转账及预算。偏好设置将保留。",
-        "button": "清除数据",
+        "label": "删除所有财务数据",
+        "description": "永久删除所有账户、交易、转账、预算、估值快照、定期事件以及你创建的分类。偏好设置将保留。",
+        "button": "删除数据",
         "confirm": {
-          "title": "清除所有财务数据？",
-          "body": "此操作将永久删除所有已创建的账户、交易、转账、预算和分类，且无法撤销。",
-          "cta": "确认清除数据"
+          "title": "删除所有财务数据？",
+          "body": "此操作将永久删除所有账户、交易、转账、预算、估值快照、定期事件以及你创建的分类。偏好设置和备份文件将保留。此操作无法撤销。",
+          "cta": "删除所有财务数据"
         },
-        "success": "所有财务数据已清除。",
+        "success": "所有财务数据已删除。",
         "error": "无法清除数据。未删除任何内容。请重试。"
       },
       "factory_reset": {
-        "label": "恢复出厂设置",
+        "label": "重置应用",
         "description": "删除整个数据库并将应用恢复至初始状态。备份文件不受影响。",
         "button": "重置应用",
         "confirm": {
-          "title": "恢复出厂设置？",
+          "title": "删除所有内容并重置 Boring Balance？",
           "body": "此操作将删除整个数据库并将应用恢复至初始状态。备份文件不受影响，且无法撤销。",
           "input_placeholder": "输入 RESET 以确认",
-          "cta": "重置应用"
+          "cta": "删除所有内容并重置"
         },
         "error": "无法重置应用。请重启应用，确认数据仍在，然后重试。"
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "恢复备份",
-        "description": "恢复「{{fileName}}」并用该保存副本替换当前数据。继续？",
+        "title": "恢复此备份？",
+        "description": "用备份「{{fileName}}」替换当前数据？此备份之后添加的内容将丢失。",
         "actions": {
-          "restore": "恢复",
+          "restore": "用此备份替换",
           "cancel": "取消"
         }
       },
       "deleteAlert": {
-        "title": "删除备份",
-        "description": "从备份文件夹中删除「{{fileName}}」。删除后将无法从中恢复。",
+        "title": "删除此备份？",
+        "description": "从备份文件夹中删除「{{fileName}}」？删除后将无法从中恢复。",
         "actions": {
-          "delete": "删除",
+          "delete": "删除备份",
           "cancel": "取消"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "删除"
         },
         "setDefaultAlert": {
-          "title": "设为默认同步文件",
-          "description": "将“{{fileName}}”设为默认同步文件并替换本设备的当前数据。继续？",
+          "title": "将此同步文件设为默认？",
+          "description": "将“{{fileName}}”设为默认同步文件？本设备的数据将被其内容替换。",
           "actions": {
-            "setDefault": "设为默认",
+            "setDefault": "替换数据并使用",
             "cancel": "取消"
           }
         },
         "deleteAlert": {
-          "title": "删除同步文件",
+          "title": "删除此同步文件？",
           "description": "从同步文件夹删除“{{fileName}}”？此操作无法撤销。",
           "actions": {
-            "delete": "删除",
+            "delete": "删除同步文件",
             "cancel": "取消"
           }
         }
       },
       "attachAlert": {
-        "title": "连接已有同步空间",
-        "description": "如果共享文件夹更新，连接可能会替换本设备的当前数据。继续？",
+        "title": "连接到已有同步空间？",
+        "description": "如果共享文件夹中的数据更新，连接将替换本设备的数据。",
         "actions": {
           "attach": "连接",
           "cancel": "取消"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "从 Excel 导入数据？",
-          "description": "此操作将向数据库导入数据。",
+          "description": "账户：{{accounts}}，分类：{{categories}}，交易：{{transactions}}，转账：{{transfers}}。同名的账户和分类会被更新。不会删除任何内容。",
           "actions": {
-            "import": "导入",
+            "import": "导入数据",
             "cancel": "取消"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "归档账户？",
-      "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留账户名称。",
+      "description": "归档「{{name}}」？该账户将不再出现在新的交易和转账中。过往交易仍保留该账户，你可以随时取消归档。",
       "actions": {
         "cancel": "取消",
-        "archive": "归档"
+        "archive": "归档账户"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "归档分类？",
-      "description": "归档「{{name}}」，使其不再出现在新记录中。现有历史记录将保留分类名称。",
+      "description": "归档「{{name}}」？该分类将不再出现在新的交易中。过往交易仍保留该分类，你可以随时取消归档。",
       "actions": {
         "cancel": "取消",
-        "archive": "归档"
+        "archive": "归档分类"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "删除「{{category}}」的预算。如需要可在之后重新添加。",
       "actions": {
         "cancel": "取消",
-        "delete": "删除"
+        "delete": "删除预算"
       }
     },
     "toasts": {
@@ -1099,11 +1099,11 @@
         }
       },
       "deleteAlert": {
-        "title": "删除转账？",
-        "description": "从历史记录中删除此转账。此操作无法撤销。",
+        "title": "删除此转账？",
+        "description": "即将删除：{{summary}}。此操作无法撤销。",
         "actions": {
           "cancel": "取消",
-          "delete": "删除"
+          "delete": "删除转账"
         }
       },
       "filters": {
@@ -1176,11 +1176,11 @@
       }
     },
     "deleteAlert": {
-      "title": "删除交易？",
-      "description": "从历史记录中删除此交易。此操作无法撤销。",
+      "title": "删除此交易？",
+      "description": "即将删除：{{summary}}。此操作无法撤销。",
       "actions": {
         "cancel": "取消",
-        "delete": "删除"
+        "delete": "删除交易"
       }
     },
     "duplicateAlert": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "删除定期事件？",
+      "title": "删除此定期事件？",
       "description": "删除「{{title}}」并停止从此规则创建未来项目。",
       "options": {
-        "deleteLinkedItems": "同时删除此计划已创建的关联项目",
+        "deleteLinkedItems": "同时删除已创建的交易和转账",
         "deleteLinkedItemsHint": "这将同时删除已从此规则创建的交易或转账。"
       },
       "actions": {
         "cancel": "取消",
-        "delete": "删除"
+        "delete": "删除定期事件"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "删除快照",
-      "description": "确定要删除此估值快照吗？此操作无法撤销。",
+      "title": "删除此快照？",
+      "description": "即将删除：{{summary}}。此操作无法撤销。",
       "actions": {
-        "delete": "删除",
+        "delete": "删除快照",
         "cancel": "取消"
       }
     },

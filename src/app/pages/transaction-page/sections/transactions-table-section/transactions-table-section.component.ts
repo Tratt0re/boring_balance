@@ -1009,7 +1009,13 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
 
     this.alertDialogService.confirm({
       zTitle: this.translateService.instant('transactions.deleteAlert.title'),
-      zDescription: this.translateService.instant('transactions.deleteAlert.description'),
+      zDescription: this.translateService.instant('transactions.deleteAlert.description', {
+        summary: [
+          this.formatActiveFilterDate(new Date(transaction.occurredAt)),
+          transaction.description?.trim() || transaction.category,
+          this.formatActiveFilterAmount(transaction.amount),
+        ].join(' · '),
+      }),
       zOkText: this.translateService.instant('transactions.deleteAlert.actions.delete'),
       zCancelText: this.translateService.instant('transactions.deleteAlert.actions.cancel'),
       zOkDestructive: true,

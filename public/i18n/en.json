@@ -157,26 +157,26 @@
         "dismiss": "Dismiss"
       },
       "clear_financial": {
-        "label": "Clear all financial data",
-        "description": "Permanently deletes all accounts, transactions, transfers, and budgets. Your preferences are kept.",
-        "button": "Clear data",
+        "label": "Delete all financial data",
+        "description": "Permanently deletes all accounts, transactions, transfers, budgets, valuation snapshots, recurring events and the categories you created. Your preferences are kept.",
+        "button": "Delete data",
         "confirm": {
-          "title": "Clear all financial data?",
-          "body": "This will permanently delete all accounts, transactions, transfers, budgets, and categories you have created. This cannot be undone.",
-          "cta": "Yes, clear data"
+          "title": "Delete all financial data?",
+          "body": "This will permanently delete all accounts, transactions, transfers, budgets, valuation snapshots, recurring events and the categories you created. Your preferences and backup files are kept. This cannot be undone.",
+          "cta": "Delete all financial data"
         },
-        "success": "All financial data has been cleared.",
+        "success": "All financial data was deleted.",
         "error": "Couldn't clear your data. Nothing was deleted. Try again."
       },
       "factory_reset": {
-        "label": "Factory reset",
+        "label": "Reset the app",
         "description": "Deletes the entire database and resets the app to its initial state. Your backups are not affected.",
         "button": "Reset app",
         "confirm": {
-          "title": "Factory reset?",
+          "title": "Delete everything and reset Boring Balance?",
           "body": "This will delete the entire database and return the app to its initial state. Your backup files will not be affected. This cannot be undone.",
           "input_placeholder": "Type RESET to confirm",
-          "cta": "Reset app"
+          "cta": "Delete everything and reset"
         },
         "error": "Couldn't reset the app. Restart it and check that your data is still there, then try again."
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "Restore backup",
-        "description": "Restore \"{{fileName}}\" and replace your current data with that saved copy. Continue?",
+        "title": "Restore this backup?",
+        "description": "Replace your current data with the backup \"{{fileName}}\"? Anything added since that backup will be lost.",
         "actions": {
-          "restore": "Restore",
+          "restore": "Replace with this backup",
           "cancel": "Cancel"
         }
       },
       "deleteAlert": {
-        "title": "Delete backup",
-        "description": "Delete \"{{fileName}}\" from your backup folder. You will not be able to restore from it afterward.",
+        "title": "Delete this backup?",
+        "description": "Delete \"{{fileName}}\" from your backup folder? You will not be able to restore from it afterward.",
         "actions": {
-          "delete": "Delete",
+          "delete": "Delete backup",
           "cancel": "Cancel"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "Delete"
         },
         "setDefaultAlert": {
-          "title": "Use sync file as default",
-          "description": "Use \"{{fileName}}\" as the default sync file and replace this device's current data with it. Continue?",
+          "title": "Use this sync file as default?",
+          "description": "Use \"{{fileName}}\" as the default sync file? This replaces the data on this device with its contents.",
           "actions": {
-            "setDefault": "Use as default",
+            "setDefault": "Replace data and use",
             "cancel": "Cancel"
           }
         },
         "deleteAlert": {
-          "title": "Delete sync file",
+          "title": "Delete this sync file?",
           "description": "Delete \"{{fileName}}\" from the sync folder? This cannot be undone.",
           "actions": {
-            "delete": "Delete",
+            "delete": "Delete sync file",
             "cancel": "Cancel"
           }
         }
       },
       "attachAlert": {
-        "title": "Connect existing sync space",
-        "description": "Connecting can replace this device's current data if the shared folder is newer. Continue?",
+        "title": "Connect to the existing sync space?",
+        "description": "If the shared folder has newer data, connecting replaces the data on this device with it.",
         "actions": {
           "attach": "Connect",
           "cancel": "Cancel"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "Import data from Excel?",
-          "description": "This will import data into your database.",
+          "description": "Accounts: {{accounts}}, categories: {{categories}}, transactions: {{transactions}}, transfers: {{transfers}}. Accounts and categories with the same name are updated. Nothing is deleted.",
           "actions": {
-            "import": "Import",
+            "import": "Import data",
             "cancel": "Cancel"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "Archive account?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the account name.",
+      "description": "Archive \"{{name}}\"? It will be hidden from new transactions and transfers. Past transactions keep it, and you can unarchive it any time.",
       "actions": {
         "cancel": "Cancel",
-        "archive": "Archive"
+        "archive": "Archive account"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "Archive category?",
-      "description": "Archive \"{{name}}\" so it no longer appears in new entries. Existing history will keep the category name.",
+      "description": "Archive \"{{name}}\"? It will be hidden from new transactions. Past transactions keep it, and you can unarchive it any time.",
       "actions": {
         "cancel": "Cancel",
-        "archive": "Archive"
+        "archive": "Archive category"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "Delete the budget for \"{{category}}\". You can add it again later if needed.",
       "actions": {
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete budget"
       }
     },
     "toasts": {
@@ -1099,11 +1099,11 @@
         }
       },
       "deleteAlert": {
-        "title": "Delete transfer?",
-        "description": "Delete this transfer from your history. This cannot be undone.",
+        "title": "Delete this transfer?",
+        "description": "You are about to delete: {{summary}}. This cannot be undone.",
         "actions": {
           "cancel": "Cancel",
-          "delete": "Delete"
+          "delete": "Delete transfer"
         }
       },
       "filters": {
@@ -1176,11 +1176,11 @@
       }
     },
     "deleteAlert": {
-      "title": "Delete transaction?",
-      "description": "Delete this transaction from your history. This cannot be undone.",
+      "title": "Delete this transaction?",
+      "description": "You are about to delete: {{summary}}. This cannot be undone.",
       "actions": {
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete transaction"
       }
     },
     "duplicateAlert": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "Delete recurring event?",
+      "title": "Delete this recurring event?",
       "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
       "options": {
-        "deleteLinkedItems": "Also delete linked items already created by this plan",
+        "deleteLinkedItems": "Also delete the transactions and transfers it already created",
         "deleteLinkedItemsHint": "This also removes the transactions or transfers that were already created from this rule."
       },
       "actions": {
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete recurring event"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "Delete snapshot",
-      "description": "Are you sure you want to delete this valuation snapshot? This action cannot be undone.",
+      "title": "Delete this snapshot?",
+      "description": "You are about to delete: {{summary}}. This cannot be undone.",
       "actions": {
-        "delete": "Delete",
+        "delete": "Delete snapshot",
         "cancel": "Cancel"
       }
     },

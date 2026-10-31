@@ -249,6 +249,12 @@ export class ExportSectionComponent {
       zTitle: this.translateService.instant('dataBackups.exportImport.import.confirm.title'),
       zDescription: this.translateService.instant(
         'dataBackups.exportImport.import.confirm.description',
+        this.importPreviewSummary() ?? {
+          accounts: 0,
+          categories: 0,
+          transactions: 0,
+          transfers: 0,
+        },
       ),
       zOkText: this.translateService.instant(
         'dataBackups.exportImport.import.confirm.actions.import',

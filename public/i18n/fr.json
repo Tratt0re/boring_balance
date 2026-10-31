@@ -157,26 +157,26 @@
         "dismiss": "Fermer"
       },
       "clear_financial": {
-        "label": "Effacer toutes les données financières",
-        "description": "Supprime définitivement tous les comptes, transactions, virements et budgets. Les préférences sont conservées.",
-        "button": "Effacer les données",
+        "label": "Supprimer toutes les données financières",
+        "description": "Supprime définitivement tous les comptes, transactions, virements, budgets, instantanés de valorisation, événements récurrents et les catégories que vous avez créées. Les préférences sont conservées.",
+        "button": "Supprimer les données",
         "confirm": {
-          "title": "Effacer toutes les données financières ?",
-          "body": "Cette action supprimera définitivement tous les comptes, transactions, virements, budgets et catégories créés. Cette opération est irréversible.",
-          "cta": "Oui, effacer les données"
+          "title": "Supprimer toutes les données financières ?",
+          "body": "Cette action supprimera définitivement tous les comptes, transactions, virements, budgets, instantanés de valorisation, événements récurrents et les catégories que vous avez créées. Vos préférences et vos fichiers de sauvegarde sont conservés. Cette opération est irréversible.",
+          "cta": "Supprimer toutes les données financières"
         },
-        "success": "Toutes les données financières ont été effacées.",
+        "success": "Toutes les données financières ont été supprimées.",
         "error": "Impossible d'effacer les données. Rien n'a été supprimé. Veuillez réessayer."
       },
       "factory_reset": {
-        "label": "Réinitialisation usine",
+        "label": "Réinitialiser l'application",
         "description": "Supprime la base de données entière et remet l'application dans son état initial. Les sauvegardes ne sont pas affectées.",
         "button": "Réinitialiser l'application",
         "confirm": {
-          "title": "Réinitialisation usine ?",
+          "title": "Tout supprimer et réinitialiser Boring Balance ?",
           "body": "Cette action supprimera la base de données entière et remettra l'application dans son état initial. Les fichiers de sauvegarde ne seront pas affectés. Cette opération est irréversible.",
           "input_placeholder": "Saisir RESET pour confirmer",
-          "cta": "Réinitialiser l'application"
+          "cta": "Tout supprimer et réinitialiser"
         },
         "error": "Impossible de réinitialiser l'application. Redémarrez-la, vérifiez que vos données sont toujours là, puis réessayez."
       }
@@ -325,18 +325,18 @@
         }
       },
       "restoreAlert": {
-        "title": "Restaurer la sauvegarde",
-        "description": "Restaurer \"{{fileName}}\" et remplacer les données actuelles par cette copie enregistrée. Continuer ?",
+        "title": "Restaurer cette sauvegarde ?",
+        "description": "Remplacer les données actuelles par la sauvegarde \"{{fileName}}\" ? Tout ce qui a été ajouté depuis cette sauvegarde sera perdu.",
         "actions": {
-          "restore": "Restaurer",
+          "restore": "Remplacer par cette sauvegarde",
           "cancel": "Annuler"
         }
       },
       "deleteAlert": {
-        "title": "Supprimer la sauvegarde",
-        "description": "Supprimer \"{{fileName}}\" du dossier de sauvegarde. Il ne sera plus possible de restaurer à partir de ce fichier.",
+        "title": "Supprimer cette sauvegarde ?",
+        "description": "Supprimer \"{{fileName}}\" du dossier de sauvegarde ? Il ne sera plus possible de restaurer à partir de ce fichier.",
         "actions": {
-          "delete": "Supprimer",
+          "delete": "Supprimer la sauvegarde",
           "cancel": "Annuler"
         }
       }
@@ -452,25 +452,25 @@
           "delete": "Supprimer"
         },
         "setDefaultAlert": {
-          "title": "Utiliser le fichier par défaut",
-          "description": "Utiliser \"{{fileName}}\" comme fichier de synchronisation par défaut et remplacer les données actuelles de cet appareil ?",
+          "title": "Utiliser ce fichier comme fichier par défaut ?",
+          "description": "Utiliser \"{{fileName}}\" comme fichier de synchronisation par défaut ? Les données de cet appareil seront remplacées par son contenu.",
           "actions": {
-            "setDefault": "Utiliser par défaut",
+            "setDefault": "Remplacer les données et utiliser",
             "cancel": "Annuler"
           }
         },
         "deleteAlert": {
-          "title": "Supprimer le fichier de synchronisation",
+          "title": "Supprimer ce fichier de synchronisation ?",
           "description": "Supprimer \"{{fileName}}\" du dossier de synchronisation ? Cette action est irréversible.",
           "actions": {
-            "delete": "Supprimer",
+            "delete": "Supprimer le fichier",
             "cancel": "Annuler"
           }
         }
       },
       "attachAlert": {
-        "title": "Connecter un espace de synchronisation existant",
-        "description": "La connexion peut remplacer les données actuelles de cet appareil si le dossier partagé est plus récent. Continuer ?",
+        "title": "Se connecter à l'espace de synchronisation existant ?",
+        "description": "Si le dossier partagé contient des données plus récentes, la connexion remplacera les données de cet appareil.",
         "actions": {
           "attach": "Connecter",
           "cancel": "Annuler"
@@ -538,9 +538,9 @@
         },
         "confirm": {
           "title": "Importer les données depuis Excel ?",
-          "description": "Cette action importera des données dans votre base de données.",
+          "description": "Comptes : {{accounts}}, catégories : {{categories}}, transactions : {{transactions}}, virements : {{transfers}}. Les comptes et catégories du même nom sont mis à jour. Rien n'est supprimé.",
           "actions": {
-            "import": "Importer",
+            "import": "Importer les données",
             "cancel": "Annuler"
           }
         },
@@ -866,10 +866,10 @@
     },
     "archiveAlert": {
       "title": "Archiver le compte ?",
-      "description": "Archiver \"{{name}}\" pour qu'il n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom du compte.",
+      "description": "Archiver \"{{name}}\" ? Le compte n'apparaîtra plus dans les nouvelles transactions et les nouveaux virements. Les transactions passées le conservent, et vous pouvez le désarchiver à tout moment.",
       "actions": {
         "cancel": "Annuler",
-        "archive": "Archiver"
+        "archive": "Archiver le compte"
       }
     },
     "toasts": {
@@ -944,10 +944,10 @@
     },
     "archiveAlert": {
       "title": "Archiver la catégorie ?",
-      "description": "Archiver \"{{name}}\" pour qu'elle n'apparaisse plus dans les nouvelles saisies. L'historique existant conservera le nom de la catégorie.",
+      "description": "Archiver \"{{name}}\" ? La catégorie n'apparaîtra plus dans les nouvelles transactions. Les transactions passées la conservent, et vous pouvez la désarchiver à tout moment.",
       "actions": {
         "cancel": "Annuler",
-        "archive": "Archiver"
+        "archive": "Archiver la catégorie"
       }
     },
     "toasts": {
@@ -1012,7 +1012,7 @@
       "description": "Supprimer le budget pour \"{{category}}\". Vous pourrez le rajouter ultérieurement si nécessaire.",
       "actions": {
         "cancel": "Annuler",
-        "delete": "Supprimer"
+        "delete": "Supprimer le budget"
       }
     },
     "toasts": {
@@ -1099,11 +1099,11 @@
         }
       },
       "deleteAlert": {
-        "title": "Supprimer le virement ?",
-        "description": "Supprimer ce virement de l'historique. Cette opération est irréversible.",
+        "title": "Supprimer ce virement ?",
+        "description": "Vous allez supprimer : {{summary}}. Cette opération est irréversible.",
         "actions": {
           "cancel": "Annuler",
-          "delete": "Supprimer"
+          "delete": "Supprimer le virement"
         }
       },
       "filters": {
@@ -1176,11 +1176,11 @@
       }
     },
     "deleteAlert": {
-      "title": "Supprimer la transaction ?",
-      "description": "Supprimer cette transaction de l'historique. Cette opération est irréversible.",
+      "title": "Supprimer cette transaction ?",
+      "description": "Vous allez supprimer : {{summary}}. Cette opération est irréversible.",
       "actions": {
         "cancel": "Annuler",
-        "delete": "Supprimer"
+        "delete": "Supprimer la transaction"
       }
     },
     "duplicateAlert": {
@@ -1478,15 +1478,15 @@
       }
     },
     "deleteAlert": {
-      "title": "Supprimer l'événement récurrent ?",
+      "title": "Supprimer cet événement récurrent ?",
       "description": "Supprimer \"{{title}}\" et arrêter la création de futurs éléments à partir de cette règle.",
       "options": {
-        "deleteLinkedItems": "Supprimer également les éléments liés déjà créés par ce plan",
+        "deleteLinkedItems": "Supprimer aussi les transactions et virements déjà créés",
         "deleteLinkedItemsHint": "Cela supprimera également les transactions ou virements déjà créés à partir de cette règle."
       },
       "actions": {
         "cancel": "Annuler",
-        "delete": "Supprimer"
+        "delete": "Supprimer l'événement récurrent"
       }
     },
     "createResult": {
@@ -1629,10 +1629,10 @@
       }
     },
     "deleteAlert": {
-      "title": "Supprimer l'instantané",
-      "description": "Confirmer la suppression de cet instantané de valorisation ? Cette opération est irréversible.",
+      "title": "Supprimer cet instantané ?",
+      "description": "Vous allez supprimer : {{summary}}. Cette opération est irréversible.",
       "actions": {
-        "delete": "Supprimer",
+        "delete": "Supprimer l'instantané",
         "cancel": "Annuler"
       }
     },
