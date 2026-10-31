@@ -1153,6 +1153,9 @@
         "errors": {
           "updateFailed": "No se pudo actualizar el movimiento. Inténtalo de nuevo."
         }
+      },
+      "form": {
+        "amountHint": "Introduce los gastos como valores negativos, por ejemplo -25,00. Los ingresos se dejan positivos."
       }
     },
     "deleteAlert": {

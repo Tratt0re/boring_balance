@@ -68,7 +68,7 @@
     }
   </div>
 
-  <div>
+  <div class="sm:col-span-2">
     <label class="mb-1.5 block text-sm font-medium" for="transaction-amount">
       {{ 'common.labels.amount' | translate }}
       <span class="text-destructive">*</span>
@@ -81,8 +81,12 @@
       step="0.01"
       aria-required="true"
       [attr.aria-invalid]="visibleAmountErrorKey() ? 'true' : null"
+      aria-describedby="transaction-amount-hint"
       [attr.placeholder]="numberFormatService.amountPlaceholder()"
     />
+    <p id="transaction-amount-hint" class="mt-1 text-xs text-muted-foreground">
+      {{ 'transactions.dialog.form.amountHint' | translate }}
+    </p>
     @if (visibleAmountErrorKey(); as currentError) {
       <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }

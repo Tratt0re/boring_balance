@@ -1153,6 +1153,9 @@
         "errors": {
           "updateFailed": "Échec de la mise à jour de la transaction. Veuillez réessayer."
         }
+      },
+      "form": {
+        "amountHint": "Saisissez les dépenses en valeurs négatives, par exemple -25,00. Les revenus restent positifs."
       }
     },
     "deleteAlert": {

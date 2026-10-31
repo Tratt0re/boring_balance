@@ -1153,6 +1153,9 @@
         "errors": {
           "updateFailed": "Couldn't update the transaction. Try again."
         }
+      },
+      "form": {
+        "amountHint": "Enter expenses as negative values, for example -25.00. Income stays positive."
       }
     },
     "deleteAlert": {

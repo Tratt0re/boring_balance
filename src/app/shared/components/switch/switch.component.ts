@@ -36,7 +36,7 @@ type OnChangeType = (value: boolean) => void;
       class="inline-flex min-h-11 items-center"
       zardId="switch"
       #z="zardId"
-      [class.gap-2]="hasLabel()"
+      [class.gap-3]="hasLabel()"
     >
       <button
         [id]="zId() || z.id()"

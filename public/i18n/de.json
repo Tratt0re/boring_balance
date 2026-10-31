@@ -1153,6 +1153,9 @@
         "errors": {
           "updateFailed": "Transaktion konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
+      },
+      "form": {
+        "amountHint": "Ausgaben als negative Werte eingeben, z. B. -25,00. Einnahmen bleiben positiv."
       }
     },
     "deleteAlert": {

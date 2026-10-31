@@ -1082,6 +1082,9 @@
         "errors": {
           "updateFailed": "Aggiornamento del movimento non riuscito. Riprova."
         }
+      },
+      "form": {
+        "amountHint": "Inserisci le spese come valori negativi, ad esempio -25,00. Le entrate restano positive."
       }
     },
     "deleteAlert": {

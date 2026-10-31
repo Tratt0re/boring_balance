@@ -1150,6 +1150,9 @@
         "errors": {
           "updateFailed": "交易更新失败。请重试。"
         }
+      },
+      "form": {
+        "amountHint": "支出请填写负数，例如 -25.00。收入保持为正数。"
       }
     },
     "deleteAlert": {
