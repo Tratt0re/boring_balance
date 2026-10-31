@@ -1,0 +1,82 @@
+@if (visible()) {
+  <div class="relative">
+    <app-base-card class="gap-4" [zTitle]="'overview.gettingStarted.title' | translate">
+      <ol class="divide-y divide-border/60">
+        <li class="flex flex-col gap-3 pb-4 sm:flex-row sm:items-center sm:gap-4">
+          <z-icon
+            [zType]="hasAccount() ? 'circle-check' : 'circle'"
+            [class]="
+              hasAccount()
+                ? 'size-5 shrink-0 text-success'
+                : 'size-5 shrink-0 text-muted-foreground/60'
+            "
+          />
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-medium">
+              {{ 'overview.gettingStarted.steps.account.title' | translate }}
+              @if (hasAccount()) {
+                <span class="sr-only">{{ 'overview.gettingStarted.done' | translate }}</span>
+              }
+            </p>
+            <p class="mt-0.5 text-sm text-muted-foreground">
+              {{ 'overview.gettingStarted.steps.account.description' | translate }}
+            </p>
+          </div>
+          @if (!hasAccount()) {
+            <button type="button" z-button zSize="sm" (click)="onAddAccount()">
+              {{ 'overview.gettingStarted.steps.account.action' | translate }}
+            </button>
+          }
+        </li>
+
+        <li class="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:gap-4">
+          <z-icon
+            [zType]="hasTransaction() ? 'circle-check' : 'circle'"
+            [class]="
+              hasTransaction()
+                ? 'size-5 shrink-0 text-success'
+                : 'size-5 shrink-0 text-muted-foreground/60'
+            "
+          />
+          <div class="min-w-0 flex-1">
+            <p class="text-sm font-medium">
+              {{ 'overview.gettingStarted.steps.transaction.title' | translate }}
+              @if (hasTransaction()) {
+                <span class="sr-only">{{ 'overview.gettingStarted.done' | translate }}</span>
+              }
+            </p>
+            <p class="mt-0.5 text-sm text-muted-foreground">
+              {{ 'overview.gettingStarted.steps.transaction.description' | translate }}
+            </p>
+          </div>
+          @if (!hasTransaction()) {
+            <button
+              type="button"
+              z-button
+              zSize="sm"
+              [zType]="hasAccount() ? 'default' : 'outline'"
+              [zDisabled]="!hasAccount()"
+              (click)="onAddTransaction()"
+            >
+              {{ 'overview.gettingStarted.steps.transaction.action' | translate }}
+            </button>
+          }
+        </li>
+      </ol>
+    </app-base-card>
+
+    <button
+      type="button"
+      z-button
+      zType="ghost"
+      zSize="sm"
+      class="absolute top-3 right-3"
+      data-testid="getting-started-dismiss"
+      [attr.aria-label]="'overview.gettingStarted.dismiss' | translate"
+      [zTooltip]="'overview.gettingStarted.dismiss' | translate"
+      (click)="onDismiss()"
+    >
+      <z-icon zType="x" />
+    </button>
+  </div>
+}

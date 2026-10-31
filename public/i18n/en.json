@@ -695,6 +695,23 @@
           "otherExpenses": "Other expenses"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "Get started",
+      "dismiss": "Hide checklist",
+      "done": "Done",
+      "steps": {
+        "account": {
+          "title": "Add an account",
+          "description": "Accounts hold your money, such as a bank account or cash.",
+          "action": "Add account"
+        },
+        "transaction": {
+          "title": "Add your first transaction",
+          "description": "Record an expense or income to see it in your reports.",
+          "action": "Add transaction"
+        }
+      }
     }
   },
   "breakdown": {

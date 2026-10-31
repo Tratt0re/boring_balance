@@ -695,6 +695,23 @@
           "otherExpenses": "Sonstige Ausgaben"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "Erste Schritte",
+      "dismiss": "Checkliste ausblenden",
+      "done": "Erledigt",
+      "steps": {
+        "account": {
+          "title": "Konto hinzufügen",
+          "description": "Konten enthalten dein Geld, zum Beispiel ein Bankkonto oder Bargeld.",
+          "action": "Konto hinzufügen"
+        },
+        "transaction": {
+          "title": "Erste Transaktion hinzufügen",
+          "description": "Eine Ausgabe oder Einnahme erfassen, um sie in den Auswertungen zu sehen.",
+          "action": "Transaktion hinzufügen"
+        }
+      }
     }
   },
   "breakdown": {

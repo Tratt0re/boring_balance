@@ -695,6 +695,23 @@
           "otherExpenses": "Autres dépenses"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "Pour commencer",
+      "dismiss": "Masquer la liste",
+      "done": "Terminé",
+      "steps": {
+        "account": {
+          "title": "Ajouter un compte",
+          "description": "Les comptes contiennent votre argent, par exemple un compte bancaire ou des espèces.",
+          "action": "Ajouter un compte"
+        },
+        "transaction": {
+          "title": "Ajouter votre première transaction",
+          "description": "Enregistrez une dépense ou un revenu pour le voir dans vos rapports.",
+          "action": "Ajouter une transaction"
+        }
+      }
     }
   },
   "breakdown": {

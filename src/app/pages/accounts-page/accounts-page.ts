@@ -7,7 +7,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -164,6 +164,7 @@ const createAccountTableStructure = (
 })
 export class AccountsPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly accountsService = inject(AccountsService);
   private readonly toolbarContextService = inject(ToolbarContextService);
   private readonly alertDialogService = inject(ZardAlertDialogService);
@@ -212,6 +213,7 @@ export class AccountsPage implements OnInit, OnDestroy {
       itemActions: this.toolbarActions,
     });
     void this.loadAccounts();
+    this.openAddDialogRequestedByLink();
   }
 
   ngOnDestroy(): void {
@@ -242,6 +244,20 @@ export class AccountsPage implements OnInit, OnDestroy {
   }
 
   protected onEmptyActionClick(): void {
+    this.openAddAccountDialog();
+  }
+
+  /** Links such as the Overview checklist arrive with ?add=1: open the form once and tidy the URL. */
+  private openAddDialogRequestedByLink(): void {
+    if (this.route.snapshot.queryParamMap.get('add') !== '1') {
+      return;
+    }
+
+    void this.router.navigate([], {
+      queryParams: { add: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
     this.openAddAccountDialog();
   }
 

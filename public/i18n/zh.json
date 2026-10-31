@@ -692,6 +692,23 @@
           "otherExpenses": "其他支出"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "开始使用",
+      "dismiss": "隐藏清单",
+      "done": "已完成",
+      "steps": {
+        "account": {
+          "title": "添加账户",
+          "description": "账户用来存放你的资金，例如银行账户或现金。",
+          "action": "添加账户"
+        },
+        "transaction": {
+          "title": "添加第一笔交易",
+          "description": "记录一笔支出或收入，即可在报表中查看。",
+          "action": "添加交易"
+        }
+      }
     }
   },
   "breakdown": {

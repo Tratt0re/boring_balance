@@ -9,7 +9,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toast } from 'ngx-sonner';
 
@@ -255,6 +255,7 @@ const createTransactionTableStructure = (
 })
 export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly transactionsService = inject(TransactionsService);
   private readonly accountsService = inject(AccountsService);
   private readonly categoriesService = inject(CategoriesService);
@@ -655,7 +656,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     }
 
     if (this.accountCount() === 0) {
-      void this.router.navigate(['/accounts']);
+      void this.router.navigate(['/accounts'], { queryParams: { add: 1 } });
       return;
     }
 
@@ -1043,6 +1044,22 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Links such as the Overview checklist arrive with ?add=1: open the form once and tidy the URL. */
+  private openAddDialogRequestedByLink(): void {
+    if (this.isEmbeddedContext() || this.route.snapshot.queryParamMap.get('add') !== '1') {
+      return;
+    }
+
+    void this.router.navigate([], {
+      queryParams: { add: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+    if (this.accountCount() > 0) {
+      this.openAddTransactionDialog();
+    }
+  }
+
   private openAddTransactionDialog(): void {
     let isCreatingTransaction = false;
 
@@ -1182,6 +1199,7 @@ export class TransactionsTableSectionComponent implements OnInit, OnDestroy {
       this.total.set(transactions.total);
       this.rows.set(transactions.rows.map((transaction) => this.toTransactionRow(transaction)));
       this.persistTableState();
+      this.openAddDialogRequestedByLink();
     } catch (error) {
       this.rows.set([]);
       this.total.set(0);

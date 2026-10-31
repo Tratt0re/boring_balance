@@ -695,6 +695,23 @@
           "otherExpenses": "Otros gastos"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "Primeros pasos",
+      "dismiss": "Ocultar lista",
+      "done": "Hecho",
+      "steps": {
+        "account": {
+          "title": "Agrega una cuenta",
+          "description": "Las cuentas guardan tu dinero, por ejemplo una cuenta bancaria o efectivo.",
+          "action": "Agregar cuenta"
+        },
+        "transaction": {
+          "title": "Agrega tu primer movimiento",
+          "description": "Registra un gasto o un ingreso para verlo en tus informes.",
+          "action": "Agregar movimiento"
+        }
+      }
     }
   },
   "breakdown": {

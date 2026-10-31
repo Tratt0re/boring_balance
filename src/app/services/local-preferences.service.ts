@@ -26,12 +26,16 @@ export class LocalPreferencesService {
   private readonly dashboardUseValuationSignal = signal<boolean>(
     LOCAL_PREFERENCE_DEFAULTS.dashboardUseValuation,
   );
+  private readonly gettingStartedDismissedSignal = signal<boolean>(
+    LOCAL_PREFERENCE_DEFAULTS.gettingStartedDismissed,
+  );
 
   readonly themePreference = this.themePreferenceSignal.asReadonly();
   readonly languagePreference = this.languagePreferenceSignal.asReadonly();
   readonly currencyPreference = this.currencyPreferenceSignal.asReadonly();
   readonly currencyFormatStylePreference = this.currencyFormatStyleSignal.asReadonly();
   readonly dashboardUseValuationPreference = this.dashboardUseValuationSignal.asReadonly();
+  readonly gettingStartedDismissedPreference = this.gettingStartedDismissedSignal.asReadonly();
 
   init(): void {
     if (!this.isBrowser) {
@@ -45,6 +49,7 @@ export class LocalPreferencesService {
     this.setCurrencyFormatStyle(this.getCurrencyFormatStyle());
     this.setDashboardUseValuation(this.getDashboardUseValuation());
     this.setOnboardingCompleted(this.getOnboardingCompleted());
+    this.setGettingStartedDismissed(this.getGettingStartedDismissed());
   }
 
   getTheme(): ThemePreference {
@@ -136,6 +141,18 @@ export class LocalPreferencesService {
 
   setOnboardingCompleted(onboardingCompleted: boolean): void {
     this.setText(LocalPreferenceKey.ONBOARDING_COMPLETED, onboardingCompleted ? '1' : '0');
+  }
+
+  getGettingStartedDismissed(): boolean {
+    const value = this.getText(LocalPreferenceKey.GETTING_STARTED_DISMISSED);
+    return value === '1' || value === 'true'
+      ? true
+      : LOCAL_PREFERENCE_DEFAULTS.gettingStartedDismissed;
+  }
+
+  setGettingStartedDismissed(dismissed: boolean): void {
+    this.gettingStartedDismissedSignal.set(dismissed);
+    this.setText(LocalPreferenceKey.GETTING_STARTED_DISMISSED, dismissed ? '1' : '0');
   }
 
   getTransactionsTableState<T>(): T | null {

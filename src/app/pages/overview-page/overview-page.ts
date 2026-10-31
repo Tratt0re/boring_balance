@@ -22,6 +22,7 @@ import { ZardTooltipImports } from '@/shared/components/tooltip';
 import { translatePlural } from '@/shared/utils';
 import { OverviewActivityPanelComponent } from './components/overview-activity-panel/overview-activity-panel.component';
 import { OverviewAllocationCardComponent } from './components/overview-allocation-card/overview-allocation-card.component';
+import { OverviewGettingStartedCardComponent } from './components/overview-getting-started-card/overview-getting-started-card.component';
 import { OverviewCashflowCardComponent } from './components/overview-charts-card/overview-cashflow-card/overview-cashflow-card.component';
 import { OverviewNetWorthCardComponent } from './components/overview-net-worth-card/overview-net-worth-card.component';
 
@@ -53,6 +54,7 @@ function detectOverviewSingleColumnLayoutViewport(): boolean {
     OverviewAllocationCardComponent,
     OverviewCashflowCardComponent,
     OverviewActivityPanelComponent,
+    OverviewGettingStartedCardComponent,
   ],
   templateUrl: './overview-page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +69,8 @@ export class OverviewPage implements OnInit, OnDestroy {
   private overviewAllocationCardComponent?: OverviewAllocationCardComponent;
   @ViewChild(OverviewCashflowCardComponent)
   private overviewCashflowCardComponent?: OverviewCashflowCardComponent;
+  @ViewChild(OverviewGettingStartedCardComponent)
+  private overviewGettingStartedCardComponent?: OverviewGettingStartedCardComponent;
 
   private releaseToolbarActions: (() => void) | null = null;
   private readonly syncService = inject(SyncService);
@@ -143,6 +147,7 @@ export class OverviewPage implements OnInit, OnDestroy {
       void this.overviewNetWorthCardComponent?.reload();
       void this.overviewAllocationCardComponent?.reload();
       void this.overviewCashflowCardComponent?.reload();
+      void this.overviewGettingStartedCardComponent?.reload();
     }, OVERVIEW_ACTIVITY_CHANGE_RELOAD_DELAY_MS);
   }
 

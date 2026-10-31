@@ -695,6 +695,23 @@
           "otherExpenses": "Altre spese"
         }
       }
+    },
+    "gettingStarted": {
+      "title": "Per iniziare",
+      "dismiss": "Nascondi elenco",
+      "done": "Fatto",
+      "steps": {
+        "account": {
+          "title": "Aggiungi un conto",
+          "description": "I conti contengono il tuo denaro, ad esempio un conto bancario o i contanti.",
+          "action": "Aggiungi conto"
+        },
+        "transaction": {
+          "title": "Aggiungi il primo movimento",
+          "description": "Registra una spesa o un’entrata per vederla nei report.",
+          "action": "Aggiungi movimento"
+        }
+      }
     }
   },
   "breakdown": {
