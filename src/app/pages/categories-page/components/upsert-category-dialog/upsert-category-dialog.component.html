@@ -20,7 +20,7 @@
       [attr.placeholder]="'categories.dialog.add.placeholders.name' | translate"
     />
     @if (visibleNameErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -42,7 +42,7 @@
       {{ descriptionLength() }}/{{ descriptionMaxLength }}
     </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -61,7 +61,7 @@
       }
     </z-select>
     @if (visibleTypeErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -98,6 +98,8 @@
   </div>
 
   @if (errorKey(); as currentError) {
-    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+    <p role="alert" class="sm:col-span-2 text-sm text-destructive">
+      {{ currentError | translate }}
+    </p>
   }
 </form>

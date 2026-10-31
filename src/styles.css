@@ -17,13 +17,13 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.52 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.6 0 0);
   --chart-1: oklch(0.66 0.23 25);
   --chart-2: oklch(0.74 0.2 55);
   --chart-3: oklch(0.84 0.17 95);
@@ -63,8 +63,8 @@
   --chart-expense: var(--negative-transaction-color);
   --chart-net-cashflow: oklch(0.72 0.18 305);
   --chart-prior-balance: oklch(0.72 0.18 85);
-  --warning: oklch(0.6 0.16 68);
-  --success: oklch(0.55 0.17 145);
+  --warning: oklch(0.52 0.16 68);
+  --success: oklch(0.52 0.17 145);
 }
 
 .dark {
@@ -209,6 +209,11 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  /* Keyboard focus: a visible ring on anything focusable that does not draw its own. */
+  :where(a, button, [role='button'], [role='switch'], [role='tab'], [tabindex]):focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
   html.theme-transition *,
   html.theme-transition *::before,

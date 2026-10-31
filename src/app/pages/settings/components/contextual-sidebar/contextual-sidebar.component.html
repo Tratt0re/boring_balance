@@ -2,7 +2,7 @@
   class="flex h-auto min-h-0 flex-col overflow-hidden rounded-xl border border-border/60 bg-card p-2 shadow-sm lg:h-full"
 >
   <nav
-    aria-label="Settings sections"
+    [attr.aria-label]="'settings.navLabel' | translate"
     class="flex gap-2 overflow-x-auto pb-1 lg:min-h-0 lg:flex-1 lg:flex-col lg:gap-1 lg:overflow-x-hidden lg:overflow-y-auto lg:pr-1 lg:pb-0"
   >
     @for (item of items(); track item.key) {

@@ -115,7 +115,11 @@
     "skipToContent": "跳至主要内容",
     "errors": {
       "fixHighlightedFields": "请修正标红字段后继续。"
-    }
+    },
+    "close": "关闭",
+    "selectAllRows": "选择所有行",
+    "selectRow": "选择行",
+    "search": "搜索"
   },
   "nav": {
     "sections": {
@@ -243,7 +247,8 @@
       "upToDate": "已是最新版本 (v{{version}})",
       "updateCheckFailed": "无法检查更新。请检查网络连接后重试。",
       "footer": "由 {{authorName}} 用 ❤️ 制作"
-    }
+    },
+    "navLabel": "设置分区"
   },
   "dataBackups": {
     "sections": {

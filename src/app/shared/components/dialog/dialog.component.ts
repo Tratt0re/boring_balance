@@ -25,6 +25,8 @@ import {
   type ViewContainerRef,
 } from '@angular/core';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { mergeClasses, noopFn } from '@/shared/utils/merge-classes';
 
 import type { ZardDialogRef } from './dialog-ref';
@@ -61,7 +63,14 @@ export class ZardDialogOptions<T, U> {
 
 @Component({
   selector: 'z-dialog',
-  imports: [A11yModule, OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent],
+  imports: [
+    A11yModule,
+    OverlayModule,
+    PortalModule,
+    TranslatePipe,
+    ZardButtonComponent,
+    ZardIconComponent,
+  ],
   template: `
     <div
       #dialogSurface
@@ -78,8 +87,8 @@ export class ZardDialogOptions<T, U> {
           zType="ghost"
           zSize="sm"
           class="absolute top-1 right-1 z-10"
-          aria-label="Close dialog"
-          title="Close dialog"
+          [attr.aria-label]="'common.close' | translate"
+          [attr.title]="'common.close' | translate"
           (click)="onCloseClick()"
         >
           <z-icon zType="x" />

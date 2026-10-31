@@ -16,7 +16,7 @@
       [placeholder]="'common.placeholders.pickDate' | translate"
     />
     @if (visibleOccurredAtErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -44,7 +44,7 @@
       [disabled]="isFromAccountFixed"
     />
     @if (visibleFromAccountErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -62,7 +62,7 @@
       [options]="$any(toAccountComboboxOptions())"
     />
     @if (visibleToAccountErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -83,7 +83,7 @@
       [attr.placeholder]="numberFormatService.amountPlaceholder()"
     />
     @if (visibleAmountErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -105,11 +105,13 @@
       {{ descriptionLength() }}/{{ descriptionMaxLength }}
     </p>
     @if (visibleDescriptionErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
   @if (errorKey(); as currentError) {
-    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+    <p role="alert" class="sm:col-span-2 text-sm text-destructive">
+      {{ currentError | translate }}
+    </p>
   }
 </form>

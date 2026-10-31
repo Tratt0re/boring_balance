@@ -115,7 +115,11 @@
     "skipToContent": "Saltar al contenido principal",
     "errors": {
       "fixHighlightedFields": "Corrige los campos resaltados para continuar."
-    }
+    },
+    "close": "Cerrar",
+    "selectAllRows": "Seleccionar todas las filas",
+    "selectRow": "Seleccionar fila",
+    "search": "Buscar"
   },
   "nav": {
     "sections": {
@@ -243,7 +247,8 @@
       "upToDate": "Estás al día (v{{version}})",
       "updateCheckFailed": "No se pudo buscar actualizaciones. Revisa tu conexión e inténtalo de nuevo.",
       "footer": "Hecho con ❤️ por {{authorName}}"
-    }
+    },
+    "navLabel": "Secciones de ajustes"
   },
   "dataBackups": {
     "sections": {

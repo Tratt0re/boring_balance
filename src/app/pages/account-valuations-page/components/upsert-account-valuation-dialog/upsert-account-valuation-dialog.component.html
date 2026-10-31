@@ -21,7 +21,7 @@
       [attr.placeholder]="numberFormatService.amountPlaceholder()"
     />
     @if (visibleValueErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
@@ -38,11 +38,13 @@
       [attr.aria-invalid]="visibleDateErrorKey() ? 'true' : null"
     />
     @if (visibleDateErrorKey(); as currentError) {
-      <p class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
+      <p role="alert" class="mt-1 text-xs text-destructive">{{ currentError | translate }}</p>
     }
   </div>
 
   @if (errorKey(); as currentError) {
-    <p class="sm:col-span-2 text-sm text-destructive">{{ currentError | translate }}</p>
+    <p role="alert" class="sm:col-span-2 text-sm text-destructive">
+      {{ currentError | translate }}
+    </p>
   }
 </form>

@@ -17,12 +17,14 @@ import type { ClassValue } from 'clsx';
 
 import { ZardCommandComponent } from '@/shared/components/command/command.component';
 import { commandInputVariants } from '@/shared/components/command/command.variants';
+import { TranslatePipe } from '@ngx-translate/core';
+
 import { ZardIconComponent } from '@/shared/components/icon';
 import { mergeClasses } from '@/shared/utils/merge-classes';
 
 @Component({
   selector: 'z-command-input',
-  imports: [ZardIconComponent],
+  imports: [TranslatePipe, ZardIconComponent],
   template: `
     <div class="flex items-center border-b px-3" cmdk-input-wrapper="">
       <z-icon zType="search" class="mr-2 shrink-0 opacity-50" />
@@ -38,7 +40,7 @@ import { mergeClasses } from '@/shared/utils/merge-classes';
         aria-controls="command-list"
         aria-describedby="command-instructions"
         aria-haspopup="listbox"
-        aria-label="Search commands"
+        [attr.aria-label]="'common.search' | translate"
         autocomplete="off"
         autocorrect="off"
         spellcheck="false"

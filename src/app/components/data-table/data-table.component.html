@@ -117,7 +117,7 @@
                   "
                   (zCheckedChange)="onToggleAllRowsChange($event)"
                 >
-                  <span class="sr-only">Select all rows</span>
+                  <span class="sr-only">{{ 'common.selectAllRows' | translate }}</span>
                 </z-checkbox>
               </th>
             }
@@ -194,7 +194,7 @@
                       [zChecked]="isRowSelected(row)"
                       (zCheckedChange)="onToggleRowChange($event, row)"
                     >
-                      <span class="sr-only">Select row</span>
+                      <span class="sr-only">{{ 'common.selectRow' | translate }}</span>
                     </z-checkbox>
                   </td>
                 }

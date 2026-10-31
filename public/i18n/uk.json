@@ -115,7 +115,11 @@
     "skipToContent": "Перейти до основного вмісту",
     "errors": {
       "fixHighlightedFields": "Виправ виділені поля, щоб продовжити."
-    }
+    },
+    "close": "Закрити",
+    "selectAllRows": "Вибрати всі рядки",
+    "selectRow": "Вибрати рядок",
+    "search": "Пошук"
   },
   "nav": {
     "sections": {
@@ -243,7 +247,8 @@
       "upToDate": "У вас остання версія (v{{version}})",
       "updateCheckFailed": "Не вдалося перевірити оновлення. Перевірте з'єднання та спробуйте ще раз.",
       "footer": "Зроблено з ❤️ від {{authorName}}"
-    }
+    },
+    "navLabel": "Розділи параметрів"
   },
   "dataBackups": {
     "sections": {

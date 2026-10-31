@@ -25,6 +25,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+import { TranslatePipe } from '@ngx-translate/core';
 import type { ClassValue } from 'clsx';
 
 import { ZardIdDirective } from '@/shared/core';
@@ -65,6 +66,7 @@ export class ZardAlertDialogOptions<T> {
     ZardIconComponent,
     A11yModule,
     ZardIdDirective,
+    TranslatePipe,
   ],
   templateUrl: './alert-dialog.component.html',
   styles: `

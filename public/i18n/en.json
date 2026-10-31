@@ -115,7 +115,11 @@
     "skipToContent": "Skip to main content",
     "errors": {
       "fixHighlightedFields": "Fix the highlighted fields to continue."
-    }
+    },
+    "close": "Close",
+    "selectAllRows": "Select all rows",
+    "selectRow": "Select row",
+    "search": "Search"
   },
   "nav": {
     "sections": {
@@ -243,7 +247,8 @@
       "upToDate": "You're up to date (v{{version}})",
       "updateCheckFailed": "Couldn't check for updates. Check your connection and try again.",
       "footer": "Made with ❤️ by {{authorName}}"
-    }
+    },
+    "navLabel": "Settings sections"
   },
   "dataBackups": {
     "sections": {
