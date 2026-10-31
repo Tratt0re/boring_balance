@@ -18,6 +18,7 @@ import { ExportService } from '@/pages/data-backups-page/services/export.service
 import { ImportExcelService } from '@/pages/data-backups-page/services/import-excel.service';
 import { ZardAlertDialogService } from '@/shared/components/alert-dialog';
 import { ZardButtonComponent } from '@/shared/components/button';
+import { translatePlural } from '@/shared/utils';
 import { reloadAppShell } from '@/shared/utils/reload-app-shell';
 import { WindowService } from '@/services/window.service';
 
@@ -237,6 +238,14 @@ export class ExportSectionComponent {
         ),
       );
     });
+  }
+
+  protected importErrorCountText(): string {
+    return translatePlural(
+      this.translateService,
+      'dataBackups.exportImport.import.errors.count',
+      this.importErrorRows().length,
+    );
   }
 
   protected onConfirmImport(): void {

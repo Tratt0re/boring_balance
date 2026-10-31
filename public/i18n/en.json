@@ -12,7 +12,7 @@
       "color": "Color",
       "icon": "Icon",
       "date": "Date",
-      "settled": "Settled",
+      "settled": "Paid",
       "account": "Account",
       "category": "Category",
       "amount": "Amount",
@@ -22,14 +22,15 @@
       "toAccount": "To account",
       "title": "Title",
       "startDate": "Start date",
-      "plan": "Plan",
+      "plan": "Recurring transaction",
       "schedule": "Schedule",
       "template": "Template",
       "occurrences": "Occurrences",
       "frequencyUnit": "Frequency unit",
       "monthPolicy": "If the day is not in the month",
       "year": "Year",
-      "archived": "Archived"
+      "archived": "Archived",
+      "frequency": "Frequency"
     },
     "placeholders": {
       "selectType": "Select type",
@@ -47,7 +48,7 @@
         "dateTo": "To date",
         "amountFrom": "Amount from",
         "amountTo": "Amount to",
-        "settled": "Settlement status",
+        "settled": "Payment status",
         "categoryType": "Category type",
         "category": "Category",
         "account": "Account"
@@ -67,8 +68,8 @@
       "options": {
         "settled": {
           "any": "Any status",
-          "yes": "Settled",
-          "no": "Not settled"
+          "yes": "Paid",
+          "no": "Pending"
         },
         "categoryType": {
           "any": "Any type"
@@ -84,15 +85,15 @@
     "pagination": {
       "previous": "Previous",
       "next": "Next",
-      "counter": "{{current}} of {{total}} pages",
+      "counter": "Page {{current}} of {{total}}",
       "rowsPerPage": "Rows per page",
       "tooltips": {
         "firstPage": "Go to first page",
         "previousPage": "Go to previous page",
         "nextPage": "Go to next page",
         "lastPage": "Go to last page",
-        "toPage": "To page",
-        "toLastPage": "To last page, page"
+        "toPage": "Go to page {{page}}",
+        "toLastPage": "Go to page {{page}}, the last page"
       }
     },
     "calendar": {
@@ -118,8 +119,8 @@
   },
   "nav": {
     "sections": {
-      "main": "Menu",
-      "setup": "Setup"
+      "setup": "Manage",
+      "plan": "Plan"
     },
     "items": {
       "overview": "Overview",
@@ -129,7 +130,7 @@
       "budget": "Budget",
       "accounts": "Accounts",
       "categories": "Categories",
-      "recurringEvents": "Recurring events",
+      "recurringEvents": "Recurring transactions",
       "settings": "Settings"
     }
   },
@@ -158,11 +159,11 @@
       },
       "clear_financial": {
         "label": "Delete all financial data",
-        "description": "Permanently deletes all accounts, transactions, transfers, budgets, valuation snapshots, recurring events and the categories you created. Your preferences are kept.",
+        "description": "Permanently deletes all accounts, transactions, transfers, budgets, valuation snapshots, recurring transactions and the categories you created. Your preferences are kept.",
         "button": "Delete data",
         "confirm": {
           "title": "Delete all financial data?",
-          "body": "This will permanently delete all accounts, transactions, transfers, budgets, valuation snapshots, recurring events and the categories you created. Your preferences and backup files are kept. This cannot be undone.",
+          "body": "This will permanently delete all accounts, transactions, transfers, budgets, valuation snapshots, recurring transactions and the categories you created. Your preferences and backup files are kept. This cannot be undone.",
           "cta": "Delete all financial data"
         },
         "success": "All financial data was deleted.",
@@ -201,16 +202,16 @@
           "fieldLabel": "App language"
         },
         "dashboardValuationMode": {
-          "description": "Choose whether Overview net worth and allocation should include valuation snapshots when available. If disabled, those cards use ledger balances from transactions only.",
-          "fieldLabel": "Dashboard calculations",
+          "description": "Choose what net worth and allocation on the Overview are based on. With valuation snapshots, accounts that have one use their latest recorded value. With transactions only, every balance is calculated from transactions.",
+          "fieldLabel": "Net worth is based on",
           "options": {
-            "include": "Include valuations",
-            "exclude": "Ledger balances only"
+            "include": "Valuation snapshots when available",
+            "exclude": "Transactions only"
           }
         },
         "currency": {
           "description": "Select the symbol you want to see next to balances, transactions, and reports.",
-          "fieldLabel": "Symbol",
+          "fieldLabel": "Currency symbol",
           "customLabel": "Custom symbol",
           "customPlaceholder": "CHF",
           "options": {
@@ -240,7 +241,7 @@
         "paragraph4": "So I built my own.",
         "paragraph5": "Boring Balance is meant to be simple, private, and completely under your control. Your data stays yours. There are no ads, no tracking, and no features designed to push you into paying just to see your own finances.",
         "paragraph6": "I believe personal finance should be something you actively manage. Taking a moment to check your balances, review your expenses, and keep things aligned is the only way to truly understand where your money goes.",
-        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring events.",
+        "paragraph7": "This app provides a few core tools to support that: tracking accounts and transactions, budgeting, and planning recurring transactions.",
         "paragraph8": "Nothing here is forced. Use as much or as little of it as you want.",
         "paragraph9": "Welcome to this boring little place — and remember to keep your balance safe with a backup from time to time 😉"
       },
@@ -281,8 +282,8 @@
         "title": "Automatic backups",
         "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
         "onQuit": "Run backup on app quit",
-        "intervalMin": "Interval (minutes, 0 to disable)",
-        "retentionCount": "Retention count",
+        "intervalMin": "Back up automatically",
+        "retentionCount": "Backups to keep",
         "intervalOptions": {
           "off": "Off",
           "minutes30": "Every 30 minutes",
@@ -348,7 +349,7 @@
         "warning": "Choose a sync folder you trust. The app keeps working from your device and uses the shared folder only to exchange copies safely.",
         "enabled": "Enable sync",
         "chooseFolder": "Choose folder location",
-        "repoPath": "App sync folder",
+        "repoPath": "Sync folder",
         "notConnected": "Not connected yet",
         "enableHints": {
           "turnOnFirst": "Turn on sync first, then choose the folder you want to use across devices.",
@@ -357,28 +358,28 @@
       },
       "setup": {
         "title": "Connect a sync folder",
-        "description": "Choose where the app sync folder should live, then create a new sync space or connect to an existing one.",
+        "description": "Choose where the sync folder should live, then create a new sync folder or join an existing one.",
         "actions": {
-          "create": "Create new sync space",
-          "attach": "Connect to existing sync space"
+          "create": "Create new sync folder",
+          "attach": "Join existing sync folder"
         },
         "status": {
           "checking": "Checking the selected folder...",
           "chooseFirst": "Choose a folder location to continue.",
-          "exists": "An existing sync space was found in this folder. Use Connect if another device already uses it.",
-          "missing": "No sync space was found in this folder yet. Use Create if this is your first synced device.",
-          "repoPathPending": "The app sync folder will appear here after the folder location is checked.",
+          "exists": "A sync folder already exists here. Use Join if another device already uses it.",
+          "missing": "No sync folder was found here yet. Use Create if this is your first synced device.",
+          "repoPathPending": "The sync folder will appear here after the folder location is checked.",
           "waitingForFolder": "Choose a folder location to continue."
         },
-        "actionHelp": "Create starts sync from this device. Connect joins a sync space that another device already created."
+        "actionHelp": "Create starts sync from this device. Join connects to a sync folder that another device already created."
       },
       "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
       "autoSync": {
         "title": "Automatic sync",
         "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
-        "autoPullIntervalMin": "Auto pull interval",
-        "autoPushIntervalMin": "Auto push interval",
-        "autoPushOnQuit": "Push on app quit",
+        "autoPullIntervalMin": "Get updates automatically",
+        "autoPushIntervalMin": "Send changes automatically",
+        "autoPushOnQuit": "Send changes when the app closes",
         "autoPushOnQuitHint": "When enabled, the app shares your latest changes before you close it.",
         "intervalOptions": {
           "off": "Off",
@@ -399,30 +400,30 @@
         },
         "hints": {
           "syncNow": "Sync now is the safest full check: it looks for newer shared changes, then shares yours if needed.",
-          "pullNow": "Pull now only brings in newer shared data to this device.",
-          "pushNow": "Push now only shares this device's current changes to the shared folder."
+          "pullNow": "Get updates only brings newer shared data to this device.",
+          "pushNow": "Send my changes only shares this device's current changes to the shared folder."
         }
       },
       "actions": {
         "syncNow": "Sync now",
-        "pullNow": "Pull now",
-        "pushNow": "Push now"
+        "pullNow": "Get updates",
+        "pushNow": "Send my changes"
       },
       "status": {
         "title": "Status",
-        "description": "Check the current sync state and see when this device last pulled or pushed.",
+        "description": "Check the current sync state and see when this device last got updates or sent changes.",
         "rows": {
           "current": "Current status",
-          "lastPull": "Last pull",
-          "lastPush": "Last push"
+          "lastPull": "Last update received",
+          "lastPush": "Last changes sent"
         },
         "values": {
           "never": "Never",
-          "noLastPull": "No last pull available",
+          "noLastPull": "No updates received yet",
           "idle": "Idle",
           "running": "Running",
-          "ok": "OK",
-          "error": "Error",
+          "ok": "Completed",
+          "error": "Failed",
           "conflict": "Conflict"
         }
       },
@@ -430,19 +431,19 @@
         "lastErrorTitle": "Last error",
         "conflictTitle": "Conflict detected",
         "localCopyPath": "Local copy saved at",
-        "remoteSnapshotPath": "Remote snapshot restored from",
-        "conflictHint": "Your local version was preserved as a sync file and a local copy. Review the available sync files and choose the correct default."
+        "remoteSnapshotPath": "Shared copy restored from",
+        "conflictHint": "Both versions were kept. Compare the dates in Available sync files and use the one you want to continue with."
       },
       "files": {
         "title": "Available sync files",
         "description": "Review shared sync files, choose the one to use as the default, or remove files you no longer need.",
         "loading": "Refreshing sync files list...",
-        "empty": "No sync files are available yet. Run a push to create the first one.",
+        "empty": "No sync files are available yet. Send your changes to create the first one.",
         "columns": {
           "date": "Date",
           "file": "File",
           "device": "Device",
-          "changeCounter": "Change counter",
+          "changeCounter": "Revision",
           "size": "Size",
           "default": "Default"
         },
@@ -469,10 +470,10 @@
         }
       },
       "attachAlert": {
-        "title": "Connect to the existing sync space?",
+        "title": "Join the existing sync folder?",
         "description": "If the shared folder has newer data, connecting replaces the data on this device with it.",
         "actions": {
-          "attach": "Connect",
+          "attach": "Join",
           "cancel": "Cancel"
         }
       }
@@ -516,7 +517,6 @@
           "transfers": "Transfers"
         },
         "errors": {
-          "count": "{{count}} errors found",
           "tableTitle": "Import errors",
           "tableDescription": "Each error points to the exact worksheet row that must be fixed.",
           "empty": "No import errors.",
@@ -525,7 +525,9 @@
             "row": "Row",
             "column": "Column",
             "message": "Message"
-          }
+          },
+          "count_one": "{{count}} error found",
+          "count_other": "{{count}} errors found"
         },
         "result": {
           "title": "Last import result",
@@ -593,19 +595,19 @@
         "disableFailed": "Couldn't turn off sync. Try again.",
         "syncNothingChanged": "Sync check completed. Nothing changed.",
         "syncFailed": "Couldn't sync. Check the sync folder and try again.",
-        "pullNothingNewer": "No newer remote snapshot was found.",
+        "pullNothingNewer": "No newer shared data was found.",
         "pullFailed": "Couldn't get updates from the sync folder. Try again.",
-        "pushNothingToPublish": "No local changes needed to be published.",
+        "pushNothingToPublish": "There were no changes to send.",
         "pushFailed": "Couldn't send your changes to the sync folder. Try again.",
-        "loadSnapshotsFailed": "Couldn't load the sync snapshots. Try again.",
+        "loadSnapshotsFailed": "Couldn't load the sync files. Try again.",
         "defaultFileUpdated": "Default sync file updated. Reloading app data...",
         "selectDefaultFileFailed": "Couldn't select the default sync file. Try again.",
         "fileDeleted": "Sync file deleted.",
         "deleteFileFailed": "Couldn't delete the sync file. Try again.",
-        "pullCompleted": "Pull completed.",
-        "pullCompletedWithId": "Pull completed ({{snapshotId}})",
-        "pushCompleted": "Push completed.",
-        "pushCompletedWithId": "Push completed ({{snapshotId}})",
+        "pullCompleted": "Updates received.",
+        "pullCompletedWithId": "Updates received ({{snapshotId}})",
+        "pushCompleted": "Changes sent.",
+        "pushCompletedWithId": "Changes sent ({{snapshotId}})",
         "conflictDetected": "Sync conflict detected. Review the details below."
       }
     }
@@ -618,7 +620,8 @@
       },
       "snapshotsOutdated": {
         "title": "Snapshots may be outdated",
-        "body": "Your latest snapshot is {{days}} days old. Update snapshots to keep Net Worth accurate."
+        "body_one": "Your latest snapshot is {{count}} day old. Update your snapshots to keep net worth accurate.",
+        "body_other": "Your latest snapshot is {{count}} days old. Update your snapshots to keep net worth accurate."
       }
     },
     "errors": {
@@ -629,36 +632,37 @@
     },
     "cards": {
       "netWorth": {
-        "summaryTitle": "Net Worth",
+        "summaryTitle": "Net worth",
         "allocationTitle": "Allocation",
         "tooltips": {
-          "ledgerBalance": "Ledger Balance",
-          "marketValue": "Market Value"
+          "ledgerBalance": "Balance from transactions",
+          "marketValue": "Latest recorded value"
         },
         "total": "Total",
         "liquidAssets": "Liquidity",
         "investments": "Investments",
         "snapshotBased": {
           "today": "Snapshots updated today",
-          "daysAgo": "Based on snapshots ({{days}} days ago)"
+          "daysAgo_one": "Based on snapshots ({{count}} day ago)",
+          "daysAgo_other": "Based on snapshots ({{count}} days ago)"
         },
         "receivables": "Receivables",
         "payables": "Payables",
-        "totalAfterRP": "After R&P",
+        "totalAfterRP": "After receivables and payables",
         "emptyDistribution": "No account balances to split yet. Add or update accounts to see the allocation.",
         "emptyDistributionNoAccounts": "No accounts yet. Add your first account to see the allocation."
       },
       "monthlyTotals": {
-        "title": "Income, expenses and net cashflow",
+        "title": "Income, expenses and net cash flow",
         "segmentTitle": "Income & expenses",
-        "descriptionCurrentYear": "Compare income, expenses, and net cashflow month by month across {{year}}.",
+        "descriptionCurrentYear": "Compare income, expenses, and net cash flow month by month across {{year}}.",
         "loading": "Loading analytics...",
         "loadFailedWithError": "Couldn't load analytics. Restart the app and try again.",
         "empty": "No analytics data available for the selected filters.",
         "series": {
-          "incomes": "Incomes",
+          "incomes": "Income",
           "expenses": "Expenses",
-          "netCashflow": "Net Cashflow"
+          "netCashflow": "Net cash flow"
         }
       },
       "activity": {
@@ -670,9 +674,10 @@
       "recentTransactions": {
         "empty": "No transactions this month yet. Add one to start building your activity feed.",
         "tooltips": {
-          "settled": "Settled",
-          "settle": "Settle",
-          "unsettled": "Unsettled"
+          "settled": "Paid",
+          "settle": "Mark as paid",
+          "unsettled": "Pending",
+          "unsettle": "Mark as pending"
         },
         "actions": {
           "goToTransactionsPage": "All transactions",
@@ -688,17 +693,17 @@
         "loadFailedWithError": "Couldn't load money flow. Restart the app and try again.",
         "empty": "No money flow for this month yet. Add transactions to see where money moved.",
         "tooltips": {
-          "actualNetCashflow": "Actual net cashflow"
+          "actualNetCashflow": "Actual net cash flow"
         },
         "nodes": {
-          "incomes": "Incomes",
+          "incomes": "Income",
           "expenses": "Expenses",
           "savings": "Savings",
           "investments": "Investments",
           "crypto": "Crypto",
-          "netCashflow": "Net Cashflow",
-          "priorBalances": "Prior balances",
-          "unused": "Unused",
+          "netCashflow": "Net cash flow",
+          "priorBalances": "Carried over from earlier months",
+          "unused": "Left over",
           "otherExpenses": "Other expenses"
         }
       }
@@ -721,7 +726,7 @@
     },
     "metrics": {
       "yearTotal": "Year total",
-      "avgPerMonth": "Avg/month"
+      "avgPerMonth": "Monthly average"
     },
     "cards": {
       "moneyFlow": {
@@ -760,7 +765,7 @@
     "cards": {
       "summary": {
         "title": "Comparison summary",
-        "description": "Compare income, expenses, and net cashflow side by side to see which month changed more."
+        "description": "Compare income, expenses, and net cash flow side by side to see which month changed more."
       },
       "radar": {
         "title": "Radar comparison",
@@ -776,25 +781,25 @@
   },
   "category": {
     "exclude": {
-      "name": "Exclude",
-      "description": "Transactions excluded from analytics and budget calculations."
+      "name": "Not counted",
+      "description": "Doesn't count toward income, spending or budgets."
     },
     "transfer": {
       "name": "Transfer",
       "description": "Money moved between your own accounts."
     },
     "other_expense": {
-      "name": "Other Expense",
+      "name": "Other expense",
       "description": "Fallback category for uncategorized expenses."
     },
     "other_income": {
-      "name": "Other Income",
+      "name": "Other income",
       "description": "Fallback category for uncategorized income."
     },
     "type": {
       "income": "Income",
       "expense": "Expense",
-      "exclude": "Exclude"
+      "exclude": "Not counted"
     }
   },
   "account": {
@@ -1126,8 +1131,8 @@
       }
     },
     "table": {
-      "description": "Review the income and expense entries that affect balances, budgets, and net cashflow.",
-      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cashflow.",
+      "description": "Review the income and expense entries that affect balances, budgets, and net cash flow.",
+      "emptyMessage": "No transactions yet. Add one to start tracking spending, income, and net cash flow.",
       "emptyNoAccountsMessage": "No accounts yet. Add your first account before recording transactions.",
       "actions": {
         "add": "Add transaction",
@@ -1235,28 +1240,28 @@
       "tags": "Tags",
       "money": "Money",
       "coins": "Coins",
-      "handCoins": "Hand Coins",
+      "handCoins": "Hand coins",
       "wallet": "Wallet",
-      "piggyBank": "Piggy Bank",
+      "piggyBank": "Piggy bank",
       "vault": "Vault",
       "bank": "Bank",
-      "shoppingCart": "Shopping Cart",
+      "shoppingCart": "Shopping cart",
       "store": "Store",
       "backpack": "Backpack",
       "globe": "Globe",
       "library": "Library",
       "school": "School",
-      "graduationCap": "Graduation Cap",
+      "graduationCap": "Graduation cap",
       "gamepad": "Gaming",
       "music": "Music",
-      "cassette": "Cassette Tape",
+      "cassette": "Cassette tape",
       "film": "Film",
       "camera": "Camera",
       "popcorn": "Popcorn",
       "cigarette": "Cigarette",
       "beer": "Beer",
       "coffee": "Coffee",
-      "glassWater": "Glass Water",
+      "glassWater": "Glass water",
       "martini": "Martini",
       "techReceipt": "Receipt",
       "badgePercent": "Percent",
@@ -1267,7 +1272,7 @@
       "pill": "Pill",
       "cannabis": "Cannabis",
       "mountainSnow": "Mountain",
-      "treePalm": "Palm Tree",
+      "treePalm": "Palm tree",
       "leaf": "Leaf",
       "bird": "Bird",
       "cat": "Cat",
@@ -1285,13 +1290,13 @@
       "home": "Home",
       "shirt": "Shirt",
       "armchair": "Armchair",
-      "lampDesk": "Desk Lamp",
+      "lampDesk": "Desk lamp",
       "frown": "Frown",
       "smile": "Smile",
       "heart": "Heart",
       "star": "Star",
       "sparkles": "Sparkles",
-      "creditCard": "Credit Card",
+      "creditCard": "Credit card",
       "tractor": "Tractor",
       "train": "Train",
       "footprints": "Footprints",
@@ -1371,16 +1376,17 @@
   "recurringEvents": {
     "table": {
       "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
-      "emptyMessage": "No recurring events yet. Add one to automate repeated transactions or transfers.",
-      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring events.",
+      "emptyMessage": "No recurring transactions yet. Add one to automate repeated transactions or transfers.",
+      "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring transactions.",
       "actions": {
-        "add": "Add recurring event",
-        "viewItems": "View planned items",
-        "edit": "Edit recurring event",
-        "delete": "Delete recurring event"
+        "add": "Add recurring transaction",
+        "viewItems": "View scheduled items",
+        "edit": "Edit recurring transaction",
+        "delete": "Delete recurring transaction"
       },
       "schedule": {
-        "summary": "Occurs {{count}} times, {{interval}} every {{unit}}"
+        "summary_one": "{{frequency}}, {{count}} time",
+        "summary_other": "{{frequency}}, {{count}} times"
       },
       "template": {
         "unknown": "Unknown template",
@@ -1394,26 +1400,42 @@
     },
     "frequency": {
       "unit": {
-        "day": "day(s)",
-        "week": "week(s)",
-        "month": "month(s)",
-        "year": "year(s)"
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
+      },
+      "every": {
+        "day": "Every day",
+        "week": "Every week",
+        "month": "Every month",
+        "year": "Every year"
+      },
+      "everyN": {
+        "day_one": "Every {{count}} day",
+        "day_other": "Every {{count}} days",
+        "week_one": "Every {{count}} week",
+        "week_other": "Every {{count}} weeks",
+        "month_one": "Every {{count}} month",
+        "month_other": "Every {{count}} months",
+        "year_one": "Every {{count}} year",
+        "year_other": "Every {{count}} years"
       }
     },
     "monthPolicy": {
-      "none": "Default",
-      "clip": "Use the last valid day of the month",
-      "skip": "Skip",
-      "last_day": "Last day",
-      "first_day": "First day"
+      "none": "Default (use the month's last day)",
+      "clip": "Use the month's last day (30 Apr for the 31st)",
+      "skip": "Skip that month",
+      "last_day": "Always the last day of the month",
+      "first_day": "Always the 1st of the month"
     },
     "dialog": {
       "add": {
-        "title": "Add recurring event",
+        "title": "Add recurring transaction",
         "description": "Create a repeating rule so the app can add upcoming transactions or transfers for you.",
         "actions": {
           "cancel": "Cancel",
-          "create": "Create recurring event"
+          "create": "Create recurring transaction"
         },
         "errors": {
           "titleRequired": "Title is required.",
@@ -1421,11 +1443,11 @@
           "titleMaxLength": "Title must be at most 80 characters.",
           "typeRequired": "Type is required.",
           "startDateRequired": "Start date is required.",
-          "countRequired": "Occurrences count is required.",
-          "countInvalid": "Occurrences count must be a positive integer.",
-          "frequencyIntervalRequired": "Frequency interval is required.",
-          "frequencyIntervalInvalid": "Frequency interval must be a positive integer.",
-          "frequencyUnitRequired": "Frequency unit is required.",
+          "countRequired": "Enter how many times it should repeat.",
+          "countInvalid": "Enter a whole number greater than 0.",
+          "frequencyIntervalRequired": "Enter how often it repeats.",
+          "frequencyIntervalInvalid": "Enter a whole number greater than 0.",
+          "frequencyUnitRequired": "Choose day, week, month or year.",
           "accountRequired": "Account is required.",
           "categoryRequired": "Category is required.",
           "fromAccountRequired": "Source account is required.",
@@ -1434,11 +1456,11 @@
           "amountRequired": "Amount is required.",
           "amountInvalid": "Amount must be a positive number.",
           "descriptionMaxLength": "Description must be at most 75 characters.",
-          "createFailed": "Couldn't create the recurring event. Try again."
+          "createFailed": "Couldn't create the recurring transaction. Try again."
         }
       },
       "edit": {
-        "title": "Edit recurring event",
+        "title": "Edit recurring transaction",
         "description": "Update this recurring rule and choose which linked generated items should receive template changes.",
         "applyTo": "Apply changes to",
         "fromDate": "Starting from",
@@ -1460,7 +1482,7 @@
         },
         "errors": {
           "fromDateRequired": "Select the date from which linked items should be updated.",
-          "updateFailed": "Couldn't update the recurring event. Try again."
+          "updateFailed": "Couldn't update the recurring transaction. Try again."
         }
       },
       "form": {
@@ -1468,7 +1490,7 @@
           "frequencyInterval": "Every"
         },
         "placeholders": {
-          "title": "Recurring event title",
+          "title": "Recurring transaction title",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
@@ -1478,7 +1500,7 @@
       }
     },
     "deleteAlert": {
-      "title": "Delete this recurring event?",
+      "title": "Delete this recurring transaction?",
       "description": "Delete \"{{title}}\" and stop creating future items from this rule.",
       "options": {
         "deleteLinkedItems": "Also delete the transactions and transfers it already created",
@@ -1486,62 +1508,62 @@
       },
       "actions": {
         "cancel": "Cancel",
-        "delete": "Delete recurring event"
+        "delete": "Delete recurring transaction"
       }
     },
     "createResult": {
-      "title": "Recurring event created"
+      "title": "Recurring transaction created"
     },
     "updateResult": {
-      "title": "Recurring event updated",
+      "title": "Recurring transaction updated",
       "description": "\"{{title}}\" was updated. Linked generated items were updated where applicable.",
       "actions": {
-        "ok": "OK"
+        "ok": "Done"
       }
     },
     "runResult": {
-      "title": "Recurring events created",
+      "title": "Recurring transactions created",
       "labels": {
-        "plan": "Recurring plan",
-        "created": "Created now",
-        "skipped": "Already existed",
-        "total": "Scheduled dates"
+        "plan": "Recurring transaction",
+        "created": "New items",
+        "skipped": "Already added",
+        "total": "Dates covered"
       },
       "hints": {
         "noNewItems": "No new items were created because all scheduled dates already had linked items."
       },
       "actions": {
-        "ok": "OK"
+        "ok": "Done"
       }
     },
     "toasts": {
-      "createSuccess": "Recurring event created.",
-      "createError": "Couldn't create the recurring event. Try again.",
-      "updateSuccess": "Recurring event updated.",
-      "updateError": "Couldn't update the recurring event. Try again.",
-      "deleteSuccess": "Recurring event deleted.",
-      "deleteError": "Couldn't delete the recurring event. Try again."
+      "createSuccess": "Recurring transaction created.",
+      "createError": "Couldn't create the recurring transaction. Try again.",
+      "updateSuccess": "Recurring transaction updated.",
+      "updateError": "Couldn't update the recurring transaction. Try again.",
+      "deleteSuccess": "Recurring transaction deleted.",
+      "deleteError": "Couldn't delete the recurring transaction. Try again."
     },
     "errors": {
-      "loadFailedWithError": "Couldn't load recurring events. Restart the app and try again.",
-      "loadUnexpected": "Couldn't load recurring events. Restart the app and try again."
+      "loadFailedWithError": "Couldn't load recurring transactions. Restart the app and try again.",
+      "loadUnexpected": "Couldn't load recurring transactions. Restart the app and try again."
     }
   },
   "recurringEventItems": {
     "page": {
-      "title": "Planned items"
+      "title": "Scheduled items"
     },
     "table": {
-      "transactionsTitle": "Planned transactions",
-      "transactionsDescription": "Transactions generated by this recurring event.",
-      "transfersTitle": "Planned transfers",
-      "transfersDescription": "Transfers generated by this recurring event.",
-      "emptyMessage": "No linked items were found for this recurring event."
+      "transactionsTitle": "Scheduled transactions",
+      "transactionsDescription": "Transactions generated by this recurring transaction.",
+      "transfersTitle": "Scheduled transfers",
+      "transfersDescription": "Transfers generated by this recurring transaction.",
+      "emptyMessage": "No linked items were found for this recurring transaction."
     },
     "errors": {
-      "invalidId": "Invalid recurring event ID.",
-      "notFound": "Recurring event not found.",
-      "loadUnexpected": "Couldn't load recurring event items. Restart the app and try again."
+      "invalidId": "Invalid recurring transaction ID.",
+      "notFound": "Recurring transaction not found.",
+      "loadUnexpected": "Couldn't load recurring transaction items. Restart the app and try again."
     }
   },
   "accountDetails": {
@@ -1568,7 +1590,7 @@
   },
   "accountValuations": {
     "page": {
-      "title": "Account Valuations"
+      "title": "Account valuations"
     },
     "table": {
       "description": "History of valuation snapshots for this account.",
@@ -1667,24 +1689,24 @@
       },
       "currency": {
         "label": "Default currency",
-        "hint": "Used for display and new accounts. You can override per account."
+        "hint": "Shown next to all amounts. You can change it any time in Settings."
       }
     },
     "start": {
       "title": "How do you want to begin?",
       "scratch": {
         "title": "Start fresh",
-        "description": "Set up your accounts and categories. Takes two minutes."
+        "description": "Start with an empty workspace. Add accounts and categories when you are ready."
       },
       "import": {
-        "title": "Import a backup",
-        "description": "Restore from a previous Boring Balance export."
+        "title": "Import existing data",
+        "description": "Restore a backup or bring in an Excel export."
       }
     },
     "confirm": {
       "title": "You're set up.",
       "subtitle": "Everything is saved locally on your device. You're in control.",
-      "import_note": "You can import your backup from Settings → Export & Import at any time.",
+      "import_note": "You can import your backup from Settings → Backups at any time.",
       "cta": "Enter Boring Balance"
     }
   },

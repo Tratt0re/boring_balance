@@ -32,10 +32,12 @@ import {
   PAGE_SIZE_OPTIONS,
   computePageCount,
   createActionColumn,
+  describeFrequency,
   getTargetPageAfterCreate,
   getTargetPageAfterDelete,
   toEditableOptionIcon,
   translateMaybe,
+  translatePlural,
 } from '@/shared/utils';
 import { DeleteRecurringEventAlertContentComponent } from './components/delete-recurring-event-alert-content/delete-recurring-event-alert-content.component';
 import {
@@ -100,7 +102,7 @@ const RECURRING_EVENT_TABLE_COLUMNS: readonly TableDataItem[] = [
     maxWidth: RECURRING_EVENT_COLUMN_WIDTH.startDate,
   },
   {
-    columnName: 'common.labels.plan',
+    columnName: 'common.labels.schedule',
     columnKey: 'schedule',
     type: 'string',
     sortable: true,
@@ -396,11 +398,14 @@ export class RecurringEventsPage implements OnInit, OnDestroy {
 
   private describeSchedule(planItem: PlanItemModel): string {
     const rule = planItem.ruleJson;
-    return this.translateService.instant('recurringEvents.table.schedule.summary', {
-      count: rule.count,
-      interval: rule.frequency.interval,
-      unit: this.translateService.instant(`recurringEvents.frequency.unit.${rule.frequency.unit}`),
-    });
+    return translatePlural(
+      this.translateService,
+      'recurringEvents.table.schedule.summary',
+      rule.count,
+      {
+        frequency: describeFrequency(this.translateService, rule.frequency),
+      },
+    );
   }
 
   private describeTemplate(planItem: PlanItemModel): string {

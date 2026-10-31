@@ -22,7 +22,7 @@ import { PlanItemsService } from '@/services/plan-items.service';
 import { ToolbarContextService } from '@/services/toolbar-context.service';
 import { ZardIconComponent, type ZardIcon } from '@/shared/components/icon';
 import { ZardSkeletonComponent } from '@/shared/components/skeleton';
-import { translateMaybe } from '@/shared/utils';
+import { describeFrequency, translateMaybe } from '@/shared/utils';
 
 @Component({
   selector: 'app-recurring-event-items-page',
@@ -47,6 +47,11 @@ export class RecurringEventItemsPage implements OnInit, OnDestroy {
   private readonly translateService = inject(TranslateService);
 
   protected readonly planItem = signal<PlanItemModel | null>(null);
+
+  protected frequencyLabel(plan: PlanItemModel): string {
+    return describeFrequency(this.translateService, plan.ruleJson.frequency);
+  }
+
   protected readonly primaryAccountName = signal<string | null>(null);
   protected readonly primaryAccountIcon = signal<ZardIcon>(DEFAULT_VISUAL_ICON_KEY as ZardIcon);
   protected readonly primaryAccountColorHex = signal(`var(--${DEFAULT_VISUAL_COLOR_KEY})`);

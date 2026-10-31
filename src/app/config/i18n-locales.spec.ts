@@ -2,7 +2,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Every locale file must expose exactly the keys of en.json, with the same `{{params}}` in each
-// value, so a missing or renamed key cannot silently fall back to English in one language.
+// value, so a missing or renamed key cannot silently fall back to English in one language. Plural
+// messages (`<key>_one`, `_few`, `_many`, `_other`) differ per language, so they are compared by
+// base key and every language must define the `_other` form.
 
 const I18N_DIR = join(process.cwd(), 'public', 'i18n');
 const SOURCE_LOCALE = 'en';
@@ -28,6 +30,12 @@ function params(message: string): string[] {
   return [...message.matchAll(/{{\s*([\w.]+)\s*}}/g)].map((match) => match[1]).sort();
 }
 
+const PLURAL_SUFFIX = /_(zero|one|two|few|many|other)$/;
+
+function baseKeys(messages: Messages): string[] {
+  return [...new Set(Object.keys(messages).map((key) => key.replace(PLURAL_SUFFIX, '')))];
+}
+
 const locales = readdirSync(I18N_DIR)
   .filter((file) => file.endsWith('.json'))
   .map((file) => file.replace(/\.json$/, ''));
@@ -41,27 +49,29 @@ describe('i18n locales', () => {
 
   for (const locale of others) {
     it(`${locale} has exactly the keys of en.json`, () => {
-      const keys = Object.keys(load(locale));
-      const sourceKeys = Object.keys(source);
+      const keys = baseKeys(load(locale));
+      const sourceKeys = baseKeys(source);
       expect(sourceKeys.filter((key) => !keys.includes(key))).toEqual([]);
       expect(keys.filter((key) => !sourceKeys.includes(key))).toEqual([]);
     });
 
     it(`${locale} uses the same {{params}} as en.json for every key`, () => {
       const messages = load(locale);
-      const mismatched = Object.keys(source).filter(
-        (key) => key in messages && params(messages[key]).join() !== params(source[key]).join(),
-      );
+      const mismatched = Object.keys(source).filter((key) => {
+        const translated =
+          key in messages ? messages[key] : messages[key.replace(PLURAL_SUFFIX, '_other')];
+        return translated !== undefined && params(translated).join() !== params(source[key]).join();
+      });
       expect(mismatched).toEqual([]);
     });
   }
 
   for (const locale of locales) {
-    it(`${locale} has an _other form for every _one plural key`, () => {
+    it(`${locale} has an _other form for every plural key`, () => {
       const keys = Object.keys(load(locale));
       const orphans = keys
-        .filter((key) => key.endsWith('_one'))
-        .filter((key) => !keys.includes(key.replace(/_one$/, '_other')));
+        .filter((key) => PLURAL_SUFFIX.test(key))
+        .filter((key) => !keys.includes(key.replace(PLURAL_SUFFIX, '_other')));
       expect(orphans).toEqual([]);
     });
   }

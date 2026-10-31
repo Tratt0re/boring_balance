@@ -12,7 +12,7 @@
       "color": "颜色",
       "icon": "图标",
       "date": "日期",
-      "settled": "已结清",
+      "settled": "已支付",
       "account": "账户",
       "category": "分类",
       "amount": "金额",
@@ -22,14 +22,15 @@
       "toAccount": "目标账户",
       "title": "标题",
       "startDate": "开始日期",
-      "plan": "计划",
+      "plan": "定期交易",
       "schedule": "安排",
       "template": "模板",
       "occurrences": "次数",
       "frequencyUnit": "频率单位",
       "monthPolicy": "若该日不在月份中",
       "year": "年",
-      "archived": "已归档"
+      "archived": "已归档",
+      "frequency": "频率"
     },
     "placeholders": {
       "selectType": "选择类型",
@@ -47,7 +48,7 @@
         "dateTo": "结束日期",
         "amountFrom": "最低金额",
         "amountTo": "最高金额",
-        "settled": "结清状态",
+        "settled": "支付状态",
         "categoryType": "分类类型",
         "category": "分类",
         "account": "账户"
@@ -67,8 +68,8 @@
       "options": {
         "settled": {
           "any": "任意状态",
-          "yes": "已结清",
-          "no": "未结清"
+          "yes": "已支付",
+          "no": "待支付"
         },
         "categoryType": {
           "any": "任意类型"
@@ -91,8 +92,8 @@
         "previousPage": "跳至上一页",
         "nextPage": "跳至下一页",
         "lastPage": "跳至最后一页",
-        "toPage": "跳至页",
-        "toLastPage": "跳至最后一页"
+        "toPage": "跳至第 {{page}} 页",
+        "toLastPage": "跳至第 {{page}} 页（最后一页）"
       }
     },
     "calendar": {
@@ -118,8 +119,8 @@
   },
   "nav": {
     "sections": {
-      "main": "菜单",
-      "setup": "设置"
+      "setup": "管理",
+      "plan": "规划"
     },
     "items": {
       "overview": "概览",
@@ -129,7 +130,7 @@
       "budget": "预算",
       "accounts": "账户",
       "categories": "分类",
-      "recurringEvents": "定期事件",
+      "recurringEvents": "定期交易",
       "settings": "首选项"
     }
   },
@@ -158,11 +159,11 @@
       },
       "clear_financial": {
         "label": "删除所有财务数据",
-        "description": "永久删除所有账户、交易、转账、预算、估值快照、定期事件以及你创建的分类。偏好设置将保留。",
+        "description": "永久删除所有账户、交易、转账、预算、估值快照、定期交易以及你创建的分类。偏好设置将保留。",
         "button": "删除数据",
         "confirm": {
           "title": "删除所有财务数据？",
-          "body": "此操作将永久删除所有账户、交易、转账、预算、估值快照、定期事件以及你创建的分类。偏好设置和备份文件将保留。此操作无法撤销。",
+          "body": "此操作将永久删除所有账户、交易、转账、预算、估值快照、定期交易以及你创建的分类。偏好设置和备份文件将保留。此操作无法撤销。",
           "cta": "删除所有财务数据"
         },
         "success": "所有财务数据已删除。",
@@ -201,16 +202,16 @@
           "fieldLabel": "应用语言"
         },
         "dashboardValuationMode": {
-          "description": "选择概览中的净资产和分配是否在可用时包含估值快照。禁用后，这些卡片仅使用交易的账本余额。",
-          "fieldLabel": "仪表板计算方式",
+          "description": "选择概览中的净资产和分配以什么为依据。使用估值快照时，有快照的账户采用其最近记录的价值；仅交易时，所有余额均按交易计算。",
+          "fieldLabel": "净资产依据",
           "options": {
-            "include": "包含估值",
-            "exclude": "仅账本余额"
+            "include": "估值快照（如有）",
+            "exclude": "仅交易"
           }
         },
         "currency": {
           "description": "选择余额、交易和报告旁显示的符号。",
-          "fieldLabel": "符号",
+          "fieldLabel": "货币符号",
           "customLabel": "自定义符号",
           "customPlaceholder": "CNY",
           "options": {
@@ -240,7 +241,7 @@
         "paragraph4": "于是我自己做了一个。",
         "paragraph5": "Boring Balance 旨在简单、私密，完全由你掌控。数据属于你。没有广告，没有追踪，也没有任何功能是为了诱导你为查看自己的财务数据而付费。",
         "paragraph6": "我相信个人财务需要主动管理。花时间查看余额、审视支出、保持平衡，是真正了解钱去哪里的唯一方式。",
-        "paragraph7": "这款应用提供了几项核心工具：账户与交易追踪、预算管理，以及定期事件规划。",
+        "paragraph7": "这款应用提供了几项核心工具：账户与交易追踪、预算管理，以及定期交易规划。",
         "paragraph8": "没有任何功能是强制的。按需使用即可。",
         "paragraph9": "欢迎来到这个朴实的小地方——记得偶尔备份，保护好你的数据 😉"
       },
@@ -281,8 +282,8 @@
         "title": "自动备份",
         "description": "设置应用保存恢复副本的频率及保留旧副本的数量。",
         "onQuit": "退出时备份",
-        "intervalMin": "间隔（分钟，0 为禁用）",
-        "retentionCount": "保留数量",
+        "intervalMin": "自动备份",
+        "retentionCount": "保留的备份数量",
         "intervalOptions": {
           "off": "关闭",
           "minutes30": "每 30 分钟",
@@ -348,7 +349,7 @@
         "warning": "请选择可信任的同步文件夹。应用继续从你的设备运行，仅使用共享文件夹安全交换副本。",
         "enabled": "启用同步",
         "chooseFolder": "选择文件夹位置",
-        "repoPath": "应用同步文件夹",
+        "repoPath": "同步文件夹",
         "notConnected": "尚未连接",
         "enableHints": {
           "turnOnFirst": "先启用同步，再选择要跨设备使用的文件夹。",
@@ -357,28 +358,28 @@
       },
       "setup": {
         "title": "连接同步文件夹",
-        "description": "选择应用同步文件夹的位置，然后创建新的同步空间或连接已有空间。",
+        "description": "选择同步文件夹的位置，然后创建新的同步文件夹或加入已有的。",
         "actions": {
-          "create": "创建新同步空间",
-          "attach": "连接已有同步空间"
+          "create": "创建新的同步文件夹",
+          "attach": "加入已有同步文件夹"
         },
         "status": {
           "checking": "正在检查所选文件夹...",
           "chooseFirst": "选择文件夹位置以继续。",
-          "exists": "此文件夹中发现已有同步空间。如另一台设备已在使用，请使用「连接」。",
-          "missing": "此文件夹中尚未找到同步空间。如这是第一台同步设备，请使用「创建」。",
-          "repoPathPending": "检查文件夹位置后，应用同步文件夹将显示在此处。",
+          "exists": "此处已有同步文件夹。如另一台设备已在使用，请使用「加入」。",
+          "missing": "此处尚无同步文件夹。如这是第一台同步设备，请使用「创建」。",
+          "repoPathPending": "检查文件夹位置后，同步文件夹将显示在此处。",
           "waitingForFolder": "选择文件夹位置以继续。"
         },
-        "actionHelp": "「创建」从本设备启动同步。「连接」加入另一台设备已创建的同步空间。"
+        "actionHelp": "「创建」从本设备启动同步。「加入」连接到另一台设备已创建的同步文件夹。"
       },
       "disabledInfo": "启用同步以选择共享文件夹并连接本设备。",
       "autoSync": {
         "title": "自动同步",
         "description": "设置应用检查新数据和分享最新更改的频率。",
-        "autoPullIntervalMin": "自动拉取间隔",
-        "autoPushIntervalMin": "自动推送间隔",
-        "autoPushOnQuit": "退出时推送",
+        "autoPullIntervalMin": "自动获取更新",
+        "autoPushIntervalMin": "自动发送更改",
+        "autoPushOnQuit": "退出时发送更改",
         "autoPushOnQuitHint": "启用后，应用在关闭前会分享最新更改。",
         "intervalOptions": {
           "off": "关闭",
@@ -399,30 +400,30 @@
         },
         "hints": {
           "syncNow": "「立即同步」是最安全的完整检查：先查找更新的共享更改，再按需分享你的更改。",
-          "pullNow": "「立即拉取」仅将更新的共享数据下载到本设备。",
-          "pushNow": "「立即推送」仅将本设备的当前更改上传到共享文件夹。"
+          "pullNow": "「获取更新」仅将更新的共享数据下载到本设备。",
+          "pushNow": "「发送我的更改」仅将本设备的当前更改上传到共享文件夹。"
         }
       },
       "actions": {
         "syncNow": "立即同步",
-        "pullNow": "立即拉取",
-        "pushNow": "立即推送"
+        "pullNow": "获取更新",
+        "pushNow": "发送我的更改"
       },
       "status": {
         "title": "状态",
-        "description": "查看当前同步状态及本设备上次拉取或推送的时间。",
+        "description": "查看当前同步状态，以及本设备上次获取更新或发送更改的时间。",
         "rows": {
           "current": "当前状态",
-          "lastPull": "上次拉取",
-          "lastPush": "上次推送"
+          "lastPull": "上次获取更新",
+          "lastPush": "上次发送更改"
         },
         "values": {
           "never": "从未",
-          "noLastPull": "无上次拉取记录",
+          "noLastPull": "尚未获取过更新",
           "idle": "空闲",
           "running": "运行中",
-          "ok": "正常",
-          "error": "错误",
+          "ok": "已完成",
+          "error": "失败",
           "conflict": "冲突"
         }
       },
@@ -430,19 +431,19 @@
         "lastErrorTitle": "最后错误",
         "conflictTitle": "检测到冲突",
         "localCopyPath": "本地副本保存路径",
-        "remoteSnapshotPath": "远程快照恢复自",
-        "conflictHint": "本地版本已保留为同步文件和本地副本。请查看可用同步文件并选择正确的默认文件。"
+        "remoteSnapshotPath": "共享副本恢复自",
+        "conflictHint": "两个版本均已保留。请在「可用同步文件」中比较日期，并选用想继续使用的版本。"
       },
       "files": {
         "title": "可用同步文件",
         "description": "查看共享同步文件、选择默认文件，或删除不再需要的文件。",
         "loading": "正在刷新同步文件列表...",
-        "empty": "尚无同步文件。执行推送以创建第一个文件。",
+        "empty": "尚无同步文件。发送你的更改以创建第一个文件。",
         "columns": {
           "date": "日期",
           "file": "文件",
           "device": "设备",
-          "changeCounter": "更改计数",
+          "changeCounter": "修订号",
           "size": "大小",
           "default": "默认"
         },
@@ -469,10 +470,10 @@
         }
       },
       "attachAlert": {
-        "title": "连接到已有同步空间？",
+        "title": "加入已有的同步文件夹？",
         "description": "如果共享文件夹中的数据更新，连接将替换本设备的数据。",
         "actions": {
-          "attach": "连接",
+          "attach": "加入",
           "cancel": "取消"
         }
       }
@@ -516,7 +517,6 @@
           "transfers": "转账"
         },
         "errors": {
-          "count": "发现 {{count}} 个错误",
           "tableTitle": "导入错误",
           "tableDescription": "每条错误指向需要修正的确切工作表行。",
           "empty": "无导入错误。",
@@ -525,7 +525,8 @@
             "row": "行",
             "column": "列",
             "message": "消息"
-          }
+          },
+          "count_other": "发现 {{count}} 个错误"
         },
         "result": {
           "title": "上次导入结果",
@@ -593,19 +594,19 @@
         "disableFailed": "无法停用同步。请重试。",
         "syncNothingChanged": "同步检查已完成，没有任何变化。",
         "syncFailed": "同步失败。请重试。",
-        "pullNothingNewer": "未找到更新的远程快照。",
+        "pullNothingNewer": "未找到更新的共享数据。",
         "pullFailed": "拉取失败。请重试。",
-        "pushNothingToPublish": "没有需要发布的本地更改。",
+        "pushNothingToPublish": "没有需要发送的更改。",
         "pushFailed": "推送失败。请重试。",
-        "loadSnapshotsFailed": "无法加载同步快照。请重试。",
+        "loadSnapshotsFailed": "无法加载同步文件。请重试。",
         "defaultFileUpdated": "默认同步文件已更新。正在重新加载应用数据……",
         "selectDefaultFileFailed": "无法选择默认同步文件。请重试。",
         "fileDeleted": "同步文件已删除。",
         "deleteFileFailed": "无法删除同步文件。请重试。",
-        "pullCompleted": "拉取已完成。",
-        "pullCompletedWithId": "拉取已完成（{{snapshotId}}）",
-        "pushCompleted": "推送已完成。",
-        "pushCompletedWithId": "推送已完成（{{snapshotId}}）",
+        "pullCompleted": "已获取更新。",
+        "pullCompletedWithId": "已获取更新（{{snapshotId}}）",
+        "pushCompleted": "更改已发送。",
+        "pushCompletedWithId": "更改已发送（{{snapshotId}}）",
         "conflictDetected": "检测到同步冲突。请查看下方详情。"
       }
     }
@@ -618,7 +619,7 @@
       },
       "snapshotsOutdated": {
         "title": "快照可能已过期",
-        "body": "你的最新快照已有 {{days}} 天。更新快照以保持净资产准确。"
+        "body_other": "你的最新快照已有 {{count}} 天。更新快照以保持净资产准确。"
       }
     },
     "errors": {
@@ -632,19 +633,19 @@
         "summaryTitle": "净资产",
         "allocationTitle": "分配",
         "tooltips": {
-          "ledgerBalance": "账本余额",
-          "marketValue": "市值"
+          "ledgerBalance": "按交易计算的余额",
+          "marketValue": "最近记录的价值"
         },
         "total": "合计",
         "liquidAssets": "流动资产",
         "investments": "投资",
         "snapshotBased": {
           "today": "快照已于今日更新",
-          "daysAgo": "基于快照（{{days}} 天前）"
+          "daysAgo_other": "基于快照（{{count}} 天前）"
         },
         "receivables": "应收款",
         "payables": "应付款",
-        "totalAfterRP": "应收应付后",
+        "totalAfterRP": "计入应收应付后",
         "emptyDistribution": "暂无账户余额可分配。添加或更新账户以查看分配情况。",
         "emptyDistributionNoAccounts": "暂无账户。添加第一个账户以查看分配情况。"
       },
@@ -670,9 +671,10 @@
       "recentTransactions": {
         "empty": "本月暂无交易。添加一笔以开始记录活动。",
         "tooltips": {
-          "settled": "已结清",
-          "settle": "结清",
-          "unsettled": "未结清"
+          "settled": "已支付",
+          "settle": "标记为已支付",
+          "unsettled": "待支付",
+          "unsettle": "标记为待支付"
         },
         "actions": {
           "goToTransactionsPage": "所有交易",
@@ -698,7 +700,7 @@
           "crypto": "加密货币",
           "netCashflow": "净现金流",
           "priorBalances": "期初余额",
-          "unused": "未使用",
+          "unused": "结余",
           "otherExpenses": "其他支出"
         }
       }
@@ -1371,16 +1373,16 @@
   "recurringEvents": {
     "table": {
       "description": "规划定期交易和转账，使常规活动更易于追踪。",
-      "emptyMessage": "暂无定期事件。添加一个以自动化重复交易或转账。",
-      "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建定期事件。",
+      "emptyMessage": "暂无定期交易。添加一个以自动化重复交易或转账。",
+      "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建定期交易。",
       "actions": {
-        "add": "添加定期事件",
+        "add": "添加定期交易",
         "viewItems": "查看计划项目",
-        "edit": "编辑定期事件",
-        "delete": "删除定期事件"
+        "edit": "编辑定期交易",
+        "delete": "删除定期交易"
       },
       "schedule": {
-        "summary": "共 {{count}} 次，每 {{unit}} {{interval}} 次"
+        "summary_other": "{{frequency}}，共 {{count}} 次"
       },
       "template": {
         "unknown": "未知模板",
@@ -1398,22 +1400,34 @@
         "week": "周",
         "month": "月",
         "year": "年"
+      },
+      "every": {
+        "day": "每天",
+        "week": "每周",
+        "month": "每月",
+        "year": "每年"
+      },
+      "everyN": {
+        "day_other": "每 {{count}} 天",
+        "week_other": "每 {{count}} 周",
+        "month_other": "每 {{count}} 个月",
+        "year_other": "每 {{count}} 年"
       }
     },
     "monthPolicy": {
-      "none": "默认",
-      "clip": "使用该月最后一个有效日",
-      "skip": "跳过",
-      "last_day": "最后一天",
-      "first_day": "第一天"
+      "none": "默认（该月最后一天）",
+      "clip": "使用该月最后一天（31 日顺延为 30 日）",
+      "skip": "跳过该月",
+      "last_day": "始终为该月最后一天",
+      "first_day": "始终为该月 1 日"
     },
     "dialog": {
       "add": {
-        "title": "添加定期事件",
+        "title": "添加定期交易",
         "description": "创建重复规则，使应用自动添加即将到来的交易或转账。",
         "actions": {
           "cancel": "取消",
-          "create": "创建定期事件"
+          "create": "创建定期交易"
         },
         "errors": {
           "titleRequired": "标题为必填项。",
@@ -1421,11 +1435,11 @@
           "titleMaxLength": "标题最多 80 个字符。",
           "typeRequired": "类型为必填项。",
           "startDateRequired": "开始日期为必填项。",
-          "countRequired": "次数为必填项。",
-          "countInvalid": "次数必须为正整数。",
-          "frequencyIntervalRequired": "频率间隔为必填项。",
-          "frequencyIntervalInvalid": "频率间隔必须为正整数。",
-          "frequencyUnitRequired": "频率单位为必填项。",
+          "countRequired": "请输入重复次数。",
+          "countInvalid": "请输入大于 0 的整数。",
+          "frequencyIntervalRequired": "请输入重复频率。",
+          "frequencyIntervalInvalid": "请输入大于 0 的整数。",
+          "frequencyUnitRequired": "请选择日、周、月或年。",
           "accountRequired": "账户为必填项。",
           "categoryRequired": "分类为必填项。",
           "fromAccountRequired": "来源账户为必填项。",
@@ -1434,11 +1448,11 @@
           "amountRequired": "金额为必填项。",
           "amountInvalid": "金额必须为正数。",
           "descriptionMaxLength": "描述最多 75 个字符。",
-          "createFailed": "定期事件创建失败。请重试。"
+          "createFailed": "定期交易创建失败。请重试。"
         }
       },
       "edit": {
-        "title": "编辑定期事件",
+        "title": "编辑定期交易",
         "description": "更新此定期规则，并选择哪些关联的已生成项目应接收模板更改。",
         "applyTo": "将更改应用于",
         "fromDate": "开始日期",
@@ -1460,7 +1474,7 @@
         },
         "errors": {
           "fromDateRequired": "请选择开始更新关联项目的日期。",
-          "updateFailed": "定期事件更新失败。请重试。"
+          "updateFailed": "定期交易更新失败。请重试。"
         }
       },
       "form": {
@@ -1468,7 +1482,7 @@
           "frequencyInterval": "每"
         },
         "placeholders": {
-          "title": "定期事件标题",
+          "title": "定期交易标题",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
@@ -1478,7 +1492,7 @@
       }
     },
     "deleteAlert": {
-      "title": "删除此定期事件？",
+      "title": "删除此定期交易？",
       "description": "删除「{{title}}」并停止从此规则创建未来项目。",
       "options": {
         "deleteLinkedItems": "同时删除已创建的交易和转账",
@@ -1486,24 +1500,24 @@
       },
       "actions": {
         "cancel": "取消",
-        "delete": "删除定期事件"
+        "delete": "删除定期交易"
       }
     },
     "createResult": {
-      "title": "定期事件已创建"
+      "title": "定期交易已创建"
     },
     "updateResult": {
-      "title": "定期事件已更新",
+      "title": "定期交易已更新",
       "description": "「{{title}}」已更新。关联的生成项目已在适用处同步更新。",
       "actions": {
-        "ok": "确定"
+        "ok": "完成"
       }
     },
     "runResult": {
-      "title": "定期事件已创建",
+      "title": "定期交易已创建",
       "labels": {
-        "plan": "定期计划",
-        "created": "本次创建",
+        "plan": "定期交易",
+        "created": "新增项目",
         "skipped": "已存在",
         "total": "计划日期"
       },
@@ -1511,20 +1525,20 @@
         "noNewItems": "未创建新项目，因为所有计划日期已有关联项目。"
       },
       "actions": {
-        "ok": "确定"
+        "ok": "完成"
       }
     },
     "toasts": {
-      "createSuccess": "定期事件已创建。",
-      "createError": "定期事件创建失败。请重试。",
-      "updateSuccess": "定期事件已更新。",
-      "updateError": "定期事件更新失败。请重试。",
-      "deleteSuccess": "定期事件已删除。",
-      "deleteError": "定期事件删除失败。请重试。"
+      "createSuccess": "定期交易已创建。",
+      "createError": "定期交易创建失败。请重试。",
+      "updateSuccess": "定期交易已更新。",
+      "updateError": "定期交易更新失败。请重试。",
+      "deleteSuccess": "定期交易已删除。",
+      "deleteError": "定期交易删除失败。请重试。"
     },
     "errors": {
-      "loadFailedWithError": "定期事件加载失败。请重启应用后重试。",
-      "loadUnexpected": "加载定期事件时发生意外错误。请重启应用后重试。"
+      "loadFailedWithError": "定期交易加载失败。请重启应用后重试。",
+      "loadUnexpected": "加载定期交易时发生意外错误。请重启应用后重试。"
     }
   },
   "recurringEventItems": {
@@ -1533,15 +1547,15 @@
     },
     "table": {
       "transactionsTitle": "计划交易",
-      "transactionsDescription": "此定期事件生成的交易。",
+      "transactionsDescription": "此定期交易生成的交易。",
       "transfersTitle": "计划转账",
-      "transfersDescription": "此定期事件生成的转账。",
-      "emptyMessage": "未找到与此定期事件关联的项目。"
+      "transfersDescription": "此定期交易生成的转账。",
+      "emptyMessage": "未找到与此定期交易关联的项目。"
     },
     "errors": {
-      "invalidId": "定期事件 ID 无效。",
-      "notFound": "未找到定期事件。",
-      "loadUnexpected": "加载定期事件项目时发生意外错误。请重启应用后重试。"
+      "invalidId": "定期交易 ID 无效。",
+      "notFound": "未找到定期交易。",
+      "loadUnexpected": "加载定期交易项目时发生意外错误。请重启应用后重试。"
     }
   },
   "accountDetails": {
@@ -1667,24 +1681,24 @@
       },
       "currency": {
         "label": "默认货币",
-        "hint": "用于显示和新账户。可按账户覆盖。"
+        "hint": "显示在所有金额旁。可随时在设置中更改。"
       }
     },
     "start": {
       "title": "你想怎么开始？",
       "scratch": {
         "title": "从头开始",
-        "description": "设置账户和分类，两分钟即可完成。"
+        "description": "从空白开始。准备好后再添加账户和分类。"
       },
       "import": {
-        "title": "导入备份",
-        "description": "从之前的 Boring Balance 导出文件恢复。"
+        "title": "导入现有数据",
+        "description": "恢复备份或导入 Excel 导出文件。"
       }
     },
     "confirm": {
       "title": "设置完成。",
       "subtitle": "所有数据保存在本地设备上，由你掌控。",
-      "import_note": "可随时通过设置 → 导出与导入来恢复备份。",
+      "import_note": "可随时通过首选项 → 备份恢复备份。",
       "cta": "进入 Boring Balance"
     }
   },

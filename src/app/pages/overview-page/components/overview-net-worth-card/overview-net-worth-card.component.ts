@@ -10,7 +10,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppBaseCardComponent } from '@/components/base-card';
 import type {
@@ -22,6 +22,7 @@ import { AnalyticsService } from '@/services/analytics.service';
 import { LocalPreferencesService } from '@/services/local-preferences.service';
 import { NumberFormatService } from '@/services/number-format.service';
 import { ZardLoaderComponent } from '@/shared/components/loader';
+import { translatePlural } from '@/shared/utils';
 import { toMonthRangeTimestamps } from '../overview-cards.utils';
 
 const AMOUNT_CENTS_DIVISOR = 100;
@@ -53,6 +54,8 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   readonly snapshotsChange = output<AnalyticsNetWorthSnapshotsDto>();
   readonly netWorthModeChange = output<'valued' | 'ledger'>();
 
+  private readonly translateService = inject(TranslateService);
+
   protected readonly isLoading = signal(true);
   protected readonly loadError = signal<string | null>(null);
   protected readonly totalNetWorthCents = signal(0);
@@ -72,6 +75,14 @@ export class OverviewNetWorthCardComponent implements OnInit, OnChanges {
   protected readonly totalAfterReceivablesPayablesCents = computed(
     () => this.totalNetWorthCents() + this.totalReceivablesCents() - this.totalPayablesCents(),
   );
+
+  protected snapshotAgeText(): string {
+    return translatePlural(
+      this.translateService,
+      'overview.cards.netWorth.snapshotBased.daysAgo',
+      this.snapshotRecency().daysSinceLatestSnapshot ?? 0,
+    );
+  }
 
   ngOnInit(): void {
     void this.loadData();

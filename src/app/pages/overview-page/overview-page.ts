@@ -19,6 +19,7 @@ import { SyncService } from '@/pages/data-backups-page/services/sync.service';
 import { ToolbarContextService, type ToolbarAction } from '@/services/toolbar-context.service';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardTooltipImports } from '@/shared/components/tooltip';
+import { translatePlural } from '@/shared/utils';
 import { OverviewActivityPanelComponent } from './components/overview-activity-panel/overview-activity-panel.component';
 import { OverviewAllocationCardComponent } from './components/overview-allocation-card/overview-allocation-card.component';
 import { OverviewCashflowCardComponent } from './components/overview-charts-card/overview-cashflow-card/overview-cashflow-card.component';
@@ -147,6 +148,14 @@ export class OverviewPage implements OnInit, OnDestroy {
 
   protected onNetWorthModeChange(netWorthMode: 'valued' | 'ledger'): void {
     this.netWorthMode.set(netWorthMode);
+  }
+
+  protected snapshotsOutdatedText(): string {
+    return translatePlural(
+      this.translateService,
+      'overview.banners.snapshotsOutdated.body',
+      this.snapshotRecency().daysSinceLatestSnapshot ?? 0,
+    );
   }
 
   protected onNetWorthSnapshotsChange(snapshotRecency: AnalyticsNetWorthSnapshotsDto): void {

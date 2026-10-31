@@ -194,10 +194,7 @@
               {{ 'dataBackups.exportImport.import.validation.errorTitle' | translate }}
             </h4>
             <p class="text-xs text-muted-foreground">
-              {{
-                'dataBackups.exportImport.import.errors.count'
-                  | translate: { count: importErrorRows().length }
-              }}
+              {{ importErrorCountText() }}
             </p>
           </div>
 

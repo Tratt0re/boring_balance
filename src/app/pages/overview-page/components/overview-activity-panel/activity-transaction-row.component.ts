@@ -45,7 +45,7 @@ export class ActivityTransactionRowComponent {
   protected settledToggleActionLabel(settled: boolean): string {
     return this.translate(
       settled
-        ? 'overview.cards.recentTransactions.tooltips.unsettled'
+        ? 'overview.cards.recentTransactions.tooltips.unsettle'
         : 'overview.cards.recentTransactions.tooltips.settle',
     );
   }

@@ -279,19 +279,18 @@ export class ZardPaginationEllipsisComponent {
               type="button"
               class="focus-visible:rounded-md"
               [attr.aria-current]="page === zPageIndex() ? 'page' : null"
+              [attr.aria-label]="
+                (page === zTotal()
+                  ? 'common.pagination.tooltips.toLastPage'
+                  : 'common.pagination.tooltips.toPage'
+                ) | translate: { page }
+              "
               [attr.aria-disabled]="zDisabled() || null"
               [zActive]="page === zPageIndex()"
               [zDisabled]="zDisabled()"
               [zSize]="zSize()"
               (click)="goToPage(page)"
             >
-              <span class="sr-only">
-                {{
-                  page === zTotal()
-                    ? ('common.pagination.tooltips.toLastPage' | translate)
-                    : ('common.pagination.tooltips.toPage' | translate)
-                }}
-              </span>
               {{ page }}
             </button>
           </li>

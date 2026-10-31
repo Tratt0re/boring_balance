@@ -39,12 +39,9 @@
 
             <div class="rounded-md bg-muted/40 p-3">
               <p class="text-xs uppercase tracking-wide text-muted-foreground">
-                {{ 'common.labels.frequencyUnit' | translate }}
+                {{ 'common.labels.frequency' | translate }}
               </p>
-              <p class="mt-1 font-medium">
-                {{ plan.ruleJson.frequency.interval }}
-                {{ 'recurringEvents.frequency.unit.' + plan.ruleJson.frequency.unit | translate }}
-              </p>
+              <p class="mt-1 font-medium">{{ frequencyLabel(plan) }}</p>
             </div>
 
             @if (plan.ruleJson.month_policy; as monthPolicy) {

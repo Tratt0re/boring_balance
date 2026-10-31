@@ -12,7 +12,7 @@
       "color": "Farbe",
       "icon": "Symbol",
       "date": "Datum",
-      "settled": "Abgerechnet",
+      "settled": "Bezahlt",
       "account": "Konto",
       "category": "Kategorie",
       "amount": "Betrag",
@@ -22,14 +22,15 @@
       "toAccount": "An Konto",
       "title": "Titel",
       "startDate": "Startdatum",
-      "plan": "Plan",
+      "plan": "Wiederkehrende Transaktion",
       "schedule": "Zeitplan",
       "template": "Vorlage",
       "occurrences": "Wiederholungen",
       "frequencyUnit": "Häufigkeitseinheit",
       "monthPolicy": "Falls der Tag nicht im Monat existiert",
       "year": "Jahr",
-      "archived": "Archiviert"
+      "archived": "Archiviert",
+      "frequency": "Häufigkeit"
     },
     "placeholders": {
       "selectType": "Typ auswählen",
@@ -47,7 +48,7 @@
         "dateTo": "Bis Datum",
         "amountFrom": "Betrag von",
         "amountTo": "Betrag bis",
-        "settled": "Abrechnungsstatus",
+        "settled": "Zahlungsstatus",
         "categoryType": "Kategorietyp",
         "category": "Kategorie",
         "account": "Konto"
@@ -67,8 +68,8 @@
       "options": {
         "settled": {
           "any": "Beliebiger Status",
-          "yes": "Abgerechnet",
-          "no": "Nicht abgerechnet"
+          "yes": "Bezahlt",
+          "no": "Ausstehend"
         },
         "categoryType": {
           "any": "Beliebiger Typ"
@@ -84,15 +85,15 @@
     "pagination": {
       "previous": "Zurück",
       "next": "Weiter",
-      "counter": "{{current}} von {{total}} Seiten",
+      "counter": "Seite {{current}} von {{total}}",
       "rowsPerPage": "Zeilen pro Seite",
       "tooltips": {
         "firstPage": "Zur ersten Seite",
         "previousPage": "Zur vorherigen Seite",
         "nextPage": "Zur nächsten Seite",
         "lastPage": "Zur letzten Seite",
-        "toPage": "Zu Seite",
-        "toLastPage": "Zur letzten Seite, Seite"
+        "toPage": "Zu Seite {{page}}",
+        "toLastPage": "Zu Seite {{page}}, der letzten Seite"
       }
     },
     "calendar": {
@@ -118,8 +119,8 @@
   },
   "nav": {
     "sections": {
-      "main": "Menü",
-      "setup": "Einrichtung"
+      "setup": "Verwalten",
+      "plan": "Planen"
     },
     "items": {
       "overview": "Übersicht",
@@ -129,7 +130,7 @@
       "budget": "Budget",
       "accounts": "Konten",
       "categories": "Kategorien",
-      "recurringEvents": "Wiederkehrende Ereignisse",
+      "recurringEvents": "Wiederkehrende Transaktionen",
       "settings": "Einstellungen"
     }
   },
@@ -158,11 +159,11 @@
       },
       "clear_financial": {
         "label": "Alle Finanzdaten löschen",
-        "description": "Löscht dauerhaft alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Ereignisse und selbst erstellten Kategorien. Einstellungen bleiben erhalten.",
+        "description": "Löscht dauerhaft alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Transaktionen und selbst erstellten Kategorien. Einstellungen bleiben erhalten.",
         "button": "Daten löschen",
         "confirm": {
           "title": "Alle Finanzdaten löschen?",
-          "body": "Dadurch werden alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Ereignisse und selbst erstellten Kategorien dauerhaft gelöscht. Einstellungen und Sicherungsdateien bleiben erhalten. Dieser Vorgang kann nicht rückgängig gemacht werden.",
+          "body": "Dadurch werden alle Konten, Transaktionen, Überträge, Budgets, Bewertungsmomentaufnahmen, wiederkehrenden Transaktionen und selbst erstellten Kategorien dauerhaft gelöscht. Einstellungen und Sicherungsdateien bleiben erhalten. Dieser Vorgang kann nicht rückgängig gemacht werden.",
           "cta": "Alle Finanzdaten löschen"
         },
         "success": "Alle Finanzdaten wurden gelöscht.",
@@ -201,16 +202,16 @@
           "fieldLabel": "App-Sprache"
         },
         "dashboardValuationMode": {
-          "description": "Festlegen, ob das Nettovermögen und die Aufteilung in der Übersicht Bewertungsmomentaufnahmen einschließen sollen, sofern verfügbar. Wenn deaktiviert, werden nur Buchungssalden aus Transaktionen verwendet.",
-          "fieldLabel": "Dashboard-Berechnungen",
+          "description": "Festlegen, worauf Nettovermögen und Aufteilung in der Übersicht beruhen. Mit Bewertungsmomentaufnahmen nutzen Konten, die eine haben, ihren zuletzt erfassten Wert. Mit „Nur Transaktionen“ wird jeder Saldo aus Transaktionen berechnet.",
+          "fieldLabel": "Nettovermögen basiert auf",
           "options": {
-            "include": "Bewertungen einschließen",
-            "exclude": "Nur Buchungssalden"
+            "include": "Bewertungsmomentaufnahmen, wenn vorhanden",
+            "exclude": "Nur Transaktionen"
           }
         },
         "currency": {
           "description": "Das Symbol auswählen, das neben Salden, Transaktionen und Berichten angezeigt werden soll.",
-          "fieldLabel": "Symbol",
+          "fieldLabel": "Währungssymbol",
           "customLabel": "Benutzerdefiniertes Symbol",
           "customPlaceholder": "CHF",
           "options": {
@@ -240,7 +241,7 @@
         "paragraph4": "Also habe ich mein eigenes gebaut.",
         "paragraph5": "Boring Balance soll einfach, privat und vollständig unter Ihrer Kontrolle sein. Ihre Daten gehören Ihnen. Keine Werbung, kein Tracking und keine Funktionen, die Sie dazu verleiten sollen, für Ihre eigenen Finanzdaten zu zahlen.",
         "paragraph6": "Ich glaube, dass persönliche Finanzen aktiv verwaltet werden sollten. Einen Moment damit zu verbringen, Salden zu prüfen, Ausgaben zu überprüfen und alles im Einklang zu halten, ist der einzige Weg, wirklich zu verstehen, wohin das Geld fließt.",
-        "paragraph7": "Diese App bietet einige grundlegende Werkzeuge dafür: Konten und Transaktionen verfolgen, budgetieren und wiederkehrende Ereignisse planen.",
+        "paragraph7": "Diese App bietet einige grundlegende Werkzeuge dafür: Konten und Transaktionen verfolgen, budgetieren und wiederkehrende Transaktionen planen.",
         "paragraph8": "Nichts davon ist verpflichtend. Nutzen Sie so viel oder so wenig, wie Sie möchten.",
         "paragraph9": "Willkommen an diesem schlichten kleinen Ort — und denken Sie daran, Ihre Daten von Zeit zu Zeit mit einer Sicherung zu schützen 😉"
       },
@@ -281,8 +282,8 @@
         "title": "Automatische Sicherungen",
         "description": "Festlegen, wie oft die App Wiederherstellungskopien speichert und wie viele ältere Kopien aufbewahrt werden sollen.",
         "onQuit": "Sicherung beim Beenden der App ausführen",
-        "intervalMin": "Intervall (Minuten, 0 zum Deaktivieren)",
-        "retentionCount": "Aufbewahrungsanzahl",
+        "intervalMin": "Automatisch sichern",
+        "retentionCount": "Aufzubewahrende Sicherungen",
         "intervalOptions": {
           "off": "Aus",
           "minutes30": "Alle 30 Minuten",
@@ -348,7 +349,7 @@
         "warning": "Einen vertrauenswürdigen Synchronisierungsordner auswählen. Die App arbeitet weiterhin vom eigenen Gerät und nutzt den gemeinsamen Ordner nur zum sicheren Dateiabgleich.",
         "enabled": "Synchronisierung aktivieren",
         "chooseFolder": "Ordnerspeicherort auswählen",
-        "repoPath": "App-Synchronisierungsordner",
+        "repoPath": "Synchronisierungsordner",
         "notConnected": "Noch nicht verbunden",
         "enableHints": {
           "turnOnFirst": "Synchronisierung zuerst aktivieren, dann den gewünschten Ordner für alle Geräte auswählen.",
@@ -357,28 +358,28 @@
       },
       "setup": {
         "title": "Synchronisierungsordner verbinden",
-        "description": "Auswählen, wo der App-Synchronisierungsordner liegen soll, und dann einen neuen Bereich erstellen oder einen vorhandenen verbinden.",
+        "description": "Auswählen, wo der Synchronisierungsordner liegen soll, und dann einen neuen erstellen oder einem vorhandenen beitreten.",
         "actions": {
-          "create": "Neuen Synchronisierungsbereich erstellen",
-          "attach": "Mit vorhandenem Synchronisierungsbereich verbinden"
+          "create": "Neuen Synchronisierungsordner erstellen",
+          "attach": "Vorhandenem Synchronisierungsordner beitreten"
         },
         "status": {
           "checking": "Ausgewählter Ordner wird geprüft...",
           "chooseFirst": "Ordnerspeicherort auswählen, um fortzufahren.",
-          "exists": "Ein vorhandener Synchronisierungsbereich wurde in diesem Ordner gefunden. \"Verbinden\" verwenden, wenn ein anderes Gerät ihn bereits verwendet.",
-          "missing": "In diesem Ordner wurde noch kein Synchronisierungsbereich gefunden. \"Erstellen\" verwenden, wenn dies das erste synchronisierte Gerät ist.",
-          "repoPathPending": "Der App-Synchronisierungsordner wird hier angezeigt, nachdem der Speicherort geprüft wurde.",
+          "exists": "In diesem Ordner gibt es bereits einen Synchronisierungsordner. „Beitreten“ verwenden, wenn ein anderes Gerät ihn bereits nutzt.",
+          "missing": "Hier wurde noch kein Synchronisierungsordner gefunden. „Erstellen“ verwenden, wenn dies das erste synchronisierte Gerät ist.",
+          "repoPathPending": "Der Synchronisierungsordner wird hier angezeigt, nachdem der Speicherort geprüft wurde.",
           "waitingForFolder": "Ordnerspeicherort auswählen, um fortzufahren."
         },
-        "actionHelp": "\"Erstellen\" startet die Synchronisierung von diesem Gerät. \"Verbinden\" tritt einem Synchronisierungsbereich bei, den ein anderes Gerät bereits erstellt hat."
+        "actionHelp": "„Erstellen“ startet die Synchronisierung von diesem Gerät. „Beitreten“ verbindet mit einem Synchronisierungsordner, den ein anderes Gerät bereits erstellt hat."
       },
       "disabledInfo": "Synchronisierung aktivieren, um einen gemeinsamen Ordner auszuwählen und dieses Gerät zu verbinden.",
       "autoSync": {
         "title": "Automatische Synchronisierung",
         "description": "Festlegen, wie oft die App nach neueren Daten sucht und wie oft sie die neuesten Änderungen teilt.",
-        "autoPullIntervalMin": "Automatisches Abrufintervall",
-        "autoPushIntervalMin": "Automatisches Übertragungsintervall",
-        "autoPushOnQuit": "Beim Beenden der App übertragen",
+        "autoPullIntervalMin": "Updates automatisch holen",
+        "autoPushIntervalMin": "Änderungen automatisch senden",
+        "autoPushOnQuit": "Änderungen beim Beenden der App senden",
         "autoPushOnQuitHint": "Wenn aktiviert, überträgt die App die neuesten Änderungen, bevor sie geschlossen wird.",
         "intervalOptions": {
           "off": "Aus",
@@ -399,30 +400,30 @@
         },
         "hints": {
           "syncNow": "\"Jetzt synchronisieren\" ist die sicherste vollständige Prüfung: Es sucht nach neueren gemeinsamen Änderungen und teilt dann bei Bedarf die eigenen.",
-          "pullNow": "\"Jetzt abrufen\" bringt nur neuere gemeinsame Daten auf dieses Gerät.",
-          "pushNow": "\"Jetzt übertragen\" teilt nur die aktuellen Änderungen dieses Geräts mit dem gemeinsamen Ordner."
+          "pullNow": "„Updates holen“ bringt nur neuere gemeinsame Daten auf dieses Gerät.",
+          "pushNow": "„Meine Änderungen senden“ teilt nur die aktuellen Änderungen dieses Geräts mit dem gemeinsamen Ordner."
         }
       },
       "actions": {
         "syncNow": "Jetzt synchronisieren",
-        "pullNow": "Jetzt abrufen",
-        "pushNow": "Jetzt übertragen"
+        "pullNow": "Updates holen",
+        "pushNow": "Meine Änderungen senden"
       },
       "status": {
         "title": "Status",
-        "description": "Aktuellen Synchronisierungsstatus prüfen und sehen, wann dieses Gerät zuletzt abgerufen oder übertragen hat.",
+        "description": "Aktuellen Synchronisierungsstatus prüfen und sehen, wann dieses Gerät zuletzt Updates geholt oder Änderungen gesendet hat.",
         "rows": {
           "current": "Aktueller Status",
-          "lastPull": "Letzter Abruf",
-          "lastPush": "Letzte Übertragung"
+          "lastPull": "Letzte Updates geholt",
+          "lastPush": "Letzte Änderungen gesendet"
         },
         "values": {
           "never": "Nie",
-          "noLastPull": "Kein letzter Abruf verfügbar",
+          "noLastPull": "Noch keine Updates geholt",
           "idle": "Inaktiv",
           "running": "Wird ausgeführt",
-          "ok": "OK",
-          "error": "Fehler",
+          "ok": "Abgeschlossen",
+          "error": "Fehlgeschlagen",
           "conflict": "Konflikt"
         }
       },
@@ -430,19 +431,19 @@
         "lastErrorTitle": "Letzter Fehler",
         "conflictTitle": "Konflikt erkannt",
         "localCopyPath": "Lokale Kopie gespeichert unter",
-        "remoteSnapshotPath": "Remote-Momentaufnahme wiederhergestellt von",
-        "conflictHint": "Die lokale Version wurde als Synchronisierungsdatei und lokale Kopie erhalten. Prüfen Sie die verfügbaren Dateien und wählen Sie den richtigen Standard."
+        "remoteSnapshotPath": "Gemeinsame Kopie wiederhergestellt von",
+        "conflictHint": "Beide Versionen wurden behalten. Daten unter „Verfügbare Synchronisierungsdateien“ vergleichen und die gewünschte Version verwenden."
       },
       "files": {
         "title": "Verfügbare Synchronisierungsdateien",
         "description": "Gemeinsame Synchronisierungsdateien prüfen, eine als Standard auswählen oder nicht mehr benötigte Dateien löschen.",
         "loading": "Liste der Synchronisierungsdateien wird aktualisiert...",
-        "empty": "Noch keine Synchronisierungsdateien verfügbar. Durch Übertragen kann die erste erstellt werden.",
+        "empty": "Noch keine Synchronisierungsdateien verfügbar. Durch Senden der Änderungen wird die erste erstellt.",
         "columns": {
           "date": "Datum",
           "file": "Datei",
           "device": "Gerät",
-          "changeCounter": "Änderungszähler",
+          "changeCounter": "Revision",
           "size": "Größe",
           "default": "Standard"
         },
@@ -469,10 +470,10 @@
         }
       },
       "attachAlert": {
-        "title": "Mit vorhandenem Synchronisierungsbereich verbinden?",
+        "title": "Dem vorhandenen Synchronisierungsordner beitreten?",
         "description": "Wenn der gemeinsame Ordner neuere Daten enthält, werden die Daten dieses Geräts dadurch ersetzt.",
         "actions": {
-          "attach": "Verbinden",
+          "attach": "Beitreten",
           "cancel": "Abbrechen"
         }
       }
@@ -516,7 +517,6 @@
           "transfers": "Überträge"
         },
         "errors": {
-          "count": "{{count}} Fehler gefunden",
           "tableTitle": "Importfehler",
           "tableDescription": "Jeder Fehler verweist auf die genaue Tabellenzeile, die korrigiert werden muss.",
           "empty": "Keine Importfehler.",
@@ -525,7 +525,9 @@
             "row": "Zeile",
             "column": "Spalte",
             "message": "Meldung"
-          }
+          },
+          "count_one": "{{count}} Fehler gefunden",
+          "count_other": "{{count}} Fehler gefunden"
         },
         "result": {
           "title": "Letztes Importergebnis",
@@ -593,19 +595,19 @@
         "disableFailed": "Sync konnte nicht deaktiviert werden. Bitte erneut versuchen.",
         "syncNothingChanged": "Sync-Prüfung abgeschlossen. Nichts hat sich geändert.",
         "syncFailed": "Sync fehlgeschlagen. Bitte erneut versuchen.",
-        "pullNothingNewer": "Es wurde kein neuerer Remote-Snapshot gefunden.",
+        "pullNothingNewer": "Es wurden keine neueren gemeinsamen Daten gefunden.",
         "pullFailed": "Abruf fehlgeschlagen. Bitte erneut versuchen.",
-        "pushNothingToPublish": "Es mussten keine lokalen Änderungen veröffentlicht werden.",
+        "pushNothingToPublish": "Es gab keine Änderungen zu senden.",
         "pushFailed": "Senden fehlgeschlagen. Bitte erneut versuchen.",
-        "loadSnapshotsFailed": "Sync-Snapshots konnten nicht geladen werden. Bitte erneut versuchen.",
+        "loadSnapshotsFailed": "Synchronisierungsdateien konnten nicht geladen werden. Bitte erneut versuchen.",
         "defaultFileUpdated": "Standard-Sync-Datei aktualisiert. App-Daten werden neu geladen...",
         "selectDefaultFileFailed": "Standard-Sync-Datei konnte nicht ausgewählt werden. Bitte erneut versuchen.",
         "fileDeleted": "Sync-Datei gelöscht.",
         "deleteFileFailed": "Sync-Datei konnte nicht gelöscht werden. Bitte erneut versuchen.",
-        "pullCompleted": "Abruf abgeschlossen.",
-        "pullCompletedWithId": "Abruf abgeschlossen ({{snapshotId}})",
-        "pushCompleted": "Senden abgeschlossen.",
-        "pushCompletedWithId": "Senden abgeschlossen ({{snapshotId}})",
+        "pullCompleted": "Updates geholt.",
+        "pullCompletedWithId": "Updates geholt ({{snapshotId}})",
+        "pushCompleted": "Änderungen gesendet.",
+        "pushCompletedWithId": "Änderungen gesendet ({{snapshotId}})",
         "conflictDetected": "Sync-Konflikt erkannt. Prüfe die Details unten."
       }
     }
@@ -618,7 +620,8 @@
       },
       "snapshotsOutdated": {
         "title": "Momentaufnahmen möglicherweise veraltet",
-        "body": "Ihre neueste Momentaufnahme ist {{days}} Tage alt. Momentaufnahmen aktualisieren, um das Nettovermögen korrekt zu halten."
+        "body_one": "Ihre neueste Momentaufnahme ist {{count}} Tag alt. Momentaufnahmen aktualisieren, um das Nettovermögen korrekt zu halten.",
+        "body_other": "Ihre neueste Momentaufnahme ist {{count}} Tage alt. Momentaufnahmen aktualisieren, um das Nettovermögen korrekt zu halten."
       }
     },
     "errors": {
@@ -632,19 +635,20 @@
         "summaryTitle": "Nettovermögen",
         "allocationTitle": "Aufteilung",
         "tooltips": {
-          "ledgerBalance": "Buchungssaldo",
-          "marketValue": "Marktwert"
+          "ledgerBalance": "Saldo aus Transaktionen",
+          "marketValue": "Zuletzt erfasster Wert"
         },
         "total": "Gesamt",
         "liquidAssets": "Liquidität",
         "investments": "Investitionen",
         "snapshotBased": {
           "today": "Momentaufnahmen heute aktualisiert",
-          "daysAgo": "Basierend auf Momentaufnahmen (vor {{days}} Tagen)"
+          "daysAgo_one": "Basierend auf Momentaufnahmen (vor {{count}} Tag)",
+          "daysAgo_other": "Basierend auf Momentaufnahmen (vor {{count}} Tagen)"
         },
         "receivables": "Forderungen",
         "payables": "Verbindlichkeiten",
-        "totalAfterRP": "Nach F&V",
+        "totalAfterRP": "Nach Forderungen und Verbindlichkeiten",
         "emptyDistribution": "Noch keine Kontosalden zur Aufteilung. Konten hinzufügen oder aktualisieren, um die Aufteilung zu sehen.",
         "emptyDistributionNoAccounts": "Noch keine Konten. Das erste Konto hinzufügen, um die Aufteilung zu sehen."
       },
@@ -670,9 +674,10 @@
       "recentTransactions": {
         "empty": "Noch keine Transaktionen diesen Monat. Eine hinzufügen, um den Aktivitätsverlauf zu beginnen.",
         "tooltips": {
-          "settled": "Abgerechnet",
-          "settle": "Abrechnen",
-          "unsettled": "Nicht abgerechnet"
+          "settled": "Bezahlt",
+          "settle": "Als bezahlt markieren",
+          "unsettled": "Ausstehend",
+          "unsettle": "Als ausstehend markieren"
         },
         "actions": {
           "goToTransactionsPage": "Alle Transaktionen",
@@ -697,8 +702,8 @@
           "investments": "Investitionen",
           "crypto": "Krypto",
           "netCashflow": "Nettocashflow",
-          "priorBalances": "Vorherige Salden",
-          "unused": "Nicht genutzt",
+          "priorBalances": "Übertrag aus früheren Monaten",
+          "unused": "Übrig",
           "otherExpenses": "Sonstige Ausgaben"
         }
       }
@@ -721,7 +726,7 @@
     },
     "metrics": {
       "yearTotal": "Jahresgesamt",
-      "avgPerMonth": "Ø/Monat"
+      "avgPerMonth": "Monatsdurchschnitt"
     },
     "cards": {
       "moneyFlow": {
@@ -776,8 +781,8 @@
   },
   "category": {
     "exclude": {
-      "name": "Ausschließen",
-      "description": "Transaktionen, die von Auswertungen und Budgetberechnungen ausgeschlossen sind."
+      "name": "Nicht gezählt",
+      "description": "Zählt nicht zu Einnahmen, Ausgaben oder Budgets."
     },
     "transfer": {
       "name": "Übertrag",
@@ -794,7 +799,7 @@
     "type": {
       "income": "Einnahmen",
       "expense": "Ausgaben",
-      "exclude": "Ausschließen"
+      "exclude": "Nicht gezählt"
     }
   },
   "account": {
@@ -1371,16 +1376,17 @@
   "recurringEvents": {
     "table": {
       "description": "Wiederkehrende Transaktionen und Überträge planen, damit routinemäßige Aktivitäten leichter nachverfolgt werden können.",
-      "emptyMessage": "Noch keine wiederkehrenden Ereignisse. Eines hinzufügen, um wiederholte Transaktionen oder Überträge zu automatisieren.",
-      "emptyNoAccountsMessage": "Noch keine Konten. Das erste Konto hinzufügen, bevor wiederkehrende Ereignisse erstellt werden.",
+      "emptyMessage": "Noch keine wiederkehrenden Transaktionen. Eine hinzufügen, um wiederholte Transaktionen oder Überträge zu automatisieren.",
+      "emptyNoAccountsMessage": "Noch keine Konten. Das erste Konto hinzufügen, bevor wiederkehrende Transaktionen erstellt werden.",
       "actions": {
-        "add": "Wiederkehrendes Ereignis hinzufügen",
+        "add": "Wiederkehrende Transaktion hinzufügen",
         "viewItems": "Geplante Einträge anzeigen",
-        "edit": "Wiederkehrendes Ereignis bearbeiten",
-        "delete": "Wiederkehrendes Ereignis löschen"
+        "edit": "Wiederkehrende Transaktion bearbeiten",
+        "delete": "Wiederkehrende Transaktion löschen"
       },
       "schedule": {
-        "summary": "Tritt {{count}} Mal auf, {{interval}} je {{unit}}"
+        "summary_one": "{{frequency}}, {{count}} Mal",
+        "summary_other": "{{frequency}}, {{count}} Mal"
       },
       "template": {
         "unknown": "Unbekannte Vorlage",
@@ -1394,26 +1400,42 @@
     },
     "frequency": {
       "unit": {
-        "day": "Tag(e)",
-        "week": "Woche(n)",
-        "month": "Monat(e)",
-        "year": "Jahr(e)"
+        "day": "Tag",
+        "week": "Woche",
+        "month": "Monat",
+        "year": "Jahr"
+      },
+      "every": {
+        "day": "Jeden Tag",
+        "week": "Jede Woche",
+        "month": "Jeden Monat",
+        "year": "Jedes Jahr"
+      },
+      "everyN": {
+        "day_one": "Alle {{count}} Tage",
+        "day_other": "Alle {{count}} Tage",
+        "week_one": "Alle {{count}} Wochen",
+        "week_other": "Alle {{count}} Wochen",
+        "month_one": "Alle {{count}} Monate",
+        "month_other": "Alle {{count}} Monate",
+        "year_one": "Alle {{count}} Jahre",
+        "year_other": "Alle {{count}} Jahre"
       }
     },
     "monthPolicy": {
-      "none": "Standard",
-      "clip": "Letzten gültigen Tag des Monats verwenden",
-      "skip": "Überspringen",
-      "last_day": "Letzter Tag",
-      "first_day": "Erster Tag"
+      "none": "Standard (letzter Tag des Monats)",
+      "clip": "Letzten Tag des Monats verwenden (30. Apr. für den 31.)",
+      "skip": "Diesen Monat überspringen",
+      "last_day": "Immer der letzte Tag des Monats",
+      "first_day": "Immer der 1. des Monats"
     },
     "dialog": {
       "add": {
-        "title": "Wiederkehrendes Ereignis hinzufügen",
+        "title": "Wiederkehrende Transaktion hinzufügen",
         "description": "Eine Wiederholungsregel erstellen, damit die App bevorstehende Transaktionen oder Überträge automatisch hinzufügen kann.",
         "actions": {
           "cancel": "Abbrechen",
-          "create": "Wiederkehrendes Ereignis erstellen"
+          "create": "Wiederkehrende Transaktion erstellen"
         },
         "errors": {
           "titleRequired": "Titel ist erforderlich.",
@@ -1421,11 +1443,11 @@
           "titleMaxLength": "Titel darf höchstens 80 Zeichen haben.",
           "typeRequired": "Typ ist erforderlich.",
           "startDateRequired": "Startdatum ist erforderlich.",
-          "countRequired": "Wiederholungsanzahl ist erforderlich.",
-          "countInvalid": "Wiederholungsanzahl muss eine positive ganze Zahl sein.",
-          "frequencyIntervalRequired": "Häufigkeitsintervall ist erforderlich.",
-          "frequencyIntervalInvalid": "Häufigkeitsintervall muss eine positive ganze Zahl sein.",
-          "frequencyUnitRequired": "Häufigkeitseinheit ist erforderlich.",
+          "countRequired": "Anzahl der Wiederholungen angeben.",
+          "countInvalid": "Eine ganze Zahl größer als 0 eingeben.",
+          "frequencyIntervalRequired": "Angeben, wie oft es sich wiederholt.",
+          "frequencyIntervalInvalid": "Eine ganze Zahl größer als 0 eingeben.",
+          "frequencyUnitRequired": "Tag, Woche, Monat oder Jahr wählen.",
           "accountRequired": "Konto ist erforderlich.",
           "categoryRequired": "Kategorie ist erforderlich.",
           "fromAccountRequired": "Quellkonto ist erforderlich.",
@@ -1434,11 +1456,11 @@
           "amountRequired": "Betrag ist erforderlich.",
           "amountInvalid": "Betrag muss eine positive Zahl sein.",
           "descriptionMaxLength": "Beschreibung darf höchstens 75 Zeichen haben.",
-          "createFailed": "Wiederkehrendes Ereignis konnte nicht erstellt werden. Bitte erneut versuchen."
+          "createFailed": "Wiederkehrende Transaktion konnte nicht erstellt werden. Bitte erneut versuchen."
         }
       },
       "edit": {
-        "title": "Wiederkehrendes Ereignis bearbeiten",
+        "title": "Wiederkehrende Transaktion bearbeiten",
         "description": "Diese Wiederholungsregel aktualisieren und auswählen, welche verknüpften erzeugten Einträge die Vorlagenänderungen erhalten.",
         "applyTo": "Änderungen anwenden auf",
         "fromDate": "Beginnend ab",
@@ -1460,7 +1482,7 @@
         },
         "errors": {
           "fromDateRequired": "Wählen Sie das Datum aus, ab dem verknüpfte Einträge aktualisiert werden sollen.",
-          "updateFailed": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden. Bitte erneut versuchen."
+          "updateFailed": "Wiederkehrende Transaktion konnte nicht aktualisiert werden. Bitte erneut versuchen."
         }
       },
       "form": {
@@ -1468,7 +1490,7 @@
           "frequencyInterval": "Alle"
         },
         "placeholders": {
-          "title": "Titel des wiederkehrenden Ereignisses",
+          "title": "Titel der wiederkehrenden Transaktion",
           "occurrences": "12",
           "frequencyInterval": "1"
         },
@@ -1478,7 +1500,7 @@
       }
     },
     "deleteAlert": {
-      "title": "Dieses wiederkehrende Ereignis löschen?",
+      "title": "Diese wiederkehrende Transaktion löschen?",
       "description": "\"{{title}}\" löschen und keine weiteren zukünftigen Einträge aus dieser Regel erstellen.",
       "options": {
         "deleteLinkedItems": "Auch die bereits erstellten Transaktionen und Überträge löschen",
@@ -1486,24 +1508,24 @@
       },
       "actions": {
         "cancel": "Abbrechen",
-        "delete": "Wiederkehrendes Ereignis löschen"
+        "delete": "Wiederkehrende Transaktion löschen"
       }
     },
     "createResult": {
-      "title": "Wiederkehrendes Ereignis erstellt"
+      "title": "Wiederkehrende Transaktion erstellt"
     },
     "updateResult": {
-      "title": "Wiederkehrendes Ereignis aktualisiert",
+      "title": "Wiederkehrende Transaktion aktualisiert",
       "description": "\"{{title}}\" wurde aktualisiert. Verknüpfte generierte Einträge wurden entsprechend aktualisiert.",
       "actions": {
-        "ok": "OK"
+        "ok": "Fertig"
       }
     },
     "runResult": {
-      "title": "Wiederkehrende Ereignisse erstellt",
+      "title": "Wiederkehrende Transaktionen erstellt",
       "labels": {
-        "plan": "Wiederkehrender Plan",
-        "created": "Jetzt erstellt",
+        "plan": "Wiederkehrende Transaktion",
+        "created": "Neue Einträge",
         "skipped": "Bereits vorhanden",
         "total": "Geplante Daten"
       },
@@ -1511,20 +1533,20 @@
         "noNewItems": "Es wurden keine neuen Einträge erstellt, da alle geplanten Daten bereits verknüpfte Einträge hatten."
       },
       "actions": {
-        "ok": "OK"
+        "ok": "Fertig"
       }
     },
     "toasts": {
-      "createSuccess": "Wiederkehrendes Ereignis erstellt.",
-      "createError": "Wiederkehrendes Ereignis konnte nicht erstellt werden. Bitte erneut versuchen.",
-      "updateSuccess": "Wiederkehrendes Ereignis aktualisiert.",
-      "updateError": "Wiederkehrendes Ereignis konnte nicht aktualisiert werden. Bitte erneut versuchen.",
-      "deleteSuccess": "Wiederkehrendes Ereignis gelöscht.",
-      "deleteError": "Wiederkehrendes Ereignis konnte nicht gelöscht werden. Bitte erneut versuchen."
+      "createSuccess": "Wiederkehrende Transaktion erstellt.",
+      "createError": "Wiederkehrende Transaktion konnte nicht erstellt werden. Bitte erneut versuchen.",
+      "updateSuccess": "Wiederkehrende Transaktion aktualisiert.",
+      "updateError": "Wiederkehrende Transaktion konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "deleteSuccess": "Wiederkehrende Transaktion gelöscht.",
+      "deleteError": "Wiederkehrende Transaktion konnte nicht gelöscht werden. Bitte erneut versuchen."
     },
     "errors": {
-      "loadFailedWithError": "Wiederkehrende Ereignisse konnten nicht geladen werden. App neu starten und erneut versuchen.",
-      "loadUnexpected": "Unerwarteter Fehler beim Laden wiederkehrender Ereignisse. App neu starten und erneut versuchen."
+      "loadFailedWithError": "Wiederkehrende Transaktionen konnten nicht geladen werden. App neu starten und erneut versuchen.",
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der wiederkehrenden Transaktionen. App neu starten und erneut versuchen."
     }
   },
   "recurringEventItems": {
@@ -1533,15 +1555,15 @@
     },
     "table": {
       "transactionsTitle": "Geplante Transaktionen",
-      "transactionsDescription": "Von diesem wiederkehrenden Ereignis erzeugte Transaktionen.",
+      "transactionsDescription": "Von dieser wiederkehrenden Transaktion erzeugte Transaktionen.",
       "transfersTitle": "Geplante Überweisungen",
-      "transfersDescription": "Von diesem wiederkehrenden Ereignis erzeugte Überweisungen.",
-      "emptyMessage": "Für dieses wiederkehrende Ereignis wurden keine verknüpften Einträge gefunden."
+      "transfersDescription": "Von dieser wiederkehrenden Transaktion erzeugte Überweisungen.",
+      "emptyMessage": "Für diese wiederkehrende Transaktion wurden keine verknüpften Einträge gefunden."
     },
     "errors": {
-      "invalidId": "Ungültige ID des wiederkehrenden Ereignisses.",
-      "notFound": "Wiederkehrendes Ereignis nicht gefunden.",
-      "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge des wiederkehrenden Ereignisses. App neu starten und erneut versuchen."
+      "invalidId": "Ungültige ID der wiederkehrenden Transaktion.",
+      "notFound": "Wiederkehrende Transaktion nicht gefunden.",
+      "loadUnexpected": "Unerwarteter Fehler beim Laden der Einträge der wiederkehrenden Transaktion. App neu starten und erneut versuchen."
     }
   },
   "accountDetails": {
@@ -1667,24 +1689,24 @@
       },
       "currency": {
         "label": "Standardwährung",
-        "hint": "Wird für die Anzeige und neue Konten verwendet. Pro Konto anpassbar."
+        "hint": "Wird bei allen Beträgen angezeigt. Jederzeit in den Einstellungen änderbar."
       }
     },
     "start": {
       "title": "Wie möchten Sie beginnen?",
       "scratch": {
         "title": "Neu starten",
-        "description": "Konten und Kategorien einrichten. Dauert zwei Minuten."
+        "description": "Mit einem leeren Arbeitsbereich beginnen. Konten und Kategorien hinzufügen, wenn es so weit ist."
       },
       "import": {
-        "title": "Sicherung importieren",
-        "description": "Aus einem früheren Boring Balance-Export wiederherstellen."
+        "title": "Vorhandene Daten importieren",
+        "description": "Eine Sicherung wiederherstellen oder einen Excel-Export importieren."
       }
     },
     "confirm": {
       "title": "Einrichtung abgeschlossen.",
       "subtitle": "Alles wird lokal auf dem Gerät gespeichert. Sie haben die Kontrolle.",
-      "import_note": "Die Sicherung kann jederzeit über Einstellungen → Export & Import importiert werden.",
+      "import_note": "Die Sicherung kann jederzeit über Einstellungen → Sicherungen importiert werden.",
       "cta": "Boring Balance öffnen"
     }
   },

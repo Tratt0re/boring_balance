@@ -23,10 +23,7 @@
             @if (snapshotRecency().daysSinceLatestSnapshot === 0) {
               {{ 'overview.cards.netWorth.snapshotBased.today' | translate }}
             } @else {
-              {{
-                'overview.cards.netWorth.snapshotBased.daysAgo'
-                  | translate: { days: snapshotRecency().daysSinceLatestSnapshot }
-              }}
+              {{ snapshotAgeText() }}
             }
           </p>
         }
