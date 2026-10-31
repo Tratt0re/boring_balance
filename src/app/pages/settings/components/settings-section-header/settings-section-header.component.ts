@@ -9,14 +9,10 @@ import { TranslatePipe } from '@ngx-translate/core';
       <h2 class="text-lg font-semibold tracking-tight">
         {{ titleKey() | translate }}
       </h2>
-      <p class="mt-1 text-sm text-muted-foreground">
-        {{ descriptionKey() | translate }}
-      </p>
     </header>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsSectionHeaderComponent {
   readonly titleKey = input.required<string>();
-  readonly descriptionKey = input.required<string>();
 }

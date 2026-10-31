@@ -33,11 +33,11 @@
                   {{ 'account.type.' + currentAccount.type | translate }}
                 </span>
               </div>
-              <p class="mt-1 truncate text-sm text-muted-foreground">
-                {{
-                  currentAccount.description ?? ('accountDetails.header.noDescription' | translate)
-                }}
-              </p>
+              @if (currentAccount.description) {
+                <p class="mt-1 truncate text-sm text-muted-foreground">
+                  {{ currentAccount.description }}
+                </p>
+              }
             </div>
           </div>
 

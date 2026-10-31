@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <app-base-card [zTitle]="monthlyTrendCardTitle()" [zDescription]="monthlyTrendCardDescription()">
+  <app-base-card [zTitle]="monthlyTrendCardTitle()">
     @if (isLoading()) {
       <div class="flex h-72 items-center justify-center">
         <div class="flex flex-col items-center gap-3 text-muted-foreground">
@@ -64,10 +64,7 @@
     }
   </app-base-card>
 
-  <app-base-card
-    [zTitle]="monthlyByCategoryCardTitle()"
-    [zDescription]="monthlyByCategoryCardDescription()"
-  >
+  <app-base-card [zTitle]="monthlyByCategoryCardTitle()">
     @if (isLoading()) {
       <div class="flex h-96 items-center justify-center">
         <div class="flex flex-col items-center gap-3 text-muted-foreground">

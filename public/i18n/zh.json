@@ -183,13 +183,10 @@
       }
     },
     "general": {
-      "intro": "这些偏好设置立即生效，使应用与你查看和管理财务的方式保持一致。",
       "appearanceGroupTitle": "外观",
       "currencyGroupTitle": "货币",
-      "currencyGroupDescription": "选择金额的显示方式，使余额、报告和表单易于阅读。",
       "cards": {
         "theme": {
-          "description": "选择最适合日常使用的外观。",
           "fieldLabel": "显示模式",
           "options": {
             "system": "跟随系统",
@@ -198,7 +195,6 @@
           }
         },
         "language": {
-          "description": "选择应用导航、标签和消息所用的语言。",
           "fieldLabel": "应用语言"
         },
         "dashboardValuationMode": {
@@ -210,7 +206,6 @@
           }
         },
         "currency": {
-          "description": "选择余额、交易和报告旁显示的符号。",
           "fieldLabel": "货币符号",
           "customLabel": "自定义符号",
           "customPlaceholder": "CNY",
@@ -219,10 +214,8 @@
           }
         },
         "numberFormat": {
-          "description": "选择金额使用的分隔符，使录入和报告符合预期格式。",
           "fieldLabel": "格式",
           "previewLabel": "预览",
-          "previewDescription": "在继续录入前预览当前符号和数字格式。",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -280,7 +273,6 @@
       },
       "autoBackup": {
         "title": "自动备份",
-        "description": "设置应用保存恢复副本的频率及保留旧副本的数量。",
         "onQuit": "退出时备份",
         "intervalMin": "自动备份",
         "retentionCount": "保留的备份数量",
@@ -292,8 +284,7 @@
         }
       },
       "manual": {
-        "title": "手动备份与状态",
-        "description": "立即创建备份并在一处查看最新备份结果。"
+        "title": "手动备份与状态"
       },
       "actions": {
         "chooseFolder": "选择文件夹",
@@ -316,7 +307,6 @@
       },
       "list": {
         "title": "可用备份",
-        "description": "查看已保存的备份，恢复或删除不再需要的副本。",
         "loading": "正在刷新备份列表...",
         "empty": "暂无备份。运行一次备份以创建首个还原点。",
         "columns": {
@@ -376,7 +366,6 @@
       "disabledInfo": "启用同步以选择共享文件夹并连接本设备。",
       "autoSync": {
         "title": "自动同步",
-        "description": "设置应用检查新数据和分享最新更改的频率。",
         "autoPullIntervalMin": "自动获取更新",
         "autoPushIntervalMin": "自动发送更改",
         "autoPushOnQuit": "退出时发送更改",
@@ -392,7 +381,6 @@
       },
       "manual": {
         "title": "手动同步",
-        "description": "需要立即检查或分享更改时使用这些操作。",
         "tooltips": {
           "syncNow": "先检查是否有更新的共享数据，再分享本设备的更新（如有）。",
           "pullNow": "仅拉取更新的共享数据，不推送本设备更改。",
@@ -411,7 +399,6 @@
       },
       "status": {
         "title": "状态",
-        "description": "查看当前同步状态，以及本设备上次获取更新或发送更改的时间。",
         "rows": {
           "current": "当前状态",
           "lastPull": "上次获取更新",
@@ -484,12 +471,10 @@
       },
       "export": {
         "title": "导出",
-        "description": "保存活动和设置的干净 Excel 副本，以便查看、分享或留存。",
         "lastExportLabel": "上次导出"
       },
       "import": {
         "title": "从 Excel 模板导入",
-        "description": "从官方模板开始，先检查所有内容，文件准备好后再导入。",
         "warning": "导入前会先进行验证。如存在错误，将不会导入任何内容。",
         "selectedFileLabel": "已选文件",
         "template": {
@@ -501,8 +486,7 @@
           }
         },
         "actions": {
-          "title": "导入数据文件",
-          "description": "选择已填写的工作簿，检查发现的问题，确认一切正确后再导入。"
+          "title": "导入数据文件"
         },
         "validation": {
           "previewTitle": "验证预览",
@@ -685,7 +669,6 @@
       },
       "moneyFlowSankey": {
         "title": "资金流向",
-        "description": "{{month}} 概览：资金从哪里来、流向哪里、留存多少。",
         "loading": "正在加载资金流向...",
         "loadFailedWithError": "资金流向加载失败。请重启应用后重试。",
         "empty": "本月暂无资金流向数据。添加交易以查看资金动向。",
@@ -727,16 +710,14 @@
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "{{year}} 年资金流向",
+        "titleYear": "{{year}} 年",
         "empty": "本年暂无资金流向数据。添加交易以查看资金随时间的变动。"
       },
       "monthlyTrend": {
-        "title": "按月 {{label}}",
-        "description": "查看 {{label}} 在全年中的涨跌或平稳情况。"
+        "title": "按月 {{label}}"
       },
       "monthlyByCategory": {
         "title": "按分类 {{label}}",
-        "description": "对比各月 {{label}} 在分类间的分布情况。",
         "summaryTitle": "分类合计与平均值"
       }
     }
@@ -761,17 +742,14 @@
     },
     "cards": {
       "summary": {
-        "title": "对比摘要",
-        "description": "并排对比收入、支出和净现金流，查看哪个月变化更大。"
+        "title": "对比摘要"
       },
       "radar": {
         "title": "雷达对比",
-        "description": "查看哪些支出分类在两个月间增长、收缩或保持相近。",
         "empty": "无支出分类可用于雷达对比。"
       },
       "expensesByCategory": {
         "title": "按分类支出",
-        "description": "并排查看各分类，包括两个月之间的差额。",
         "empty": "所选月份无支出分类合计。"
       }
     }
@@ -811,7 +789,6 @@
   },
   "accounts": {
     "table": {
-      "description": "设置持有资金或负债的账户，使余额和转账保持有序。",
       "emptyMessage": "暂无账户。添加第一个账户以开始追踪余额和转账。",
       "actions": {
         "add": "添加账户",
@@ -857,7 +834,7 @@
     },
     "archivedDialog": {
       "title": "已归档账户",
-      "description": "查看已归档账户，并将其重新用于新记录。",
+      "description": "取消归档账户后，可再次用于新交易。",
       "emptyMessage": "没有已归档账户。",
       "actions": {
         "unarchive": "取消归档账户"
@@ -890,7 +867,6 @@
   },
   "categories": {
     "table": {
-      "description": "将交易整理到分类中，使报告、预算和对比保持有意义。",
       "emptyMessage": "暂无分类。添加第一个分类以整理支出和收入。",
       "actions": {
         "add": "添加分类",
@@ -935,7 +911,7 @@
     },
     "archivedDialog": {
       "title": "已归档分类",
-      "description": "查看已归档分类，并将其重新用于新记录。",
+      "description": "取消归档分类后，可再次用于新交易。",
       "emptyMessage": "没有已归档分类。",
       "actions": {
         "unarchive": "取消归档分类"
@@ -972,7 +948,6 @@
       "analysis": "预算分析"
     },
     "table": {
-      "description": "按分类设置支出目标，将计划与实际支出进行对比。",
       "emptyMessage": "暂无预算。添加第一个预算以开始追踪分类目标。",
       "unknownCategory": "未知分类",
       "actions": {
@@ -1058,7 +1033,7 @@
     },
     "transfers": {
       "table": {
-        "description": "追踪自有账户间的资金流动。转账改变资金位置，不影响支出合计。",
+        "description": "转账改变资金位置，不影响支出合计。",
         "emptyMessage": "暂无转账记录。在自有账户间转移资金时添加。",
         "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建转账。",
         "emptyNeedTwoAccountsMessage": "创建转账至少需要两个账户。添加另一个账户以继续。",
@@ -1372,7 +1347,6 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "规划定期交易和转账，使常规活动更易于追踪。",
       "emptyMessage": "暂无定期交易。添加一个以自动化重复交易或转账。",
       "emptyNoAccountsMessage": "暂无账户。添加第一个账户后再创建定期交易。",
       "actions": {
@@ -1563,8 +1537,7 @@
       "title": "账户详情"
     },
     "header": {
-      "totalValue": "账户总值",
-      "noDescription": "未提供描述。"
+      "totalValue": "账户总值"
     },
     "table": {
       "transactionsTitle": "账户交易",
@@ -1585,7 +1558,6 @@
       "title": "账户估值"
     },
     "table": {
-      "description": "此账户的估值快照历史记录。",
       "emptyMessage": "暂无估值快照。添加第一个快照以开始追踪。",
       "columns": {
         "date": "日期",
@@ -1608,7 +1580,6 @@
     },
     "chart": {
       "title": "价值随时间变化",
-      "description": "此账户已保存估值快照的趋势。",
       "seriesName": "价值"
     },
     "dialog": {

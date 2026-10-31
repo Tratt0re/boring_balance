@@ -183,13 +183,10 @@
       }
     },
     "general": {
-      "intro": "Ces préférences prennent effet immédiatement pour que l'application corresponde à votre façon de consulter vos finances.",
       "appearanceGroupTitle": "Apparence",
       "currencyGroupTitle": "Devise",
-      "currencyGroupDescription": "Choisir comment les montants s'affichent pour que les soldes, les rapports et les formulaires restent lisibles.",
       "cards": {
         "theme": {
-          "description": "Choisir l'apparence la plus adaptée à une utilisation quotidienne dans toute l'application.",
           "fieldLabel": "Mode d'affichage",
           "options": {
             "system": "Système",
@@ -198,7 +195,6 @@
           }
         },
         "language": {
-          "description": "Choisir la langue utilisée dans la navigation, les libellés et les messages de l'application.",
           "fieldLabel": "Langue de l'application"
         },
         "dashboardValuationMode": {
@@ -210,7 +206,6 @@
           }
         },
         "currency": {
-          "description": "Sélectionner le symbole à afficher à côté des soldes, transactions et rapports.",
           "fieldLabel": "Symbole monétaire",
           "customLabel": "Symbole personnalisé",
           "customPlaceholder": "CHF",
@@ -219,10 +214,8 @@
           }
         },
         "numberFormat": {
-          "description": "Choisir les séparateurs utilisés dans les montants pour que les saisies et rapports correspondent au format attendu.",
           "fieldLabel": "Format",
           "previewLabel": "Aperçu",
-          "previewDescription": "Prévisualiser le symbole et le format numérique actuels avant de continuer la saisie.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -280,7 +273,6 @@
       },
       "autoBackup": {
         "title": "Sauvegardes automatiques",
-        "description": "Choisir la fréquence d'enregistrement des copies de récupération et le nombre de copies anciennes à conserver.",
         "onQuit": "Effectuer une sauvegarde à la fermeture",
         "intervalMin": "Sauvegarder automatiquement",
         "retentionCount": "Sauvegardes à conserver",
@@ -292,8 +284,7 @@
         }
       },
       "manual": {
-        "title": "Sauvegarde manuelle et statut",
-        "description": "Créer une sauvegarde maintenant et consulter le dernier résultat en un seul endroit."
+        "title": "Sauvegarde manuelle et statut"
       },
       "actions": {
         "chooseFolder": "Choisir un dossier",
@@ -316,7 +307,6 @@
       },
       "list": {
         "title": "Sauvegardes disponibles",
-        "description": "Consulter les sauvegardes enregistrées, puis restaurer ou supprimer celles dont vous n'avez plus besoin.",
         "loading": "Actualisation de la liste des sauvegardes...",
         "empty": "Aucune sauvegarde pour l'instant. Lancez une sauvegarde pour créer votre premier point de restauration.",
         "columns": {
@@ -376,7 +366,6 @@
       "disabledInfo": "Activer la synchronisation pour choisir un dossier partagé et connecter cet appareil.",
       "autoSync": {
         "title": "Synchronisation automatique",
-        "description": "Définir la fréquence à laquelle l'application vérifie les données plus récentes et partage les dernières modifications.",
         "autoPullIntervalMin": "Récupérer les mises à jour automatiquement",
         "autoPushIntervalMin": "Envoyer les modifications automatiquement",
         "autoPushOnQuit": "Envoyer les modifications à la fermeture",
@@ -392,7 +381,6 @@
       },
       "manual": {
         "title": "Synchronisation manuelle",
-        "description": "Utiliser ces actions pour vérifier ou partager des modifications immédiatement.",
         "tooltips": {
           "syncNow": "Vérifie d'abord si des données partagées plus récentes sont disponibles, puis partage les mises à jour de cet appareil, le cas échéant.",
           "pullNow": "Récupère les données partagées plus récentes sans envoyer les modifications de cet appareil.",
@@ -411,7 +399,6 @@
       },
       "status": {
         "title": "Statut",
-        "description": "Vérifier l'état actuel de la synchronisation et voir quand cet appareil a récupéré des mises à jour ou envoyé des modifications pour la dernière fois.",
         "rows": {
           "current": "Statut actuel",
           "lastPull": "Dernières mises à jour récupérées",
@@ -484,12 +471,10 @@
       },
       "export": {
         "title": "Export",
-        "description": "Enregistrer une copie Excel propre de votre activité et de votre configuration pour la consulter, la partager ou la conserver.",
         "lastExportLabel": "Dernier export"
       },
       "import": {
         "title": "Importer depuis le modèle Excel",
-        "description": "Partir du modèle officiel, tout vérifier d'abord, et importer uniquement lorsque le fichier est prêt.",
         "warning": "Les imports sont validés en premier. En cas d'erreurs, rien n'est importé.",
         "selectedFileLabel": "Fichier sélectionné",
         "template": {
@@ -501,8 +486,7 @@
           }
         },
         "actions": {
-          "title": "Importer un fichier de données",
-          "description": "Sélectionner le classeur complété, vérifier les problèmes détectés et importer uniquement lorsque tout est correct."
+          "title": "Importer un fichier de données"
         },
         "validation": {
           "previewTitle": "Aperçu de la validation",
@@ -688,7 +672,6 @@
       },
       "moneyFlowSankey": {
         "title": "Flux d'argent",
-        "description": "{{month}} en un coup d'œil : voir d'où vient l'argent, où il va et ce qui reste.",
         "loading": "Chargement du flux d'argent...",
         "loadFailedWithError": "Échec du chargement du flux d'argent. Redémarrez l'application et réessayez.",
         "empty": "Aucun flux d'argent ce mois-ci. Ajoutez des transactions pour voir les mouvements.",
@@ -730,16 +713,14 @@
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Flux d'argent de l'année : {{year}}",
+        "titleYear": "Année {{year}}",
         "empty": "Aucun flux d'argent cette année. Ajoutez des transactions pour voir les mouvements dans le temps."
       },
       "monthlyTrend": {
-        "title": "{{label}} par mois",
-        "description": "Voir quand {{label}} augmente, diminue ou reste stable au cours de l'année."
+        "title": "{{label}} par mois"
       },
       "monthlyByCategory": {
         "title": "{{label}} par catégorie",
-        "description": "Comparer comment le {{label}} de chaque mois se répartit entre les catégories.",
         "summaryTitle": "Totaux et moyennes par catégorie"
       }
     }
@@ -764,17 +745,14 @@
     },
     "cards": {
       "summary": {
-        "title": "Résumé de la comparaison",
-        "description": "Comparer les revenus, dépenses et flux de trésorerie net côte à côte pour voir quel mois a le plus évolué."
+        "title": "Résumé de la comparaison"
       },
       "radar": {
         "title": "Comparaison radar",
-        "description": "Voir quelles catégories de dépenses ont augmenté, diminué ou sont restées similaires entre les deux mois.",
         "empty": "Aucune catégorie de dépenses disponible pour la comparaison radar."
       },
       "expensesByCategory": {
         "title": "Dépenses par catégorie",
-        "description": "Examiner chaque catégorie côte à côte, y compris la différence entre les deux mois.",
         "empty": "Aucun total de catégorie de dépenses pour les mois sélectionnés."
       }
     }
@@ -814,7 +792,6 @@
   },
   "accounts": {
     "table": {
-      "description": "Configurer les comptes qui détiennent votre argent ou vos dettes pour que les soldes et virements restent organisés.",
       "emptyMessage": "Aucun compte. Ajoutez votre premier compte pour commencer à suivre les soldes et les virements.",
       "actions": {
         "add": "Ajouter un compte",
@@ -860,7 +837,7 @@
     },
     "archivedDialog": {
       "title": "Comptes archivés",
-      "description": "Consulter les comptes archivés et les rendre à nouveau disponibles pour les nouvelles saisies.",
+      "description": "Désarchivez un compte pour l'utiliser à nouveau dans de nouvelles transactions.",
       "emptyMessage": "Il n'y a aucun compte archivé.",
       "actions": {
         "unarchive": "Désarchiver le compte"
@@ -893,7 +870,6 @@
   },
   "categories": {
     "table": {
-      "description": "Organiser les transactions en catégories pour que les rapports, budgets et comparaisons restent pertinents.",
       "emptyMessage": "Aucune catégorie. Ajoutez votre première catégorie pour organiser les dépenses et revenus.",
       "actions": {
         "add": "Ajouter une catégorie",
@@ -938,7 +914,7 @@
     },
     "archivedDialog": {
       "title": "Catégories archivées",
-      "description": "Consulter les catégories archivées et les rendre à nouveau disponibles pour les nouvelles saisies.",
+      "description": "Désarchivez une catégorie pour l'utiliser à nouveau dans de nouvelles transactions.",
       "emptyMessage": "Il n'y a aucune catégorie archivée.",
       "actions": {
         "unarchive": "Désarchiver la catégorie"
@@ -975,7 +951,6 @@
       "analysis": "Analyse budgétaire"
     },
     "table": {
-      "description": "Définir des objectifs de dépenses par catégorie pour comparer le plan aux dépenses réelles.",
       "emptyMessage": "Aucun budget. Ajoutez votre premier budget pour commencer à suivre les objectifs par catégorie.",
       "unknownCategory": "Catégorie inconnue",
       "actions": {
@@ -1061,7 +1036,7 @@
     },
     "transfers": {
       "table": {
-        "description": "Suivre les mouvements d'argent entre vos propres comptes. Les virements changent l'emplacement de l'argent, pas les totaux de dépenses.",
+        "description": "Les virements changent l'emplacement de l'argent, pas les totaux de dépenses.",
         "emptyMessage": "Aucun virement. Ajoutez-en un lorsque vous déplacez de l'argent entre vos comptes.",
         "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant de créer des virements.",
         "emptyNeedTwoAccountsMessage": "Au moins deux comptes sont nécessaires pour créer des virements. Ajoutez un autre compte pour continuer.",
@@ -1375,7 +1350,6 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Planifier des transactions et des virements récurrents pour faciliter le suivi des activités routinières.",
       "emptyMessage": "Aucune transaction récurrente. Ajoutez-en une pour automatiser les transactions ou virements répétés.",
       "emptyNoAccountsMessage": "Aucun compte. Ajoutez votre premier compte avant de créer des transactions récurrentes.",
       "actions": {
@@ -1571,8 +1545,7 @@
       "title": "Détails du compte"
     },
     "header": {
-      "totalValue": "Valeur totale du compte",
-      "noDescription": "Aucune description fournie."
+      "totalValue": "Valeur totale du compte"
     },
     "table": {
       "transactionsTitle": "Transactions du compte",
@@ -1593,7 +1566,6 @@
       "title": "Valorisations du compte"
     },
     "table": {
-      "description": "Historique des instantanés de valorisation pour ce compte.",
       "emptyMessage": "Aucun instantané de valorisation. Ajoutez votre premier instantané pour commencer le suivi.",
       "columns": {
         "date": "Date",
@@ -1616,7 +1588,6 @@
     },
     "chart": {
       "title": "Valeur dans le temps",
-      "description": "Tendance des instantanés de valorisation enregistrés pour ce compte.",
       "seriesName": "Valeur"
     },
     "dialog": {

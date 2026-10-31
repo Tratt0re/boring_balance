@@ -183,13 +183,10 @@
       }
     },
     "general": {
-      "intro": "Diese Einstellungen werden sofort übernommen, damit die App zur Ansicht und Überprüfung der Finanzen passt.",
       "appearanceGroupTitle": "Darstellung",
       "currencyGroupTitle": "Währung",
-      "currencyGroupDescription": "Festlegen, wie Geldwerte angezeigt werden, damit Salden, Berichte und Formulare leicht lesbar bleiben.",
       "cards": {
         "theme": {
-          "description": "Das Erscheinungsbild auswählen, das sich für den täglichen Einsatz am besten eignet.",
           "fieldLabel": "Designmodus",
           "options": {
             "system": "System",
@@ -198,7 +195,6 @@
           }
         },
         "language": {
-          "description": "Sprache für Navigation, Beschriftungen und Meldungen in der gesamten App auswählen.",
           "fieldLabel": "App-Sprache"
         },
         "dashboardValuationMode": {
@@ -210,7 +206,6 @@
           }
         },
         "currency": {
-          "description": "Das Symbol auswählen, das neben Salden, Transaktionen und Berichten angezeigt werden soll.",
           "fieldLabel": "Währungssymbol",
           "customLabel": "Benutzerdefiniertes Symbol",
           "customPlaceholder": "CHF",
@@ -219,10 +214,8 @@
           }
         },
         "numberFormat": {
-          "description": "Trennzeichen für Beträge auswählen, damit Einträge und Berichte dem gewohnten Format entsprechen.",
           "fieldLabel": "Format",
           "previewLabel": "Vorschau",
-          "previewDescription": "Das aktuelle Symbol und den Zahlenstil in der Vorschau ansehen, bevor weitere Daten eingegeben werden.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -280,7 +273,6 @@
       },
       "autoBackup": {
         "title": "Automatische Sicherungen",
-        "description": "Festlegen, wie oft die App Wiederherstellungskopien speichert und wie viele ältere Kopien aufbewahrt werden sollen.",
         "onQuit": "Sicherung beim Beenden der App ausführen",
         "intervalMin": "Automatisch sichern",
         "retentionCount": "Aufzubewahrende Sicherungen",
@@ -292,8 +284,7 @@
         }
       },
       "manual": {
-        "title": "Manuelle Sicherung und Status",
-        "description": "Jetzt eine Sicherung erstellen und das neueste Sicherungsergebnis an einem Ort einsehen."
+        "title": "Manuelle Sicherung und Status"
       },
       "actions": {
         "chooseFolder": "Ordner auswählen",
@@ -316,7 +307,6 @@
       },
       "list": {
         "title": "Verfügbare Sicherungen",
-        "description": "Gespeicherte Sicherungen prüfen, dann nicht mehr benötigte wiederherstellen oder entfernen.",
         "loading": "Sicherungsliste wird aktualisiert...",
         "empty": "Noch keine Sicherungen vorhanden. Eine Sicherung ausführen, um den ersten Wiederherstellungspunkt zu erstellen.",
         "columns": {
@@ -376,7 +366,6 @@
       "disabledInfo": "Synchronisierung aktivieren, um einen gemeinsamen Ordner auszuwählen und dieses Gerät zu verbinden.",
       "autoSync": {
         "title": "Automatische Synchronisierung",
-        "description": "Festlegen, wie oft die App nach neueren Daten sucht und wie oft sie die neuesten Änderungen teilt.",
         "autoPullIntervalMin": "Updates automatisch holen",
         "autoPushIntervalMin": "Änderungen automatisch senden",
         "autoPushOnQuit": "Änderungen beim Beenden der App senden",
@@ -392,7 +381,6 @@
       },
       "manual": {
         "title": "Manuelle Synchronisierung",
-        "description": "Diese Aktionen verwenden, wenn Änderungen sofort geprüft oder geteilt werden sollen.",
         "tooltips": {
           "syncNow": "Prüft zuerst, ob neuere gemeinsame Daten verfügbar sind, und überträgt anschließend die Aktualisierungen dieses Geräts, falls vorhanden.",
           "pullNow": "Ruft neuere gemeinsame Daten ab, ohne die Änderungen dieses Geräts zu senden.",
@@ -411,7 +399,6 @@
       },
       "status": {
         "title": "Status",
-        "description": "Aktuellen Synchronisierungsstatus prüfen und sehen, wann dieses Gerät zuletzt Updates geholt oder Änderungen gesendet hat.",
         "rows": {
           "current": "Aktueller Status",
           "lastPull": "Letzte Updates geholt",
@@ -484,12 +471,10 @@
       },
       "export": {
         "title": "Export",
-        "description": "Eine saubere Excel-Kopie der Aktivitäten und Einstellungen speichern, um sie zu überprüfen, zu teilen oder für später aufzubewahren.",
         "lastExportLabel": "Letzter Export"
       },
       "import": {
         "title": "Aus Excel-Vorlage importieren",
-        "description": "Mit der offiziellen Vorlage beginnen, alles zuerst prüfen und nur importieren, wenn die Datei bereit ist.",
         "warning": "Importe werden zuerst validiert. Wenn Fehler vorhanden sind, wird nichts importiert.",
         "selectedFileLabel": "Ausgewählte Datei",
         "template": {
@@ -501,8 +486,7 @@
           }
         },
         "actions": {
-          "title": "Datendatei importieren",
-          "description": "Die ausgefüllte Arbeitsmappe auswählen, gefundene Probleme prüfen und nur importieren, wenn alles korrekt aussieht."
+          "title": "Datendatei importieren"
         },
         "validation": {
           "previewTitle": "Validierungsvorschau",
@@ -688,7 +672,6 @@
       },
       "moneyFlowSankey": {
         "title": "Geldfluss",
-        "description": "{{month}} auf einen Blick: sehen, woher Geld kam, wohin es ging und was verblieb.",
         "loading": "Geldfluss wird geladen...",
         "loadFailedWithError": "Geldfluss konnte nicht geladen werden. App neu starten und erneut versuchen.",
         "empty": "Noch kein Geldfluss für diesen Monat. Transaktionen hinzufügen, um Geldbewegungen zu sehen.",
@@ -730,16 +713,14 @@
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Geldfluss des Jahres: {{year}}",
+        "titleYear": "Jahr {{year}}",
         "empty": "Noch kein Geldfluss für dieses Jahr. Transaktionen hinzufügen, um Geldbewegungen über die Zeit zu sehen."
       },
       "monthlyTrend": {
-        "title": "{{label}} nach Monat",
-        "description": "Sehen, wann {{label}} im Jahresverlauf steigt, fällt oder stabil bleibt."
+        "title": "{{label}} nach Monat"
       },
       "monthlyByCategory": {
         "title": "{{label}} nach Kategorie",
-        "description": "Vergleichen, wie der {{label}} jedes Monats auf Kategorien aufgeteilt ist.",
         "summaryTitle": "Kategoriesummen und Durchschnitte"
       }
     }
@@ -764,17 +745,14 @@
     },
     "cards": {
       "summary": {
-        "title": "Vergleichszusammenfassung",
-        "description": "Einnahmen, Ausgaben und Nettocashflow nebeneinander vergleichen, um zu sehen, in welchem Monat sich mehr verändert hat."
+        "title": "Vergleichszusammenfassung"
       },
       "radar": {
         "title": "Radar-Vergleich",
-        "description": "Sehen, welche Ausgabenkategorien in den zwei Monaten gewachsen, geschrumpft oder ähnlich geblieben sind.",
         "empty": "Keine Ausgabenkategorien für den Radar-Vergleich verfügbar."
       },
       "expensesByCategory": {
         "title": "Ausgaben nach Kategorie",
-        "description": "Jede Kategorie nebeneinander prüfen, einschließlich der Differenz zwischen den zwei Monaten.",
         "empty": "Keine Ausgabenkategorie-Summen für die ausgewählten Monate."
       }
     }
@@ -814,7 +792,6 @@
   },
   "accounts": {
     "table": {
-      "description": "Konten einrichten, die Geld oder Schulden halten, damit Salden und Überträge übersichtlich bleiben.",
       "emptyMessage": "Noch keine Konten. Das erste Konto hinzufügen, um Salden und Überträge zu verfolgen.",
       "actions": {
         "add": "Konto hinzufügen",
@@ -860,7 +837,7 @@
     },
     "archivedDialog": {
       "title": "Archivierte Konten",
-      "description": "Archivierte Konten anzeigen und wieder für neue Einträge verfügbar machen.",
+      "description": "Ein Konto wieder aktivieren, um es in neuen Transaktionen zu verwenden.",
       "emptyMessage": "Es gibt keine archivierten Konten.",
       "actions": {
         "unarchive": "Konto wiederherstellen"
@@ -893,7 +870,6 @@
   },
   "categories": {
     "table": {
-      "description": "Transaktionen in Kategorien organisieren, damit Berichte, Budgets und Vergleiche aussagekräftig bleiben.",
       "emptyMessage": "Noch keine Kategorien. Die erste Kategorie hinzufügen, um Ausgaben und Einnahmen zu ordnen.",
       "actions": {
         "add": "Kategorie hinzufügen",
@@ -938,7 +914,7 @@
     },
     "archivedDialog": {
       "title": "Archivierte Kategorien",
-      "description": "Archivierte Kategorien anzeigen und wieder für neue Einträge verfügbar machen.",
+      "description": "Eine Kategorie wieder aktivieren, um sie in neuen Transaktionen zu verwenden.",
       "emptyMessage": "Es gibt keine archivierten Kategorien.",
       "actions": {
         "unarchive": "Kategorie wiederherstellen"
@@ -975,7 +951,6 @@
       "analysis": "Budgetanalyse"
     },
     "table": {
-      "description": "Ausgabenziele nach Kategorie festlegen, um den Plan mit den tatsächlichen Ausgaben zu vergleichen.",
       "emptyMessage": "Noch keine Budgets. Das erste Budget hinzufügen, um Kategorieziele zu verfolgen.",
       "unknownCategory": "Unbekannte Kategorie",
       "actions": {
@@ -1061,7 +1036,7 @@
     },
     "transfers": {
       "table": {
-        "description": "Geldbewegungen zwischen eigenen Konten verfolgen. Überträge ändern, wo Geld liegt, nicht die Ausgabensummen.",
+        "description": "Überträge ändern, wo Geld liegt, nicht die Ausgabensummen.",
         "emptyMessage": "Noch keine Überträge. Einen hinzufügen, wenn Geld zwischen eigenen Konten bewegt wird.",
         "emptyNoAccountsMessage": "Noch keine Konten. Das erste Konto hinzufügen, bevor Überträge erstellt werden.",
         "emptyNeedTwoAccountsMessage": "Mindestens zwei Konten werden für Überträge benötigt. Ein weiteres Konto hinzufügen, um fortzufahren.",
@@ -1375,7 +1350,6 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Wiederkehrende Transaktionen und Überträge planen, damit routinemäßige Aktivitäten leichter nachverfolgt werden können.",
       "emptyMessage": "Noch keine wiederkehrenden Transaktionen. Eine hinzufügen, um wiederholte Transaktionen oder Überträge zu automatisieren.",
       "emptyNoAccountsMessage": "Noch keine Konten. Das erste Konto hinzufügen, bevor wiederkehrende Transaktionen erstellt werden.",
       "actions": {
@@ -1571,8 +1545,7 @@
       "title": "Kontodetails"
     },
     "header": {
-      "totalValue": "Gesamtkontowert",
-      "noDescription": "Keine Beschreibung vorhanden."
+      "totalValue": "Gesamtkontowert"
     },
     "table": {
       "transactionsTitle": "Kontotransaktionen",
@@ -1593,7 +1566,6 @@
       "title": "Kontobewertungen"
     },
     "table": {
-      "description": "Verlauf der Bewertungsmomentaufnahmen für dieses Konto.",
       "emptyMessage": "Noch keine Bewertungsmomentaufnahmen. Die erste Momentaufnahme hinzufügen, um mit der Verfolgung zu beginnen.",
       "columns": {
         "date": "Datum",
@@ -1616,7 +1588,6 @@
     },
     "chart": {
       "title": "Wert über die Zeit",
-      "description": "Trend der gespeicherten Bewertungsmomentaufnahmen für dieses Konto.",
       "seriesName": "Wert"
     },
     "dialog": {

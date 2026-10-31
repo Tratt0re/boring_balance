@@ -278,21 +278,9 @@ export class CategoryBreakdownSectionComponent implements OnInit, OnChanges {
     });
   }
 
-  protected monthlyTrendCardDescription(): string {
-    return this.translate('breakdown.cards.monthlyTrend.description', {
-      label: this.translate(this.sectionLabelKey()).toLowerCase(),
-    });
-  }
-
   protected monthlyByCategoryCardTitle(): string {
     return this.translate('breakdown.cards.monthlyByCategory.title', {
       label: this.translate(this.sectionLabelKey()),
-    });
-  }
-
-  protected monthlyByCategoryCardDescription(): string {
-    return this.translate('breakdown.cards.monthlyByCategory.description', {
-      label: this.translate(this.sectionLabelKey()).toLowerCase(),
     });
   }
 

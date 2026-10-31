@@ -183,13 +183,10 @@
       }
     },
     "general": {
-      "intro": "These preferences update right away so the app matches how you read and review your finances.",
       "appearanceGroupTitle": "Appearance",
       "currencyGroupTitle": "Currency",
-      "currencyGroupDescription": "Choose how money values appear so balances, reports, and forms stay easy to scan.",
       "cards": {
         "theme": {
-          "description": "Pick the appearance that feels best for everyday use across the whole app.",
           "fieldLabel": "Theme mode",
           "options": {
             "system": "System",
@@ -198,7 +195,6 @@
           }
         },
         "language": {
-          "description": "Choose the language used in navigation, labels, and messages throughout the app.",
           "fieldLabel": "App language"
         },
         "dashboardValuationMode": {
@@ -210,7 +206,6 @@
           }
         },
         "currency": {
-          "description": "Select the symbol you want to see next to balances, transactions, and reports.",
           "fieldLabel": "Currency symbol",
           "customLabel": "Custom symbol",
           "customPlaceholder": "CHF",
@@ -219,10 +214,8 @@
           }
         },
         "numberFormat": {
-          "description": "Choose the separators used in amounts so entries and reports match what you expect.",
           "fieldLabel": "Format",
           "previewLabel": "Preview",
-          "previewDescription": "Preview the current symbol and number style before you keep entering data.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -280,7 +273,6 @@
       },
       "autoBackup": {
         "title": "Automatic backups",
-        "description": "Choose how often the app saves recovery copies and how many older copies it should keep.",
         "onQuit": "Run backup on app quit",
         "intervalMin": "Back up automatically",
         "retentionCount": "Backups to keep",
@@ -292,8 +284,7 @@
         }
       },
       "manual": {
-        "title": "Manual backup and status",
-        "description": "Create a backup now and review the latest backup result in one place."
+        "title": "Manual backup and status"
       },
       "actions": {
         "chooseFolder": "Choose folder",
@@ -316,7 +307,6 @@
       },
       "list": {
         "title": "Available backups",
-        "description": "Review saved backups, then restore or remove the ones you no longer need.",
         "loading": "Refreshing backups list...",
         "empty": "No backups here yet. Run a backup to create your first restore point.",
         "columns": {
@@ -376,7 +366,6 @@
       "disabledInfo": "Turn on sync to choose a shared folder and connect this device.",
       "autoSync": {
         "title": "Automatic sync",
-        "description": "Set how often the app checks for newer data and how often it shares your latest changes.",
         "autoPullIntervalMin": "Get updates automatically",
         "autoPushIntervalMin": "Send changes automatically",
         "autoPushOnQuit": "Send changes when the app closes",
@@ -392,7 +381,6 @@
       },
       "manual": {
         "title": "Manual sync",
-        "description": "Use these actions when you want to check or share changes immediately.",
         "tooltips": {
           "syncNow": "Checks for newer shared data first, then shares this device's updates, if any.",
           "pullNow": "Brings in newer shared data without sending this device's changes.",
@@ -411,7 +399,6 @@
       },
       "status": {
         "title": "Status",
-        "description": "Check the current sync state and see when this device last got updates or sent changes.",
         "rows": {
           "current": "Current status",
           "lastPull": "Last update received",
@@ -484,12 +471,10 @@
       },
       "export": {
         "title": "Export",
-        "description": "Save a clean Excel copy of your activity and setup so you can review it, share it, or keep it for later.",
         "lastExportLabel": "Last export"
       },
       "import": {
         "title": "Import from Excel template",
-        "description": "Start with the official template, review everything first, and import only when the file is ready.",
         "warning": "Imports are validated first. If errors exist, nothing is imported.",
         "selectedFileLabel": "Selected file",
         "template": {
@@ -501,8 +486,7 @@
           }
         },
         "actions": {
-          "title": "Import data file",
-          "description": "Pick the completed workbook, check any issues the app finds, and import only when everything looks right."
+          "title": "Import data file"
         },
         "validation": {
           "previewTitle": "Validation preview",
@@ -688,7 +672,6 @@
       },
       "moneyFlowSankey": {
         "title": "Money flow",
-        "description": "{{month}} at a glance: see where money came from, where it went, and what remained.",
         "loading": "Loading money flow...",
         "loadFailedWithError": "Couldn't load money flow. Restart the app and try again.",
         "empty": "No money flow for this month yet. Add transactions to see where money moved.",
@@ -730,16 +713,14 @@
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Money flow of the year: {{year}}",
+        "titleYear": "Year {{year}}",
         "empty": "No money flow for this year yet. Add transactions to see how money moved over time."
       },
       "monthlyTrend": {
-        "title": "{{label}} by month",
-        "description": "See when {{label}} rises, dips, or stays steady across the year."
+        "title": "{{label}} by month"
       },
       "monthlyByCategory": {
         "title": "{{label}} by category",
-        "description": "Compare how each month's {{label}} is split across categories.",
         "summaryTitle": "Category totals and averages"
       }
     }
@@ -764,17 +745,14 @@
     },
     "cards": {
       "summary": {
-        "title": "Comparison summary",
-        "description": "Compare income, expenses, and net cash flow side by side to see which month changed more."
+        "title": "Comparison summary"
       },
       "radar": {
         "title": "Radar comparison",
-        "description": "See which expense categories grew, shrank, or stayed similar across the two months.",
         "empty": "No expense categories available for radar comparison."
       },
       "expensesByCategory": {
         "title": "Expenses by category",
-        "description": "Review each category side by side, including the difference between the two months.",
         "empty": "No expense category totals for the selected months."
       }
     }
@@ -814,7 +792,6 @@
   },
   "accounts": {
     "table": {
-      "description": "Set up the accounts that hold your money or debt so balances and transfers stay organized.",
       "emptyMessage": "No accounts yet. Add your first account to start tracking balances and transfers.",
       "actions": {
         "add": "Add account",
@@ -860,7 +837,7 @@
     },
     "archivedDialog": {
       "title": "Archived accounts",
-      "description": "Review archived accounts and make them available for new entries again.",
+      "description": "Unarchive an account to use it in new transactions again.",
       "emptyMessage": "There are no archived accounts.",
       "actions": {
         "unarchive": "Unarchive account"
@@ -893,7 +870,6 @@
   },
   "categories": {
     "table": {
-      "description": "Organize transactions into categories so reports, budgets, and comparisons stay meaningful.",
       "emptyMessage": "No categories yet. Add your first category to organize spending and income.",
       "actions": {
         "add": "Add category",
@@ -938,7 +914,7 @@
     },
     "archivedDialog": {
       "title": "Archived categories",
-      "description": "Review archived categories and make them available for new entries again.",
+      "description": "Unarchive a category to use it in new transactions again.",
       "emptyMessage": "There are no archived categories.",
       "actions": {
         "unarchive": "Unarchive category"
@@ -975,7 +951,6 @@
       "analysis": "Budget analysis"
     },
     "table": {
-      "description": "Set spending targets by category so you can compare your plan against real spending.",
       "emptyMessage": "No budgets yet. Add your first budget to start tracking category targets.",
       "unknownCategory": "Unknown category",
       "actions": {
@@ -1061,7 +1036,7 @@
     },
     "transfers": {
       "table": {
-        "description": "Track money moved between your own accounts. Transfers change where money sits, not your spending totals.",
+        "description": "Transfers change where money sits, not your spending totals.",
         "emptyMessage": "No transfers yet. Add one when you move money between your own accounts.",
         "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating transfers.",
         "emptyNeedTwoAccountsMessage": "You need at least two accounts before creating transfers. Add another account to continue.",
@@ -1375,7 +1350,6 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Plan repeating transactions and transfers so routine activity stays easier to keep up with.",
       "emptyMessage": "No recurring transactions yet. Add one to automate repeated transactions or transfers.",
       "emptyNoAccountsMessage": "No accounts yet. Add your first account before creating recurring transactions.",
       "actions": {
@@ -1571,8 +1545,7 @@
       "title": "Account details"
     },
     "header": {
-      "totalValue": "Total account value",
-      "noDescription": "No description provided."
+      "totalValue": "Total account value"
     },
     "table": {
       "transactionsTitle": "Account transactions",
@@ -1593,7 +1566,6 @@
       "title": "Account valuations"
     },
     "table": {
-      "description": "History of valuation snapshots for this account.",
       "emptyMessage": "No valuation snapshots yet. Add your first snapshot to start tracking.",
       "columns": {
         "date": "Date",
@@ -1616,7 +1588,6 @@
     },
     "chart": {
       "title": "Value over time",
-      "description": "Trend of saved valuation snapshots for this account.",
       "seriesName": "Value"
     },
     "dialog": {

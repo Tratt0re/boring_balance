@@ -183,13 +183,10 @@
       }
     },
     "general": {
-      "intro": "Queste preferenze si applicano subito, così l'app si adatta a come leggi e controlli le tue finanze.",
       "appearanceGroupTitle": "Aspetto",
       "currencyGroupTitle": "Valuta",
-      "currencyGroupDescription": "Scegli come visualizzare gli importi, così saldi, report e moduli restano facili da leggere.",
       "cards": {
         "theme": {
-          "description": "Scegli l'aspetto più comodo per usare l'app tutti i giorni.",
           "fieldLabel": "Modalità tema",
           "options": {
             "system": "Sistema",
@@ -198,7 +195,6 @@
           }
         },
         "language": {
-          "description": "Scegli la lingua usata in navigazione, etichette e messaggi in tutta l'app.",
           "fieldLabel": "Lingua app"
         },
         "dashboardValuationMode": {
@@ -210,7 +206,6 @@
           }
         },
         "currency": {
-          "description": "Seleziona il simbolo che vuoi vedere accanto a saldi, movimenti e report.",
           "fieldLabel": "Simbolo di valuta",
           "customLabel": "Simbolo personalizzato",
           "customPlaceholder": "CHF",
@@ -219,10 +214,8 @@
           }
         },
         "numberFormat": {
-          "description": "Scegli i separatori degli importi così inserimenti e report appaiono come ti aspetti.",
           "fieldLabel": "Formato",
           "previewLabel": "Anteprima",
-          "previewDescription": "Controlla simbolo e formato correnti prima di continuare a inserire dati.",
           "options": {
             "US": "1,234,567.89",
             "EU_DOT": "1.234.567,89",
@@ -280,7 +273,6 @@
       },
       "autoBackup": {
         "title": "Backup automatici",
-        "description": "Scegli ogni quanto l'app salva copie di recupero e quante versioni precedenti deve tenere.",
         "onQuit": "Esegui backup alla chiusura",
         "intervalMin": "Esegui backup automatico",
         "retentionCount": "Backup da mantenere",
@@ -292,8 +284,7 @@
         }
       },
       "manual": {
-        "title": "Backup manuale e stato",
-        "description": "Crea subito un backup e controlla qui l'ultimo risultato."
+        "title": "Backup manuale e stato"
       },
       "actions": {
         "chooseFolder": "Scegli cartella",
@@ -316,7 +307,6 @@
       },
       "list": {
         "title": "Backup disponibili",
-        "description": "Controlla i backup salvati e ripristina o elimina quelli che non ti servono più.",
         "loading": "Aggiornamento elenco backup...",
         "empty": "Qui non ci sono ancora backup. Eseguine uno per creare il primo punto di ripristino.",
         "columns": {
@@ -376,7 +366,6 @@
       "disabledInfo": "Attiva la sincronizzazione per scegliere una cartella condivisa e collegare questo dispositivo.",
       "autoSync": {
         "title": "Sync automatico",
-        "description": "Scegli ogni quanto l'app controlla dati più nuovi e ogni quanto condivide le tue modifiche recenti.",
         "autoPullIntervalMin": "Ricevi aggiornamenti automaticamente",
         "autoPushIntervalMin": "Invia modifiche automaticamente",
         "autoPushOnQuit": "Invia le modifiche alla chiusura dell'app",
@@ -392,7 +381,6 @@
       },
       "manual": {
         "title": "Sync manuale",
-        "description": "Usa queste azioni quando vuoi controllare o condividere subito le modifiche.",
         "tooltips": {
           "syncNow": "Controlla prima se sono disponibili dati condivisi più recenti, quindi condivide gli aggiornamenti di questo dispositivo, se presenti.",
           "pullNow": "Porta su questo dispositivo dati condivisi più nuovi senza inviare le modifiche locali.",
@@ -411,7 +399,6 @@
       },
       "status": {
         "title": "Stato",
-        "description": "Controlla lo stato attuale della sincronizzazione e quando questo dispositivo ha ricevuto aggiornamenti o inviato modifiche per l'ultima volta.",
         "rows": {
           "current": "Stato attuale",
           "lastPull": "Ultimo aggiornamento ricevuto",
@@ -484,12 +471,10 @@
       },
       "export": {
         "title": "Export",
-        "description": "Salva una copia Excel chiara delle tue attività e impostazioni per controllarla, condividerla o conservarla.",
         "lastExportLabel": "Ultimo export"
       },
       "import": {
         "title": "Import da template Excel",
-        "description": "Parti dal template ufficiale, controlla tutto prima e importa solo quando il file è pronto.",
         "warning": "L'import viene prima validato. Se ci sono errori, non viene importato nulla.",
         "selectedFileLabel": "File selezionato",
         "template": {
@@ -501,8 +486,7 @@
           }
         },
         "actions": {
-          "title": "Importa file dati",
-          "description": "Scegli il file compilato, controlla gli eventuali problemi segnalati dall'app e importa solo quando è tutto a posto."
+          "title": "Importa file dati"
         },
         "validation": {
           "previewTitle": "Anteprima validazione",
@@ -688,7 +672,6 @@
       },
       "moneyFlowSankey": {
         "title": "Flusso di denaro",
-        "description": "{{month}} in sintesi: guarda da dove è arrivato il denaro, dove è andato e cosa è rimasto.",
         "loading": "Caricamento flusso di denaro...",
         "loadFailedWithError": "Caricamento flusso di denaro non riuscito. Riavvia l'app e riprova.",
         "empty": "Non c'è ancora flusso di denaro per questo mese. Aggiungi movimenti per vedere come si è spostato il denaro.",
@@ -730,16 +713,14 @@
     },
     "cards": {
       "moneyFlow": {
-        "titleYear": "Flusso di denaro dell'anno: {{year}}",
+        "titleYear": "Anno {{year}}",
         "empty": "Non c'è ancora flusso di denaro per quest'anno. Aggiungi movimenti per vedere come si è mosso nel tempo."
       },
       "monthlyTrend": {
-        "title": "{{label}} per mese",
-        "description": "Vedi quando {{label}} sale, scende o resta stabile durante l'anno."
+        "title": "{{label}} per mese"
       },
       "monthlyByCategory": {
         "title": "{{label}} per categoria",
-        "description": "Confronta come {{label}} si distribuisce ogni mese tra le categorie.",
         "summaryTitle": "Totali e medie per categoria"
       }
     }
@@ -764,17 +745,14 @@
     },
     "cards": {
       "summary": {
-        "title": "Riepilogo confronto",
-        "description": "Confronta entrate, spese e flusso di cassa netto fianco a fianco per capire quale mese è cambiato di più."
+        "title": "Riepilogo confronto"
       },
       "radar": {
         "title": "Confronto radar",
-        "description": "Vedi quali categorie di spesa sono cresciute, scese o rimaste simili tra i due mesi.",
         "empty": "Nessuna categoria di spesa disponibile per il confronto radar."
       },
       "expensesByCategory": {
         "title": "Spese per categoria",
-        "description": "Controlla ogni categoria fianco a fianco, compresa la differenza tra i due mesi.",
         "empty": "Non ci sono totali di spesa per categoria per i mesi selezionati."
       }
     }
@@ -814,7 +792,6 @@
   },
   "accounts": {
     "table": {
-      "description": "Configura i conti che custodiscono denaro o debiti, così saldi e trasferimenti restano ordinati.",
       "emptyMessage": "Non ci sono ancora conti. Aggiungi il primo per iniziare a seguire saldi e trasferimenti.",
       "actions": {
         "add": "Aggiungi conto",
@@ -860,7 +837,7 @@
     },
     "archivedDialog": {
       "title": "Conti archiviati",
-      "description": "Visualizza i conti archiviati e rendili nuovamente disponibili per le nuove registrazioni.",
+      "description": "Disarchivia un conto per usarlo di nuovo nei nuovi movimenti.",
       "emptyMessage": "Non ci sono conti archiviati.",
       "actions": {
         "unarchive": "Ripristina conto"
@@ -893,7 +870,6 @@
   },
   "categories": {
     "table": {
-      "description": "Organizza i movimenti in categorie, così report, budget e confronti restano davvero utili.",
       "emptyMessage": "Non ci sono ancora categorie. Aggiungine una per organizzare spese ed entrate.",
       "actions": {
         "add": "Aggiungi categoria",
@@ -938,7 +914,7 @@
     },
     "archivedDialog": {
       "title": "Categorie archiviate",
-      "description": "Visualizza le categorie archiviate e rendile nuovamente disponibili per le nuove registrazioni.",
+      "description": "Disarchivia una categoria per usarla di nuovo nei nuovi movimenti.",
       "emptyMessage": "Non ci sono categorie archiviate.",
       "actions": {
         "unarchive": "Ripristina categoria"
@@ -975,7 +951,6 @@
       "analysis": "Analisi budget"
     },
     "table": {
-      "description": "Definisci obiettivi di spesa per categoria, così puoi confrontare il piano con la spesa reale.",
       "emptyMessage": "Non ci sono ancora budget. Aggiungine uno per iniziare a seguire gli obiettivi per categoria.",
       "unknownCategory": "Categoria sconosciuta",
       "actions": {
@@ -1127,7 +1102,7 @@
     },
     "transfers": {
       "table": {
-        "description": "Tieni traccia del denaro spostato tra i tuoi conti. I trasferimenti cambiano dove si trova il denaro, non la spesa totale.",
+        "description": "I trasferimenti cambiano dove si trova il denaro, non la spesa totale.",
         "emptyMessage": "Non ci sono ancora trasferimenti. Aggiungine uno quando sposti denaro tra i tuoi conti.",
         "emptyNoAccountsMessage": "Non ci sono ancora conti. Aggiungi il primo prima di creare trasferimenti.",
         "emptyNeedTwoAccountsMessage": "Servono almeno due conti per creare un trasferimento. Aggiungi un altro conto per continuare.",
@@ -1375,7 +1350,6 @@
   },
   "recurringEvents": {
     "table": {
-      "description": "Pianifica movimenti e trasferimenti ripetuti, così la gestione della routine diventa più semplice.",
       "emptyMessage": "Non ci sono ancora movimenti ricorrenti. Aggiungine uno per automatizzare movimenti o trasferimenti ripetuti.",
       "emptyNoAccountsMessage": "Non ci sono ancora conti. Aggiungi il primo prima di creare movimenti ricorrenti.",
       "actions": {
@@ -1571,8 +1545,7 @@
       "title": "Dettagli conto"
     },
     "header": {
-      "totalValue": "Valore totale del conto",
-      "noDescription": "Nessuna descrizione disponibile."
+      "totalValue": "Valore totale del conto"
     },
     "table": {
       "transactionsTitle": "Movimenti del conto",
@@ -1593,7 +1566,6 @@
       "title": "Valutazioni conto"
     },
     "table": {
-      "description": "Storico delle istantanee di valutazione per questo conto.",
       "emptyMessage": "Nessuna istantanea di valutazione ancora. Aggiungi la prima per iniziare a monitorare.",
       "columns": {
         "date": "Data",
@@ -1616,7 +1588,6 @@
     },
     "chart": {
       "title": "Valore nel tempo",
-      "description": "Andamento delle istantanee di valutazione salvate per questo conto.",
       "seriesName": "Valore"
     },
     "dialog": {

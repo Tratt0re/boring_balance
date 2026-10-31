@@ -3,9 +3,6 @@
     <h3 class="text-sm font-semibold tracking-tight">
       {{ 'dataBackups.backups.destination.title' | translate }}
     </h3>
-    <p class="mt-1 text-sm text-muted-foreground">
-      {{ 'dataBackups.backups.destination.description' | translate }}
-    </p>
 
     <div class="flex flex-wrap items-center gap-3">
       <z-switch
@@ -51,9 +48,6 @@
       <h3 class="text-sm font-semibold tracking-tight">
         {{ 'dataBackups.backups.autoBackup.title' | translate }}
       </h3>
-      <p class="mt-1 text-sm text-muted-foreground">
-        {{ 'dataBackups.backups.autoBackup.description' | translate }}
-      </p>
 
       <div class="mt-3 grid gap-3 lg:grid-cols-3">
         <div class="rounded-md bg-muted/40 p-3">
@@ -107,9 +101,6 @@
       <h3 class="text-sm font-semibold tracking-tight">
         {{ 'dataBackups.backups.manual.title' | translate }}
       </h3>
-      <p class="mt-1 text-sm text-muted-foreground">
-        {{ 'dataBackups.backups.manual.description' | translate }}
-      </p>
 
       <div class="mt-3 flex flex-wrap items-center gap-2">
         <button
@@ -192,7 +183,6 @@
         [data]="backupRows()"
         [structure]="backupsTableStructure"
         [title]="'dataBackups.backups.list.title'"
-        description="dataBackups.backups.list.description"
         emptyMessage="dataBackups.backups.list.empty"
         [appearance]="'default'"
         [showEmpty]="true"

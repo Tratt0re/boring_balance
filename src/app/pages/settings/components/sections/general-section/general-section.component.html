@@ -1,10 +1,6 @@
 <div class="space-y-5">
   <section class="rounded-lg border border-border/60 bg-card p-4 md:p-5">
     <h3 class="sr-only">{{ 'settings.general.appearanceGroupTitle' | translate }}</h3>
-    <div class="rounded-md bg-muted/40 p-3 text-sm text-muted-foreground">
-      {{ 'settings.general.intro' | translate }}
-    </div>
-
     <div class="mt-4 grid gap-4 lg:grid-cols-2">
       <div>
         <label class="mb-1 block text-sm font-medium" for="settings-theme">
@@ -23,9 +19,6 @@
             />
           }
         </z-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.theme.description' | translate }}
-        </p>
       </div>
 
       <div>
@@ -44,9 +37,6 @@
             />
           }
         </z-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.language.description' | translate }}
-        </p>
       </div>
 
       <div>
@@ -77,9 +67,6 @@
       <h3 class="text-sm font-semibold tracking-tight">
         {{ 'settings.general.currencyGroupTitle' | translate }}
       </h3>
-      <p class="mt-1 text-sm text-muted-foreground">
-        {{ 'settings.general.currencyGroupDescription' | translate }}
-      </p>
     </div>
 
     <div class="mt-4 grid gap-4 lg:grid-cols-2">
@@ -100,9 +87,6 @@
             [zLabel]="'settings.general.cards.currency.options.custom' | translate"
           />
         </z-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.currency.description' | translate }}
-        </p>
       </div>
 
       <div>
@@ -121,9 +105,6 @@
             />
           }
         </z-select>
-        <p class="mt-2 text-xs text-muted-foreground">
-          {{ 'settings.general.cards.numberFormat.description' | translate }}
-        </p>
       </div>
     </div>
 
@@ -148,9 +129,6 @@
     <div class="mt-4 border-t border-border/60 pt-4">
       <p class="text-xs uppercase tracking-wide text-muted-foreground">
         {{ 'settings.general.cards.numberFormat.previewLabel' | translate }}
-      </p>
-      <p class="mt-1 text-xs text-muted-foreground">
-        {{ 'settings.general.cards.numberFormat.previewDescription' | translate }}
       </p>
       <app-currency-preview
         class="mt-3"

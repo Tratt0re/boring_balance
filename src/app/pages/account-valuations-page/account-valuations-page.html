@@ -87,10 +87,7 @@
       </div>
 
       @if (hasChartData()) {
-        <app-base-card
-          [zTitle]="'accountValuations.chart.title' | translate"
-          [zDescription]="'accountValuations.chart.description' | translate"
-        >
+        <app-base-card [zTitle]="'accountValuations.chart.title' | translate">
           <app-line-chart
             [labels]="chartLabels()"
             [series]="chartSeries()"
@@ -107,7 +104,6 @@
         [data]="valuations()"
         [structure]="valuationTableStructure"
         [title]="'accountValuations.page.title'"
-        description="accountValuations.table.description"
         emptyMessage="accountValuations.table.emptyMessage"
         [emptyActionLabel]="'accountValuations.table.actions.add'"
         [emptyActionIcon]="'plus'"

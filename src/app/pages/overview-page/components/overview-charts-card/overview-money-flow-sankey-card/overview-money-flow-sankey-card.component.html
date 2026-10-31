@@ -45,9 +45,6 @@
   <app-base-card
     [style.height.%]="100"
     [zTitle]="'overview.cards.moneyFlowSankey.title' | translate"
-    [zDescription]="
-      'overview.cards.moneyFlowSankey.description' | translate: { month: monthLabel() }
-    "
   >
     <ng-container [ngTemplateOutlet]="cardContent"></ng-container>
   </app-base-card>

@@ -44,10 +44,7 @@
     </div>
   } @else if (hasComparisonData()) {
     <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-      <app-base-card
-        [zTitle]="'compare.cards.summary.title' | translate"
-        [zDescription]="'compare.cards.summary.description' | translate"
-      >
+      <app-base-card [zTitle]="'compare.cards.summary.title' | translate">
         <app-bar-chart
           [labels]="summaryBarChartLabels()"
           [series]="summaryBarChartSeries()"
@@ -61,10 +58,7 @@
         ></app-bar-chart>
       </app-base-card>
 
-      <app-base-card
-        [zTitle]="'compare.cards.radar.title' | translate"
-        [zDescription]="'compare.cards.radar.description' | translate"
-      >
+      <app-base-card [zTitle]="'compare.cards.radar.title' | translate">
         @if (radarSeries().length === 0) {
           <div
             class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
@@ -86,10 +80,7 @@
       </app-base-card>
     </div>
 
-    <app-base-card
-      [zTitle]="'compare.cards.expensesByCategory.title' | translate"
-      [zDescription]="'compare.cards.expensesByCategory.description' | translate"
-    >
+    <app-base-card [zTitle]="'compare.cards.expensesByCategory.title' | translate">
       @if (expenseCategoryTableRows().length === 0) {
         <div
           class="rounded-md border border-border/60 bg-muted/40 p-4 text-sm text-muted-foreground"
