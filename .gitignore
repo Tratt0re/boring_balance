@@ -56,3 +56,7 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+
+# Local tooling
+.claude/
+.impeccable/
