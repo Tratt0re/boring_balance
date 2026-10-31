@@ -1155,7 +1155,7 @@
         }
       },
       "form": {
-        "amountHint": "Enter expenses as negative values, for example -25.00. Income stays positive."
+        "amountHint": "Enter expenses as negative values, income or refunds as positive."
       }
     },
     "deleteAlert": {

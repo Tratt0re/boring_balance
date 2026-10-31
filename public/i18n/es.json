@@ -1155,7 +1155,7 @@
         }
       },
       "form": {
-        "amountHint": "Introduce los gastos como valores negativos, por ejemplo -25,00. Los ingresos se dejan positivos."
+        "amountHint": "Introduce los gastos como valores negativos, los ingresos o reembolsos como positivos."
       }
     },
     "deleteAlert": {

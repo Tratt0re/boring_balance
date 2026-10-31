@@ -1155,7 +1155,7 @@
         }
       },
       "form": {
-        "amountHint": "Ausgaben als negative Werte eingeben, z. B. -25,00. Einnahmen bleiben positiv."
+        "amountHint": "Ausgaben als negative Werte eingeben, Einnahmen oder Erstattungen als positive."
       }
     },
     "deleteAlert": {

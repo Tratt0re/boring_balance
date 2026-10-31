@@ -1155,7 +1155,7 @@
         }
       },
       "form": {
-        "amountHint": "Saisissez les dépenses en valeurs négatives, par exemple -25,00. Les revenus restent positifs."
+        "amountHint": "Saisissez les dépenses en valeurs négatives, les revenus ou remboursements en valeurs positives."
       }
     },
     "deleteAlert": {

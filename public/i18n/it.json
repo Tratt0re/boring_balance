@@ -1084,7 +1084,7 @@
         }
       },
       "form": {
-        "amountHint": "Inserisci le spese come valori negativi, ad esempio -25,00. Le entrate restano positive."
+        "amountHint": "Inserisci le spese come valori negativi, le entrate o i rimborsi come positivi."
       }
     },
     "deleteAlert": {
