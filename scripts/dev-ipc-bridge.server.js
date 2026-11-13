@@ -135,20 +135,30 @@ async function seed() {
   const at = (monthsAgo, dayOfMonth) =>
     new Date(now.getFullYear(), now.getMonth() - monthsAgo, dayOfMonth, 12).getTime();
 
-  const account = async (name, type) =>
-    (await call(CHANNELS.accounts.create, { name, type, description: `${name} account` })).id;
-  const cash = await account('Cash', 'cash');
-  const bank = await account('Bank', 'bank');
-  const savings = await account('Savings', 'savings');
-  const broker = await account('Broker', 'brokerage');
-  const card = await account('Credit card', 'credit');
+  const account = async (name, type, color_key, icon) =>
+    (
+      await call(CHANNELS.accounts.create, {
+        name,
+        type,
+        description: `${name} account`,
+        color_key,
+        icon,
+      })
+    ).id;
+  const cash = await account('Cash', 'cash', 'system-app-color-4', 'wallet');
+  const bank = await account('Bank', 'bank', 'system-app-color-8', 'landmark');
+  const savings = await account('Savings', 'savings', 'system-app-color-6', 'piggy-bank');
+  const broker = await account('Broker', 'brokerage', 'system-app-color-9', 'vault');
+  const card = await account('Credit card', 'credit', 'system-app-color-1', 'credit-card');
 
-  const category = async (name, type) =>
-    (await call(CHANNELS.categories.create, { name, type })).id;
-  const salary = await category('Salary', 'income');
-  const groceries = await category('Groceries', 'expense');
-  const rent = await category('Rent', 'expense');
-  const leisure = await category('Leisure', 'expense');
+  const category = async (name, type, color_key, icon) =>
+    (await call(CHANNELS.categories.create, { name, type, color_key, icon })).id;
+  const salary = await category('Salary', 'income', 'system-app-color-5', 'banknote-arrow-up');
+  const groceries = await category('Groceries', 'expense', 'system-app-color-7', 'shopping-cart');
+  const rent = await category('Rent', 'expense', 'system-app-color-2', 'house');
+  const leisure = await category('Leisure', 'expense', 'system-app-color-9', 'gamepad-2');
+  const dining = await category('Dining out', 'expense', 'system-app-color-10', 'utensils');
+  const transport = await category('Transport', 'expense', 'system-app-color-3', 'train-front');
 
   for (let monthsAgo = 5; monthsAgo >= 0; monthsAgo -= 1) {
     const add = (account_id, category_id, amount, description, dayOfMonth, settled = true) =>
@@ -166,6 +176,8 @@ async function seed() {
     await add(cash, groceries, -45.5, 'Market', 15);
     await add(card, leisure, -60 + monthsAgo * 3, 'Cinema and dinner', 20);
     await add(bank, leisure, -25, 'Subscription', 25, monthsAgo !== 0);
+    await add(card, dining, -38 - monthsAgo * 2, 'Dinner with friends', 12);
+    await add(bank, transport, -42, 'Monthly pass', 6);
   }
 
   for (const monthsAgo of [1, 0]) {
@@ -184,14 +196,14 @@ async function seed() {
   ]) {
     await call(CHANNELS.accountValuations.create, {
       account_id: broker,
-      valued_at: at(monthsAgo, 28),
+      valued_at: at(monthsAgo, 9),
       value_cents: valueCents,
       source: 'manual',
     });
   }
 
-  await call(CHANNELS.budgets.create, { category_id: groceries, amount_cents: 40000 });
-  await call(CHANNELS.budgets.create, { category_id: leisure, amount_cents: 15000 });
+  await call(CHANNELS.budgets.create, { category_id: groceries, amount_cents: 120000 });
+  await call(CHANNELS.budgets.create, { category_id: leisure, amount_cents: 60000 });
 
   await call(CHANNELS.planItems.create, {
     title: 'Gym membership',
@@ -202,7 +214,7 @@ async function seed() {
       category_id: leisure,
       description: 'Gym',
     },
-    rule_json: { start_date: at(0, 10), count: 6, frequency: { unit: 'month', interval: 1 } },
+    rule_json: { start_date: at(5, 10), count: 6, frequency: { unit: 'month', interval: 1 } },
     create_and_run: true,
   });
 }
