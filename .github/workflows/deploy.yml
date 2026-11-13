@@ -1,0 +1,61 @@
+name: Deploy site
+
+# Builds the Angular landing page from the website branch and publishes the output to the github-page branch.
+# GitHub Pages is set to serve that branch (Settings > Pages > Deploy from a branch > github-page / root).
+# Source, README and the workflow itself stay on the website branch only.
+# Same scheme as the portfolio and lazydm sites, with a build step because this site is an Angular app.
+
+on:
+  push:
+    branches: [website]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the site
+        run: npm run build
+
+      - name: Collect the site files
+        run: |
+          mkdir _site
+          cp -r dist/boringbalance/browser/. _site/
+          touch _site/.nojekyll
+          # a custom domain needs a CNAME file at the root of the published branch; it must be carried over or each deploy would erase it
+          if [ -f CNAME ]; then cp CNAME _site/; fi
+          echo "Files going live:" && find _site -type f | sort
+
+      - name: Publish to github-page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd _site
+          git init -q -b github-page
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA::7} from website"
+          git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" github-page
