@@ -1,0 +1,110 @@
+/* Hero: copy on the left, the real Overview screen bleeding off the right edge. */
+.hero {
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 72rem;
+  flex-direction: column;
+  gap: 2.85rem;
+  overflow-x: clip;
+  padding: 3.8rem 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  .hero {
+    padding-inline: 2.5rem;
+    padding-block: 4.75rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 3.5rem;
+    padding-block: 5.7rem;
+  }
+}
+
+.hero-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-logo {
+  height: 3.5rem;
+}
+
+.hero-eyebrow {
+  margin-top: 1.1875rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.hero-title {
+  margin-top: 0.83125rem;
+  font-size: clamp(2.25rem, 4.2vw, 3.25rem);
+  line-height: 1.04;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  color: var(--foreground);
+}
+
+.hero-lede {
+  margin-top: 1.06875rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+  color: var(--muted-foreground);
+}
+
+.hero-lede + .hero-lede {
+  margin-top: 0.625rem;
+}
+
+.hero-shot {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow:
+    0 1px 2px oklch(0.2 0.01 90 / 0.06),
+    0 24px 48px -20px oklch(0.2 0.01 90 / 0.22);
+}
+
+@media (min-width: 64rem) {
+  .hero-shot {
+    width: calc(100% + 1.35rem);
+    max-width: none;
+    border-right: 0;
+    border-radius: 0.875rem 0 0 0.875rem;
+  }
+}
+
+.hero-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Both screenshots ship; the site's own theme class decides which one shows. */
+.hero-img-dark,
+:root.dark .hero-img-light {
+  display: none;
+}
+
+:root.dark .hero-img-dark {
+  display: block;
+}
+
+:root.dark .hero-shot {
+  background: #0a0a0a;
+}

@@ -1,33 +1,18 @@
-<section
-  aria-labelledby="hero-heading"
-  class="mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 py-16 sm:px-10 sm:py-24 lg:flex-row lg:items-start lg:gap-20"
->
-  <div class="flex min-w-0 flex-1 flex-col items-start">
-    <app-logo class="h-18 w-auto shrink-0 text-primary sm:h-18" />
-
-    <header class="max-w-3xl">
-      <p class="mt-5 text-sm font-medium tracking-[0.16em] text-muted-foreground uppercase">
-        personal finance, without the noise.
+<section aria-labelledby="hero-heading" class="hero">
+  <div class="hero-copy">
+    <app-logo class="hero-logo w-auto shrink-0 text-primary" />
+    <header class="hero-head">
+      <p class="hero-eyebrow">personal finance, without the noise.</p>
+      <h1 id="hero-heading" class="hero-title">Simple, private, boring.</h1>
+      <p class="hero-lede">
+        Track accounts, budgets, and day-to-day spending in a desktop app that stays local and stays
+        out of the way.
       </p>
-
-      <h1
-        id="hero-heading"
-        class="mt-5 text-4xl font-semibold tracking-tight text-balance text-foreground sm:text-5xl"
-      >
-        Simple, private, boring.
-      </h1>
-
-      <p class="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-        Track accounts, budgets, and day-to-day spending in a desktop app that stays local and
-        stays out of the way.
-      </p>
-
-      <p class="mt-4 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+      <p class="hero-lede">
         No sign-up. No sync dependency. Just clear numbers, recurring entries, and a file you
         control.
       </p>
     </header>
-
     <div class="mt-10 flex w-full max-w-2xl flex-col gap-4">
       <div class="flex flex-wrap items-center gap-3">
         <a
@@ -68,7 +53,8 @@
             [href]="getPlatformUrl(platform)"
             [attr.aria-label]="'Download for ' + getPlatformLabel(platform)"
             class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >{{ getPlatformLabel(platform) }}</a>
+            >{{ getPlatformLabel(platform) }}</a
+          >
         }
       </div>
     } @else {
@@ -80,17 +66,20 @@
           [href]="getPlatformUrl('windows')"
           aria-label="Download for Windows"
           class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >Windows</a>
+          >Windows</a
+        >
         <a
           [href]="getPlatformUrl('macos')"
           aria-label="Download for macOS"
           class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >macOS</a>
+          >macOS</a
+        >
         <a
           [href]="getPlatformUrl('linux')"
           aria-label="Download for Linux"
           class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >Linux</a>
+          >Linux</a
+        >
       </div>
     }
 
@@ -98,72 +87,22 @@
       Open source desktop app for Windows, macOS, and Linux. Releases are published on GitHub.
     </p>
   </div>
-
-  <div class="hidden lg:flex lg:self-center flex-1 items-center justify-end">
-    <div class="w-full max-w-sm rounded-xl border border-border bg-background overflow-hidden">
-      <div class="flex items-center gap-1.5 border-b border-border px-4 py-3">
-        <span class="size-2.5 rounded-full bg-border"></span>
-        <span class="size-2.5 rounded-full bg-border"></span>
-        <span class="size-2.5 rounded-full bg-border"></span>
-        <span class="ml-auto text-xs text-muted-foreground/50 font-mono">boring balance</span>
-      </div>
-
-      <div class="p-5">
-        <div class="mb-5">
-          <p class="mb-1 text-xs tracking-wider text-muted-foreground uppercase">Inside</p>
-          <p class="text-2xl font-semibold text-foreground">Balances, budgets, charts.</p>
-          <p class="mt-1 text-xs text-muted-foreground">Local &middot; Free &middot; Simple</p>
-        </div>
-
-        <div class="mb-5 flex h-10 items-end gap-1" aria-hidden="true">
-          <div class="flex-1 rounded-sm bg-foreground/8 h-[55%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/8 h-[70%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/8 h-[45%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/10 h-[80%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/10 h-[60%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/12 h-[75%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/15 h-[90%]"></div>
-          <div class="flex-1 rounded-sm bg-foreground/12 h-[65%]"></div>
-        </div>
-
-        <div class="divide-y divide-border">
-          <div class="flex items-center justify-between py-2.5">
-            <div>
-              <p class="text-sm text-foreground">Accounts &amp; net worth</p>
-              <p class="text-xs text-muted-foreground">Track balances over time &middot; Overview</p>
-            </div>
-            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
-          </div>
-          <div class="flex items-center justify-between py-2.5">
-            <div>
-              <p class="text-sm text-foreground">Transaction log</p>
-              <p class="text-xs text-muted-foreground">Categorize &amp; search &middot; Transactions</p>
-            </div>
-            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
-          </div>
-          <div class="flex items-center justify-between py-2.5">
-            <div>
-              <p class="text-sm text-foreground">Budgets &amp; goals</p>
-              <p class="text-xs text-muted-foreground">Monthly limits per category &middot; Budgets</p>
-            </div>
-            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
-          </div>
-          <div class="flex items-center justify-between py-2.5">
-            <div>
-              <p class="text-sm text-foreground">Recurring events</p>
-              <p class="text-xs text-muted-foreground">Automate regular entries &middot; Planning</p>
-            </div>
-            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">built-in</span>
-          </div>
-          <div class="flex items-center justify-between py-2.5">
-            <div>
-              <p class="text-sm text-foreground">Local &amp; private</p>
-              <p class="text-xs text-muted-foreground">SQLite, no cloud, no tracking &middot; Privacy</p>
-            </div>
-            <span class="text-xs font-mono text-muted-foreground shrink-0 ml-3">always</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <figure class="hero-shot">
+    <img
+      src="screenshots/overview.webp"
+      width="2000"
+      height="1253"
+      alt="Boring Balance Overview screen showing net worth of 22,902 euros, an account allocation pie chart, a monthly income and expenses bar chart, and a list of recent transactions"
+      class="hero-img hero-img-light"
+    />
+    <img
+      src="screenshots/overview-dark.webp"
+      width="2000"
+      height="1253"
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      class="hero-img hero-img-dark"
+    />
+  </figure>
 </section>

@@ -11,6 +11,7 @@ import { APP_CONFIG } from '../../config';
   encapsulation: ViewEncapsulation.None,
   imports: [LogoComponent, LucideAngularModule],
   templateUrl: './hero.component.html',
+  styleUrl: './hero.component.css',
 })
 export class HeroComponent {
   protected readonly release = inject(ReleaseService);
