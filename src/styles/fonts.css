@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Manrope';
-  src: url('../assetts/fonts/manrope/Manrope-Regular.woff2') format('woff2');
+  src: url('/assets/fonts/manrope/Manrope-Regular.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'Manrope';
-  src: url('../assetts/fonts/manrope/Manrope-Medium.woff2') format('woff2');
+  src: url('/assets/fonts/manrope/Manrope-Medium.woff2') format('woff2');
   font-style: normal;
   font-weight: 500;
   font-display: swap;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: 'Manrope';
-  src: url('../assetts/fonts/manrope/Manrope-SemiBold.woff2') format('woff2');
+  src: url('/assets/fonts/manrope/Manrope-SemiBold.woff2') format('woff2');
   font-style: normal;
   font-weight: 600;
   font-display: swap;
@@ -24,7 +24,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('../assetts/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
+  src: url('/assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;

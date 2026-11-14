@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 
 /**
- * Brand icon from src/assetts/icons/brandIcon.svg.
+ * Brand icon from src/assets/icons/brandIcon.svg.
  * All hardcoded #171717 colours replaced with currentColor so it adapts to light/dark themes.
  */
 @Component({

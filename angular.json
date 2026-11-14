@@ -25,8 +25,8 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/assetts",
-                "output": "assetts"
+                "input": "src/assets",
+                "output": "assets"
               },
               {
                 "glob": "404.html",
