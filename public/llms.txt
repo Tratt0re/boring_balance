@@ -1,0 +1,26 @@
+# Boring Balance
+
+> A free, open-source desktop app for tracking accounts, spending and budgets. It runs on Windows, macOS and Linux, needs no sign-up, and keeps all data in one SQLite file on the user's computer.
+
+## What it does
+
+- Overview of net worth, account allocation and monthly cash flow
+- Transactions and transfers between the user's own accounts
+- Category budgets with setup and analysis views
+- Recurring transactions
+- Breakdown and Compare pages for yearly and month-to-month analysis
+- Backups and restore, optional folder sync, Excel import and export
+- Seven interface languages, light and dark themes
+
+## Privacy and data
+
+- No account, no analytics, no telemetry, no hosted backend
+- Data lives in a local SQLite file; backups and sync only write to folders the user chooses
+- The only network request is a check for new releases on the public GitHub API, which sends none of the user's data
+- It does not connect to bank accounts today; linking bank accounts is on the roadmap
+
+## Links
+
+- [Download](https://github.com/Tratt0re/boring_balance/releases/latest): installers for Windows, macOS and Linux
+- [Source code](https://github.com/Tratt0re/boring_balance): MIT licence
+- [Website](https://boringbalance.com/)

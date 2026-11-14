@@ -3,97 +3,60 @@ export interface LandingCard {
   description: string;
 }
 
-export interface LandingFact {
-  label: string;
-  value: string;
-}
-
 export interface LandingFaq {
   question: string;
   answer: string;
 }
 
-export const LANDING_BENEFITS: LandingCard[] = [
-  {
-    title: 'See the full picture quickly',
-    description: 'Review accounts and net worth without turning money into a side project.',
-  },
-  {
-    title: 'Keep routine work boring',
-    description: 'Budgets, categories, and recurring entries stay visible without extra ceremony.',
-  },
-  {
-    title: 'Keep the file in your hands',
-    description: 'Your finance data stays on your computer, in a file you can move or back up.',
-  },
-];
-
 export const LANDING_AUDIENCES: LandingCard[] = [
   {
-    title: 'Prefer a desktop ledger',
+    title: "You've outgrown the spreadsheet",
     description:
-      'Use a real desktop app for tracking money without falling back to spreadsheets or browser tabs.',
+      'Accounts, categories, budgets and charts, without a sheet to build and maintain yourself.',
   },
   {
-    title: 'Want steadier budgeting',
-    description: 'Keep budgets, balances, and expenses tidy without alerts, streaks, or filler.',
+    title: "You don't want a finance app watching you",
+    description: 'No sign-up, no analytics, no ads. Your numbers stay on your computer.',
   },
   {
-    title: 'Need local ownership',
-    description: 'Keep your records on-device instead of handing them to a hosted service.',
-  },
-];
-
-export const LANDING_SUMMARY_FACTS: LandingFact[] = [
-  {
-    label: 'App type',
-    value: 'Desktop finance app',
-  },
-  {
-    label: 'Platforms',
-    value: 'Windows, macOS, Linux',
-  },
-  {
-    label: 'Best for',
-    value: 'Balances, expenses, budgets',
-  },
-  {
-    label: 'Data storage',
-    value: 'Single local SQLite file',
-  },
-  {
-    label: 'Download source',
-    value: 'GitHub Releases',
-  },
-  {
-    label: 'Project model',
-    value: 'Open source, no account',
+    title: "You'd rather review than be nudged",
+    description: 'A calm place to see where the money went, with no alerts or streaks.',
   },
 ];
 
 export const LANDING_FAQS: LandingFaq[] = [
   {
-    question: 'Why a desktop app?',
+    question: 'Does it connect to my bank?',
     answer:
-      'A desktop app gives you room to sit down, review your balances, and stay aware of what is happening.',
+      'Not today. You add transactions yourself or import them from an Excel file. Linking bank accounts is planned.',
   },
   {
-    question: 'Is Boring Balance local-first and privacy-friendly?',
+    question: 'Does it send my data anywhere?',
     answer:
-      'Yes. Your data stays under your control. You can manage backups and sync folders, but the app does not send data or metrics to any service.',
+      'No. There is no account, no analytics and no server. The only network request is a check for new releases on GitHub, which sends none of your data. Backups and sync write only to folders you choose.',
   },
   {
-    question: 'Why doesn\'t Boring Balance automate everything?',
+    question: 'Where is my data, and how do I back it up?',
     answer:
-      'Because personal finance works better when you stay involved. The goal is clarity, not distance.',
+      'In one SQLite file on your computer. Copy it anywhere, or have the app save backups to a folder you pick and restore from them.',
   },
   {
-    question: 'Where do I download Boring Balance?',
-    answer: 'You can download it from GitHub.',
+    question: 'Can I use it on more than one computer?',
+    answer:
+      'Optionally. Point the app at a shared folder, such as a cloud drive, a NAS or a USB drive, and it saves snapshots there. There is no Boring Balance cloud.',
   },
   {
-    question: 'Is Boring Balance open source?',
+    question: 'Is it really free?',
+    answer: 'Yes. It is MIT-licensed, with no subscription, no ads and no paid tier.',
+  },
+  {
+    question: 'Where do I download it?',
     answer:
-      'Yes. Boring Balance is open source. You can inspect the code, leave feedback, or suggest improvements.',
+      'From GitHub Releases. The download button at the top picks the right build for your system.',
+  },
+  {
+    question: "Why doesn't it automate everything?",
+    answer:
+      'Looking at your own numbers is how you understand them. Boring Balance gives you tools to review, not an autopilot.',
   },
 ];

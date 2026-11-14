@@ -61,15 +61,12 @@ export class ReleaseService {
 
     if (state.status === 'loading') {
       return detectedPlatform
-        ? `Looking up the latest ${detectedPlatform} installer. GitHub Releases are available immediately.`
-        : 'Looking up the latest installer. GitHub Releases are available immediately.';
+        ? `Finding the latest ${detectedPlatform} installer…`
+        : 'Finding the latest installer…';
     }
 
-    if (detectedPlatform) {
-      return `Suggested for ${detectedPlatform}.`;
-    }
-
-    return 'Windows, macOS, and Linux builds are available.';
+    // Ready: the button label and the platform links already say everything.
+    return '';
   });
 
   readonly otherPlatforms = computed(() =>
@@ -82,10 +79,9 @@ export class ReleaseService {
 
   private detectPlatform(): Platform | null {
     if (typeof navigator === 'undefined') return null;
-    const raw = (
-      // @ts-expect-error userAgentData is experimental
-      (navigator.userAgentData?.platform as string | undefined) ?? navigator.userAgent
-    ).toLowerCase();
+    // userAgentData is not in the DOM typings yet.
+    const nav = navigator as Navigator & { userAgentData?: { platform?: string } };
+    const raw = (nav.userAgentData?.platform ?? nav.userAgent).toLowerCase();
     if (raw.includes('win')) return 'windows';
     if (raw.includes('mac')) return 'macos';
     if (raw.includes('linux')) return 'linux';

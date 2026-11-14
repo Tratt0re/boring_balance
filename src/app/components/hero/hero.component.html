@@ -2,90 +2,44 @@
   <div class="hero-copy">
     <app-logo class="hero-logo w-auto shrink-0 text-primary" />
     <header class="hero-head">
-      <p class="hero-eyebrow">personal finance, without the noise.</p>
       <h1 id="hero-heading" class="hero-title">Simple, private, boring.</h1>
       <p class="hero-lede">
-        Track accounts, budgets, and day-to-day spending in a desktop app that stays local and stays
-        out of the way.
-      </p>
-      <p class="hero-lede">
-        No sign-up. No sync dependency. Just clear numbers, recurring entries, and a file you
-        control.
+        A free, open-source desktop app for tracking accounts, spending and budgets. Your data lives
+        in one file on your computer.
       </p>
     </header>
-    <div class="mt-10 flex w-full max-w-2xl flex-col gap-4">
-      <div class="flex flex-wrap items-center gap-3">
-        <a
-          [href]="release.primaryUrl()"
-          class="inline-flex min-h-11 items-center justify-center gap-2.5 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          @if (release.isLoading()) {
-            <lucide-icon [img]="loaderIcon" [size]="15" class="animate-spin" aria-hidden="true" />
-          } @else {
-            <lucide-icon [img]="downloadIcon" [size]="15" class="shrink-0" aria-hidden="true" />
-          }
-          {{ release.primaryLabel() }}
-        </a>
-
-        <a
-          [href]="repoUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-background px-5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          <lucide-icon [img]="githubIcon" [size]="15" aria-hidden="true" />
-          View source <span aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
-
-      <p aria-live="polite" aria-atomic="true" class="min-h-6 text-sm text-muted-foreground">
+    <div class="hero-actions">
+      <a
+        [href]="release.primaryUrl()"
+        class="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-md bg-primary px-8 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        @if (release.isLoading()) {
+          <lucide-icon [img]="loaderIcon" [size]="15" class="animate-spin" aria-hidden="true" />
+        } @else {
+          <lucide-icon [img]="downloadIcon" [size]="15" class="shrink-0" aria-hidden="true" />
+        }
+        {{ release.primaryLabel() }}
+      </a>
+      <p aria-live="polite" aria-atomic="true" class="hero-note">
         {{ release.availabilityNote() }}
       </p>
-    </div>
-
-    @if (release.otherPlatforms().length > 0) {
-      <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
-        <span class="min-h-11 px-1 text-muted-foreground sm:inline-flex sm:items-center">
-          Other installers
-        </span>
-        @for (platform of release.otherPlatforms(); track platform; let last = $last) {
+      <p class="hero-meta">
+        <span>Also for</span>
+        @for (platform of release.otherPlatforms(); track platform) {
           <a
             [href]="getPlatformUrl(platform)"
             [attr.aria-label]="'Download for ' + getPlatformLabel(platform)"
-            class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            class="hero-link"
             >{{ getPlatformLabel(platform) }}</a
           >
         }
-      </div>
-    } @else {
-      <div class="mt-3 flex flex-wrap items-center gap-2 text-sm">
-        <span class="min-h-11 px-1 text-muted-foreground sm:inline-flex sm:items-center">
-          Other installers
-        </span>
-        <a
-          [href]="getPlatformUrl('windows')"
-          aria-label="Download for Windows"
-          class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >Windows</a
+        <span class="hero-dot" aria-hidden="true">&middot;</span>
+        <a [href]="repoUrl" target="_blank" rel="noopener noreferrer" class="hero-link"
+          >View source <span aria-hidden="true">&rarr;</span></a
         >
-        <a
-          [href]="getPlatformUrl('macos')"
-          aria-label="Download for macOS"
-          class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >macOS</a
-        >
-        <a
-          [href]="getPlatformUrl('linux')"
-          aria-label="Download for Linux"
-          class="inline-flex min-h-11 items-center rounded-md border border-border px-4 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >Linux</a
-        >
-      </div>
-    }
-
-    <p class="mt-8 max-w-xl text-sm leading-6 text-muted-foreground">
-      Open source desktop app for Windows, macOS, and Linux. Releases are published on GitHub.
-    </p>
+      </p>
+      <p class="hero-licence">MIT licence</p>
+    </div>
   </div>
   <figure class="hero-shot">
     <img

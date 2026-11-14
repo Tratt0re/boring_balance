@@ -20,7 +20,6 @@ export class SeoService {
 
     const tags: HeadTagDefinition[] = [
       { name: 'description', content: seo.description },
-      { name: 'keywords', content: seo.keywords },
       { name: 'robots', content: seo.robots },
       { name: 'author', content: APP_CONFIG.authorName },
       { name: 'application-name', content: APP_CONFIG.brandName },
@@ -113,6 +112,8 @@ export class SeoService {
       url: APP_CONFIG.siteUrl,
       downloadUrl: APP_CONFIG.releaseUrl,
       isAccessibleForFree: true,
+      license: 'https://opensource.org/license/mit',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       featureList: [
         'Track balances, accounts, and net worth',
         'Log transactions and categories',
