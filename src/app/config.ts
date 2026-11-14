@@ -30,9 +30,9 @@ export const APP_CONFIG = {
     'Boring Balance Overview screen showing net worth, account allocation and monthly income and expenses, next to the headline "Simple, private, boring."',
 
   seo: {
-    title: 'Boring Balance: free, private finance tracker for desktop',
+    title: 'Free Private Expense Tracker for Desktop | Boring Balance',
     description:
-      'Free, open-source desktop app to track accounts, spending and budgets. No account, no cloud; your data stays in one file on your computer.',
+      'Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.',
     robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
     canonicalUrl: siteUrl,
     locale: 'en_US',

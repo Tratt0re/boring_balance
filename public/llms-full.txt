@@ -1,0 +1,71 @@
+# Boring Balance
+
+> Boring Balance is a free, open-source desktop expense tracker for people who want to review accounts, transactions, budgets and net worth without sending financial data to a hosted service.
+
+## Product summary
+
+- Category: desktop personal finance and expense-tracking application
+- Price: free
+- Licence: MIT
+- Platforms: Windows, macOS and Linux
+- Account required: no
+- Hosted backend: no
+- Advertising: no
+- Analytics or telemetry: no
+- Source code: https://github.com/Tratt0re/boring_balance
+- Downloads: https://github.com/Tratt0re/boring_balance/releases/latest
+- Website: https://boringbalance.com/
+
+## What Boring Balance does
+
+Boring Balance tracks balances, transactions, transfers, categories, budgets and recurring entries. Its Overview page shows net worth, account allocation, monthly income and expenses, and recent transactions. Breakdown and Compare views support yearly and month-to-month analysis.
+
+The app supports cash, bank, savings, brokerage, cryptocurrency and credit accounts. Transfers between a user's own accounts do not count as income or expenses.
+
+## Privacy and data storage
+
+Financial data stays in one SQLite file on the user's computer. Boring Balance has no account system, hosted backend, analytics, telemetry or advertising. The only automatic network request checks the public GitHub API for new releases and sends no financial data.
+
+Users can copy the SQLite file directly, configure backups to a folder they choose, restore from those backups, or save snapshots to a shared folder such as a cloud drive, NAS or USB drive. Boring Balance does not operate its own cloud service.
+
+## Imports, exports and bank connections
+
+Users can add transactions manually or import them from an Excel file. The app also supports Excel export. It does not connect directly to bank accounts today; bank connections are planned for a future release.
+
+## Interface
+
+Boring Balance includes light and dark themes and seven interface languages. It is designed for deliberate review rather than alerts, streaks or automated financial nudges.
+
+## Pricing
+
+Boring Balance is free to download and use. There is no subscription, advertising or paid tier. The entire application is available under the MIT licence.
+
+## Frequently asked questions
+
+### Does Boring Balance connect to my bank?
+
+Not today. Add transactions manually or import them from an Excel file. Bank connections are planned for a future release.
+
+### Does Boring Balance send financial data anywhere?
+
+No. Financial data remains in the local SQLite file or in backup and sync folders selected by the user. The release check contacts GitHub without sending financial data.
+
+### Can Boring Balance be used on more than one computer?
+
+Yes, optionally. Configure a shared folder such as a cloud drive, NAS or USB drive and the app saves snapshots there. Boring Balance does not provide a hosted sync service.
+
+### Is Boring Balance really free?
+
+Yes. It is MIT-licensed, with no subscription, advertising or paid tier.
+
+### Where can Boring Balance be downloaded?
+
+Download installers for Windows, macOS and Linux from GitHub Releases: https://github.com/Tratt0re/boring_balance/releases/latest
+
+## Publisher and author
+
+Boring Balance is published as an open-source project by Tratt0re.
+
+- GitHub: https://github.com/Tratt0re
+- LinkedIn: https://www.linkedin.com/in/salvatdeluca/
+- Repository: https://github.com/Tratt0re/boring_balance

@@ -10,13 +10,14 @@ export interface LandingFaq {
 
 export const LANDING_AUDIENCES: LandingCard[] = [
   {
-    title: "You've outgrown the spreadsheet",
+    title: "You've outgrown expense-tracking spreadsheets",
     description:
-      'Accounts, categories, budgets and charts, without a sheet to build and maintain yourself.',
+      'Track accounts, categories and budgets with charts you do not have to build or maintain.',
   },
   {
     title: "You don't want a finance app watching you",
-    description: 'No sign-up, no analytics, no ads. Your numbers stay on your computer.',
+    description:
+      'Your numbers stay on your computer. The app works without an account, analytics or advertising.',
   },
   {
     title: "You'd rather review than be nudged",
@@ -28,7 +29,7 @@ export const LANDING_FAQS: LandingFaq[] = [
   {
     question: 'Does it connect to my bank?',
     answer:
-      'Not today. You add transactions yourself or import them from an Excel file. Linking bank accounts is planned.',
+      'Not today. Add transactions yourself or import them from an Excel file. Bank connections are planned for a future release.',
   },
   {
     question: 'Does it send my data anywhere?',
@@ -47,7 +48,8 @@ export const LANDING_FAQS: LandingFaq[] = [
   },
   {
     question: 'Is it really free?',
-    answer: 'Yes. It is MIT-licensed, with no subscription, no ads and no paid tier.',
+    answer:
+      'Yes. The app is MIT-licensed and free to download. It has no subscription, advertising or paid tier.',
   },
   {
     question: 'Where do I download it?',

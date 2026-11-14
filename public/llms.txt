@@ -24,3 +24,4 @@
 - [Download](https://github.com/Tratt0re/boring_balance/releases/latest): installers for Windows, macOS and Linux
 - [Source code](https://github.com/Tratt0re/boring_balance): MIT licence
 - [Website](https://boringbalance.com/)
+- [Complete product information](https://boringbalance.com/llms-full.txt): features, privacy, pricing, platforms and FAQs in one Markdown document

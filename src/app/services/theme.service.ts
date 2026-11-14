@@ -15,12 +15,13 @@ const THEME_ORDER: readonly ThemeMode[] = ['light', 'dark', 'system'];
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly isBrowser = typeof window !== 'undefined';
   private readonly mediaQuery =
-    typeof window?.matchMedia === 'function'
+    this.isBrowser && typeof window.matchMedia === 'function'
       ? window.matchMedia('(prefers-color-scheme: dark)')
       : null;
   private readonly reducedMotionQuery =
-    typeof window?.matchMedia === 'function'
+    this.isBrowser && typeof window.matchMedia === 'function'
       ? window.matchMedia('(prefers-reduced-motion: reduce)')
       : null;
   private hasAppliedTheme = false;

@@ -18,6 +18,7 @@ describe('App', () => {
       primaryLabel: signal('Download for macOS'),
       primaryUrl: signal(APP_CONFIG.releaseUrl),
       isLoading: signal(false),
+      availabilityNote: signal('Available for Windows, macOS and Linux.'),
       otherPlatforms: signal<Platform[]>(['windows', 'linux']),
       releaseState: signal<ReleaseState>({ status: 'ready', urls }),
       getPlatformLabel: (platform: Platform) =>
@@ -46,7 +47,10 @@ describe('App', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
+    expect(compiled.querySelector('.hero-title-context')?.textContent).toContain(
+      'Desktop expense tracking',
+    );
+    expect(compiled.querySelector('.hero-title-message')?.textContent).toContain(
       'Simple, private, boring',
     );
   });
@@ -56,7 +60,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('A few quick answers.');
+    expect(compiled.textContent).toContain('Questions, answered plainly.');
   });
 
   it('should apply landing page SEO metadata', () => {

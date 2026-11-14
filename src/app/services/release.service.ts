@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { catchError, map, of, timeout } from 'rxjs';
 
 import { APP_CONFIG } from '../config';
@@ -29,6 +30,7 @@ const PLATFORM_LABELS: Record<Platform, string> = {
 @Injectable({ providedIn: 'root' })
 export class ReleaseService {
   private readonly http = inject(HttpClient);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   readonly platform = signal<Platform | null>(this.detectPlatform());
   readonly releaseState = signal<ReleaseState>({ status: 'loading' });
@@ -74,7 +76,11 @@ export class ReleaseService {
   );
 
   constructor() {
-    this.loadRelease();
+    if (this.isBrowser) {
+      this.loadRelease();
+    } else {
+      this.releaseState.set({ status: 'ready', urls: APP_CONFIG.fallback });
+    }
   }
 
   private detectPlatform(): Platform | null {

@@ -14,7 +14,7 @@ interface ProofPoint {
 const PROOF_POINTS: ProofPoint[] = [
   {
     title: 'Your data stays with you',
-    text: 'One file on your computer. No sign-up, no cloud, no tracking. Back it up or move it like any other file.',
+    text: 'Your finances live in one SQLite file on your computer. Move it, back it up or sync snapshots to a folder you choose.',
   },
   {
     title: 'The whole picture',
@@ -22,11 +22,11 @@ const PROOF_POINTS: ProofPoint[] = [
   },
   {
     title: 'Review, not nagging',
-    text: 'No alerts, streaks or upsells. Open it, check the numbers, close it.',
+    text: "Open the app when you want to review your money. It won't chase you with alerts, streaks or upsells.",
   },
   {
     title: 'Open source',
-    text: 'MIT-licensed. Read the code, or build it yourself.',
+    text: 'The entire app is MIT-licensed. Read the code, audit it or build it yourself.',
   },
 ];
 
@@ -62,14 +62,14 @@ const SCREENS: ProofScreen[] = [
     <section aria-labelledby="feature-strip-heading" class="proof">
       <div class="proof-left">
         <h2 id="feature-strip-heading" class="proof-title">
-          Personal finance that stays out of the way.
+          A private expense tracker that stays out of the way.
         </h2>
         <ul class="proof-list" role="list">
           <li>
             <h3 class="proof-point-title">Your data stays with you</h3>
             <p class="proof-point-text">
-              One file on your computer. No sign-up, no cloud, no tracking. Back it up or move it
-              like any other file.
+              Your finances live in one SQLite file on your computer. Move it, back it up or sync
+              snapshots to a folder you choose.
             </p>
           </li>
           <li>
@@ -82,12 +82,15 @@ const SCREENS: ProofScreen[] = [
           <li>
             <h3 class="proof-point-title">Review, not nagging</h3>
             <p class="proof-point-text">
-              No alerts, streaks or upsells. Open it, check the numbers, close it.
+              Open the app when you want to review your money. It won't chase you with alerts,
+              streaks or upsells.
             </p>
           </li>
           <li>
             <h3 class="proof-point-title">Open source</h3>
-            <p class="proof-point-text">MIT-licensed. Read the code, or build it yourself.</p>
+            <p class="proof-point-text">
+              The entire app is MIT-licensed. Read the code, audit it or build it yourself.
+            </p>
           </li>
         </ul>
       </div>
