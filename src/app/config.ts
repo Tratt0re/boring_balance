@@ -22,8 +22,12 @@ export const APP_CONFIG = {
 
   releasesApiUrl: `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`,
 
-  socialImageUrl: `${siteUrl}android-chrome-512x512.png`,
-  socialImageAlt: 'Boring Balance logo and app icon',
+  logoUrl: `${siteUrl}android-chrome-512x512.png`,
+  socialImageUrl: `${siteUrl}social-card.png`,
+  socialImageWidth: 1200,
+  socialImageHeight: 630,
+  socialImageAlt:
+    'Boring Balance Overview screen showing net worth, account allocation and monthly income and expenses, next to the headline "Simple, private, boring."',
 
   seo: {
     title: 'Boring Balance | Desktop Personal Finance and Expense Tracking App',

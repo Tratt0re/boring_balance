@@ -29,11 +29,13 @@ export class SeoService {
       { property: 'og:description', content: seo.description },
       { property: 'og:type', content: 'website' },
       { property: 'og:url', content: seo.canonicalUrl },
+      { property: 'og:image:width', content: String(APP_CONFIG.socialImageWidth) },
+      { property: 'og:image:height', content: String(APP_CONFIG.socialImageHeight) },
       { property: 'og:image', content: APP_CONFIG.socialImageUrl },
       { property: 'og:image:alt', content: APP_CONFIG.socialImageAlt },
       { property: 'og:site_name', content: APP_CONFIG.siteName },
       { property: 'og:locale', content: seo.locale },
-      { name: 'twitter:card', content: 'summary' },
+      { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: seo.title },
       { name: 'twitter:description', content: seo.description },
       { name: 'twitter:image', content: APP_CONFIG.socialImageUrl },
@@ -96,7 +98,7 @@ export class SeoService {
       '@type': 'Organization',
       name: APP_CONFIG.brandName,
       url: APP_CONFIG.siteUrl,
-      logo: APP_CONFIG.socialImageUrl,
+      logo: APP_CONFIG.logoUrl,
       sameAs: [APP_CONFIG.repoUrl],
     };
 
