@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-beasties-container="">
+  <head>
+    <meta charset="utf-8">
+    <title>Free Private Expense Tracker for Desktop | Boring Balance</title>
+    <base href="./">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Tratt0re">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+    <meta name="description" content="Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.">
+    <meta name="application-name" content="Boring Balance">
+    <meta name="apple-mobile-web-app-title" content="Boring Balance">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
+    <link rel="me" href="https://www.linkedin.com/in/salvatdeluca/">
+    <link rel="canonical" href="https://boringbalance.com/">
+    <link rel="alternate" type="text/plain" href="https://boringbalance.com/llms.txt" title="Boring Balance AI content index">
+    <link rel="alternate" type="text/markdown" href="https://boringbalance.com/llms-full.txt" title="Boring Balance product information">
+    <link rel="preconnect" href="https://api.github.com">
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope/Manrope-Regular.woff2" crossorigin="">
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope/Manrope-Medium.woff2" crossorigin="">
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/manrope/Manrope-SemiBold.woff2" crossorigin="">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Free Private Expense Tracker for Desktop | Boring Balance">
+    <meta property="og:description" content="Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.">
+    <meta property="og:url" content="https://boringbalance.com/">
+    <meta property="og:image" content="https://boringbalance.com/social-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Boring Balance Overview screen showing net worth, account allocation and monthly income and expenses, next to the headline &quot;Simple, private, boring.&quot;">
+    <meta property="og:site_name" content="Boring Balance">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Private Expense Tracker for Desktop | Boring Balance">
+    <meta name="twitter:description" content="Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.">
+    <meta name="twitter:image" content="https://boringbalance.com/social-card.png">
+    <meta name="twitter:image:alt" content="Boring Balance Overview screen showing net worth, account allocation and monthly income and expenses, next to the headline &quot;Simple, private, boring.&quot;">
+
+    <script>
+      (function () {
+        const html = document.documentElement;
+
+        try {
+          const theme = localStorage.theme;
+          const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+
+          const isSystem = theme === 'system' || !('theme' in localStorage);
+          const isDark = theme === 'dark' || (isSystem && prefersDark);
+          html.classList.toggle('dark', isDark);
+          html.setAttribute('data-theme', theme ?? 'system');
+        } catch (_) {}
+      })();
+    </script>
+
+    <script id="boring-balance-structured-data" type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Boring Balance",
+          "url": "https://boringbalance.com/",
+          "description": "Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.",
+          "inLanguage": "en"
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Boring Balance",
+          "url": "https://boringbalance.com/",
+          "logo": "https://boringbalance.com/android-chrome-512x512.png",
+          "sameAs": ["https://github.com/Tratt0re/boring_balance"]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Boring Balance",
+          "applicationCategory": "FinanceApplication",
+          "applicationSubCategory": "Desktop personal finance app",
+          "operatingSystem": "Windows, macOS, Linux",
+          "description": "Track expenses, accounts, budgets and net worth in a free, open-source desktop app. Your data stays in one local file on Windows, macOS or Linux.",
+          "url": "https://boringbalance.com/",
+          "downloadUrl": "https://github.com/Tratt0re/boring_balance/releases/latest",
+          "isAccessibleForFree": true,
+          "featureList": [
+            "Track balances, accounts, and net worth",
+            "Log transactions and categories",
+            "Review budgets and recurring entries",
+            "Store personal finance data locally in SQLite",
+            "Download builds through GitHub Releases"
+          ],
+          "publisher": {
+            "@type": "Organization",
+            "name": "Boring Balance",
+            "url": "https://boringbalance.com/"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Tratt0re",
+            "sameAs": [
+              "https://github.com/Tratt0re",
+              "https://www.linkedin.com/in/salvatdeluca/"
+            ]
+          },
+          "sameAs": ["https://github.com/Tratt0re/boring_balance"]
+        }
+      ]
+    </script>
+  <style>@layer properties;@layer theme,base,components,utilities;@layer theme{:root{--font-sans:"Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;--font-mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--spacing:.25rem;--container-2xl:42rem;--container-6xl:72rem;--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-base:1rem;--text-base--line-height:1.5 ;--font-weight-medium:500;--tracking-tight:-.025em;--animate-spin:spin 1s linear infinite;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:"Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;--default-mono-font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}}@layer base{*,:after,:before{box-sizing:border-box;margin:0;padding:0;border:0 solid}html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings, normal);font-variation-settings:var(--default-font-variation-settings, normal);-webkit-tap-highlight-color:transparent}}@layer utilities{}@font-face{font-family:Manrope;src:url(/assets/fonts/manrope/Manrope-Regular.woff2) format("woff2");font-style:normal;font-weight:400;font-display:swap}@font-face{font-family:Manrope;src:url(/assets/fonts/manrope/Manrope-Medium.woff2) format("woff2");font-style:normal;font-weight:500;font-display:swap}@font-face{font-family:Manrope;src:url(/assets/fonts/manrope/Manrope-SemiBold.woff2) format("woff2");font-style:normal;font-weight:600;font-display:swap}@font-face{font-family:JetBrains Mono;src:url(/assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2) format("woff2");font-style:normal;font-weight:400;font-display:swap}:root{--radius:.625rem;--background:oklch(1 0 0);--foreground:oklch(.145 0 0);--card:oklch(1 0 0);--card-foreground:oklch(.145 0 0);--popover:oklch(1 0 0);--popover-foreground:oklch(.145 0 0);--primary:oklch(.205 0 0);--primary-foreground:oklch(.985 0 0);--secondary:oklch(.97 0 0);--secondary-foreground:oklch(.205 0 0);--muted:oklch(.97 0 0);--muted-foreground:oklch(.52 0 0);--accent:oklch(.97 0 0);--accent-foreground:oklch(.205 0 0);--destructive:oklch(.577 .245 27.325);--border:oklch(.922 0 0);--input:oklch(.922 0 0);--ring:oklch(.6 0 0);--chart-1:oklch(.66 .23 25);--chart-2:oklch(.74 .2 55);--chart-3:oklch(.84 .17 95);--chart-4:oklch(.78 .19 145);--chart-5:oklch(.73 .16 195);--chart-6:oklch(.69 .17 235);--chart-7:oklch(.66 .18 275);--chart-8:oklch(.69 .2 320);--sidebar:oklch(.985 0 0);--sidebar-foreground:oklch(.145 0 0);--sidebar-primary:oklch(.205 0 0);--sidebar-primary-foreground:oklch(.985 0 0);--sidebar-accent:oklch(.97 0 0);--sidebar-accent-foreground:oklch(.205 0 0);--sidebar-border:oklch(.922 0 0);--sidebar-ring:oklch(.708 0 0);--high-contrast-table-header-color:oklch(.205 0 0);--high-contrast-table-header-foreground-color:oklch(.985 0 0);--system-app-color-1:oklch(.69 .2 24);--system-app-color-2:oklch(.74 .18 52);--system-app-color-3:oklch(.83 .16 88);--system-app-color-4:oklch(.8 .18 132);--system-app-color-5:oklch(.73 .16 154);--system-app-color-6:oklch(.74 .14 194);--system-app-color-7:oklch(.75 .16 228);--system-app-color-8:oklch(.67 .19 264);--system-app-color-9:oklch(.68 .2 302);--system-app-color-10:oklch(.72 .2 342);--system-app-color-11:oklch(.72 0 0);--positive-transaction-color:oklch(.72 .18 260);--negative-transaction-color:oklch(.72 .18 25);--chart-income:var(--positive-transaction-color);--chart-expense:var(--negative-transaction-color);--chart-net-cashflow:oklch(.72 .18 305);--chart-prior-balance:oklch(.72 .18 85);--warning:oklch(.52 .16 68);--success:oklch(.52 .17 145)}:root{--shot-shadow:0 1px 2px oklch(0 0 0 / .06), 0 24px 48px -20px oklch(0 0 0 / .2)}@layer base{*{border-color:var(--border);outline-color:var(--ring)}@supports (color: color-mix(in lab,red,red)){*{outline-color:color-mix(in oklab,var(--ring) 50%,transparent)}}html{color-scheme:light dark}body{background-color:var(--background);color:var(--foreground);font-family:var(--font-sans);font-feature-settings:"tnum" 1}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}}@layer utilities{}@supports (view-transition-name: root){}@property --tw-rotate-x{syntax:"*";inherits:false;}@property --tw-rotate-y{syntax:"*";inherits:false;}@property --tw-rotate-z{syntax:"*";inherits:false;}@property --tw-skew-x{syntax:"*";inherits:false;}@property --tw-skew-y{syntax:"*";inherits:false;}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid;}@property --tw-leading{syntax:"*";inherits:false;}@property --tw-font-weight{syntax:"*";inherits:false;}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000;}@property --tw-shadow-color{syntax:"*";inherits:false;}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%;}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000;}@property --tw-inset-shadow-color{syntax:"*";inherits:false;}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%;}@property --tw-ring-color{syntax:"*";inherits:false;}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000;}@property --tw-inset-ring-color{syntax:"*";inherits:false;}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000;}@property --tw-ring-inset{syntax:"*";inherits:false;}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0px;}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff;}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000;}@property --tw-content{syntax:"*";initial-value:"";inherits:false;}@property --tw-tracking{syntax:"*";inherits:false;}@property --tw-ordinal{syntax:"*";inherits:false;}@property --tw-slashed-zero{syntax:"*";inherits:false;}@property --tw-numeric-figure{syntax:"*";inherits:false;}@property --tw-numeric-spacing{syntax:"*";inherits:false;}@property --tw-numeric-fraction{syntax:"*";inherits:false;}@layer properties{@supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))){*,:before,:after{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-content:"";--tw-tracking:initial;--tw-ordinal:initial;--tw-slashed-zero:initial;--tw-numeric-figure:initial;--tw-numeric-spacing:initial;--tw-numeric-fraction:initial}}}</style><link rel="stylesheet" href="styles-UAQNSM6E.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-UAQNSM6E.css"></noscript></head>
+  <body ngcm="">
+    <app-root></app-root>
+  <script src="main-WUGV45NC.js" type="module"></script></body>
+</html>
