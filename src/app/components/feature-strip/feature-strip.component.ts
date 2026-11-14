@@ -1,32 +1,55 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { LucideAngularModule, LucideIconData, Monitor, Database, UserX, GitBranch } from 'lucide-angular';
 
-interface Feature {
+interface ProofScreen {
+  name: string;
   label: string;
-  description: string;
-  icon: LucideIconData;
+  alt: string;
 }
 
-const FEATURES: Feature[] = [
+interface ProofPoint {
+  title: string;
+  text: string;
+}
+
+const PROOF_POINTS: ProofPoint[] = [
   {
-    label: 'Desktop workflow',
-    description: 'Keyboard-friendly and built for deliberate review on Windows, macOS, and Linux.',
-    icon: Monitor,
+    title: 'Your data stays with you',
+    text: 'One file on your computer. No sign-up, no cloud, no tracking. Back it up or move it like any other file.',
   },
   {
-    label: 'Single local file',
-    description: 'Your data stays in SQLite on your machine, not in someone else’s service.',
-    icon: Database,
+    title: 'The whole picture',
+    text: "Net worth across cash, bank, savings, brokerage, crypto and credit accounts. Transfers between your own accounts don't distort income or expenses.",
   },
   {
-    label: 'No account layer',
-    description: 'No sign-up, no subscription, and no background sync requirement.',
-    icon: UserX,
+    title: 'Review, not nagging',
+    text: 'No alerts, streaks or upsells. Open it, check the numbers, close it.',
   },
   {
-    label: 'Open source',
-    description: 'Download it, read it, and verify how it works.',
-    icon: GitBranch,
+    title: 'Open source',
+    text: 'MIT-licensed. Read the code, or build it yourself.',
+  },
+];
+
+const SCREENS: ProofScreen[] = [
+  {
+    name: 'transactions',
+    label: 'Transactions',
+    alt: 'Boring Balance Transactions screen: a table of transactions with coloured category chips, account icons, amounts and paid checkboxes',
+  },
+  {
+    name: 'accounts',
+    label: 'Accounts',
+    alt: 'Boring Balance Accounts screen listing Cash, Bank, Savings, Broker and Credit card, each with its own colour and icon',
+  },
+  {
+    name: 'budget',
+    label: 'Budget',
+    alt: 'Boring Balance Budget analysis screen comparing budget and expenses for the Groceries and Leisure categories, with total budget, total expenses and remaining budget',
+  },
+  {
+    name: 'compare',
+    label: 'Compare',
+    alt: 'Boring Balance Compare screen showing income, expenses and net cash flow for two months side by side, with a radar chart and a category table by month',
   },
 ];
 
@@ -34,45 +57,81 @@ const FEATURES: Feature[] = [
   selector: 'app-feature-strip',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [LucideAngularModule],
+  styleUrl: './feature-strip.component.css',
   template: `
-    <section
-      aria-labelledby="feature-strip-heading"
-      class="mx-auto w-full max-w-6xl border-t border-border px-6 py-12 sm:px-10 sm:py-14"
-    >
-      <div class="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] lg:items-start">
-        <div class="max-w-2xl">
-          <h2
-            id="feature-strip-heading"
-            class="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
-          >
-            Built for deliberate bookkeeping.
-          </h2>
-          <p class="mt-4 text-base leading-7 text-muted-foreground sm:text-lg">
-            The product stays spare on purpose. The useful parts stay close, and the rest stays
-            out of your way.
-          </p>
-        </div>
-
-        <ul class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2" role="list">
-        @for (feature of features; track feature.label; let index = $index) {
-          <li class="border-t border-border pt-4">
-            <div class="flex items-start gap-3">
-              <span class="mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground">
-              <lucide-icon [img]="feature.icon" [size]="16" aria-hidden="true" />
-              </span>
-              <div class="min-w-0">
-                <h3 class="text-sm font-medium text-foreground">{{ feature.label }}</h3>
-                <p class="mt-1 text-sm leading-6 text-muted-foreground">{{ feature.description }}</p>
-              </div>
-            </div>
+    <section aria-labelledby="feature-strip-heading" class="proof">
+      <div class="proof-left">
+        <h2 id="feature-strip-heading" class="proof-title">
+          Personal finance that stays out of the way.
+        </h2>
+        <ul class="proof-list" role="list">
+          <li>
+            <h3 class="proof-point-title">Your data stays with you</h3>
+            <p class="proof-point-text">
+              One file on your computer. No sign-up, no cloud, no tracking. Back it up or move it
+              like any other file.
+            </p>
           </li>
-        }
+          <li>
+            <h3 class="proof-point-title">The whole picture</h3>
+            <p class="proof-point-text">
+              Net worth across cash, bank, savings, brokerage, crypto and credit accounts. Transfers
+              between your own accounts don't distort income or expenses.
+            </p>
+          </li>
+          <li>
+            <h3 class="proof-point-title">Review, not nagging</h3>
+            <p class="proof-point-text">
+              No alerts, streaks or upsells. Open it, check the numbers, close it.
+            </p>
+          </li>
+          <li>
+            <h3 class="proof-point-title">Open source</h3>
+            <p class="proof-point-text">MIT-licensed. Read the code, or build it yourself.</p>
+          </li>
         </ul>
+      </div>
+      <div class="proof-shots">
+        @for (screen of screens; track screen.name; let i = $index) {
+          <input
+            type="radio"
+            name="proof-screen"
+            class="proof-radio"
+            [id]="'proof-screen-' + i"
+            [checked]="i === 0"
+          />
+        }
+        <div class="proof-tabs">
+          @for (screen of screens; track screen.name; let i = $index) {
+            <label class="proof-tab" [attr.for]="'proof-screen-' + i">{{ screen.label }}</label>
+          }
+        </div>
+        @for (screen of screens; track screen.name) {
+          <figure class="proof-shot">
+            <img
+              [src]="'screenshots/' + screen.name + '.webp'"
+              width="1600"
+              height="1003"
+              [alt]="screen.alt"
+              loading="lazy"
+              class="proof-img proof-img-light"
+            />
+            <img
+              [src]="'screenshots/' + screen.name + '-dark.webp'"
+              width="1600"
+              height="1003"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              class="proof-img proof-img-dark"
+            />
+          </figure>
+        }
       </div>
     </section>
   `,
 })
 export class FeatureStripComponent {
-  protected readonly features = FEATURES;
+  protected readonly points = PROOF_POINTS;
+  protected readonly screens = SCREENS;
 }
