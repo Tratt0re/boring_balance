@@ -34,8 +34,8 @@ export const APP_CONFIG = {
     robots: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1',
     canonicalUrl: siteUrl,
     locale: 'en_US',
-    themeColorLight: '#fbfaf7',
-    themeColorDark: '#151410',
+    themeColorLight: '#ffffff',
+    themeColorDark: '#0a0a0a',
   },
 
   fallback: {
