@@ -11,23 +11,25 @@ import { APP_CONFIG } from '../../config';
   encapsulation: ViewEncapsulation.None,
   imports: [BrandIconComponent, LucideAngularModule],
   template: `
-    <header class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-5 sm:px-10">
+    <header
+      class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-5 sm:px-10"
+    >
       <a
         [href]="homePath"
         aria-label="Boring Balance home"
-        class="rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        class="relative after:absolute after:-inset-1.5 after:content-[''] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <app-brand-icon class="h-8 w-auto text-primary" />
       </a>
 
       <nav aria-label="Site navigation">
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-3">
           <a
             [href]="repoUrl"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Browse the Boring Balance GitHub repository"
-            class="inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            class="relative after:absolute after:-inset-1.5 after:content-[''] inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <lucide-icon [img]="githubIcon" [size]="16" aria-hidden="true" />
           </a>
@@ -37,7 +39,7 @@ import { APP_CONFIG } from '../../config';
             (click)="cycleTheme($event)"
             [attr.aria-label]="themeAriaLabel()"
             [attr.title]="themeTitle()"
-            class="flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            class="relative after:absolute after:-inset-1.5 after:content-[''] flex size-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <lucide-icon [img]="themeIcon()" [size]="16" aria-hidden="true" />
           </button>

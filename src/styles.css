@@ -238,6 +238,11 @@
     color-scheme: light dark;
   }
 
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
   html.theme-transition *,
   html.theme-transition *::before,
   html.theme-transition *::after {
